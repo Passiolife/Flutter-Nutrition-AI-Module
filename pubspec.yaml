@@ -1,7 +1,7 @@
-name: flutter_nutrition_ai_module
-description: A new Flutter project.
+name: nutrition_ai_module
+description: Passio Nutrition AI Module for Flutter. Supports Android and iOS.
 version: 0.0.1
-homepage:
+homepage: https://www.passio.ai/
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
@@ -21,10 +21,6 @@ dependencies:
   # https://pub.dev/packages/flutter_bloc
   # It is a design pattern which helps separate the presentation layer from the business logic.
   flutter_bloc: ^8.1.1
-
-  # https://pub.dev/packages/go_router
-  # A Declarative Routing Package for Flutter.
-#  go_router: ^12.0.1
 
   # https://pub.dev/packages/json_serializable
   # Provides Dart Build System builders for handling JSON.

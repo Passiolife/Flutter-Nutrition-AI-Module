@@ -34,7 +34,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
 
-  flutter_nutrition_ai_module:
+  nutrition_ai_module:
     path: ../
 
   hive: ^2.2.3

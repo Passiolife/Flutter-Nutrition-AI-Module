@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_nutrition_ai_module/nutrition_ai_module.dart';
+import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
 
@@ -97,8 +97,8 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
       ),
       body: Center(
         child: ElevatedButton(
-          onPressed: () {
-            NutritionAIModule.instance.setPassioKey(PUT_PASSIO_KEY_HERE).setPassioConnector(this).launch(context);
+          onPressed: () async {
+            await NutritionAIModule.instance.setPassioKey(PUT_YOUR_PASSIO_KEY_HERE).setPassioConnector(this).launch(context);
           },
           child: const Text('Launch'),
         ),

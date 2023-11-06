@@ -1,16 +1,13 @@
 # example
 
-A new Flutter project.
+Demo app for the Flutter Nutrition AI Module.
 
-## Getting Started
+## First run
 
-This project is a starting point for a Flutter application.
+* The first time the app is built, the build will not complete because the app is missing an API key.
+* To use the SDK sign up at https://www.passio.ai/nutrition-ai. The SDK WILL NOT WORK without a valid SDK key.
 
-A few resources to get you started if this is your first Flutter project:
+## Changing the data storage
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+* The demo app comes equipped with ```passio_connector.dart``` class. This abstract class defines where the data is stored and retrieved from. The default implementation ```LocalDBConnector``` uses a local database to store user data.
+* To change where the data is being store create an implementation of the ```PassioConnector``` class.
