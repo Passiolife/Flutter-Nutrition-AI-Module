@@ -1,5 +1,0 @@
-arb-dir: lib/locale
-template-arb-file: app_en.arb
-output-localization-file: app_localizations.dart
-synthetic-package: false # important, if you want to import the delegate in another package or app
-output-dir: lib/locale/generated # this is optional, if synthetic-package=false and not stated, defaults to arb-dir location
