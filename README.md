@@ -3,7 +3,7 @@ This package provides a collection of pre-built pages, allowing users to effortl
 ## Features
 | Quick Scan | Multi Food Scan | Food Search |
 |-------------|---------|-------|
-| <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/media/quick_scan.mov"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/media/multi_food_scan.mov"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/media/food_search.mov"> |
+| <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/bff54089-6636-4be5-8c81-51eccb09fb5e"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/8932ce98-1a37-46df-82c2-af8d9eac0d24"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/301771a3-0663-4d35-a250-dfd1a6d2fc71"> |
 | This page enables you to scan real-time food items using your camera. | Capability to Scan multiple food items in real-time using your camera. | Input the name of a food item, and it will display matched results from the SDK. |
 
 
