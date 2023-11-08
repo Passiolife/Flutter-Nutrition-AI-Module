@@ -1,6 +1,6 @@
 class AppConstants {
 
-  static const packageName = 'flutter_nutrition_ai_module';
+  static const packageName = 'nutrition_ai_module';
 
   static const String noInternetConnection = 'No Internet Connected!';
   static const String email = 'Email';
