@@ -74,6 +74,10 @@ dependencies:
   # Flutter widget that automatically resizes text to fit perfectly within its bounds.
   auto_size_text: ^3.0.0
 
+  # https://pub.dev/packages/intl
+  # Provides internationalization and localization facilities
+  intl: ^0.18.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -3,9 +3,8 @@ This package provides a collection of pre-built pages, allowing users to effortl
 ## Features
 | Quick Scan | Multi Food Scan | Food Search |
 |-------------|---------|-------|
-| <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/bff54089-6636-4be5-8c81-51eccb09fb5e"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/8932ce98-1a37-46df-82c2-af8d9eac0d24"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/301771a3-0663-4d35-a250-dfd1a6d2fc71"> |
+| <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/2518512a-0404-4f04-a07d-b4b37241d098"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/afd44d6f-7183-46b6-a4ab-c74d32acd291"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/eedc43f0-389c-4c0b-b72b-c993fa060c45"> |
 | This page enables you to scan real-time food items using your camera. | Capability to Scan multiple food items in real-time using your camera. | Input the name of a food item, and it will display matched results from the SDK. |
-
 
 
 ## BEFORE YOU CONTINUE:
@@ -16,15 +15,13 @@ This package provides a collection of pre-built pages, allowing users to effortl
 
 2. To use the SDK sign up at https://www.passio.ai/nutrition-ai. The SDK WILL NOT WORK without a valid SDK key.
 
-3. This module is predefined set of widgets so if you want to make customization then you can take a look at the nutrition_ai package.
-
 ## Minimum Requirements
 
 |             | Android | iOS   |
 |-------------|---------|-------|
 | **Support** | SDK 26+ | 13.0+ |
 
-> **_NOTE:_** The SDK requires access to the devices's camera.
+> **_NOTE:_** The SDK requires access to the device's camera.
 
 ### Setup for Android
 
@@ -60,7 +57,10 @@ import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 
 3. Insert the following line at the location of your choice to initiate the Nutrition AI Module.
 ```dart
-await NutritionAIModule.instance.setPassioKey(PUT_YOUR_PASSIO_KEY_HERE).setPassioConnector(this).launch(context);
+await NutritionAIModule.instance
+    .setPassioKey(PUT_YOUR_PASSIO_KEY_HERE)
+    .setPassioConnector(this)
+    .launch(context);
 ```
 
 #### Required Methods:

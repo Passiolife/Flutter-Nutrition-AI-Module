@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../../../pages/edit_food/edit_food_page.dart';
+import '../../../pages/food_search/food_search_page.dart';
 import '../../constant/app_constants.dart';
 import '../../constant/dimens.dart';
 import '../../models/food_record/food_record.dart';
@@ -14,13 +16,17 @@ import '../../util/string_extensions.dart';
 import 'bloc/food_details_bloc.dart';
 import 'dialogs/rename_food_dialogs.dart';
 import 'widgets/food_detail_header.dart';
+import 'widgets/ingredients_widget.dart';
+import 'widgets/meal_time_widget.dart';
 import 'widgets/serving_size_view_widget.dart';
 import 'widgets/visual_alternative_widget.dart';
 
 class FoodDetailsWidget extends StatefulWidget {
   final FoodRecord? foodRecord;
+  final bool isMealTimeVisible;
+  final bool isIngredientsVisible;
 
-  const FoodDetailsWidget({this.foodRecord, super.key});
+  const FoodDetailsWidget({this.foodRecord, this.isMealTimeVisible = true, this.isIngredientsVisible = true, super.key});
 
   @override
   State<FoodDetailsWidget> createState() => FoodDetailsWidgetState();
@@ -109,75 +115,93 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget> with TickerProvide
       builder: (context, state) {
         return AnimatedCrossFade(
           duration: const Duration(milliseconds: Dimens.duration300),
-          firstChild: ListView(
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            children: [
-              FoodDetailHeader(
-                key: ValueKey(_updatedFoodRecord?.passioID),
-                passioID: _updatedFoodRecord?.passioID,
-                entityType: _updatedFoodRecord?.entityType ?? PassioIDEntityType.item,
-                title: _title,
-                subTitle: _subTitle,
-                totalCalories: _totalCalories,
-                totalCarbs: _totalCarbs,
-                totalProteins: _totalProteins,
-                totalFat: _totalFat,
-                tagPassioId: _tagPassioId,
-                tagName: _tagName,
-                tagSubtitle: _tagSubtitle,
-                tagCalories: _tagCalories,
-                tagCaloriesData: _tagCaloriesData,
-                isEditAmountVisible: _visibleEditAmountButton,
-                onTapEditAmount: () {
-                  _bloc.add(DoUpdateAmountEditableEvent(isEditable: true));
-                },
-                onTapTitle: () {
-                  RenameFoodDialogs.show(
-                    context: context,
-                    text: _title,
-                    title: context.localization?.renameFoodRecord ?? '',
-                    onRenameFood: (value) {
-                      _updatedFoodRecord?.name = value;
+          firstChild: SingleChildScrollView(
+            child: Column(
+              children: [
+                FoodDetailHeader(
+                  key: ValueKey(_updatedFoodRecord?.passioID),
+                  passioID: _updatedFoodRecord?.passioID,
+                  entityType: _updatedFoodRecord?.entityType ?? PassioIDEntityType.item,
+                  title: _title,
+                  subTitle: _subTitle,
+                  totalCalories: _totalCalories,
+                  totalCarbs: _totalCarbs,
+                  totalProteins: _totalProteins,
+                  totalFat: _totalFat,
+                  tagPassioId: _tagPassioId,
+                  tagName: _tagName,
+                  tagSubtitle: _tagSubtitle,
+                  tagCalories: _tagCalories,
+                  tagCaloriesData: _tagCaloriesData,
+                  isEditAmountVisible: _visibleEditAmountButton,
+                  onTapEditAmount: () {
+                    _bloc.add(DoUpdateAmountEditableEvent(isEditable: true));
+                  },
+                  onTapTitle: () {
+                    RenameFoodDialogs.show(
+                      context: context,
+                      text: _title,
+                      title: context.localization?.renameFoodRecord ?? '',
+                      onRenameFood: (value) {
+                        _updatedFoodRecord?.name = value;
+                      },
+                    );
+                  },
+                ),
+                Dimens.h4.verticalSpace,
+                ServingSizeViewWidget(
+                  quantityController: _quantityController,
+                  selectedServingUnitName: _updatedFoodRecord?.selectedUnit,
+                  servingUnits: _updatedFoodRecord?.servingUnits,
+                  onChangeServingUnit: (PassioServingUnit? servingUnit) {
+                    _bloc.add(DoUpdateUnitKeepWeightEvent(data: _updatedFoodRecord, selectedUnitName: servingUnit?.unitName ?? ''));
+                  },
+                  computedWeight: _updatedFoodRecord?.computedWeight,
+                  sliderData: _sliderData,
+                  onQuantityChange: (fromSlider, value) {
+                    _bloc.add(DoUpdateQuantityEvent(data: _updatedFoodRecord, updatedQuantity: value, shouldReset: !fromSlider));
+                  },
+                  servingSizes: _updatedFoodRecord?.servingSizes,
+                  selectedServingSize: _selectedServingSize,
+                  onServingSizeChange: (servingSize) {
+                    _bloc.add(DoUpdateServingSizeEvent(
+                      updatedUnitName: servingSize?.unitName,
+                      updatedQuantity: servingSize?.quantity,
+                      data: _updatedFoodRecord,
+                    ));
+                  },
+                  isCloseVisible: _visibleCloseButton,
+                  onTapCloseEdit: () {
+                    _bloc.add(DoUpdateAmountEditableEvent(isEditable: false));
+                  },
+                ),
+                Dimens.h4.verticalSpace,
+                VisualAlternativeWidget(
+                  alternatives: _alternatives,
+                  onTapAlternative: (alternative) {
+                    _bloc.add(DoAlternateEvent(passioID: alternative?.passioID));
+                  },
+                ),
+                if (widget.isMealTimeVisible) ...[
+                  Dimens.h4.verticalSpace,
+                  MealTimeWidget(
+                    selectedMealLabel: _updatedFoodRecord?.mealLabel,
+                    onUpdateMealTime: (label) {
+                      _updatedFoodRecord?.mealLabel = label;
                     },
-                  );
-                },
-              ),
-              Dimens.h4.verticalSpace,
-              ServingSizeViewWidget(
-                quantityController: _quantityController,
-                selectedServingUnitName: _updatedFoodRecord?.selectedUnit,
-                servingUnits: _updatedFoodRecord?.servingUnits,
-                onChangeServingUnit: (PassioServingUnit? servingUnit) {
-                  _bloc.add(DoUpdateUnitKeepWeightEvent(data: _updatedFoodRecord, selectedUnitName: servingUnit?.unitName ?? ''));
-                },
-                computedWeight: _updatedFoodRecord?.computedWeight,
-                sliderData: _sliderData,
-                onQuantityChange: (fromSlider, value) {
-                  _bloc.add(DoUpdateQuantityEvent(data: _updatedFoodRecord, updatedQuantity: value, shouldReset: !fromSlider));
-                },
-                servingSizes: _updatedFoodRecord?.servingSizes,
-                selectedServingSize: _selectedServingSize,
-                onServingSizeChange: (servingSize) {
-                  _bloc.add(DoUpdateServingSizeEvent(
-                    updatedUnitName: servingSize?.unitName,
-                    updatedQuantity: servingSize?.quantity,
-                    data: _updatedFoodRecord,
-                  ));
-                },
-                isCloseVisible: _visibleCloseButton,
-                onTapCloseEdit: () {
-                  _bloc.add(DoUpdateAmountEditableEvent(isEditable: false));
-                },
-              ),
-              Dimens.h4.verticalSpace,
-              VisualAlternativeWidget(
-                alternatives: _alternatives,
-                onTapAlternative: (alternative) {
-                  _bloc.add(DoAlternateEvent(passioID: alternative?.passioID));
-                },
-              ),
-            ],
+                  ),
+                ],
+                if (widget.isIngredientsVisible) ...[
+                  Dimens.h8.verticalSpace,
+                  IngredientsWidget(
+                    data: _updatedFoodRecord?.ingredients,
+                    onTapAddIngredients: _handleOnTapAddIngredients,
+                    onDeleteItem: _handleDeleteItem,
+                    onEditItem: _handleOnEditItem,
+                  ),
+                ],
+              ],
+            ),
           ),
           secondChild: ListView(
             padding: EdgeInsets.zero,
@@ -220,6 +244,24 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget> with TickerProvide
                   _bloc.add(DoAlternateEvent(passioID: alternative?.passioID));
                 },
               ),
+              if (widget.isMealTimeVisible) ...[
+                Dimens.h4.verticalSpace,
+                MealTimeWidget(
+                  selectedMealLabel: _updatedFoodRecord?.mealLabel,
+                  onUpdateMealTime: (label) {
+                    _updatedFoodRecord?.mealLabel = label;
+                  },
+                ),
+              ],
+              if (widget.isIngredientsVisible) ...[
+                Dimens.h8.verticalSpace,
+                IngredientsWidget(
+                  data: _updatedFoodRecord?.ingredients,
+                  onTapAddIngredients: _handleOnTapAddIngredients,
+                  onDeleteItem: _handleDeleteItem,
+                  onEditItem: _handleOnEditItem,
+                ),
+              ],
             ],
           ),
           crossFadeState: _visibleCloseButton ? CrossFadeState.showFirst : CrossFadeState.showSecond,
@@ -240,6 +282,27 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget> with TickerProvide
       data: _updatedFoodRecord,
       shouldReset: true,
     ));
+  }
+
+  Future _handleOnTapAddIngredients() async {
+    final data = await FoodSearchPage.navigate(context);
+    if (data != null && data is PassioIDAndName?) {
+      _bloc.add(DoAddIngredientsEvent(data: _updatedFoodRecord, ingredientData: data));
+    }
+  }
+
+  void _handleDeleteItem(int index) {
+    _bloc.add(DoRemoveIngredientsEvent(index: index, data: _updatedFoodRecord));
+  }
+
+  Future<void> _handleOnEditItem(int index) async {
+    FoodRecord? data = await EditFoodPage.navigate(
+      context,
+      foodRecord: FoodRecord.from(passioFoodItemData: _updatedFoodRecord?.ingredients?.elementAt(index)),
+      index: index,
+      isFromEdit: true,
+    );
+    _bloc.add(DoUpdateIngredientEvent(atIndex: index, data: _updatedFoodRecord, updatedFoodItemData: data?.toFoodItem));
   }
 
   void _handleSliderUpdateState({required SliderUpdateState state}) {

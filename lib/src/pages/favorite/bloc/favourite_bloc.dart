@@ -71,6 +71,10 @@ class FavouriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
         emit(FoodRecordLogFailureState(message: 'Something went wrong while parsing data.'));
         return;
       }
+      final selectedDateTime = DateTime.now();
+      foodRecord.createdAt = selectedDateTime.millisecondsSinceEpoch.toDouble();
+      foodRecord.mealLabel = MealLabel.mealLabelBy(selectedDateTime);
+
       await _connector.updateRecord(foodRecord: foodRecord, isNew: true);
       // Waiting for some time to finish the animation.
       await Future.delayed(const Duration(milliseconds: Dimens.duration500));
