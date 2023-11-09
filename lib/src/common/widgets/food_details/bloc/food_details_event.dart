@@ -43,3 +43,26 @@ class DoUpdateAmountEditableEvent extends EditFoodEvent {
 
   DoUpdateAmountEditableEvent({required this.isEditable});
 }
+
+/// Ingredients Events
+class DoAddIngredientsEvent extends EditFoodEvent {
+  final FoodRecord? data;
+  final PassioIDAndName? ingredientData;
+
+  DoAddIngredientsEvent({this.data, this.ingredientData});
+}
+
+class DoRemoveIngredientsEvent extends EditFoodEvent {
+  final int index;
+  final FoodRecord? data;
+
+  DoRemoveIngredientsEvent({required this.index, this.data});
+}
+
+class DoUpdateIngredientEvent extends EditFoodEvent {
+  final int atIndex;
+  final FoodRecord? data;
+  final PassioFoodItemData? updatedFoodItemData;
+
+  DoUpdateIngredientEvent({required this.atIndex, this.data, this.updatedFoodItemData});
+}

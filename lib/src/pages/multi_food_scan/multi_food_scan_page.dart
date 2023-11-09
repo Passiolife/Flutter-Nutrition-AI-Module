@@ -164,7 +164,12 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               Dimens.h12.verticalSpace,
-                              FoodDetailsWidget(foodRecord: _updatedFoodRecord, key: _foodDetailsKey,),
+                              FoodDetailsWidget(
+                                foodRecord: _updatedFoodRecord,
+                                key: _foodDetailsKey,
+                                isMealTimeVisible: false,
+                                isIngredientsVisible: false,
+                              ),
                               Dimens.h4.verticalSpace,
                               MealTimeWidget(
                                 selectedMealLabel: _updatedFoodRecord?.mealLabel,

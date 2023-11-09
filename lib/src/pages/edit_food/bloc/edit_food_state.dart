@@ -4,19 +4,6 @@ abstract class EditFoodState {}
 
 class EditFoodInitial extends EditFoodState {}
 
-
-/// States for DoAddIngredientsEvent
-class AddIngredientsSuccessState extends EditFoodState {}
-
-class AddIngredientsFailureState extends EditFoodState {}
-
-// States for DoRemoveIngredientsEvent
-class RemoveIngredientsState extends EditFoodState {}
-
-// States for DoUpdateIngredientEvent
-class UpdateIngredientsSuccessState extends EditFoodState {}
-
-
 // States for DoFavouriteEvent
 class FavoriteSuccessState extends EditFoodState {}
 

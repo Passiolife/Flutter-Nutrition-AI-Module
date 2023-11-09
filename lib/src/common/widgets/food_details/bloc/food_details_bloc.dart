@@ -6,6 +6,7 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../models/food_record/food_record.dart';
 import '../../../util/double_extensions.dart';
+import '../../../util/passio_food_item_data_extension.dart';
 import '../../../util/string_extensions.dart';
 
 part 'food_details_event.dart';
@@ -51,6 +52,9 @@ class FoodDetailsBloc extends Bloc<EditFoodEvent, EditFoodState> {
     on<DoSliderUpdateEvent>(_handleDoSliderUpdateEvent);
     on<DoAlternateEvent>(_handleDoAlternateEvent);
     on<DoUpdateAmountEditableEvent>(_handleDoUpdateAmountEditableEvent);
+    on<DoAddIngredientsEvent>(_handleDoAddIngredientsEvent);
+    on<DoRemoveIngredientsEvent>(_handleDoRemoveIngredientsEvent);
+    on<DoUpdateIngredientEvent>(_handleDoUpdateIngredientEvent);
   }
 
   FutureOr<void> _handleDoUpdateQuantityEvent(DoUpdateQuantityEvent event, Emitter<EditFoodState> emit) {
@@ -120,5 +124,32 @@ class FoodDetailsBloc extends Bloc<EditFoodEvent, EditFoodState> {
 
   FutureOr<void> _handleDoUpdateAmountEditableEvent(DoUpdateAmountEditableEvent event, Emitter<EditFoodState> emit) {
     emit(UpdateAmountEditableState(isEditable: event.isEditable));
+  }
+
+  FutureOr<void> _handleDoAddIngredientsEvent(DoAddIngredientsEvent event, Emitter<EditFoodState> emit) async {
+    final attributes = await NutritionAI.instance.lookupPassioAttributesFor(event.ingredientData?.passioID ?? '');
+    if (attributes != null) {
+      if (attributes.foodItem != null) {
+        event.data?.addIngredients(ingredient: attributes.foodItem?.copyWith(passioID: attributes.passioID, name: attributes.name), isFirst: true);
+        // emit(AddIngredientsSuccessState());
+      } else if (attributes.entityType == PassioIDEntityType.recipe) {
+        attributes.recipe?.foodItems.forEach((element) {
+          event.data?.addIngredients(ingredient: element, isFirst: true);
+        });
+      }
+      add(DoSliderUpdateEvent(data: event.data, shouldReset: true));
+    }
+  }
+
+  FutureOr<void> _handleDoRemoveIngredientsEvent(DoRemoveIngredientsEvent event, Emitter<EditFoodState> emit) async {
+    event.data?.removeIngredient(event.index) ?? false;
+    emit(RemoveIngredientsState());
+  }
+
+  FutureOr<void> _handleDoUpdateIngredientEvent(DoUpdateIngredientEvent event, Emitter<EditFoodState> emit) async {
+    if (event.updatedFoodItemData != null) {
+      event.data?.replaceIngredient(event.updatedFoodItemData!, event.atIndex);
+      emit(UpdateIngredientsSuccessState());
+    }
   }
 }

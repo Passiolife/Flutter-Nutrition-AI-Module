@@ -15,9 +15,6 @@ import '../../common/widgets/custom_app_bar.dart';
 import '../../common/widgets/custom_button.dart';
 import '../../common/widgets/food_details/dialogs/rename_food_dialogs.dart';
 import '../../common/widgets/food_details/food_details_widget.dart';
-import '../../common/widgets/food_details/widgets/ingredients_widget.dart';
-import '../../common/widgets/food_details/widgets/meal_time_widget.dart';
-import '../food_search/food_search_page.dart';
 import 'bloc/edit_food_bloc.dart';
 
 class EditFoodPage extends StatefulWidget {
@@ -127,7 +124,6 @@ class _EditFoodPageState extends State<EditFoodPage> {
         if (state is FavoriteSuccessState) {
           /// Showing success message for saving favorite in DB.
           context.showSnackbar(text: context.localization?.favoriteSuccessMessage);
-          Navigator.pop(context);
         } else if (state is FavoriteFailureState) {
           context.showSnackbar(text: state.message);
         } else if (state is FoodUpdateSuccessState) {
@@ -161,26 +157,10 @@ class _EditFoodPageState extends State<EditFoodPage> {
                   children: [
                     FoodDetailsWidget(
                       foodRecord: _updatedFoodRecord,
+                      isMealTimeVisible: (!widget.isFromEdit && !widget.isFromFavorite),
+                      isIngredientsVisible: (!widget.isFromEdit),
                       key: _foodDetailsKey,
                     ),
-                    Dimens.h4.verticalSpace,
-                    (!widget.isFromEdit && !widget.isFromFavorite)
-                        ? MealTimeWidget(
-                            selectedMealLabel: _updatedFoodRecord?.mealLabel,
-                            onUpdateMealTime: (label) {
-                              _updatedFoodRecord?.mealLabel = label;
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                    Dimens.h8.verticalSpace,
-                    (!widget.isFromEdit)
-                        ? IngredientsWidget(
-                            data: _updatedFoodRecord?.ingredients,
-                            onTapAddIngredients: _handleOnTapAddIngredients,
-                            onDeleteItem: _handleDeleteItem,
-                            onEditItem: _handleOnEditItem,
-                          )
-                        : const SizedBox.shrink(),
                   ],
                 ),
               ),
@@ -229,27 +209,6 @@ class _EditFoodPageState extends State<EditFoodPage> {
 
   void _initialize() {
     _updatedFoodRecord = FoodRecord.fromJson(widget.foodRecord?.toJson());
-  }
-
-  Future _handleOnTapAddIngredients() async {
-    final data = await FoodSearchPage.navigate(context);
-    if (data != null && data is PassioIDAndName?) {
-      _bloc.add(DoAddIngredientsEvent(data: _updatedFoodRecord, ingredientData: data));
-    }
-  }
-
-  void _handleDeleteItem(int index) {
-    _bloc.add(DoRemoveIngredientsEvent(index: index, data: _updatedFoodRecord));
-  }
-
-  Future<void> _handleOnEditItem(int index) async {
-    FoodRecord? data = await EditFoodPage.navigate(
-      context,
-      foodRecord: FoodRecord.from(passioFoodItemData: _updatedFoodRecord?.ingredients?.elementAt(index)),
-      index: index,
-      isFromEdit: true,
-    );
-    _bloc.add(DoUpdateIngredientEvent(atIndex: index, data: _updatedFoodRecord, updatedFoodItemData: data?.toFoodItem));
   }
 
   void _showFavoriteDialog() {

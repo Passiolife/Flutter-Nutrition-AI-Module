@@ -163,6 +163,8 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                               FoodDetailsWidget(
                                 foodRecord: _updatedFoodRecord,
                                 key: _foodDetailsKey,
+                                isMealTimeVisible: false,
+                                isIngredientsVisible: false,
                               ),
                               Dimens.h4.verticalSpace,
                               MealTimeWidget(

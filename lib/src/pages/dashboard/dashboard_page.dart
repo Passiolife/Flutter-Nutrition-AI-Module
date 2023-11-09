@@ -232,7 +232,8 @@ class _DashboardPageState extends State<DashboardPage> with SingleTickerProvider
             _doFetchRecords();
           }
         } else if (item == context.localization?.profile) {
-          ProfilePage.navigate(context);
+          await ProfilePage.navigate(context);
+          _doFetchRecords();
         }
       },
     );

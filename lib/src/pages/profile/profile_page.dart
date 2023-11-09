@@ -23,8 +23,8 @@ import 'widgets/edit_text_widget.dart';
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
-  static void navigate(BuildContext context) {
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
+  static Future navigate(BuildContext context) async {
+    return Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
   }
 
   @override
