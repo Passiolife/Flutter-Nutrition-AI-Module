@@ -10,11 +10,15 @@ import '../../../util/passio_food_item_data_extension.dart';
 import '../../../util/string_extensions.dart';
 
 part 'food_details_event.dart';
-
 part 'food_details_state.dart';
 
 /// [SliderData] use to get callbacks of slider.
-typedef SliderData = ({double sliderMax, double sliderMin, double sliderStep, double sliderValue});
+typedef SliderData = ({
+  double sliderMax,
+  double sliderMin,
+  double sliderStep,
+  double sliderValue
+});
 
 class FoodDetailsBloc extends Bloc<EditFoodEvent, EditFoodState> {
   // [cachedMaxForSlider] stores the max value for the slider.
@@ -57,32 +61,41 @@ class FoodDetailsBloc extends Bloc<EditFoodEvent, EditFoodState> {
     on<DoUpdateIngredientEvent>(_handleDoUpdateIngredientEvent);
   }
 
-  FutureOr<void> _handleDoUpdateQuantityEvent(DoUpdateQuantityEvent event, Emitter<EditFoodState> emit) {
-    double currentValue = event.updatedQuantity.roundNumber(2) == 0 ? minSliderValue : event.updatedQuantity.roundNumber(2);
-    event.data?.setFoodRecordServing(event.data?.selectedUnit ?? '', currentValue);
+  FutureOr<void> _handleDoUpdateQuantityEvent(
+      DoUpdateQuantityEvent event, Emitter<EditFoodState> emit) {
+    double currentValue = event.updatedQuantity.roundNumber(2) == 0
+        ? minSliderValue
+        : event.updatedQuantity.roundNumber(2);
+    event.data
+        ?.setFoodRecordServing(event.data?.selectedUnit ?? '', currentValue);
     add(DoSliderUpdateEvent(data: event.data, shouldReset: event.shouldReset));
   }
 
-  FutureOr<void> _handleDoSliderUpdateEvent(DoSliderUpdateEvent event, Emitter<EditFoodState> emit) async {
+  FutureOr<void> _handleDoSliderUpdateEvent(
+      DoSliderUpdateEvent event, Emitter<EditFoodState> emit) async {
     SliderData sliderData = _updateSliderData(event.data, event.shouldReset);
     emit(SliderUpdateState(sliderData: sliderData));
   }
 
   SliderData _updateSliderData(FoodRecord? foodRecord, bool shouldReset) {
     /// currentValue is the [selectedQuantity]. If it is null then set it 1.0.
-    double currentValue = max(foodRecord?.selectedQuantity ?? 1, minSliderValue);
+    double currentValue =
+        max(foodRecord?.selectedQuantity ?? 1, minSliderValue);
 
     if (shouldReset) {
       if (_cachedMaxForSlider.unit != foodRecord?.selectedUnit) {
         sliderMaximumValue = _sliderMultiplier * max(currentValue, 1);
-        _cachedMaxForSlider = (unit: foodRecord?.selectedUnit, value: sliderMaximumValue);
-      } else if (_cachedMaxForSlider.value > _maxSliderFromData && _cachedMaxForSlider.value > currentValue) {
+        _cachedMaxForSlider =
+            (unit: foodRecord?.selectedUnit, value: sliderMaximumValue);
+      } else if (_cachedMaxForSlider.value > _maxSliderFromData &&
+          _cachedMaxForSlider.value > currentValue) {
         sliderMaximumValue = _cachedMaxForSlider.value;
       } else if (_maxSliderFromData > currentValue) {
         sliderMaximumValue = _maxSliderFromData;
       } else {
         sliderMaximumValue = currentValue;
-        _cachedMaxForSlider = (unit: foodRecord?.selectedUnit, value: currentValue);
+        _cachedMaxForSlider =
+            (unit: foodRecord?.selectedUnit, value: currentValue);
       }
 
       // Here, rounding the number.
@@ -101,36 +114,52 @@ class FoodDetailsBloc extends Bloc<EditFoodEvent, EditFoodState> {
       };
     }
 
-    return (sliderValue: currentValue, sliderStep: _sliderStep, sliderMin: minSliderValue, sliderMax: sliderMaximumValue);
+    return (
+      sliderValue: currentValue,
+      sliderStep: _sliderStep,
+      sliderMin: minSliderValue,
+      sliderMax: sliderMaximumValue
+    );
   }
 
-  Future _handleDoAlternateEvent(DoAlternateEvent event, Emitter<EditFoodState> emit) async {
+  Future _handleDoAlternateEvent(
+      DoAlternateEvent event, Emitter<EditFoodState> emit) async {
     if (event.passioID?.isNotNullOrEmpty ?? false) {
-      final attributes = await NutritionAI.instance.lookupPassioAttributesFor(event.passioID!);
+      final attributes =
+          await NutritionAI.instance.lookupPassioAttributesFor(event.passioID!);
       final foodData = FoodRecord.from(passioIDAttributes: attributes);
       emit(AlternateSuccessState(data: foodData));
     }
   }
 
-  FutureOr<void> _handleDoUpdateUnitKeepWeightEvent(DoUpdateUnitKeepWeightEvent event, Emitter<EditFoodState> emit) async {
+  FutureOr<void> _handleDoUpdateUnitKeepWeightEvent(
+      DoUpdateUnitKeepWeightEvent event, Emitter<EditFoodState> emit) async {
     event.data?.setSelectedUnitKeepWeight(event.selectedUnitName);
     add(DoSliderUpdateEvent(data: event.data, shouldReset: true));
   }
 
-  FutureOr<void> _handleDoUpdateServingSizeEvent(DoUpdateServingSizeEvent event, Emitter<EditFoodState> emit) {
-    event.data?.setFoodRecordServing(event.updatedUnitName ?? '', event.updatedQuantity ?? 0);
+  FutureOr<void> _handleDoUpdateServingSizeEvent(
+      DoUpdateServingSizeEvent event, Emitter<EditFoodState> emit) {
+    event.data?.setFoodRecordServing(
+        event.updatedUnitName ?? '', event.updatedQuantity ?? 0);
     add(DoSliderUpdateEvent(data: event.data, shouldReset: true));
   }
 
-  FutureOr<void> _handleDoUpdateAmountEditableEvent(DoUpdateAmountEditableEvent event, Emitter<EditFoodState> emit) {
+  FutureOr<void> _handleDoUpdateAmountEditableEvent(
+      DoUpdateAmountEditableEvent event, Emitter<EditFoodState> emit) {
     emit(UpdateAmountEditableState(isEditable: event.isEditable));
   }
 
-  FutureOr<void> _handleDoAddIngredientsEvent(DoAddIngredientsEvent event, Emitter<EditFoodState> emit) async {
-    final attributes = await NutritionAI.instance.lookupPassioAttributesFor(event.ingredientData?.passioID ?? '');
+  FutureOr<void> _handleDoAddIngredientsEvent(
+      DoAddIngredientsEvent event, Emitter<EditFoodState> emit) async {
+    final attributes = await NutritionAI.instance
+        .lookupPassioAttributesFor(event.ingredientData?.passioID ?? '');
     if (attributes != null) {
       if (attributes.foodItem != null) {
-        event.data?.addIngredients(ingredient: attributes.foodItem?.copyWith(passioID: attributes.passioID, name: attributes.name), isFirst: true);
+        event.data?.addIngredients(
+            ingredient: attributes.foodItem?.copyWith(
+                passioID: attributes.passioID, name: attributes.name),
+            isFirst: true);
         // emit(AddIngredientsSuccessState());
       } else if (attributes.entityType == PassioIDEntityType.recipe) {
         attributes.recipe?.foodItems.forEach((element) {
@@ -141,12 +170,14 @@ class FoodDetailsBloc extends Bloc<EditFoodEvent, EditFoodState> {
     }
   }
 
-  FutureOr<void> _handleDoRemoveIngredientsEvent(DoRemoveIngredientsEvent event, Emitter<EditFoodState> emit) async {
-    event.data?.removeIngredient(event.index) ?? false;
+  FutureOr<void> _handleDoRemoveIngredientsEvent(
+      DoRemoveIngredientsEvent event, Emitter<EditFoodState> emit) async {
+    event.data?.removeIngredient(event.index);
     emit(RemoveIngredientsState());
   }
 
-  FutureOr<void> _handleDoUpdateIngredientEvent(DoUpdateIngredientEvent event, Emitter<EditFoodState> emit) async {
+  FutureOr<void> _handleDoUpdateIngredientEvent(
+      DoUpdateIngredientEvent event, Emitter<EditFoodState> emit) async {
     if (event.updatedFoodItemData != null) {
       event.data?.replaceIngredient(event.updatedFoodItemData!, event.atIndex);
       emit(UpdateIngredientsSuccessState());

@@ -4,7 +4,8 @@ import 'package:flutter/services.dart';
 
 class AppLocalizations {
   /// Here, implementing the code for singleton class.
-  static final AppLocalizations _instance = AppLocalizations._privateConstructor();
+  static final AppLocalizations _instance =
+      AppLocalizations._privateConstructor();
 
   AppLocalizations._privateConstructor();
 
@@ -20,7 +21,9 @@ class AppLocalizations {
   /// Retrieve the language translation
   /// name: Component name
   String? getLabel(String name) {
-    return (_localeData?.containsKey(name) ?? false) ? _localeData![name] : null;
+    return (_localeData?.containsKey(name) ?? false)
+        ? _localeData![name]
+        : null;
   }
 
   String? get scanningForFood => getLabel('scanningForFood');
@@ -68,7 +71,8 @@ class AppLocalizations {
   String? get recipeNameErrorMessage => getLabel('recipeNameErrorMessage');
   String? get keepTyping => getLabel('keepTyping');
   String? get searching => getLabel('searching');
-  String? get noFoodSearchResultMessage => getLabel('noFoodSearchResultMessage');
+  String? get noFoodSearchResultMessage =>
+      getLabel('noFoodSearchResultMessage');
   String? get myFavorites => getLabel('myFavorites');
   String? get back => getLabel('back');
   String? get delete => getLabel('delete');
@@ -105,7 +109,8 @@ class AppLocalizations {
   String? get acceptSignUp => getLabel('acceptSignUp');
   String? get termsOfService => getLabel('termsOfService');
   String? get privacyPolicy => getLabel('privacyPolicy');
-  String? get youHaveReadThePrivacyPolicy => getLabel('youHaveReadThePrivacyPolicy');
+  String? get youHaveReadThePrivacyPolicy =>
+      getLabel('youHaveReadThePrivacyPolicy');
   String? get signUp => getLabel('signUp');
   String? get configuringSDK => getLabel('configuringSDK');
   String? get editAmount => getLabel('editAmount');

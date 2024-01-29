@@ -1,11 +1,9 @@
 class AppConstants {
-
   static const packageName = 'nutrition_ai_module';
 
   static const String noInternetConnection = 'No Internet Connected!';
   static const String email = 'Email';
   static const String password = 'Password';
-
 
   /// SharedPreference Keys
   static const String userData = 'user_data';
@@ -38,5 +36,4 @@ class AppConstants {
   static const visibleFavouriteButton = 'visibleFavouriteButton';
   static const isFromEdit = 'isFromEdit';
   static const isFromFavorite = 'isFromFavorite';
-
 }

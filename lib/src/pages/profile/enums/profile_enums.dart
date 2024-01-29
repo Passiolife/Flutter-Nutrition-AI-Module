@@ -1,7 +1,7 @@
 enum Gender {
-  male, female, other,
+  male,
+  female,
+  other,
 }
 
-enum Units {
-  imperial, metric
-}
+enum Units { imperial, metric }

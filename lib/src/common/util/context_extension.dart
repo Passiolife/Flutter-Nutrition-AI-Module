@@ -28,7 +28,11 @@ extension Dimension on BuildContext {
 
   /// [showCupertinoPopup] displays a CupertinoModalPopup with a reasonable fixed height
   /// which hosts CupertinoDatePicker.
-  void showCupertinoPopup({required Widget child, required double height, bool barrierDismissible = true, Color? backgroundColor}) {
+  void showCupertinoPopup(
+      {required Widget child,
+      required double height,
+      bool barrierDismissible = true,
+      Color? backgroundColor}) {
     showCupertinoModalPopup<void>(
       barrierDismissible: barrierDismissible,
       context: this,
@@ -40,7 +44,8 @@ extension Dimension on BuildContext {
           bottom: MediaQuery.of(context).viewInsets.bottom,
         ),
         // Provide a background color for the popup.
-        color: backgroundColor ?? CupertinoColors.systemBackground.resolveFrom(context),
+        color: backgroundColor ??
+            CupertinoColors.systemBackground.resolveFrom(context),
         // Use a SafeArea widget to avoid system overlaps.
         child: SafeArea(
           top: false,

@@ -55,7 +55,7 @@ dev_dependencies:
 
   # The build_runner package provides a concrete way of generating files using Dart code
   # https://pub.dev/packages/build_runner
-  build_runner: ^2.4.6
+  build_runner: ^2.4.8
 
   # Extension for hive please go there for documentation.
   # https://pub.dev/packages/hive_generator
