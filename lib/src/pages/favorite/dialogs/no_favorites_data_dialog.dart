@@ -26,10 +26,8 @@ class NoFavoritesDataDialog {
         );
       },
       pageBuilder: (dialogContext, animation, animation2) {
-        return WillPopScope(
-          onWillPop: () async {
-            return false;
-          },
+        return PopScope(
+          canPop: false,
           child: AlertDialog.adaptive(
             title: Text(
               context.localization?.noFavoriteTitle ?? '',

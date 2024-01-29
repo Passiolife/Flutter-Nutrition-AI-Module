@@ -9,7 +9,8 @@ class TabLunchWidget extends StatefulWidget {
   final OnDeleteItem? onDeleteItem;
   final OnEditItem? onEditItem;
 
-  const TabLunchWidget({required this.data, this.onDeleteItem, this.onEditItem, super.key});
+  const TabLunchWidget(
+      {required this.data, this.onDeleteItem, this.onEditItem, super.key});
 
   @override
   State<TabLunchWidget> createState() => _TabLunchWidgetState();
@@ -22,7 +23,8 @@ class _TabLunchWidgetState extends State<TabLunchWidget> {
   void initState() {
     _foodRecordsList
       ..addAll(widget.data)
-      ..removeWhere((element) => element?.mealLabel?.value != MealLabel.lunch.value);
+      ..removeWhere(
+          (element) => element?.mealLabel?.value != MealLabel.lunch.value);
     super.initState();
   }
 

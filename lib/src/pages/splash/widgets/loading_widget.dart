@@ -22,7 +22,9 @@ class LoadingWidget extends StatelessWidget {
           child: Center(
             child: Transform.scale(
               scale: Platform.isIOS ? 1.5 : 1,
-              child: const CircularProgressIndicator.adaptive(backgroundColor: AppColors.passioInset,),
+              child: const CircularProgressIndicator.adaptive(
+                backgroundColor: AppColors.passioInset,
+              ),
             ),
           ),
         ),

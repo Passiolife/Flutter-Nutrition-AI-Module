@@ -19,8 +19,9 @@ import 'bloc/sign_in_bloc.dart';
 class SignInPage extends StatefulWidget {
   const SignInPage({super.key});
 
-  static void navigate(BuildContext context){
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const SignInPage()));
+  static void navigate(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const SignInPage()));
   }
 
   @override
@@ -29,10 +30,12 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> {
   /// [_emailController] is use to get the value of email text field.
-  final TextEditingController _emailController = TextEditingController(text: kDebugMode ? '' : '');
+  final TextEditingController _emailController =
+      TextEditingController(text: kDebugMode ? '' : '');
 
   /// [_passwordController] is use to get the value of password text field.
-  final TextEditingController _passwordController = TextEditingController(text: kDebugMode ? '' : '');
+  final TextEditingController _passwordController =
+      TextEditingController(text: kDebugMode ? '' : '');
 
   /// [_bloc] is use to fire the appropriate event and bloc will emit the state.
   /// So, based on that we will display the widget.
@@ -44,14 +47,17 @@ class _SignInPageState extends State<SignInPage> {
       bloc: _bloc,
       listener: (context, state) {
         if (state is SignInValidEmailErrorState) {
-          showDialogBox(context, context.localization?.enterValidEmailAddress ?? '');
+          showDialogBox(
+              context, context.localization?.enterValidEmailAddress ?? '');
         } else if (state is SignInValidPasswordErrorState) {
-          showDialogBox(context, context.localization?.enterValidPassword ?? '');
+          showDialogBox(
+              context, context.localization?.enterValidPassword ?? '');
         }
       },
       builder: (context, state) {
         return IgnorePointer(
-          ignoring: state is SignInLoadingState || state is ForgotPasswordLoadingState,
+          ignoring: state is SignInLoadingState ||
+              state is ForgotPasswordLoadingState,
           child: ImageBackgroundWidget(
             child: Scaffold(
               backgroundColor: Colors.transparent,
@@ -88,7 +94,8 @@ class _SignInPageState extends State<SignInPage> {
                             hintText: context.localization?.email ?? '',
                             textInputAction: TextInputAction.next,
                             onFieldSubmitted: (value) {
-                              _bloc.add(ValidateEmailAddressEvent(email: _emailController.text));
+                              _bloc.add(ValidateEmailAddressEvent(
+                                  email: _emailController.text));
                             },
                           ),
                           Dimens.h32.verticalSpace,
@@ -98,7 +105,8 @@ class _SignInPageState extends State<SignInPage> {
                             hintText: context.localization?.password ?? '',
                             textInputAction: TextInputAction.done,
                             onFieldSubmitted: (value) {
-                              _bloc.add(DoSignInEvent(_emailController.text, _passwordController.text));
+                              _bloc.add(DoSignInEvent(_emailController.text,
+                                  _passwordController.text));
                             },
                           ),
                           const Spacer(),
@@ -114,12 +122,15 @@ class _SignInPageState extends State<SignInPage> {
                               : GestureDetector(
                                   behavior: HitTestBehavior.translucent,
                                   onTap: () {
-                                    _bloc.add(DoForgotPasswordEvent(_emailController.text));
+                                    _bloc.add(DoForgotPasswordEvent(
+                                        _emailController.text));
                                   },
                                   child: Text(
                                     context.localization?.forgotPassword ?? "",
-                                    style: AppStyles.style14
-                                        .copyWith(fontSize: Dimens.fontSize18, color: AppColors.whiteColor, fontWeight: FontWeight.w400),
+                                    style: AppStyles.style14.copyWith(
+                                        fontSize: Dimens.fontSize18,
+                                        color: AppColors.whiteColor,
+                                        fontWeight: FontWeight.w400),
                                     textAlign: TextAlign.center,
                                   ),
                                 ),
@@ -127,9 +138,12 @@ class _SignInPageState extends State<SignInPage> {
                           state is SignInLoadingState
                               ? const AppButtonLoadingWidget()
                               : AppButton(
-                                  buttonName: context.localization?.signIn ?? '',
+                                  buttonName:
+                                      context.localization?.signIn ?? '',
                                   onTap: () {
-                                    _bloc.add(DoSignInEvent(_emailController.text, _passwordController.text));
+                                    _bloc.add(DoSignInEvent(
+                                        _emailController.text,
+                                        _passwordController.text));
                                   },
                                 ),
                           Dimens.h40.verticalSpace,

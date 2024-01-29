@@ -23,7 +23,8 @@ extension Util on String? {
 
   bool get isValidPassword => RegExps.password.hasMatch(this ?? '');
 
-  String get toTitleCase => isBlank ? '' : '${this![0].toUpperCase()}${this!.substring(1)}';
+  String get toTitleCase =>
+      isBlank ? '' : '${this![0].toUpperCase()}${this!.substring(1)}';
 
   String get toBase64 => base64.encode(utf8.encode(this ?? ''));
 
@@ -33,9 +34,12 @@ extension Util on String? {
 
   bool get containsNumbers => RegExp(r"[0-9]").hasMatch(this ?? '');
 
-  bool get containsSymbol => RegExp(r"[$&+,:;=?@#|'<>.^*()%!-]").hasMatch(this ?? '');
+  bool get containsSymbol =>
+      RegExp(r"[$&+,:;=?@#|'<>.^*()%!-]").hasMatch(this ?? '');
 
-  String? toCapitalized() => (this?.length ?? 0) > 0 ? '${this?[0].toUpperCase()}${this?.substring(1).toLowerCase()}' : '';
+  String? toCapitalized() => (this?.length ?? 0) > 0
+      ? '${this?[0].toUpperCase()}${this?.substring(1).toLowerCase()}'
+      : '';
 
   String getUppercaseFromString(int numberOfCharacters) {
     String upperString = '';
@@ -53,7 +57,8 @@ extension Util on String? {
     return upperString;
   }
 
-  String get toUpperCaseWord => this?.split(" ").map((str) => str.toTitleCase).join(" ") ?? '';
+  String get toUpperCaseWord =>
+      this?.split(" ").map((str) => str.toTitleCase).join(" ") ?? '';
 
   bool isUpperCase(String value) {
     return value == value.toUpperCase();
@@ -64,7 +69,10 @@ extension Util on String? {
   /// replaceList: is a collection of string which you want to replace in string where the findList founds.
   /// replaceString: if your [replaceList] is null then replace string will assign at everyplace in findList.
   ///
-  String? replace({required List<String> findList, List<String>? replaceList, String replaceString = ''}) {
+  String? replace(
+      {required List<String> findList,
+      List<String>? replaceList,
+      String replaceString = ''}) {
     String? replacedString = this;
     findList.asMap().forEach((key, value) {
       if (replaceList != null && replaceList.isNotEmpty) {

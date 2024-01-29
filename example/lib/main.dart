@@ -1,9 +1,9 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:intl/intl.dart';
+import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 
 String foodRecordBoxName = 'foodRecordBox';
 String userProfileBoxName = 'userProfileBox';
@@ -37,7 +37,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Nutrition AI Module Demo'),
     );
   }
 }
@@ -98,7 +98,10 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
       body: Center(
         child: ElevatedButton(
           onPressed: () async {
-            await NutritionAIModule.instance.setPassioKey(PUT_YOUR_PASSIO_KEY_HERE).setPassioConnector(this).launch(context);
+            await NutritionAIModule.instance
+                .setPassioKey('9xL917n5RlTHhNttWTE4PQ6y7sdzD3mJWxJ36duPvL1Y')
+                .setPassioConnector(this) // This is optional
+                .launch(context);
           },
           child: const Text('Launch'),
         ),
@@ -107,7 +110,8 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
   }
 
   @override
-  Future<List<FoodRecord>?> fetchDayRecords({required DateTime dateTime}) async {
+  Future<List<FoodRecord>?> fetchDayRecords(
+      {required DateTime dateTime}) async {
     _foodRecords = _foodRecordBox?.values
         .toList()
         .asMap()
@@ -117,7 +121,9 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
           return e.value;
         })
         .where((element) {
-          String createdAt = DateFormat('yyyyMMdd').format(DateTime.fromMillisecondsSinceEpoch(element.createdAt?.toInt() ?? 0));
+          String createdAt = DateFormat('yyyyMMdd').format(
+              DateTime.fromMillisecondsSinceEpoch(
+                  element.createdAt?.toInt() ?? 0));
           String date = DateFormat('yyyyMMdd').format(dateTime);
           return createdAt == date;
         })
@@ -128,7 +134,8 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
   }
 
   @override
-  Future<void> updateRecord({required FoodRecord foodRecord, required bool isNew}) async {
+  Future<void> updateRecord(
+      {required FoodRecord foodRecord, required bool isNew}) async {
     if (isNew) {
       await _foodRecordBox?.add(foodRecord);
     } else {
@@ -166,7 +173,8 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
   }
 
   @override
-  Future<void> updateFavorite({required FoodRecord foodRecord, required bool isNew}) async {
+  Future<void> updateFavorite(
+      {required FoodRecord foodRecord, required bool isNew}) async {
     if (isNew) {
       await _favoriteBox?.add(foodRecord);
     } else {
@@ -193,11 +201,13 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
   }
 
   @override
-  Future<void> updateUserProfile({required UserProfileModel userProfile, required bool isNew}) async {
+  Future<void> updateUserProfile(
+      {required UserProfileModel userProfile, required bool isNew}) async {
     if (isNew) {
       await _userProfileBox?.add(userProfile);
     } else {
-      await _userProfileBox?.putAt(_userProfileBox?.keys.firstOrNull, userProfile);
+      await _userProfileBox?.putAt(
+          _userProfileBox?.keys.firstOrNull, userProfile);
     }
   }
 }

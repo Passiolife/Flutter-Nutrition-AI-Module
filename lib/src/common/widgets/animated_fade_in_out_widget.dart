@@ -19,20 +19,21 @@ class AnimatedFadeOutIn<T> extends StatefulWidget {
   final DataDidChangeCallback<T>? dataDidChange;
 
   const AnimatedFadeOutIn({
-    Key? key,
+    super.key,
     this.initialData,
     required this.data,
     required this.builder,
     this.duration = const Duration(milliseconds: 300),
     this.onFadeComplete,
     this.dataDidChange,
-  }) : super(key: key);
+  });
 
   @override
   AnimatedFadeOutInState<T> createState() => AnimatedFadeOutInState<T>();
 }
 
-class AnimatedFadeOutInState<T> extends State<AnimatedFadeOutIn<T>> with SingleTickerProviderStateMixin {
+class AnimatedFadeOutInState<T> extends State<AnimatedFadeOutIn<T>>
+    with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> animation;
   late T dataToShow;
@@ -59,7 +60,8 @@ class AnimatedFadeOutInState<T> extends State<AnimatedFadeOutIn<T>> with SingleT
         reverseCurve: Curves.easeOut,
       ),
     );
-    if (widget.dataDidChange?.call(dataToShow, widget.data) ?? widget.data != dataToShow) {
+    if (widget.dataDidChange?.call(dataToShow, widget.data) ??
+        widget.data != dataToShow) {
       controller.forward(from: 0.0);
     }
   }
@@ -73,7 +75,8 @@ class AnimatedFadeOutInState<T> extends State<AnimatedFadeOutIn<T>> with SingleT
   @override
   void didUpdateWidget(AnimatedFadeOutIn<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.dataDidChange?.call(oldWidget.data, widget.data) ?? widget.data != oldWidget.data) {
+    if (widget.dataDidChange?.call(oldWidget.data, widget.data) ??
+        widget.data != oldWidget.data) {
       dataToShow = oldWidget.data;
       controller.forward(from: 0.0);
     }

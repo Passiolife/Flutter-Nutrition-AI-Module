@@ -14,7 +14,8 @@ class FoodResultSearchingWidget extends StatelessWidget {
     return Card(
       color: AppColors.passioInset,
       surfaceTintColor: AppColors.passioInset,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.r16)),
+      shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(Dimens.r16)),
       child: Container(
         height: Dimens.h100,
         padding: EdgeInsets.only(top: Dimens.h16),
@@ -31,7 +32,8 @@ class FoodResultSearchingWidget extends StatelessWidget {
                   child: Center(
                     child: Transform.scale(
                       scale: Platform.isIOS ? 1.5 : 1,
-                      child: const CircularProgressIndicator.adaptive(backgroundColor: AppColors.passioMedContrast),
+                      child: const CircularProgressIndicator.adaptive(
+                          backgroundColor: AppColors.passioMedContrast),
                     ),
                   ),
                 ),

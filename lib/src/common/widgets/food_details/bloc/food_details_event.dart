@@ -6,7 +6,8 @@ class DoUpdateUnitKeepWeightEvent extends EditFoodEvent {
   final FoodRecord? data;
   final String selectedUnitName;
 
-  DoUpdateUnitKeepWeightEvent({required this.data, required this.selectedUnitName});
+  DoUpdateUnitKeepWeightEvent(
+      {required this.data, required this.selectedUnitName});
 }
 
 class DoUpdateQuantityEvent extends EditFoodEvent {
@@ -14,7 +15,10 @@ class DoUpdateQuantityEvent extends EditFoodEvent {
   final double updatedQuantity;
   final bool shouldReset;
 
-  DoUpdateQuantityEvent({required this.data, required this.updatedQuantity, required this.shouldReset});
+  DoUpdateQuantityEvent(
+      {required this.data,
+      required this.updatedQuantity,
+      required this.shouldReset});
 }
 
 class DoUpdateServingSizeEvent extends EditFoodEvent {
@@ -22,7 +26,10 @@ class DoUpdateServingSizeEvent extends EditFoodEvent {
   final String? updatedUnitName;
   final double? updatedQuantity;
 
-  DoUpdateServingSizeEvent({required this.data, required this.updatedUnitName, required this.updatedQuantity});
+  DoUpdateServingSizeEvent(
+      {required this.data,
+      required this.updatedUnitName,
+      required this.updatedQuantity});
 }
 
 class DoSliderUpdateEvent extends EditFoodEvent {
@@ -64,5 +71,6 @@ class DoUpdateIngredientEvent extends EditFoodEvent {
   final FoodRecord? data;
   final PassioFoodItemData? updatedFoodItemData;
 
-  DoUpdateIngredientEvent({required this.atIndex, this.data, this.updatedFoodItemData});
+  DoUpdateIngredientEvent(
+      {required this.atIndex, this.data, this.updatedFoodItemData});
 }
