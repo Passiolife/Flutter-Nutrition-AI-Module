@@ -6,16 +6,12 @@ extension DateTimeExtension on DateTime {
   }
 
   bool isSameDate(DateTime? dateTime) {
-    return year == dateTime?.year &&
-        month == dateTime?.month &&
-        day == dateTime?.day;
+    return year == dateTime?.year && month == dateTime?.month && day == dateTime?.day;
   }
 
   bool isSameDateString(String? dateTimeString) {
     final dateTime = dateTimeString?.formatToDateTime(format2);
-    return year == dateTime?.year &&
-        month == dateTime?.month &&
-        day == dateTime?.day;
+    return year == dateTime?.year && month == dateTime?.month && day == dateTime?.day;
   }
 
   int daysBetween(DateTime to) {
@@ -26,11 +22,9 @@ extension DateTimeExtension on DateTime {
 }
 
 extension StringDateTimeExtension on String {
-  DateTime? formatToDateTime(String format) =>
-      (isEmpty) ? null : DateTime.parse(this);
+  DateTime? formatToDateTime(String format) => (isEmpty) ? null : DateTime.parse(this);
 
-  String formatToString(String format) =>
-      (isEmpty) ? '' : DateFormat(format).format(DateTime.parse(this));
+  String formatToString(String format) => (isEmpty) ? '' : DateFormat(format).format(DateTime.parse(this));
 
   bool isToday() {
     if (isEmpty) {

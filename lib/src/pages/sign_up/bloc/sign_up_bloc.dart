@@ -15,8 +15,7 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     on<DoSignUpEvent>(_doSignUpEvent);
   }
 
-  Future<void> _doSignUpEvent(
-      DoSignUpEvent event, Emitter<SignUpState> emit) async {
+  Future<void> _doSignUpEvent(DoSignUpEvent event, Emitter<SignUpState> emit) async {
     if (!event.email.isValidEmail) {
       emit(SignUpValidEmailErrorState());
     } else if (event.password.isEmpty || event.password.length < 6) {
@@ -24,15 +23,13 @@ class SignUpBloc extends Bloc<SignUpEvent, SignUpState> {
     } else {}
   }
 
-  Future _validateEmailAddressEvent(
-      ValidateEmailAddressEvent event, Emitter<SignUpState> emit) async {
+  Future _validateEmailAddressEvent(ValidateEmailAddressEvent event, Emitter<SignUpState> emit) async {
     if (!event.email.isValidEmail) {
       emit(SignUpValidEmailErrorState());
     }
   }
 
-  Future _validatePasswordEvent(
-      ValidatePasswordEvent event, Emitter<SignUpState> emit) async {
+  Future _validatePasswordEvent(ValidatePasswordEvent event, Emitter<SignUpState> emit) async {
     if (event.password.isEmpty) {
       emit(SignUpValidPasswordErrorState());
     }

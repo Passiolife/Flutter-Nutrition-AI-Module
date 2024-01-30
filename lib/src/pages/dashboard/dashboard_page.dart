@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
-
 import '../../common/constant/app_colors.dart';
 import '../../common/constant/dimens.dart';
 import '../../common/models/food_record/food_record.dart';
@@ -32,17 +31,15 @@ import 'widgets/tab_snack_widget.dart';
 class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
-  static void navigate(BuildContext context) {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (_) => const DashboardPage()));
+  static void navigate(BuildContext context){
+    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => const DashboardPage()));
   }
 
   @override
   State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _DashboardPageState extends State<DashboardPage>
-    with SingleTickerProviderStateMixin {
+class _DashboardPageState extends State<DashboardPage> with SingleTickerProviderStateMixin {
   /// [_bloc] is use to call the events.
   final _bloc = DashboardBloc();
 
@@ -71,21 +68,8 @@ class _DashboardPageState extends State<DashboardPage>
   // [_caloriesTarget] contains the calories target from user profile.
   int get _caloriesTarget => _userSession.userProfile?.caloriesTarget ?? 0;
 
-  ({
-    int totalCarbs,
-    int totalProtiens,
-    int totalFats,
-    String carbsValue,
-    String proteinsValue,
-    String fatsValue
-  }) macroData = (
-    totalCarbs: 0,
-    totalProtiens: 0,
-    totalFats: 0,
-    carbsValue: '0%',
-    proteinsValue: '0%',
-    fatsValue: '0%'
-  );
+  ({int totalCarbs, int totalProtiens, int totalFats, String carbsValue, String proteinsValue, String fatsValue}) macroData =
+      (totalCarbs: 0, totalProtiens: 0, totalFats: 0, carbsValue: '0%', proteinsValue: '0%', fatsValue: '0%');
 
   bool isMacroGraphInPercentage = true;
 
@@ -138,8 +122,7 @@ class _DashboardPageState extends State<DashboardPage>
                   },
                   child: NestedScrollView(
                     physics: const AlwaysScrollableScrollPhysics(),
-                    headerSliverBuilder:
-                        (BuildContext context, bool innerBoxIsScrolled) {
+                    headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
                       return [
                         SliverList(
                           delegate: SliverChildListDelegate([
@@ -150,8 +133,7 @@ class _DashboardPageState extends State<DashboardPage>
                                 onTap: _reloadGraph,
                                 child: IgnorePointer(
                                   child: Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     mainAxisAlignment: MainAxisAlignment.start,
                                     children: [
                                       Expanded(
@@ -176,13 +158,10 @@ class _DashboardPageState extends State<DashboardPage>
                           ]),
                         ),
                         SliverOverlapAbsorber(
-                          handle:
-                              NestedScrollView.sliverOverlapAbsorberHandleFor(
-                                  context),
+                          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
                           sliver: SliverPersistentHeader(
                             pinned: true,
-                            delegate: TabBarWidgetDelegate(
-                                controller: _tabController, tabs: _tabs),
+                            delegate: TabBarWidgetDelegate(controller: _tabController, tabs: _tabs),
                           ),
                         ),
                       ];
@@ -248,7 +227,10 @@ class _DashboardPageState extends State<DashboardPage>
         if (item == context.localization?.progress) {
           ProgressPage.navigate(context, _selectedDate);
         } else if (item == context.localization?.favorites) {
-          _openFavouritePage();
+          bool? hasChanges = await FavoritePage.navigate(context);
+          if (hasChanges ?? false) {
+            _doFetchRecords();
+          }
         } else if (item == context.localization?.profile) {
           await ProfilePage.navigate(context);
           _doFetchRecords();
@@ -265,14 +247,12 @@ class _DashboardPageState extends State<DashboardPage>
 
         if (item == context.localization?.quickFoodScan) {
           // var hasAdded = await Navigator.push(context, MaterialPageRoute(builder: (_) => QuickFoodScanPage(selectedDateTime: _selectedDate)));
-          bool? hasAdded =
-              await QuickFoodScanPage.navigate(context, _selectedDate);
+          bool? hasAdded = await QuickFoodScanPage.navigate(context, _selectedDate);
           if (hasAdded is bool && hasAdded) {
             _doFetchRecords();
           }
         } else if (item == context.localization?.multiFoodScan) {
-          bool? hasAdded =
-              await MultiFoodScanPage.navigate(context, _selectedDate);
+          bool? hasAdded = await MultiFoodScanPage.navigate(context, _selectedDate);
 
           if (hasAdded ?? false) {
             _doFetchRecords();
@@ -283,7 +263,10 @@ class _DashboardPageState extends State<DashboardPage>
             _bloc.add(DoFoodInsertEvent(data: data, dateTime: _selectedDate));
           }
         } else if (item == context.localization?.fromFavorites) {
-          _openFavouritePage();
+          bool? hasChanges = await FavoritePage.navigate(context);
+          if (hasChanges ?? false) {
+            _doFetchRecords();
+          }
         }
       },
     );
@@ -298,13 +281,11 @@ class _DashboardPageState extends State<DashboardPage>
     _doFetchRecords();
   }
 
-  void _handleFoodRecordFailureState(
-      {required GetFoodRecordFailureState state}) {
+  void _handleFoodRecordFailureState({required GetFoodRecordFailureState state}) {
     context.showSnackbar(text: state.message);
   }
 
-  void _handleFoodRecordSuccessState(
-      {required GetFoodRecordSuccessState state}) {
+  void _handleFoodRecordSuccessState({required GetFoodRecordSuccessState state}) {
     _foodRecordsList.clear();
     _foodRecordsList.addAll(state.data);
     _updateGraph();
@@ -313,8 +294,7 @@ class _DashboardPageState extends State<DashboardPage>
   void _initialize() {
     /// Initialize the tab related things.
     _tabController = TabController(length: 5, vsync: this);
-    _pageController =
-        PageController(initialPage: _tabController.index, keepPage: true);
+    _pageController = PageController(initialPage: _tabController.index, keepPage: true);
     _tabController.addListener(() {
       _pageController.jumpToPage(_tabController.index);
     });
@@ -326,39 +306,22 @@ class _DashboardPageState extends State<DashboardPage>
   void _updateGraph() {
     if (_foodRecordsList.isNotEmpty) {
       // Calculating the data for calories chart.
-      _totalCalories = _foodRecordsList
-              .map((e) => e?.totalCalories)
-              .reduce((value, element) => (value ?? 0) + (element ?? 0))
-              ?.roundToDouble()
-              .toInt() ??
-          0;
+      _totalCalories =
+          _foodRecordsList.map((e) => e?.totalCalories).reduce((value, element) => (value ?? 0) + (element ?? 0))?.roundToDouble().toInt() ?? 0;
 
       // Calculating the data for macros chart.
-      final carbs = _foodRecordsList
-              .map((e) => e?.totalCarbs)
-              .reduce((value, element) => (value ?? 0) + (element ?? 0)) ??
-          0;
-      final proteins = _foodRecordsList
-              .map((e) => e?.totalProteins)
-              .reduce((value, element) => (value ?? 0) + (element ?? 0)) ??
-          0;
-      final fats = _foodRecordsList
-              .map((e) => e?.totalFat)
-              .reduce((value, element) => (value ?? 0) + (element ?? 0)) ??
-          0;
+      final carbs = _foodRecordsList.map((e) => e?.totalCarbs).reduce((value, element) => (value ?? 0) + (element ?? 0)) ?? 0;
+      final proteins = _foodRecordsList.map((e) => e?.totalProteins).reduce((value, element) => (value ?? 0) + (element ?? 0)) ?? 0;
+      final fats = _foodRecordsList.map((e) => e?.totalFat).reduce((value, element) => (value ?? 0) + (element ?? 0)) ?? 0;
       final macro = calculatePercentageInPlace(carbs, proteins, fats);
 
       macroData = (
         totalCarbs: macro.$1,
         totalProtiens: macro.$2,
         totalFats: macro.$3,
-        carbsValue:
-            (isMacroGraphInPercentage) ? '${macro.$1}%' : '${carbs.round()}g',
-        proteinsValue: (isMacroGraphInPercentage)
-            ? '${macro.$2}%'
-            : '${proteins.round()}g',
-        fatsValue:
-            (isMacroGraphInPercentage) ? '${macro.$3}%' : '${fats.round()}g',
+        carbsValue: (isMacroGraphInPercentage) ? '${macro.$1}%' : '${carbs.round()}g',
+        proteinsValue: (isMacroGraphInPercentage) ? '${macro.$2}%' : '${proteins.round()}g',
+        fatsValue: (isMacroGraphInPercentage) ? '${macro.$3}%' : '${fats.round()}g',
       );
     } else {
       // Updating calories to 0.
@@ -375,8 +338,7 @@ class _DashboardPageState extends State<DashboardPage>
     }
   }
 
-  (int carbs, int proteins, int fats) calculatePercentageInPlace(
-      double carbs, double proteins, double fats) {
+  (int carbs, int proteins, int fats) calculatePercentageInPlace(double carbs, double proteins, double fats) {
     int rCarbs = 0;
     int rPro = 0;
     int rFat = 0;
@@ -398,8 +360,7 @@ class _DashboardPageState extends State<DashboardPage>
 
   Future<void> _onEditItem(int index, FoodRecord? data) async {
     // Opening edit food page and awaiting for the result from edit page based on user action if action is save or favourite then perform action.
-    bool? result = await EditFoodPage.navigate(context,
-        index: index, foodRecord: data, dateTime: _selectedDate);
+    bool? result = await EditFoodPage.navigate(context, index: index, foodRecord: data, dateTime: _selectedDate);
     if (result != null && result) {
       _doFetchRecords();
     }
@@ -421,16 +382,5 @@ class _DashboardPageState extends State<DashboardPage>
 
   void _handleFavoriteFailureState({required FavoriteFailureState state}) {
     context.showSnackbar(text: state.message);
-  }
-
-  /// Opens the favorite page and awaits changes, triggering a fetch of records if changes are detected.
-  Future<void> _openFavouritePage() async {
-    // Navigate to the favorite page and await changes.
-    bool? hasChanges = await FavoritePage.navigate(context);
-
-    // If there are changes, trigger fetching of records.
-    if (hasChanges ?? false) {
-      _doFetchRecords();
-    }
   }
 }

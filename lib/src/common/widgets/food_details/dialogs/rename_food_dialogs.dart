@@ -8,12 +8,7 @@ import '../../adaptive_action_button_widget.dart';
 typedef OnRenameFood = Function(String text);
 
 class RenameFoodDialogs {
-  RenameFoodDialogs.show(
-      {required BuildContext context,
-      String? title,
-      required String text,
-      String? placeHolder,
-      OnRenameFood? onRenameFood}) {
+  RenameFoodDialogs.show({required BuildContext context, String? title, required String text, String? placeHolder, OnRenameFood? onRenameFood}) {
     TextEditingController controller = TextEditingController(text: text);
     showAdaptiveDialog<String>(
       context: context,

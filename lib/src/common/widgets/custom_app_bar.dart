@@ -51,8 +51,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                       type: MaterialType.transparency,
                       child: Text(
                         backPageName ?? '',
-                        style: AppStyles.style14.copyWith(
-                            color: backPageNameColor ?? foregroundColor),
+                        style: AppStyles.style14.copyWith(color: backPageNameColor ?? foregroundColor),
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -68,8 +67,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
           type: MaterialType.transparency,
           child: Text(
             title ?? '',
-            style: AppStyles.style18
-                .copyWith(color: titleColor ?? foregroundColor),
+            style: AppStyles.style18.copyWith(color: titleColor ?? foregroundColor),
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
           ),

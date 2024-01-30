@@ -92,4 +92,5 @@ class Dimens {
   static const duration300 = 300;
   static const duration500 = 500;
   static const duration1000 = 1000;
+
 }

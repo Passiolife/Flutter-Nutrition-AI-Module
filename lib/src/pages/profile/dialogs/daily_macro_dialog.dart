@@ -26,15 +26,8 @@ class DailyMacroDialog {
   }) {
     StateSetter? state;
 
-    ({
-      bool isCarbsScrolling,
-      bool isProtienScrolling,
-      bool isFatScrolling
-    }) scrollingData = (
-      isCarbsScrolling: false,
-      isProtienScrolling: false,
-      isFatScrolling: false
-    );
+    ({bool isCarbsScrolling, bool isProtienScrolling, bool isFatScrolling}) scrollingData =
+        (isCarbsScrolling: false, isProtienScrolling: false, isFatScrolling: false);
 
     // Here waiting to render the frames.
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
@@ -44,10 +37,8 @@ class DailyMacroDialog {
           // Scrolling is end
           if (scrollingData.isCarbsScrolling) {
             macros.carbsPercent = carbsController.selectedItem;
-            await _updatePicker(
-                proteinsController, proteins, macros, macros.proteinPercent);
-            await _updatePicker(
-                fatsController, fats, macros, macros.fatPercent);
+            await _updatePicker(proteinsController, proteins, macros, macros.proteinPercent);
+            await _updatePicker(fatsController, fats, macros, macros.fatPercent);
             state?.call(() {});
           }
         }
@@ -58,10 +49,8 @@ class DailyMacroDialog {
           // Scrolling is end
           if (scrollingData.isProtienScrolling) {
             macros.proteinPercent = proteinsController.selectedItem;
-            await _updatePicker(
-                carbsController, carbs, macros, macros.carbsPercent);
-            await _updatePicker(
-                fatsController, fats, macros, macros.fatPercent);
+            await _updatePicker(carbsController, carbs, macros, macros.carbsPercent);
+            await _updatePicker(fatsController, fats, macros, macros.fatPercent);
             state?.call(() {});
           }
         }
@@ -73,10 +62,8 @@ class DailyMacroDialog {
           // Scrolling is end
           if (scrollingData.isFatScrolling) {
             macros.fatPercent = fatsController.selectedItem;
-            await _updatePicker(
-                carbsController, carbs, macros, macros.carbsPercent);
-            await _updatePicker(
-                proteinsController, proteins, macros, macros.proteinPercent);
+            await _updatePicker(carbsController, carbs, macros, macros.carbsPercent);
+            await _updatePicker(proteinsController, proteins, macros, macros.proteinPercent);
             state?.call(() {});
           }
         }
@@ -85,6 +72,7 @@ class DailyMacroDialog {
     showGeneralDialog(
       context: context,
       transitionDuration: const Duration(milliseconds: Dimens.duration300),
+      barrierDismissible: false,
       transitionBuilder: (context, a1, a2, child) {
         return SlideTransition(
           position: Tween(
@@ -95,215 +83,199 @@ class DailyMacroDialog {
         );
       },
       pageBuilder: (context, animation, animation2) {
-        return StatefulBuilder(builder: (context, setState) {
-          state = setState;
-          return Material(
-            type: MaterialType.transparency,
-            child: Align(
-              alignment: Alignment.center,
-              child: IntrinsicHeight(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: Dimens.w8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(Dimens.r16),
-                  ),
-                  child: SizedBox.expand(
-                    child: Column(
-                      children: [
-                        Dimens.h20.verticalSpace,
-                        Text(
-                          context.localization?.dailyMacroTarget ?? '',
-                          style: AppStyles.style22,
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Dimens.h20.verticalSpace,
-                                  Text(
-                                    context.localization?.carbs ?? '',
-                                    style: AppStyles.style17,
-                                  ),
-                                  Dimens.h8.verticalSpace,
-                                  Text(
-                                    '${macros.carbsGram} g',
-                                    style: AppStyles.style17.copyWith(
-                                        color: AppColors.darkGreyColor),
-                                  ),
-                                  SizedBox(
-                                    height: Dimens.h214,
-                                    child: CupertinoPicker(
-                                      magnification: 1.22,
-                                      squeeze: 1.22,
-                                      scrollController: carbsController,
-                                      selectionOverlay:
-                                          const CupertinoPickerDefaultSelectionOverlay(
-                                        capEndEdge: false,
-                                      ),
-                                      itemExtent: Dimens.r22,
-                                      onSelectedItemChanged: (selectedItem) {
-                                        scrollingData = (
-                                          isCarbsScrolling: true,
-                                          isProtienScrolling: false,
-                                          isFatScrolling: false
-                                        );
-                                      },
-                                      children: carbs
-                                              ?.map((e) => Center(
-                                                    child: Text(
-                                                      '$e %',
-                                                      style: AppStyles.style17,
-                                                    ),
-                                                  ))
-                                              .toList() ??
-                                          [],
+        return WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: StatefulBuilder(builder: (context, setState) {
+            state = setState;
+            return Material(
+              type: MaterialType.transparency,
+              child: Align(
+                alignment: Alignment.center,
+                child: IntrinsicHeight(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: Dimens.w8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(Dimens.r16),
+                    ),
+                    child: SizedBox.expand(
+                      child: Column(
+                        children: [
+                          Dimens.h20.verticalSpace,
+                          Text(
+                            context.localization?.dailyMacroTarget ?? '',
+                            style: AppStyles.style22,
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Dimens.h20.verticalSpace,
+                                    Text(
+                                      context.localization?.carbs ?? '',
+                                      style: AppStyles.style17,
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Dimens.h20.verticalSpace,
-                                  Text(
-                                    context.localization?.protein ?? '',
-                                    style: AppStyles.style17,
-                                  ),
-                                  Dimens.h8.verticalSpace,
-                                  Text(
-                                    '${macros.proteinGram} g',
-                                    style: AppStyles.style17.copyWith(
-                                        color: AppColors.darkGreyColor),
-                                  ),
-                                  SizedBox(
-                                    height: Dimens.h214,
-                                    child: CupertinoPicker(
-                                      magnification: 1.22,
-                                      scrollController: proteinsController,
-                                      selectionOverlay:
-                                          const CupertinoPickerDefaultSelectionOverlay(
-                                        capStartEdge: false,
-                                        capEndEdge: false,
-                                      ),
-                                      itemExtent: Dimens.r22,
-                                      squeeze: 1.22,
-                                      onSelectedItemChanged: (selectedItem) {
-                                        scrollingData = (
-                                          isCarbsScrolling: false,
-                                          isProtienScrolling: true,
-                                          isFatScrolling: false
-                                        );
-                                      },
-                                      children: proteins
-                                              ?.map((e) => Center(
-                                                    child: Text(
-                                                      '$e %',
-                                                      style: AppStyles.style17,
-                                                    ),
-                                                  ))
-                                              .toList() ??
-                                          [],
+                                    Dimens.h8.verticalSpace,
+                                    Text(
+                                      '${macros.carbsGram} g',
+                                      style: AppStyles.style17.copyWith(color: AppColors.darkGreyColor),
                                     ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Expanded(
-                              child: Column(
-                                children: [
-                                  Dimens.h20.verticalSpace,
-                                  Text(
-                                    context.localization?.fat ?? '',
-                                    style: AppStyles.style17,
-                                  ),
-                                  Dimens.h8.verticalSpace,
-                                  Text(
-                                    '${macros.fatGrams} g',
-                                    style: AppStyles.style17.copyWith(
-                                        color: AppColors.darkGreyColor),
-                                  ),
-                                  SizedBox(
-                                    height: Dimens.h214,
-                                    child: CupertinoPicker(
-                                      magnification: 1.22,
-                                      scrollController: fatsController,
-                                      selectionOverlay:
-                                          const CupertinoPickerDefaultSelectionOverlay(
-                                        capStartEdge: false,
+                                    SizedBox(
+                                      height: Dimens.h214,
+                                      child: CupertinoPicker(
+                                        magnification: 1.22,
+                                        squeeze: 1.22,
+                                        scrollController: carbsController,
+                                        selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                                          capEndEdge: false,
+                                        ),
+                                        itemExtent: Dimens.r22,
+                                        onSelectedItemChanged: (selectedItem) {
+                                          scrollingData = (isCarbsScrolling: true, isProtienScrolling: false, isFatScrolling: false);
+                                        },
+                                        children: carbs
+                                                ?.map((e) => Center(
+                                                      child: Text(
+                                                        '$e %',
+                                                        style: AppStyles.style17,
+                                                      ),
+                                                    ))
+                                                .toList() ??
+                                            [],
                                       ),
-                                      itemExtent: Dimens.r22,
-                                      squeeze: 1.22,
-                                      onSelectedItemChanged: (selectedItem) {
-                                        scrollingData = (
-                                          isCarbsScrolling: false,
-                                          isProtienScrolling: false,
-                                          isFatScrolling: true
-                                        );
-                                      },
-                                      children: fats
-                                              ?.map((e) => Center(
-                                                    child: Text(
-                                                      '$e %',
-                                                      style: AppStyles.style17,
-                                                    ),
-                                                  ))
-                                              .toList() ??
-                                          [],
                                     ),
-                                  ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: Dimens.h20),
-                        Row(
-                          children: [
-                            SizedBox(width: Dimens.w16),
-                            Expanded(
-                              child: AppButton(
-                                buttonName: context.localization?.cancel ?? '',
-                                onTap: () {
-                                  Navigator.pop(context);
-                                },
-                                textStyle: AppStyles.style15
-                                    .copyWith(color: AppColors.passioInset),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Dimens.h20.verticalSpace,
+                                    Text(
+                                      context.localization?.protein ?? '',
+                                      style: AppStyles.style17,
+                                    ),
+                                    Dimens.h8.verticalSpace,
+                                    Text(
+                                      '${macros.proteinGram} g',
+                                      style: AppStyles.style17.copyWith(color: AppColors.darkGreyColor),
+                                    ),
+                                    SizedBox(
+                                      height: Dimens.h214,
+                                      child: CupertinoPicker(
+                                        magnification: 1.22,
+                                        scrollController: proteinsController,
+                                        selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                                          capStartEdge: false,
+                                          capEndEdge: false,
+                                        ),
+                                        itemExtent: Dimens.r22,
+                                        squeeze: 1.22,
+                                        onSelectedItemChanged: (selectedItem) {
+                                          scrollingData = (isCarbsScrolling: false, isProtienScrolling: true, isFatScrolling: false);
+                                        },
+                                        children: proteins
+                                                ?.map((e) => Center(
+                                                      child: Text(
+                                                        '$e %',
+                                                        style: AppStyles.style17,
+                                                      ),
+                                                    ))
+                                                .toList() ??
+                                            [],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Dimens.w8.horizontalSpace,
-                            Expanded(
-                              child: AppButton(
-                                buttonName: context.localization?.ok ?? '',
-                                onTap: () {
-                                  Navigator.pop(context);
-                                  onSaveMacroTarget?.call();
-                                },
-                                textStyle: AppStyles.style15
-                                    .copyWith(color: AppColors.passioInset),
+                              Expanded(
+                                child: Column(
+                                  children: [
+                                    Dimens.h20.verticalSpace,
+                                    Text(
+                                      context.localization?.fat ?? '',
+                                      style: AppStyles.style17,
+                                    ),
+                                    Dimens.h8.verticalSpace,
+                                    Text(
+                                      '${macros.fatGrams} g',
+                                      style: AppStyles.style17.copyWith(color: AppColors.darkGreyColor),
+                                    ),
+                                    SizedBox(
+                                      height: Dimens.h214,
+                                      child: CupertinoPicker(
+                                        magnification: 1.22,
+                                        scrollController: fatsController,
+                                        selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                                          capStartEdge: false,
+                                        ),
+                                        itemExtent: Dimens.r22,
+                                        squeeze: 1.22,
+                                        onSelectedItemChanged: (selectedItem) {
+                                          scrollingData = (isCarbsScrolling: false, isProtienScrolling: false, isFatScrolling: true);
+                                        },
+                                        children: fats
+                                                ?.map((e) => Center(
+                                                      child: Text(
+                                                        '$e %',
+                                                        style: AppStyles.style17,
+                                                      ),
+                                                    ))
+                                                .toList() ??
+                                            [],
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            SizedBox(width: Dimens.w16),
-                          ],
-                        ),
-                        SizedBox(height: Dimens.h24),
-                      ],
+                            ],
+                          ),
+                          SizedBox(height: Dimens.h20),
+                          Row(
+                            children: [
+                              SizedBox(width: Dimens.w16),
+                              Expanded(
+                                child: AppButton(
+                                  buttonName: context.localization?.cancel ?? '',
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                  },
+                                  textStyle: AppStyles.style15.copyWith(color: AppColors.passioInset),
+                                ),
+                              ),
+                              Dimens.w8.horizontalSpace,
+                              Expanded(
+                                child: AppButton(
+                                  buttonName: context.localization?.ok ?? '',
+                                  onTap: () {
+                                    Navigator.pop(context);
+                                    onSaveMacroTarget?.call();
+                                  },
+                                  textStyle: AppStyles.style15.copyWith(color: AppColors.passioInset),
+                                ),
+                              ),
+                              SizedBox(width: Dimens.w16),
+                            ],
+                          ),
+                          SizedBox(height: Dimens.h24),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+        );
       },
     );
   }
 
-  Future<void> _updatePicker(FixedExtentScrollController? controller,
-      List<int>? data, Macros macros, int percent) async {
+  Future<void> _updatePicker(FixedExtentScrollController? controller, List<int>? data, Macros macros, int percent) async {
     await controller?.animateToItem(
       data?.indexWhere((element) => element == percent) ?? 0,
       duration: const Duration(milliseconds: Dimens.duration300),

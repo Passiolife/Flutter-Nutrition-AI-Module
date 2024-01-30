@@ -22,8 +22,7 @@ class ProgressPage extends StatefulWidget {
   const ProgressPage({super.key});
 
   static void navigate(BuildContext context, DateTime dateTime) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const ProgressPage()));
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const ProgressPage()));
   }
 
   @override
@@ -55,10 +54,7 @@ class _ProgressPageState extends State<ProgressPage> {
   // Calories related things.
   /// [_consumedCalories] contains the consumed calories.
   double get _consumedCalories => _timeLog.isNotEmpty
-      ? _timeLog
-          .map((e) => e.foodRecords.isNotEmpty ? e.totalCalories : 0.0)
-          .reduce((value, element) => (value) + (element))
-          .roundNumber(1)
+      ? _timeLog.map((e) => e.foodRecords.isNotEmpty ? e.totalCalories : 0.0).reduce((value, element) => (value) + (element)).roundNumber(1)
       : 0;
 
   // Calories: END
@@ -66,10 +62,7 @@ class _ProgressPageState extends State<ProgressPage> {
   // Carbs related things.
   /// [_consumedCarbs] contains the consumed carbs.
   double get _consumedCarbs => _timeLog.isNotEmpty
-      ? _timeLog
-          .map((e) => e.foodRecords.isNotEmpty ? e.totalCarbs : 0.0)
-          .reduce((value, element) => (value) + (element))
-          .roundNumber(1)
+      ? _timeLog.map((e) => e.foodRecords.isNotEmpty ? e.totalCarbs : 0.0).reduce((value, element) => (value) + (element)).roundNumber(1)
       : 0;
 
   // Carbs: END
@@ -77,10 +70,7 @@ class _ProgressPageState extends State<ProgressPage> {
   // Fat related things.
   /// [_consumedFats] contains the consumed fats.
   double get _consumedFats => _timeLog.isNotEmpty
-      ? _timeLog
-          .map((e) => e.foodRecords.isNotEmpty ? e.totalFat : 0.0)
-          .reduce((value, element) => (value) + (element))
-          .roundNumber(1)
+      ? _timeLog.map((e) => e.foodRecords.isNotEmpty ? e.totalFat : 0.0).reduce((value, element) => (value) + (element)).roundNumber(1)
       : 0;
 
   // Fat: END
@@ -88,10 +78,7 @@ class _ProgressPageState extends State<ProgressPage> {
   // Proteins related things.
   /// [_consumedProteins] contains the consumed proteins.
   double get _consumedProteins => _timeLog.isNotEmpty
-      ? _timeLog
-          .map((e) => e.foodRecords.isNotEmpty ? e.totalProteins : 0.0)
-          .reduce((value, element) => (value) + (element))
-          .roundNumber(1)
+      ? _timeLog.map((e) => e.foodRecords.isNotEmpty ? e.totalProteins : 0.0).reduce((value, element) => (value) + (element)).roundNumber(1)
       : 0;
 
   // Proteins: END
@@ -160,11 +147,8 @@ class _ProgressPageState extends State<ProgressPage> {
                         margin: EdgeInsets.all(Dimens.r12),
                         child: Text(
                           v,
-                          style: AppStyles.style12.copyWith(
-                              color: _selectedTime?.name.toLowerCase() ==
-                                      (v).toLowerCase()
-                                  ? AppColors.passioInset
-                                  : AppColors.blackColor),
+                          style: AppStyles.style12
+                              .copyWith(color: _selectedTime?.name.toLowerCase() == (v).toLowerCase() ? AppColors.passioInset : AppColors.blackColor),
                         ),
                       )
                   },
@@ -187,30 +171,23 @@ class _ProgressPageState extends State<ProgressPage> {
                       children: [
                         Expanded(
                           child: DonutChart(
-                            totalValue:
-                                (_userSession.userProfile?.caloriesTarget ??
-                                        0) *
-                                    _selectedDays,
+                            totalValue: (_userSession.userProfile?.caloriesTarget ?? 0) * _selectedDays,
                             value: _consumedCalories,
                             centerValue: '${_consumedCalories.toInt()}g',
                             progressColor: AppColors.chartColorGOrange,
                             title: context.localization?.calories ?? '',
-                            targetValue:
-                                '${(_userSession.userProfile?.caloriesTarget ?? 0) * _selectedDays}g',
+                            targetValue: '${(_userSession.userProfile?.caloriesTarget ?? 0) * _selectedDays}g',
                           ),
                         ),
                         Dimens.w16.horizontalSpace,
                         Expanded(
                           child: DonutChart(
-                            totalValue:
-                                (_userSession.userProfile?.carbsGrams ?? 0) *
-                                    _selectedDays,
+                            totalValue: (_userSession.userProfile?.carbsGrams ?? 0) * _selectedDays,
                             value: _consumedCarbs,
                             centerValue: '${_consumedCarbs.toInt()}g',
                             progressColor: AppColors.chartColorGBlue,
                             title: context.localization?.carbs ?? '',
-                            targetValue:
-                                '${(_userSession.userProfile?.carbsGrams ?? 0) * _selectedDays}g',
+                            targetValue: '${(_userSession.userProfile?.carbsGrams ?? 0) * _selectedDays}g',
                           ),
                         ),
                       ],
@@ -229,29 +206,23 @@ class _ProgressPageState extends State<ProgressPage> {
                       children: [
                         Expanded(
                           child: DonutChart(
-                            totalValue:
-                                (_userSession.userProfile?.fatGrams ?? 0) *
-                                    _selectedDays,
+                            totalValue: (_userSession.userProfile?.fatGrams ?? 0) * _selectedDays,
                             value: _consumedFats,
                             centerValue: '${_consumedFats.toInt()}g',
                             progressColor: AppColors.chartColorGRed,
                             title: context.localization?.fat ?? '',
-                            targetValue:
-                                '${(_userSession.userProfile?.fatGrams ?? 0) * _selectedDays}g',
+                            targetValue: '${(_userSession.userProfile?.fatGrams ?? 0) * _selectedDays}g',
                           ),
                         ),
                         Dimens.w16.horizontalSpace,
                         Expanded(
                           child: DonutChart(
-                            totalValue:
-                                (_userSession.userProfile?.proteinGrams ?? 0) *
-                                    _selectedDays,
+                            totalValue: (_userSession.userProfile?.proteinGrams ?? 0) * _selectedDays,
                             value: _consumedProteins,
                             centerValue: '${_consumedProteins.toInt()}g',
                             progressColor: AppColors.chartColorGGreen,
                             title: context.localization?.protein ?? '',
-                            targetValue:
-                                '${(_userSession.userProfile?.proteinGrams ?? 0) * _selectedDays}',
+                            targetValue: '${(_userSession.userProfile?.proteinGrams ?? 0) * _selectedDays}',
                           ),
                         ),
                       ],

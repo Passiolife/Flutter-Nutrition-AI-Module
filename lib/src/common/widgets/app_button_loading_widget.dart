@@ -8,14 +8,13 @@ import '../constant/dimens.dart';
 class AppButtonLoadingWidget extends StatelessWidget {
   final Color? color;
 
-  const AppButtonLoadingWidget({super.key, this.color});
+  const AppButtonLoadingWidget({Key? key, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimens.r8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.r8)),
         backgroundColor: color ?? AppColors.buttonColor.withOpacity(0.50),
       ),
       onPressed: null,

@@ -26,18 +26,13 @@ class FoodDetailsWidget extends StatefulWidget {
   final bool isMealTimeVisible;
   final bool isIngredientsVisible;
 
-  const FoodDetailsWidget(
-      {this.foodRecord,
-      this.isMealTimeVisible = true,
-      this.isIngredientsVisible = true,
-      super.key});
+  const FoodDetailsWidget({this.foodRecord, this.isMealTimeVisible = true, this.isIngredientsVisible = true, super.key});
 
   @override
   State<FoodDetailsWidget> createState() => FoodDetailsWidgetState();
 }
 
-class FoodDetailsWidgetState extends State<FoodDetailsWidget>
-    with TickerProviderStateMixin {
+class FoodDetailsWidgetState extends State<FoodDetailsWidget> with TickerProviderStateMixin {
   /// [_bloc] is use to call the events and listening the states.
   final _bloc = FoodDetailsBloc();
 
@@ -62,13 +57,11 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
   String get _title => _updatedFoodRecord?.name?.toUpperCaseWord ?? '';
 
   /// Getting nutrition from the food record.
-  String get _subTitle =>
-      "${(_updatedFoodRecord?.selectedQuantity ?? 1).removeDecimalZeroFormat} ${_updatedFoodRecord?.selectedUnit ?? ""} "
+  String get _subTitle => "${(_updatedFoodRecord?.selectedQuantity ?? 1).removeDecimalZeroFormat} ${_updatedFoodRecord?.selectedUnit ?? ""} "
       "(${_updatedFoodRecord?.computedWeight.value.removeDecimalZeroFormat ?? ""} ${_updatedFoodRecord?.computedWeight.symbol ?? ""})";
 
   // Get total calories from food.
-  String get _totalCalories =>
-      (_updatedFoodRecord?.totalCalories.toInt() ?? 0).toString();
+  String get _totalCalories => (_updatedFoodRecord?.totalCalories.toInt() ?? 0).toString();
 
   String get _totalCarbs =>
       "${(_updatedFoodRecord?.totalCarbs ?? 0).removeDecimalZeroFormat} ${_updatedFoodRecord?.ingredients?.firstOrNull?.totalCarbs()?.unit.symbol ?? ""}";
@@ -84,15 +77,12 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
 
   // [sliderValue] is defines the position of slider.
   // [sliderMaximum] is maximum value the user can select.
-  SliderData _sliderData =
-      (sliderValue: 0.0001, sliderStep: 1, sliderMin: 0.0001, sliderMax: 1.0);
+  SliderData _sliderData = (sliderValue: 0.0001, sliderStep: 1, sliderMin: 0.0001, sliderMax: 1.0);
 
   PassioServingSize? _selectedServingSize;
 
   List<PassioAlternative?> get _alternatives =>
-      (_updatedFoodRecord?.parents ?? []) +
-      (_updatedFoodRecord?.siblings ?? []) +
-      (_updatedFoodRecord?.children ?? []);
+      (_updatedFoodRecord?.parents ?? []) + (_updatedFoodRecord?.siblings ?? []) + (_updatedFoodRecord?.children ?? []);
 
   // [visibleEditAmountButton] use in FoodDetailHeader to show the "Edit Amount" button.
   bool _visibleEditAmountButton = false;
@@ -131,8 +121,7 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
                 FoodDetailHeader(
                   key: ValueKey(_updatedFoodRecord?.passioID),
                   passioID: _updatedFoodRecord?.passioID,
-                  entityType:
-                      _updatedFoodRecord?.entityType ?? PassioIDEntityType.item,
+                  entityType: _updatedFoodRecord?.entityType ?? PassioIDEntityType.item,
                   title: _title,
                   subTitle: _subTitle,
                   totalCalories: _totalCalories,
@@ -165,17 +154,12 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
                   selectedServingUnitName: _updatedFoodRecord?.selectedUnit,
                   servingUnits: _updatedFoodRecord?.servingUnits,
                   onChangeServingUnit: (PassioServingUnit? servingUnit) {
-                    _bloc.add(DoUpdateUnitKeepWeightEvent(
-                        data: _updatedFoodRecord,
-                        selectedUnitName: servingUnit?.unitName ?? ''));
+                    _bloc.add(DoUpdateUnitKeepWeightEvent(data: _updatedFoodRecord, selectedUnitName: servingUnit?.unitName ?? ''));
                   },
                   computedWeight: _updatedFoodRecord?.computedWeight,
                   sliderData: _sliderData,
                   onQuantityChange: (fromSlider, value) {
-                    _bloc.add(DoUpdateQuantityEvent(
-                        data: _updatedFoodRecord,
-                        updatedQuantity: value,
-                        shouldReset: !fromSlider));
+                    _bloc.add(DoUpdateQuantityEvent(data: _updatedFoodRecord, updatedQuantity: value, shouldReset: !fromSlider));
                   },
                   servingSizes: _updatedFoodRecord?.servingSizes,
                   selectedServingSize: _selectedServingSize,
@@ -195,8 +179,7 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
                 VisualAlternativeWidget(
                   alternatives: _alternatives,
                   onTapAlternative: (alternative) {
-                    _bloc
-                        .add(DoAlternateEvent(passioID: alternative?.passioID));
+                    _bloc.add(DoAlternateEvent(passioID: alternative?.passioID));
                   },
                 ),
                 if (widget.isMealTimeVisible) ...[
@@ -227,8 +210,7 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
               FoodDetailHeader(
                 key: ValueKey(_updatedFoodRecord?.passioID),
                 passioID: _updatedFoodRecord?.passioID,
-                entityType:
-                    _updatedFoodRecord?.entityType ?? PassioIDEntityType.item,
+                entityType: _updatedFoodRecord?.entityType ?? PassioIDEntityType.item,
                 title: _title,
                 subTitle: _subTitle,
                 totalCalories: _totalCalories,
@@ -282,9 +264,7 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
               ],
             ],
           ),
-          crossFadeState: _visibleCloseButton
-              ? CrossFadeState.showFirst
-              : CrossFadeState.showSecond,
+          crossFadeState: _visibleCloseButton ? CrossFadeState.showFirst : CrossFadeState.showSecond,
         );
       },
     );
@@ -296,8 +276,7 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
     /// Here checking ingredients count if it is more than 1 then editable is not visible by default,
     /// else we will show the editable widget.
     _visibleCloseButton = (_updatedFoodRecord?.ingredients?.length ?? 0) <= 1;
-    _visibleEditAmountButton =
-        (_updatedFoodRecord?.ingredients?.length ?? 0) > 1;
+    _visibleEditAmountButton = (_updatedFoodRecord?.ingredients?.length ?? 0) > 1;
     _updateSelectedPassioServingSize();
     _bloc.add(DoSliderUpdateEvent(
       data: _updatedFoodRecord,
@@ -308,8 +287,7 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
   Future _handleOnTapAddIngredients() async {
     final data = await FoodSearchPage.navigate(context);
     if (data != null && data is PassioIDAndName?) {
-      _bloc.add(DoAddIngredientsEvent(
-          data: _updatedFoodRecord, ingredientData: data));
+      _bloc.add(DoAddIngredientsEvent(data: _updatedFoodRecord, ingredientData: data));
     }
   }
 
@@ -320,16 +298,11 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
   Future<void> _handleOnEditItem(int index) async {
     FoodRecord? data = await EditFoodPage.navigate(
       context,
-      foodRecord: FoodRecord.from(
-          passioFoodItemData:
-              _updatedFoodRecord?.ingredients?.elementAt(index)),
+      foodRecord: FoodRecord.from(passioFoodItemData: _updatedFoodRecord?.ingredients?.elementAt(index)),
       index: index,
       isFromEdit: true,
     );
-    _bloc.add(DoUpdateIngredientEvent(
-        atIndex: index,
-        data: _updatedFoodRecord,
-        updatedFoodItemData: data?.toFoodItem));
+    _bloc.add(DoUpdateIngredientEvent(atIndex: index, data: _updatedFoodRecord, updatedFoodItemData: data?.toFoodItem));
   }
 
   void _handleSliderUpdateState({required SliderUpdateState state}) {
@@ -342,17 +315,14 @@ class FoodDetailsWidgetState extends State<FoodDetailsWidget>
   }
 
   void _updateSelectedPassioServingSize() {
-    _selectedServingSize = PassioServingSize(
-        _updatedFoodRecord?.selectedQuantity ?? 0,
-        _updatedFoodRecord?.selectedUnit ?? '');
+    _selectedServingSize = PassioServingSize(_updatedFoodRecord?.selectedQuantity ?? 0, _updatedFoodRecord?.selectedUnit ?? '');
   }
 
   void _handleAlternateSuccessState({required AlternateSuccessState state}) {
     _updatedFoodRecord = state.data;
   }
 
-  void _handleUpdateAmountEditableState(
-      {required UpdateAmountEditableState state}) {
+  void _handleUpdateAmountEditableState({required UpdateAmountEditableState state}) {
     _visibleEditAmountButton = !state.isEditable;
 
     _visibleCloseButton = state.isEditable;

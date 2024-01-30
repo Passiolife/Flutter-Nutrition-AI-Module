@@ -7,17 +7,12 @@ import '../../../common/models/chart_model/chart_data_model.dart';
 import '../../../common/util/context_extension.dart';
 
 class CaloriesChart extends StatelessWidget {
-  const CaloriesChart(
-      {super.key, required this.totalCalories, required this.caloriesTarget});
+  const CaloriesChart({super.key, required this.totalCalories, required this.caloriesTarget});
 
   List<ChartDataModel> get chartData {
     return [
       ChartDataModel(y: totalCalories, color: AppColors.chartColorGOrange),
-      ChartDataModel(
-          y: (totalCalories > caloriesTarget)
-              ? 0
-              : caloriesTarget - totalCalories,
-          color: AppColors.chartColorGGray),
+      ChartDataModel(y: (totalCalories > caloriesTarget) ? 0 : caloriesTarget - totalCalories, color: AppColors.chartColorGGray),
     ];
   }
 

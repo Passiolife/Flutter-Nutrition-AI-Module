@@ -9,8 +9,7 @@ class TabDinnerWidget extends StatefulWidget {
   final OnDeleteItem? onDeleteItem;
   final OnEditItem? onEditItem;
 
-  const TabDinnerWidget(
-      {required this.data, this.onDeleteItem, this.onEditItem, super.key});
+  const TabDinnerWidget({required this.data, this.onDeleteItem, this.onEditItem, super.key});
 
   @override
   State<TabDinnerWidget> createState() => _TabDinnerWidgetState();
@@ -23,8 +22,7 @@ class _TabDinnerWidgetState extends State<TabDinnerWidget> {
   void initState() {
     _foodRecordsList
       ..addAll(widget.data)
-      ..removeWhere(
-          (element) => element?.mealLabel?.value != MealLabel.dinner.value);
+      ..removeWhere((element) => element?.mealLabel?.value != MealLabel.dinner.value);
     super.initState();
   }
 

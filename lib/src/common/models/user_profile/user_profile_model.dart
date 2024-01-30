@@ -72,10 +72,7 @@ class UserProfileModel {
   int get fatGrams => caloriesTarget * fatPercent / 100 ~/ 9;
 
   double? get bmi {
-    if (weight != null &&
-        height != null &&
-        (height ?? 0) > 0 &&
-        (weight ?? 0) > 0) {
+    if (weight != null && height != null && (height ?? 0) > 0 && (weight ?? 0) > 0) {
       return ((weight ?? 0) / pow((height ?? 0), 2)).roundNumber(1);
     }
     return null;
@@ -94,8 +91,7 @@ class UserProfileModel {
     if (weight != null) {
       return switch (units) {
         UnitSelection.metric => weight.roundNumber(1).toString(),
-        _ =>
-          ((weight ?? 0) * Conversion.lbsToKg.value).roundNumber(1).toString(),
+        _ => ((weight ?? 0) * Conversion.lbsToKg.value).roundNumber(1).toString(),
       };
     }
     return null;
@@ -141,12 +137,7 @@ class UserProfileModel {
     };
   }
 
-  ({
-    List<String>? meter,
-    List<String>? centimeter,
-    List<String>? feet,
-    List<String>? inches
-  }) get heightArrayForPicker {
+  ({List<String>? meter, List<String>? centimeter, List<String>? feet, List<String>? inches}) get heightArrayForPicker {
     return switch (units) {
       UnitSelection.metric => (
           meter: List.generate(3, (index) => '$index m'),
@@ -154,36 +145,21 @@ class UserProfileModel {
           feet: null,
           inches: null
         ),
-      _ => (
-          meter: null,
-          centimeter: null,
-          feet: List.generate(9, (index) => "$index'"),
-          inches: List.generate(12, (index) => '$index"')
-        ),
+      _ => (meter: null, centimeter: null, feet: List.generate(9, (index) => "$index'"), inches: List.generate(12, (index) => '$index"')),
     };
   }
 
-  ({int? meter, int? centimeter, int? feet, int? inches})
-      get heightInitialValueForPicker {
+  ({int? meter, int? centimeter, int? feet, int? inches}) get heightInitialValueForPicker {
     return switch (units) {
       UnitSelection.metric => (height != null)
-          ? (
-              meter: height?.toInt() ?? 0,
-              centimeter:
-                  (((height ?? 0) - (height?.toInt() ?? 0)) * 100).toInt(),
-              feet: null,
-              inches: null
-            )
+          ? (meter: height?.toInt() ?? 0, centimeter: (((height ?? 0) - (height?.toInt() ?? 0)) * 100).toInt(), feet: null, inches: null)
           : (meter: 1, centimeter: 65, feet: null, inches: null),
       _ => (height != null)
           ? (
               meter: null,
               centimeter: null,
-              feet: ((height ?? 0) * Conversion.inchToMeter.value) ~/
-                  Conversion.inchToFeet.value,
-              inches: (((height ?? 0) * Conversion.inchToMeter.value) %
-                      Conversion.inchToFeet.value)
-                  .toInt(),
+              feet: ((height ?? 0) * Conversion.inchToMeter.value) ~/ Conversion.inchToFeet.value,
+              inches: (((height ?? 0) * Conversion.inchToMeter.value) % Conversion.inchToFeet.value).toInt(),
             )
           : (meter: null, centimeter: null, feet: 5, inches: 6),
     };
@@ -192,14 +168,11 @@ class UserProfileModel {
   void setHeightInMetersFor(int valueOne, int valueTwo) {
     height = switch (units) {
       UnitSelection.metric => valueOne.toDouble() + valueTwo.toDouble() / 100,
-      _ => ((valueOne * Conversion.inchToFeet.value.toInt() + valueTwo) /
-              Conversion.inchToMeter.value)
-          .toDouble(),
+      _ => ((valueOne * Conversion.inchToFeet.value.toInt() + valueTwo) / Conversion.inchToMeter.value).toDouble(),
     };
   }
 
-  factory UserProfileModel.fromJson(Map<String, dynamic> json) =>
-      _$UserProfileModelFromJson(json);
+  factory UserProfileModel.fromJson(Map<String, dynamic> json) => _$UserProfileModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$UserProfileModelToJson(this);
 }

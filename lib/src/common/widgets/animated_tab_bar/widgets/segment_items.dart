@@ -1,4 +1,4 @@
-part of '../segment_animation.dart';
+part of animated_segment;
 
 /// [SegmentItems] class is [StatelessWidget] class.
 /// This class creates a segment.
@@ -11,8 +11,8 @@ class SegmentItems extends StatelessWidget {
     required this.eventBus,
     required this.onEndRenderItems,
     required this.currentIndex,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   /// [width] property is use to set the width of segment.
   final double width;
@@ -60,9 +60,7 @@ class SegmentItems extends StatelessWidget {
             child: Text(
               element,
               style: AppStyles.style14.copyWith(
-                color: index == currentIndex
-                    ? AnimatedSegmentAppColors.white
-                    : AnimatedSegmentAppColors.themeButtonColor,
+                color: index == currentIndex ? AnimatedSegmentAppColors.white : AnimatedSegmentAppColors.themeButtonColor,
               ),
             ),
           ),
