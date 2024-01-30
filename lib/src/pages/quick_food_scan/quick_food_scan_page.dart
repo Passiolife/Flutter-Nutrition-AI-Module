@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -27,14 +29,18 @@ class QuickFoodScanPage extends StatefulWidget {
   final DateTime selectedDateTime;
 
   static Future navigate(BuildContext context, DateTime dateTime) {
-    return Navigator.push(context, MaterialPageRoute(builder: (_) => QuickFoodScanPage(selectedDateTime: dateTime)));
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => QuickFoodScanPage(selectedDateTime: dateTime)));
   }
 
   @override
   State<QuickFoodScanPage> createState() => _QuickFoodScanPageState();
 }
 
-class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRecognitionListener {
+class _QuickFoodScanPageState extends State<QuickFoodScanPage>
+    implements FoodRecognitionListener {
   /// [_displayedFood] is currently visible to user when found any result in recognition.
   String? _displayedFood;
 
@@ -73,10 +79,13 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
         Navigator.pop(context, _hasRecordAdded);
-        return false;
       },
       child: BlocConsumer(
         bloc: _bloc,
@@ -95,7 +104,8 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
 
           ///
           else if (state is FavoriteSuccessState) {
-            context.showSnackbar(text: context.localization?.favoriteSuccessMessage);
+            context.showSnackbar(
+                text: context.localization?.favoriteSuccessMessage);
           } else if (state is FavoriteFailureState) {
             context.showSnackbar(text: state.message);
           }
@@ -139,8 +149,10 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                     alignment: Alignment.center,
                     child: TweenAnimationBuilder<double>(
                       tween: Tween<double>(begin: 0, end: 1.0),
-                      duration: const Duration(milliseconds: Dimens.duration500),
-                      builder: (BuildContext context, double value, Widget? child) {
+                      duration:
+                          const Duration(milliseconds: Dimens.duration500),
+                      builder:
+                          (BuildContext context, double value, Widget? child) {
                         return Opacity(
                           opacity: value,
                           child: Transform.scale(
@@ -150,11 +162,15 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                         );
                       },
                       child: Padding(
-                        padding: EdgeInsets.only(left: Dimens.w8, right: Dimens.w8, top: context.topPadding),
+                        padding: EdgeInsets.only(
+                            left: Dimens.w8,
+                            right: Dimens.w8,
+                            top: context.topPadding),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimens.r16),
-                            color: Colors.grey.shade200.withOpacity(Dimens.opacity50),
+                            color: Colors.grey.shade200
+                                .withOpacity(Dimens.opacity50),
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -168,7 +184,8 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                               ),
                               Dimens.h4.verticalSpace,
                               MealTimeWidget(
-                                selectedMealLabel: _updatedFoodRecord?.mealLabel,
+                                selectedMealLabel:
+                                    _updatedFoodRecord?.mealLabel,
                                 onUpdateMealTime: (label) {
                                   _updatedFoodRecord?.mealLabel = label;
                                 },
@@ -180,7 +197,8 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                                   Expanded(
                                     child: CustomElevatedButton(
                                       onTap: () {
-                                        _bloc.add(ShowFoodDetailsViewEvent(isVisible: false));
+                                        _bloc.add(ShowFoodDetailsViewEvent(
+                                            isVisible: false));
                                       },
                                       text: context.localization?.cancel ?? '',
                                     ),
@@ -191,20 +209,28 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                                       onTap: () {
                                         _showFavoriteDialog();
                                       },
-                                      text: context.localization?.favorites ?? '',
+                                      text:
+                                          context.localization?.favorites ?? '',
                                     ),
                                   ),
                                   Dimens.w8.horizontalSpace,
                                   Expanded(
                                     child: CustomElevatedButton(
                                       onTap: () {
-                                        _updatedFoodRecord = _foodDetailsKey.currentState?.updatedFoodRecord;
+                                        _updatedFoodRecord = _foodDetailsKey
+                                            .currentState?.updatedFoodRecord;
 
                                         _hasRecordAdded = true;
-                                        _bloc.add(DoLogEvent(data: _updatedFoodRecord));
-                                        _bloc.add(ShowFoodDetailsViewEvent(isVisible: false));
+                                        _bloc.add(DoLogEvent(
+                                            data: _updatedFoodRecord));
+                                        _bloc.add(ShowFoodDetailsViewEvent(
+                                            isVisible: false));
                                         ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(content: Text(context.localization?.logSuccessMessage ?? '')));
+                                            .showSnackBar(SnackBar(
+                                                content: Text(context
+                                                        .localization
+                                                        ?.logSuccessMessage ??
+                                                    '')));
                                       },
                                       text: context.localization?.save ?? '',
                                     ),
@@ -228,11 +254,15 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
                         ? FoodResultWidget(
                             key: ValueKey(_foodRecord?.passioID ?? ''),
                             title: _foodRecord?.name,
-                            subTitle: _foodRecord?.ingredients?.firstOrNull?.name ?? '',
+                            subTitle:
+                                _foodRecord?.ingredients?.firstOrNull?.name ??
+                                    '',
                             passioID: _foodRecord?.passioID ?? '',
-                            entityType: _foodRecord?.entityType ?? PassioIDEntityType.item,
+                            entityType: _foodRecord?.entityType ??
+                                PassioIDEntityType.item,
                             onTapResult: () {
-                              _bloc.add(ShowFoodDetailsViewEvent(isVisible: true));
+                              _bloc.add(
+                                  ShowFoodDetailsViewEvent(isVisible: true));
                             },
                           )
                         : const FoodResultSearchingWidget(),
@@ -246,8 +276,12 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
   }
 
   @override
-  void recognitionResults(FoodCandidates foodCandidates) {
-    _bloc.add(RecognitionResultEvent(foodCandidates: foodCandidates, displayedResult: _displayedFood, dateTime: widget.selectedDateTime));
+  void recognitionResults(FoodCandidates foodCandidates, PlatformImage? image) {
+    log('foodCandidates: $foodCandidates');
+    _bloc.add(RecognitionResultEvent(
+        foodCandidates: foodCandidates,
+        displayedResult: _displayedFood,
+        dateTime: widget.selectedDateTime));
   }
 
   void _initialize() {
@@ -269,7 +303,8 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
         Navigator.pop(context);
         Navigator.pop(context);
       },
-      onUpdateStatus: (Permission? permission, bool isOpenSettingDialogVisible) async {
+      onUpdateStatus:
+          (Permission? permission, bool isOpenSettingDialogVisible) async {
         if ((await permission?.isGranted) ?? false) {
           if (isOpenSettingDialogVisible) {
             PermissionManagerUtility().closeSettingDialog();
@@ -285,7 +320,8 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
   }
 
   void _startFoodDetection() {
-    var detectionConfig = FoodDetectionConfiguration(detectBarcodes: true, detectPackagedFood: true);
+    var detectionConfig = FoodDetectionConfiguration(
+        detectBarcodes: true, detectPackagedFood: true);
     NutritionAI.instance.startFoodDetection(detectionConfig, this);
   }
 
@@ -298,10 +334,13 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
     _foodRecord = state.foodRecord;
   }
 
-  void _handleShowFoodDetailsViewState({required ShowFoodDetailsViewState state}) {
+  void _handleShowFoodDetailsViewState(
+      {required ShowFoodDetailsViewState state}) {
     _foodDetailsKey = GlobalKey();
     if (state.isVisible) {
-      _updatedFoodRecord = FoodRecord.fromJson(_foodRecord?.toJson());
+      if (_foodRecord != null) {
+        _updatedFoodRecord = FoodRecord.fromJson(_foodRecord!.toJson());
+      }
       _stopFoodDetection();
     } else {
       if (_updatedFoodRecord != null) {
@@ -316,11 +355,13 @@ class _QuickFoodScanPageState extends State<QuickFoodScanPage> implements FoodRe
       context: context,
       title: context.localization?.favoriteDialogTitle,
       text: '',
-      placeHolder: '${context.localization?.my} ${_updatedFoodRecord?.name}'.toUpperCaseWord,
+      placeHolder: '${context.localization?.my} ${_updatedFoodRecord?.name}'
+          .toUpperCaseWord,
       onRenameFood: (value) {
         _updatedFoodRecord?.name = value;
 
-        _bloc.add(DoFavouriteEvent(data: _updatedFoodRecord, dateTime: DateTime.now()));
+        _bloc.add(DoFavouriteEvent(
+            data: _updatedFoodRecord, dateTime: DateTime.now()));
       },
     );
   }

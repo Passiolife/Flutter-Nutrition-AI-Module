@@ -7,7 +7,10 @@ class RecognitionResultEvent extends QuickFoodScanEvent {
   final String? displayedResult;
   final DateTime dateTime;
 
-  RecognitionResultEvent({required this.foodCandidates, required this.displayedResult, required this.dateTime});
+  RecognitionResultEvent(
+      {required this.foodCandidates,
+      required this.displayedResult,
+      required this.dateTime});
 }
 
 class ShowFoodDetailsViewEvent extends QuickFoodScanEvent {

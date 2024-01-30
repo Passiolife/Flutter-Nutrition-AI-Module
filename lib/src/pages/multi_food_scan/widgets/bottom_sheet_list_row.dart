@@ -49,7 +49,8 @@ class _BottomSheetListRowState extends State<BottomSheetListRow> {
         end: const Offset(0, 0),
       ).animate(widget.animation),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Dimens.h4, horizontal: Dimens.w8),
+        padding:
+            EdgeInsets.symmetric(vertical: Dimens.h4, horizontal: Dimens.w8),
         child: Row(
           children: [
             /// Clear button to remove the item from list.
@@ -144,7 +145,8 @@ class _BottomSheetListRowState extends State<BottomSheetListRow> {
     }
     _image.value = passioFoodIcons.defaultIcon;
 
-    var remoteIcon = await NutritionAI.instance.fetchIconFor(widget.foodRecord?.passioID ?? '');
+    var remoteIcon = await NutritionAI.instance
+        .fetchIconFor(widget.foodRecord?.passioID ?? '');
     if (remoteIcon != null) {
       _image.value = remoteIcon;
     }

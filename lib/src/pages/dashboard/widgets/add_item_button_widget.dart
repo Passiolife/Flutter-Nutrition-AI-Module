@@ -19,7 +19,8 @@ class AddItemButtonWidget extends StatelessWidget {
         decoration: const BoxDecoration(
           color: AppColors.buttonColor,
         ),
-        padding: EdgeInsets.symmetric(horizontal: Dimens.w12, vertical: Dimens.h4),
+        padding:
+            EdgeInsets.symmetric(horizontal: Dimens.w12, vertical: Dimens.h4),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
