@@ -10,7 +10,8 @@ import '../../../common/util/context_extension.dart';
 typedef OnTapDailyMacro = VoidCallback;
 
 class EditMacrosWidget extends StatelessWidget {
-  const EditMacrosWidget({this.onTapDailyMacro, this.userProfileModel, super.key});
+  const EditMacrosWidget(
+      {this.onTapDailyMacro, this.userProfileModel, super.key});
 
   final OnTapDailyMacro? onTapDailyMacro;
   final UserProfileModel? userProfileModel;
@@ -52,7 +53,8 @@ class EditMacrosWidget extends StatelessWidget {
                           child: Text(
                             '(${userProfileModel?.carbsGrams}g)',
                             overflow: TextOverflow.ellipsis,
-                            style: AppStyles.style16.copyWith(color: AppColors.darkGreyColor),
+                            style: AppStyles.style16
+                                .copyWith(color: AppColors.darkGreyColor),
                           ),
                         ),
                       ],
@@ -79,7 +81,8 @@ class EditMacrosWidget extends StatelessWidget {
                           child: Text(
                             '(${userProfileModel?.proteinGrams ?? ''}g)',
                             overflow: TextOverflow.ellipsis,
-                            style: AppStyles.style16.copyWith(color: AppColors.darkGreyColor),
+                            style: AppStyles.style16
+                                .copyWith(color: AppColors.darkGreyColor),
                           ),
                         ),
                       ],
@@ -107,7 +110,8 @@ class EditMacrosWidget extends StatelessWidget {
                           child: Text(
                             '(${userProfileModel?.fatGrams ?? ''}g)',
                             overflow: TextOverflow.ellipsis,
-                            style: AppStyles.style16.copyWith(color: AppColors.darkGreyColor),
+                            style: AppStyles.style16
+                                .copyWith(color: AppColors.darkGreyColor),
                           ),
                         ),
                       ],

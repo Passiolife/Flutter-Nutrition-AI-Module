@@ -11,7 +11,8 @@ class TabAllDayWidget extends StatefulWidget {
   final OnDeleteItem? onDeleteItem;
   final OnEditItem? onEditItem;
 
-  const TabAllDayWidget({required this.data, this.onDeleteItem, this.onEditItem, super.key});
+  const TabAllDayWidget(
+      {required this.data, this.onDeleteItem, this.onEditItem, super.key});
 
   @override
   State<TabAllDayWidget> createState() => _TabAllDayWidgetState();

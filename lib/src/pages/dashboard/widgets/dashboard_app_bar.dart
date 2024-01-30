@@ -11,7 +11,11 @@ import '../dialogs/date_picker_dialog.dart';
 typedef OnDateChange = Function(DateTime dateTime);
 
 class DashboardAppBar extends StatefulWidget implements PreferredSizeWidget {
-  const DashboardAppBar({required this.selectedDateTime, this.onDateChange, this.onTapMore, super.key});
+  const DashboardAppBar(
+      {required this.selectedDateTime,
+      this.onDateChange,
+      this.onTapMore,
+      super.key});
 
   /// [onTapMore] will executes when gesture detector calls.
   final OnDateChange? onDateChange;

@@ -9,7 +9,8 @@ import '../../../common/widgets/adaptive_action_button_widget.dart';
 typedef OnSave = Function(String text);
 
 class NewRecipeDialog {
-  NewRecipeDialog.show({required BuildContext context, required String text, OnSave? onSave}) {
+  NewRecipeDialog.show(
+      {required BuildContext context, required String text, OnSave? onSave}) {
     TextEditingController controller = TextEditingController(text: text);
     final formKey = GlobalKey<FormState>();
     showAdaptiveDialog<String>(
@@ -26,13 +27,13 @@ class NewRecipeDialog {
               textCapitalization: TextCapitalization.sentences,
               controller: controller,
               decoration: InputDecoration(
-                hintText: context.localization?.newRecipeHint ?? '',
-                hintStyle: AppStyles.style14.copyWith(color: AppColors.hintColor),
-                filled: true,
-                fillColor: AppColors.passioInset,
-                border: InputBorder.none,
-                isDense: true
-              ),
+                  hintText: context.localization?.newRecipeHint ?? '',
+                  hintStyle:
+                      AppStyles.style14.copyWith(color: AppColors.hintColor),
+                  filled: true,
+                  fillColor: AppColors.passioInset,
+                  border: InputBorder.none,
+                  isDense: true),
               validator: (value) {
                 if (value.isNullOrEmpty) {
                   return context.localization?.recipeNameErrorMessage ?? '';

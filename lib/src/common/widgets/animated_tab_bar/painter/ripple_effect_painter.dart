@@ -1,4 +1,4 @@
-part of animated_segment;
+part of '../segment_animation.dart';
 
 /// [RippleEffectPainter] class create a ripple effect on tap of segment.
 /// This class uses a [CustomPainter] to draw a ripple effect.
@@ -17,7 +17,8 @@ class RippleEffectPainter extends CustomPainter {
     final double size = rect.width / 2;
     final double area = size * size;
     final double radius = math.sqrt(area * value / 4);
-    final Paint paint = Paint()..color = color.withOpacity(_calculateOpacity(value));
+    final Paint paint = Paint()
+      ..color = color.withOpacity(_calculateOpacity(value));
     canvas.drawCircle(rect.center, radius, paint);
   }
 
@@ -33,5 +34,6 @@ class RippleEffectPainter extends CustomPainter {
   bool shouldRepaint(CustomPainter oldDelegate) => true;
 
   /// [_calculateOpacity] method calculates a opacity of ripple effect.
-  double _calculateOpacity(double value) => (1.0 - (value / 4.0)).clamp(0.0, 1.0);
+  double _calculateOpacity(double value) =>
+      (1.0 - (value / 4.0)).clamp(0.0, 1.0);
 }

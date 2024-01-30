@@ -1,4 +1,4 @@
-part of animated_segment;
+part of '../segment_animation.dart';
 
 /// [AnimatedSegmentAppColors] class have all the static and const members.
 /// Here, we have defined used color inside the package.

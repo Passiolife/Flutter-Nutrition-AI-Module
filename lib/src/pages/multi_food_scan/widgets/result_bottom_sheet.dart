@@ -101,10 +101,15 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                     /// Clear button
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: widget.detectedList.isNotEmpty ? widget.onTapClear : null,
+                      onTap: widget.detectedList.isNotEmpty
+                          ? widget.onTapClear
+                          : null,
                       child: Text(
                         context.localization?.clear ?? '',
-                        style: AppStyles.style14.copyWith(color: widget.detectedList.isNotEmpty ? AppColors.passioBlack85 : AppColors.passioBlack25),
+                        style: AppStyles.style14.copyWith(
+                            color: widget.detectedList.isNotEmpty
+                                ? AppColors.passioBlack85
+                                : AppColors.passioBlack25),
                       ),
                     ),
 
@@ -123,11 +128,15 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                         ),
                         Dimens.h4.verticalSpace,
                         GestureDetector(
-                          onTap: widget.detectedList.length > 1 ? widget.onTapNewRecipe : null,
+                          onTap: widget.detectedList.length > 1
+                              ? widget.onTapNewRecipe
+                              : null,
                           child: Text(
                             context.localization?.newRecipe ?? '',
-                            style:
-                                AppStyles.style14.copyWith(color: widget.detectedList.length > 1 ? AppColors.passioBlack85 : AppColors.passioBlack25),
+                            style: AppStyles.style14.copyWith(
+                                color: widget.detectedList.length > 1
+                                    ? AppColors.passioBlack85
+                                    : AppColors.passioBlack25),
                           ),
                         ),
                       ],
@@ -136,10 +145,15 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                     /// Add all button
                     GestureDetector(
                       behavior: HitTestBehavior.translucent,
-                      onTap: widget.detectedList.isNotEmpty ? widget.onTapAddAll : null,
+                      onTap: widget.detectedList.isNotEmpty
+                          ? widget.onTapAddAll
+                          : null,
                       child: Text(
                         context.localization?.addAll ?? '',
-                        style: AppStyles.style14.copyWith(color: widget.detectedList.isNotEmpty ? AppColors.passioBlack85 : AppColors.passioBlack25),
+                        style: AppStyles.style14.copyWith(
+                            color: widget.detectedList.isNotEmpty
+                                ? AppColors.passioBlack85
+                                : AppColors.passioBlack25),
                       ),
                     ),
                   ],
@@ -163,7 +177,8 @@ class _ResultBottomSheetState extends State<ResultBottomSheet> {
                         key: ValueKey(data?.passioID),
                         foodRecord: data,
                         animation: animation,
-                        onCancel: () => widget.onTapClearItem?.call(index, data),
+                        onCancel: () =>
+                            widget.onTapClearItem?.call(index, data),
                       ),
                     );
                   },

@@ -85,7 +85,8 @@ class _EditFoodPageState extends State<EditFoodPage> {
   String get title => _updatedFoodRecord?.name?.toUpperCaseWord ?? '';
 
   /// Getting nutrition from the food record.
-  String get subTitle => "${(_updatedFoodRecord?.selectedQuantity ?? 1).removeDecimalZeroFormat} ${_updatedFoodRecord?.selectedUnit ?? ""} "
+  String get subTitle =>
+      "${(_updatedFoodRecord?.selectedQuantity ?? 1).removeDecimalZeroFormat} ${_updatedFoodRecord?.selectedUnit ?? ""} "
       "(${_updatedFoodRecord?.computedWeight.value.removeDecimalZeroFormat ?? ""} ${_updatedFoodRecord?.computedWeight.symbol ?? ""})";
 
   /// [_quantityController] is use to update and get the value from quantity text field.
@@ -123,7 +124,8 @@ class _EditFoodPageState extends State<EditFoodPage> {
         // states for [DoFavouriteEvent]
         if (state is FavoriteSuccessState) {
           /// Showing success message for saving favorite in DB.
-          context.showSnackbar(text: context.localization?.favoriteSuccessMessage);
+          context.showSnackbar(
+              text: context.localization?.favoriteSuccessMessage);
         } else if (state is FavoriteFailureState) {
           context.showSnackbar(text: state.message);
         } else if (state is FoodUpdateSuccessState) {
@@ -157,7 +159,8 @@ class _EditFoodPageState extends State<EditFoodPage> {
                   children: [
                     FoodDetailsWidget(
                       foodRecord: _updatedFoodRecord,
-                      isMealTimeVisible: (!widget.isFromEdit && !widget.isFromFavorite),
+                      isMealTimeVisible:
+                          (!widget.isFromEdit && !widget.isFromFavorite),
                       isIngredientsVisible: (!widget.isFromEdit),
                       key: _foodDetailsKey,
                     ),
@@ -208,7 +211,9 @@ class _EditFoodPageState extends State<EditFoodPage> {
   }
 
   void _initialize() {
-    _updatedFoodRecord = FoodRecord.fromJson(widget.foodRecord?.toJson());
+    if (widget.foodRecord != null) {
+      _updatedFoodRecord = FoodRecord.fromJson(widget.foodRecord!.toJson());
+    }
   }
 
   void _showFavoriteDialog() {
@@ -216,11 +221,13 @@ class _EditFoodPageState extends State<EditFoodPage> {
       context: context,
       title: context.localization?.favoriteDialogTitle,
       text: '',
-      placeHolder: '${context.localization?.my} ${_updatedFoodRecord?.name}'.toUpperCaseWord,
+      placeHolder: '${context.localization?.my} ${_updatedFoodRecord?.name}'
+          .toUpperCaseWord,
       onRenameFood: (value) {
         _updatedFoodRecord?.name = value;
 
-        _bloc.add(DoFavouriteEvent(data: _updatedFoodRecord, dateTime: widget.dateTime));
+        _bloc.add(DoFavouriteEvent(
+            data: _updatedFoodRecord, dateTime: widget.dateTime));
       },
     );
   }
@@ -234,6 +241,7 @@ class _EditFoodPageState extends State<EditFoodPage> {
       return Navigator.pop(context, _updatedFoodRecord);
     }
     // Firing bloc event to update the food record in local DB.
-    _bloc.add(DoFoodUpdateEvent(data: _updatedFoodRecord, isFavorite: widget.isFromFavorite));
+    _bloc.add(DoFoodUpdateEvent(
+        data: _updatedFoodRecord, isFavorite: widget.isFromFavorite));
   }
 }

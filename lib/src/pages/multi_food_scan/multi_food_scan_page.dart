@@ -26,14 +26,18 @@ class MultiFoodScanPage extends StatefulWidget {
   final DateTime selectedDateTime;
 
   static Future navigate(BuildContext context, DateTime dateTime) {
-    return Navigator.push(context, MaterialPageRoute(builder: (_) => MultiFoodScanPage(selectedDateTime: dateTime)));
+    return Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (_) => MultiFoodScanPage(selectedDateTime: dateTime)));
   }
 
   @override
   State<MultiFoodScanPage> createState() => _MultiFoodScanPageState();
 }
 
-class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRecognitionListener {
+class _MultiFoodScanPageState extends State<MultiFoodScanPage>
+    implements FoodRecognitionListener {
   ///
   final _bloc = MultiFoodScanBloc();
 
@@ -73,17 +77,23 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
   }
 
   @override
-  void recognitionResults(FoodCandidates foodCandidates) {
-    _bloc.add(
-        RecognitionResultEvent(foodCandidates: foodCandidates, list: _detectedList, removedList: _removedList, dateTime: widget.selectedDateTime));
+  void recognitionResults(FoodCandidates foodCandidates, PlatformImage? image) {
+    _bloc.add(RecognitionResultEvent(
+        foodCandidates: foodCandidates,
+        list: _detectedList,
+        removedList: _removedList,
+        dateTime: widget.selectedDateTime));
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // context.pop(_hasRecordAdded);
-        return false;
+    return PopScope(
+      canPop: false,
+      onPopInvoked: (didPop) {
+        if (didPop) {
+          return;
+        }
+        Navigator.pop(context, _hasRecordAdded);
       },
       child: Scaffold(
         backgroundColor: AppColors.passioBackgroundWhite,
@@ -143,8 +153,10 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                     alignment: Alignment.center,
                     child: TweenAnimationBuilder<double>(
                       tween: Tween<double>(begin: 0, end: 1.0),
-                      duration: const Duration(milliseconds: Dimens.duration500),
-                      builder: (BuildContext context, double value, Widget? child) {
+                      duration:
+                          const Duration(milliseconds: Dimens.duration500),
+                      builder:
+                          (BuildContext context, double value, Widget? child) {
                         return Opacity(
                           opacity: value,
                           child: Transform.scale(
@@ -154,11 +166,15 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                         );
                       },
                       child: Padding(
-                        padding: EdgeInsets.only(left: Dimens.w8, right: Dimens.w8, top: context.topPadding),
+                        padding: EdgeInsets.only(
+                            left: Dimens.w8,
+                            right: Dimens.w8,
+                            top: context.topPadding),
                         child: Container(
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(Dimens.r16),
-                            color: Colors.grey.shade200.withOpacity(Dimens.opacity50),
+                            color: Colors.grey.shade200
+                                .withOpacity(Dimens.opacity50),
                           ),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
@@ -172,7 +188,8 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                               ),
                               Dimens.h4.verticalSpace,
                               MealTimeWidget(
-                                selectedMealLabel: _updatedFoodRecord?.mealLabel,
+                                selectedMealLabel:
+                                    _updatedFoodRecord?.mealLabel,
                                 onUpdateMealTime: (label) {
                                   _updatedFoodRecord?.mealLabel = label;
                                 },
@@ -184,7 +201,9 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                                   Expanded(
                                     child: CustomElevatedButton(
                                       onTap: () {
-                                        _bloc.add(ShowFoodDetailsViewEvent(isVisible: false, index: state.index));
+                                        _bloc.add(ShowFoodDetailsViewEvent(
+                                            isVisible: false,
+                                            index: state.index));
                                       },
                                       text: context.localization?.cancel ?? '',
                                     ),
@@ -193,9 +212,13 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                                   Expanded(
                                     child: CustomElevatedButton(
                                       onTap: () {
-                                        _updatedFoodRecord = _foodDetailsKey.currentState?.updatedFoodRecord;
-                                        _detectedList[state.index] = _updatedFoodRecord;
-                                        _bloc.add(ShowFoodDetailsViewEvent(isVisible: false, index: state.index));
+                                        _updatedFoodRecord = _foodDetailsKey
+                                            .currentState?.updatedFoodRecord;
+                                        _detectedList[state.index] =
+                                            _updatedFoodRecord;
+                                        _bloc.add(ShowFoodDetailsViewEvent(
+                                            isVisible: false,
+                                            index: state.index));
                                       },
                                       text: context.localization?.save ?? '',
                                     ),
@@ -218,23 +241,30 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                         _listKey = key;
                       },
                       onTapItem: (index) {
-                        _bloc.add(ShowFoodDetailsViewEvent(isVisible: true, index: index));
+                        _bloc.add(ShowFoodDetailsViewEvent(
+                            isVisible: true, index: index));
                       },
                       onTapClearItem: (index, data) {
                         _detectedList.remove(data);
                         _removedList.add(data);
-                        _listKey?.currentState?.removeItem(index, (context, animation) => BottomSheetListRow(foodRecord: data, animation: animation));
+                        _listKey?.currentState?.removeItem(
+                            index,
+                            (context, animation) => BottomSheetListRow(
+                                foodRecord: data, animation: animation));
                       },
                       onTapClear: () {
                         _bloc.add(DoClearAllEvent());
                         _removedList.clear();
                         _detectedList.clear();
-                        _listKey?.currentState?.removeAllItems((context, animation) => const SizedBox.shrink());
+                        _listKey?.currentState?.removeAllItems(
+                            (context, animation) => const SizedBox.shrink());
                       },
                       onTapAddAll: () {
                         _stopFoodDetection();
                         _hasRecordAdded = true;
-                        _bloc.add(DoAddAllEvent(data: _detectedList.toList(), dateTime: widget.selectedDateTime));
+                        _bloc.add(DoAddAllEvent(
+                            data: _detectedList.toList(),
+                            dateTime: widget.selectedDateTime));
                       },
                       onTapNewRecipe: () {
                         _stopFoodDetection();
@@ -243,9 +273,14 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
                           text: '',
                           onSave: (value) {
                             _hasRecordAdded = true;
-                            _bloc.add(DoNewRecipeEvent(data: List.of(_detectedList), name: value, dateTime: widget.selectedDateTime));
+                            _bloc.add(DoNewRecipeEvent(
+                                data: List.of(_detectedList),
+                                name: value,
+                                dateTime: widget.selectedDateTime));
                             _detectedList.clear();
-                            _listKey?.currentState?.removeAllItems((context, animation) => const SizedBox.shrink());
+                            _listKey?.currentState?.removeAllItems(
+                                (context, animation) =>
+                                    const SizedBox.shrink());
                             _startFoodDetection();
                           },
                         );
@@ -280,7 +315,8 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
         Navigator.pop(context);
         Navigator.pop(context);
       },
-      onUpdateStatus: (Permission? permission, bool isOpenSettingDialogVisible) async {
+      onUpdateStatus:
+          (Permission? permission, bool isOpenSettingDialogVisible) async {
         if ((await permission?.isGranted) ?? false) {
           if (isOpenSettingDialogVisible) {
             PermissionManagerUtility().closeSettingDialog();
@@ -296,7 +332,8 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
   }
 
   void _startFoodDetection() {
-    var detectionConfig = FoodDetectionConfiguration(detectBarcodes: true, detectPackagedFood: true);
+    var detectionConfig = FoodDetectionConfiguration(
+        detectBarcodes: true, detectPackagedFood: true);
     NutritionAI.instance.startFoodDetection(detectionConfig, this);
   }
 
@@ -305,13 +342,18 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
   }
 
   void _handleQuickFoodSuccessState({required QuickFoodSuccessState state}) {
-    _listKey?.currentState?.insertItem(0, duration: const Duration(milliseconds: 500));
+    _listKey?.currentState
+        ?.insertItem(0, duration: const Duration(milliseconds: 500));
     _detectedList.insert(0, state.foodRecord);
   }
 
-  void _handleShowFoodDetailsViewState({required ShowFoodDetailsViewState state}) {
+  void _handleShowFoodDetailsViewState(
+      {required ShowFoodDetailsViewState state}) {
     if (state.isVisible) {
-      _updatedFoodRecord = FoodRecord.fromJson(_detectedList.elementAt(state.index)?.toJson());
+      final data = _detectedList.elementAt(state.index)?.toJson();
+      if (data != null) {
+        _updatedFoodRecord = FoodRecord.fromJson(data);
+      }
       _stopFoodDetection();
     } else {
       if (_updatedFoodRecord != null) {
@@ -326,14 +368,16 @@ class _MultiFoodScanPageState extends State<MultiFoodScanPage> implements FoodRe
     _checkPermission();
     _removedList.clear();
     _detectedList.clear();
-    _listKey?.currentState?.removeAllItems((context, animation) => const SizedBox.shrink());
+    _listKey?.currentState
+        ?.removeAllItems((context, animation) => const SizedBox.shrink());
   }
 
   void _handleFoodInsertFailureState({required FoodInsertFailureState state}) {
     _checkPermission();
     _removedList.clear();
     _detectedList.clear();
-    _listKey?.currentState?.removeAllItems((context, animation) => const SizedBox.shrink());
+    _listKey?.currentState
+        ?.removeAllItems((context, animation) => const SizedBox.shrink());
   }
 
   void _handleNewRecipeAddedState({required NewRecipeSuccessState state}) {

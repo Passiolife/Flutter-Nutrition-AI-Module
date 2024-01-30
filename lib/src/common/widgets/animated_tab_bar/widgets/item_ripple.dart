@@ -1,4 +1,4 @@
-part of animated_segment;
+part of '../segment_animation.dart';
 
 /// [ItemRipple] class is [StatefulWidget] class.
 /// Because we are using ticker provider.
@@ -10,8 +10,8 @@ class ItemRipple extends StatefulWidget {
     required this.rippleEffectColor,
     required this.leftMargin,
     required this.onRippleComplete,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   /// [width] property set the width of segment ripple effect.
   final double width;
@@ -39,7 +39,8 @@ class _ItemRippleState extends State<ItemRipple> with TickerProviderStateMixin {
   void initState() {
     _animationController = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: AnimatedSegmentDimens.animationDurationSmall),
+      duration: const Duration(
+          milliseconds: AnimatedSegmentDimens.animationDurationSmall),
     );
     _animationController.forward();
     _animationController.addListener(() {

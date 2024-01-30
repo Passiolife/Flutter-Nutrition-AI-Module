@@ -16,14 +16,15 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
   final _userSession = UserSession.instance;
 
   /// [_connector] use to perform operations.
-  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector =>
+      NutritionAIModule.instance.configuration.connector;
 
   SplashBloc() : super(SplashInitial()) {
     on<DoConfigureSdkEvent>(_handleDoConfigureSdk);
   }
 
-  Future _handleDoConfigureSdk(DoConfigureSdkEvent event, Emitter<SplashState> emit) async {
-
+  Future _handleDoConfigureSdk(
+      DoConfigureSdkEvent event, Emitter<SplashState> emit) async {
     emit(ConfigureLoadingState(isLoading: true));
 
     try {
@@ -56,7 +57,8 @@ class SplashBloc extends Bloc<SplashEvent, SplashState> {
         _userSession.userProfile = UserProfileModel();
         if (_userSession.userProfile != null) {
           // Storing user profile data in database.
-          await _connector.updateUserProfile(userProfile: _userSession.userProfile!, isNew: true);
+          await _connector.updateUserProfile(
+              userProfile: _userSession.userProfile!, isNew: true);
         }
       }
       emit(ConfigureSuccessState());

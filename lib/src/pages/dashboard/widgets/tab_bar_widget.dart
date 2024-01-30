@@ -11,7 +11,8 @@ class TabBarWidgetDelegate extends SliverPersistentHeaderDelegate {
   final List<String> tabs;
 
   @override
-  Widget build(BuildContext context, double shrinkOffset, bool overlapsContent) {
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Dimens.w8),
       child: Container(

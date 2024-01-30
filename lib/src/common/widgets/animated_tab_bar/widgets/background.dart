@@ -1,9 +1,13 @@
-part of animated_segment;
+part of '../segment_animation.dart';
 
 /// [Background] class is [StatelessWidget] class.
 /// This class creates a background in segments.
 class Background extends StatelessWidget {
-  const Background({required this.width, required this.height, required this.bgColor, Key? key}) : super(key: key);
+  const Background(
+      {required this.width,
+      required this.height,
+      required this.bgColor,
+      super.key});
 
   /// [height] property set the width of segment background.
   final double width;
@@ -23,7 +27,8 @@ class Background extends StatelessWidget {
         surfaceTintColor: bgColor,
         margin: const EdgeInsets.all(0),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(AnimatedSegmentDimens.radiusLarge),
+          borderRadius:
+              BorderRadius.circular(AnimatedSegmentDimens.radiusLarge),
         ),
         color: bgColor,
       ),

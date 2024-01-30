@@ -17,10 +17,7 @@ class SignInValidEmailErrorState extends SignInState {}
 class SignInValidPasswordErrorState extends SignInState {}
 
 /// states for DoSignInEvent
-class SignInLoadingState extends SignInState {
-}
+class SignInLoadingState extends SignInState {}
 
 /// states for DoForgotPasswordEvent
-class ForgotPasswordLoadingState extends SignInState {
-}
-
+class ForgotPasswordLoadingState extends SignInState {}

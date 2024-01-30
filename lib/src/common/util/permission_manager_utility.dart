@@ -3,7 +3,8 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../widgets/adaptive_action_button_widget.dart';
 
-typedef PermissionCallback = Function(Permission? permission, bool isOpenSettingDialogVisible);
+typedef PermissionCallback = Function(
+    Permission? permission, bool isOpenSettingDialogVisible);
 
 class PermissionManagerUtility {
   /// This flag will update once the setting is opened after permission denied.
@@ -27,7 +28,11 @@ class PermissionManagerUtility {
   /// default value is 'true'.
   ///
   Future request(BuildContext context, Permission permission,
-      {bool askForSettings = true, PermissionCallback? onUpdateStatus, String? title, String? message, VoidCallback? onTapCancelForSettings}) async {
+      {bool askForSettings = true,
+      PermissionCallback? onUpdateStatus,
+      String? title,
+      String? message,
+      VoidCallback? onTapCancelForSettings}) async {
     isOpenSettingDialogVisible = false;
     permissionCallback = onUpdateStatus;
     _permission = permission;
@@ -35,7 +40,8 @@ class PermissionManagerUtility {
 
     if (result.isGranted) {
       permissionCallback?.call(_permission, isOpenSettingDialogVisible);
-    } else if ((result.isDenied || result.isPermanentlyDenied) && askForSettings) {
+    } else if ((result.isDenied || result.isPermanentlyDenied) &&
+        askForSettings) {
       isOpenSettingDialogVisible = true;
       if (context.mounted) {
         showDialog<String>(
@@ -43,8 +49,8 @@ class PermissionManagerUtility {
           context: context,
           builder: (dialogContext) {
             settingDialogContext = dialogContext;
-            return WillPopScope(
-              onWillPop: () async => false,
+            return PopScope(
+              canPop: false,
               child: AlertDialog.adaptive(
                 title: Text(title ?? ''),
                 content: Text(message ?? ''),

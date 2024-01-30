@@ -12,13 +12,17 @@ import 'locale/app_localizations.dart';
 import 'nutrition_ai_module_configuration.dart';
 import 'pages/splash/splash_page.dart';
 
+/// Singleton class for managing Nutrition AI functionality.
 class NutritionAIModule {
   /// Here, implementing the code for singleton class.
   ///
-  static final NutritionAIModule _instance = NutritionAIModule._privateConstructor();
+  static final NutritionAIModule _instance =
+      NutritionAIModule._privateConstructor();
 
+  /// Private constructor for [NutritionAIModule].
   NutritionAIModule._privateConstructor();
 
+  /// Getter for the singleton instance.
   static NutritionAIModule get instance => _instance;
 
   /// [configuration] holds the key & connector data.
@@ -42,9 +46,10 @@ class NutritionAIModule {
   /// [launch] function requires a [BuildContext] parameter to initiate the Nutrition AI module.
   ///
   Future launch(BuildContext context) async {
-    assert(configuration.key.isNotNullOrEmpty, 'Passio key should not be empty.');
+    assert(
+        configuration.key.isNotNullOrEmpty, 'Passio key should not be empty.');
 
-    /// Checking the type of connector and based on that will peform the operator.
+    /// Checking the type of connector and based on that will perform the operator.
     /// If user passes the connector to the configuration then we will not initialize the Database
     /// Else we have to initialize the local database.
     ///
@@ -57,8 +62,10 @@ class NutritionAIModule {
     /// Launching the [Main] to set up the module.
     ///
     if (context.mounted) {
-      AppLocalizations.instance.loadLanguageFile('packages/${AppConstants.packageName}/assets/translation/app_en.json');
-      ScreenUtil.init(context, designSize: const Size(Dimens.designWidth, Dimens.designHeight));
+      AppLocalizations.instance.loadLanguageFile(
+          'packages/${AppConstants.packageName}/assets/translation/app_en.json');
+      ScreenUtil.init(context,
+          designSize: const Size(Dimens.designWidth, Dimens.designHeight));
       SplashPage.navigate(context);
     }
   }

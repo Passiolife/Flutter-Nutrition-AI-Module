@@ -11,7 +11,8 @@ part 'quick_food_scan_state.dart';
 
 class QuickFoodScanBloc extends Bloc<QuickFoodScanEvent, QuickFoodScanState> {
   /// [_connector] use to perform operations.
-  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector =>
+      NutritionAIModule.instance.configuration.connector;
 
   QuickFoodScanBloc() : super(QuickFoodScanInitial()) {
     on<RecognitionResultEvent>(_handleRecognitionResultEvent);
@@ -20,7 +21,8 @@ class QuickFoodScanBloc extends Bloc<QuickFoodScanEvent, QuickFoodScanState> {
     on<DoFavouriteEvent>(_handleDoFavouriteEvent);
   }
 
-  Future _handleRecognitionResultEvent(RecognitionResultEvent event, Emitter<QuickFoodScanState> emit) async {
+  Future _handleRecognitionResultEvent(
+      RecognitionResultEvent event, Emitter<QuickFoodScanState> emit) async {
     /// [foodCandidates] from recognition result.
     final foodCandidates = event.foodCandidates;
 
@@ -29,13 +31,16 @@ class QuickFoodScanBloc extends Bloc<QuickFoodScanEvent, QuickFoodScanState> {
 
     var passioID = foodCandidates.detectedCandidates.firstOrNull?.passioID;
     var barcode = foodCandidates.barcodeCandidates?.firstOrNull?.value;
-    var packagedFoodCode = foodCandidates.packagedFoodCandidates?.firstOrNull?.packagedFoodCode;
+    var packagedFoodCode =
+        foodCandidates.packagedFoodCandidates?.firstOrNull?.packagedFoodCode;
 
     /// If the scan result is Bar code.
     if (barcode != null) {
       if (barcode != displayedResult) {
-        final attributes = await NutritionAI.instance.fetchAttributesForBarcode(barcode);
-        FoodRecord? foodRecord = FoodRecord.from(passioIDAttributes: attributes, dateTime: event.dateTime);
+        final attributes =
+            await NutritionAI.instance.fetchAttributesForBarcode(barcode);
+        FoodRecord? foodRecord = FoodRecord.from(
+            passioIDAttributes: attributes, dateTime: event.dateTime);
         emit(QuickFoodSuccessState(foodRecord: foodRecord, data: barcode));
       }
     }
@@ -43,17 +48,22 @@ class QuickFoodScanBloc extends Bloc<QuickFoodScanEvent, QuickFoodScanState> {
     /// If the scan result is food package.
     else if (packagedFoodCode != null) {
       if (packagedFoodCode != displayedResult) {
-        final attributes = await NutritionAI.instance.fetchAttributesForPackagedFoodCode(packagedFoodCode);
-        FoodRecord? foodRecord = FoodRecord.from(passioIDAttributes: attributes, dateTime: event.dateTime);
-        emit(QuickFoodSuccessState(foodRecord: foodRecord, data: packagedFoodCode));
+        final attributes = await NutritionAI.instance
+            .fetchAttributesForPackagedFoodCode(packagedFoodCode);
+        FoodRecord? foodRecord = FoodRecord.from(
+            passioIDAttributes: attributes, dateTime: event.dateTime);
+        emit(QuickFoodSuccessState(
+            foodRecord: foodRecord, data: packagedFoodCode));
       }
     }
 
     /// If the scan result is passioID.
     else if (passioID != null) {
       if (passioID != displayedResult) {
-        final attributes = await NutritionAI.instance.lookupPassioAttributesFor(passioID);
-        FoodRecord? foodRecord = FoodRecord.from(passioIDAttributes: attributes, dateTime: event.dateTime);
+        final attributes =
+            await NutritionAI.instance.lookupPassioAttributesFor(passioID);
+        FoodRecord? foodRecord = FoodRecord.from(
+            passioIDAttributes: attributes, dateTime: event.dateTime);
         emit(QuickFoodSuccessState(foodRecord: foodRecord, data: passioID));
       }
     }
@@ -64,14 +74,17 @@ class QuickFoodScanBloc extends Bloc<QuickFoodScanEvent, QuickFoodScanState> {
     }
   }
 
-  Future _handleShowFoodDetailsViewEvent(ShowFoodDetailsViewEvent event, Emitter<QuickFoodScanState> emit) async {
+  Future _handleShowFoodDetailsViewEvent(
+      ShowFoodDetailsViewEvent event, Emitter<QuickFoodScanState> emit) async {
     emit(ShowFoodDetailsViewState(isVisible: event.isVisible));
   }
 
-  FutureOr<void> _handleDoLogEvent(DoLogEvent event, Emitter<QuickFoodScanState> emit) async {
+  FutureOr<void> _handleDoLogEvent(
+      DoLogEvent event, Emitter<QuickFoodScanState> emit) async {
     final foodRecord = event.data;
     if (foodRecord == null) {
-      emit(FoodInsertFailureState(message: 'Something went wrong while parsing data.'));
+      emit(FoodInsertFailureState(
+          message: 'Something went wrong while parsing data.'));
       return;
     }
     if (event.data != null) {
@@ -80,11 +93,13 @@ class QuickFoodScanBloc extends Bloc<QuickFoodScanEvent, QuickFoodScanState> {
     }
   }
 
-  Future<void> _handleDoFavouriteEvent(DoFavouriteEvent event, Emitter<QuickFoodScanState> emit) async {
+  Future<void> _handleDoFavouriteEvent(
+      DoFavouriteEvent event, Emitter<QuickFoodScanState> emit) async {
     try {
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FavoriteFailureState(message: 'Something went wrong while parsing data.'));
+        emit(FavoriteFailureState(
+            message: 'Something went wrong while parsing data.'));
         return;
       }
       await _connector.updateFavorite(foodRecord: foodRecord, isNew: true);

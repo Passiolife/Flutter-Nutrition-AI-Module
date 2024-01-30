@@ -26,7 +26,7 @@ class AppTextField extends StatelessWidget {
   final bool isDense;
 
   const AppTextField({
-    Key? key,
+    super.key,
     required this.controller,
     this.keyboardType,
     this.textInputAction,
@@ -43,7 +43,7 @@ class AppTextField extends StatelessWidget {
     this.fillColor,
     this.filled = true,
     this.isDense = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -76,9 +76,15 @@ class AppTextField extends StatelessWidget {
           fillColor: fillColor ?? AppColors.passioMedContrast,
           filled: filled,
           hintStyle: AppStyles.style14.copyWith(color: AppColors.hintColor),
-          focusedErrorBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimens.r8), borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimens.r8), borderSide: BorderSide.none),
-          enabledBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(Dimens.r8), borderSide: BorderSide.none),
+          focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimens.r8),
+              borderSide: BorderSide.none),
+          focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimens.r8),
+              borderSide: BorderSide.none),
+          enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(Dimens.r8),
+              borderSide: BorderSide.none),
           suffix: suffixIcon ??
               ValueListenableBuilder(
                   valueListenable: controller,
@@ -88,7 +94,9 @@ class AppTextField extends StatelessWidget {
                           height: 20,
                           width: 20,
                           alignment: Alignment.center,
-                          decoration: const BoxDecoration(color: AppColors.textFieldIconBgColor, shape: BoxShape.circle),
+                          decoration: const BoxDecoration(
+                              color: AppColors.textFieldIconBgColor,
+                              shape: BoxShape.circle),
                           child: IconButton(
                               padding: EdgeInsets.zero,
                               onPressed: () {

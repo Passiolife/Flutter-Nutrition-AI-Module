@@ -17,7 +17,8 @@ class FoodSearchPage extends StatefulWidget {
   const FoodSearchPage({super.key});
 
   static Future navigate(BuildContext context) async {
-    return Navigator.push(context, MaterialPageRoute(builder: (_) => const FoodSearchPage()));
+    return Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const FoodSearchPage()));
   }
 
   @override
@@ -91,7 +92,8 @@ class _FoodSearchPageState extends State<FoodSearchPage> {
               Dimens.h4.verticalSpace,
               Expanded(
                 child: ListView.separated(
-                  padding: const EdgeInsets.only(bottom: kFloatingActionButtonMargin),
+                  padding: const EdgeInsets.only(
+                      bottom: kFloatingActionButtonMargin),
                   shrinkWrap: true,
                   physics: const ClampingScrollPhysics(),
                   itemBuilder: (context, index) {

@@ -14,8 +14,9 @@ import '../sign_up/sign_up_page.dart';
 class WelcomePage extends StatefulWidget {
   const WelcomePage({super.key});
 
-  static void navigate(BuildContext context){
-    Navigator.push(context, MaterialPageRoute(builder: (_) => const WelcomePage()));
+  static void navigate(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const WelcomePage()));
   }
 
   @override
@@ -40,7 +41,8 @@ class _WelcomePageState extends State<WelcomePage> {
               Dimens.h140.verticalSpace,
               Text(
                 context.localization?.welcome ?? "",
-                style: AppStyles.style18.copyWith(fontSize: Dimens.fontSize28, color: AppColors.whiteColor),
+                style: AppStyles.style18.copyWith(
+                    fontSize: Dimens.fontSize28, color: AppColors.whiteColor),
               ),
               const Spacer(),
               Hero(

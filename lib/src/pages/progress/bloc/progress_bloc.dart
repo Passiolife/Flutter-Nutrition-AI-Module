@@ -13,18 +13,21 @@ part 'progress_state.dart';
 
 class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
   /// [_connector] use to perform operations.
-  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector =>
+      NutritionAIModule.instance.configuration.connector;
 
   ProgressBloc() : super(ProgressInitial()) {
     on<DoCalendarChangeEvent>(_handleDoCalendarChangeEvent);
     on<GetAllFoodDataEvent>(_handleGetAllFoodDataEvent);
   }
 
-  FutureOr<void> _handleDoCalendarChangeEvent(DoCalendarChangeEvent event, Emitter<ProgressState> emit) async {
+  FutureOr<void> _handleDoCalendarChangeEvent(
+      DoCalendarChangeEvent event, Emitter<ProgressState> emit) async {
     try {
       // Getting selected time enum from selected time.
-      final selectedTimeEnum =
-          TimeEnum.values.cast<TimeEnum?>().firstWhere((element) => element?.name.toLowerCase() == event.time?.toLowerCase(), orElse: () => null);
+      final selectedTimeEnum = TimeEnum.values.cast<TimeEnum?>().firstWhere(
+          (element) => element?.name.toLowerCase() == event.time?.toLowerCase(),
+          orElse: () => null);
 
       DateTime currentDateTime = DateTime.now();
 
@@ -38,7 +41,8 @@ class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
       /// Based on that we will update the [startTime] and [endTime].
       switch (selectedTimeEnum) {
         case TimeEnum.month:
-          startTime = DateTime(currentDateTime.year, currentDateTime.month - 1, currentDateTime.day);
+          startTime = DateTime(currentDateTime.year, currentDateTime.month - 1,
+              currentDateTime.day);
           endTime = currentDateTime;
           break;
         case TimeEnum.week:
@@ -56,18 +60,23 @@ class ProgressBloc extends Bloc<ProgressEvent, ProgressState> {
       List<TimeLog> timeLogs = [];
       for (int i = 1; i <= totalDays; i++) {
         // Generating date based on loop.
-        final dateTime = DateTime(startTime.year, startTime.month, startTime.day + i);
+        final dateTime =
+            DateTime(startTime.year, startTime.month, startTime.day + i);
         // Fetching food record data from database.
         final result = await _connector.fetchDayRecords(dateTime: dateTime);
         timeLogs.add(TimeLog(dateTime: dateTime, foodRecords: result ?? []));
       }
       // Emitting success state to update the view.
-      emit(TimeUpdateSuccessState(data: timeLogs, selectedDays: totalDays, selectedTimeEnum: selectedTimeEnum));
+      emit(TimeUpdateSuccessState(
+          data: timeLogs,
+          selectedDays: totalDays,
+          selectedTimeEnum: selectedTimeEnum));
     } catch (e) {
       // Emitting failure state to update the view.
       emit(TimeUpdateFailureState(message: e.toString()));
     }
   }
 
-  Future<void> _handleGetAllFoodDataEvent(GetAllFoodDataEvent event, Emitter<ProgressState> emit) async {}
+  Future<void> _handleGetAllFoodDataEvent(
+      GetAllFoodDataEvent event, Emitter<ProgressState> emit) async {}
 }

@@ -108,7 +108,6 @@ class IngredientsWidget extends StatelessWidget {
   }
 }
 
-
 class _IngredientListRow extends StatefulWidget {
   const _IngredientListRow({
     required this.index,
@@ -163,7 +162,8 @@ class _IngredientListRowState extends State<_IngredientListRow> {
       // The end action pane is the one at the right or the bottom side.
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        dismissible: DismissiblePane(onDismissed: () => widget.onDeleteItem?.call(widget.index)),
+        dismissible: DismissiblePane(
+            onDismissed: () => widget.onDeleteItem?.call(widget.index)),
         children: [
           SlidableAction(
             onPressed: (context) => widget.onDeleteItem?.call(widget.index),
@@ -178,7 +178,8 @@ class _IngredientListRowState extends State<_IngredientListRow> {
         child: Card(
           color: AppColors.passioInset,
           surfaceTintColor: AppColors.passioInset,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.r50)),
+          shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(Dimens.r50)),
           child: Row(
             children: [
               Padding(
@@ -223,7 +224,7 @@ class _IngredientListRowState extends State<_IngredientListRow> {
                       type: MaterialType.transparency,
                       child: Text(
                         "${(widget.selectedQuantity).removeDecimalZeroFormat} ${widget.selectedUnit?.toUpperCaseWord ?? ""} "
-                            "(${widget.computedWeight.value.removeDecimalZeroFormat} ${widget.computedWeight.symbol})",
+                        "(${widget.computedWeight.value.removeDecimalZeroFormat} ${widget.computedWeight.symbol})",
                         style: AppStyles.style12,
                       ),
                     ),
@@ -270,8 +271,9 @@ class _IngredientListRowState extends State<_IngredientListRow> {
       return;
     }
 
-    PassioFoodIcons passioFoodIcons =
-    await NutritionAI.instance.lookupIconsFor(widget.passioID ?? '', type: widget.entityType ?? PassioIDEntityType.item);
+    PassioFoodIcons passioFoodIcons = await NutritionAI.instance.lookupIconsFor(
+        widget.passioID ?? '',
+        type: widget.entityType ?? PassioIDEntityType.item);
 
     if (passioFoodIcons.cachedIcon != null) {
       _image.value = passioFoodIcons.cachedIcon;
@@ -279,7 +281,8 @@ class _IngredientListRowState extends State<_IngredientListRow> {
     }
     _image.value = passioFoodIcons.defaultIcon;
 
-    var remoteIcon = await NutritionAI.instance.fetchIconFor(widget.passioID ?? '');
+    var remoteIcon =
+        await NutritionAI.instance.fetchIconFor(widget.passioID ?? '');
     if (remoteIcon != null) {
       _image.value = remoteIcon;
     }

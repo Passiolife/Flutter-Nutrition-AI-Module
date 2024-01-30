@@ -24,7 +24,8 @@ class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
 
   static Future navigate(BuildContext context) async {
-    return Navigator.push(context, MaterialPageRoute(builder: (_) => const ProfilePage()));
+    return Navigator.push(
+        context, MaterialPageRoute(builder: (_) => const ProfilePage()));
   }
 
   @override
@@ -41,7 +42,10 @@ class _ProfilePageState extends State<ProfilePage> {
   final _weightController = TextEditingController();
 
   // [_selectedHeightUnit] contains the value of [m] or [ft] based on selected unit
-  String get _selectedHeightUnit => (_userProfile?.units.name == Units.metric.name) ? context.localization?.m ?? '' : context.localization?.ft ?? '';
+  String get _selectedHeightUnit =>
+      (_userProfile?.units.name == Units.metric.name)
+          ? context.localization?.m ?? ''
+          : context.localization?.ft ?? '';
 
   String get _selectedWeightUnit =>
       '${context.localization?.weight} (${(_userProfile?.units.name == Units.metric.name) ? context.localization?.kg : context.localization?.lb})';
@@ -50,30 +54,39 @@ class _ProfilePageState extends State<ProfilePage> {
   final _dailyCaloriesController = TextEditingController();
 
   // [_feetController] is use to set the initialItem in feet [CupertinoPicker] for the height.
-  FixedExtentScrollController get _meterController => FixedExtentScrollController(
-      initialItem: (_userProfile?.units.name.toLowerCase() == Units.metric.name.toLowerCase()
-              ? _userProfile?.heightInitialValueForPicker.meter
-              : _userProfile?.heightInitialValueForPicker.feet) ??
-          0);
+  FixedExtentScrollController get _meterController =>
+      FixedExtentScrollController(
+          initialItem: (_userProfile?.units.name.toLowerCase() ==
+                      Units.metric.name.toLowerCase()
+                  ? _userProfile?.heightInitialValueForPicker.meter
+                  : _userProfile?.heightInitialValueForPicker.feet) ??
+              0);
 
   // [inchController] is use to set the initialItem in inch [CupertinoPicker] for the height.
-  FixedExtentScrollController get _centimeterController => FixedExtentScrollController(
-      initialItem: (_userProfile?.units.name.toLowerCase() == Units.metric.name.toLowerCase()
-              ? _userProfile?.heightInitialValueForPicker.centimeter
-              : _userProfile?.heightInitialValueForPicker.inches) ??
-          0);
+  FixedExtentScrollController get _centimeterController =>
+      FixedExtentScrollController(
+          initialItem: (_userProfile?.units.name.toLowerCase() ==
+                      Units.metric.name.toLowerCase()
+                  ? _userProfile?.heightInitialValueForPicker.centimeter
+                  : _userProfile?.heightInitialValueForPicker.inches) ??
+              0);
 
   final macroData = List.generate(101, (index) => index);
 
   // [_carbsController] is use to set the initialItem in carbs [CupertinoPicker] for the Macro Targets.
   FixedExtentScrollController get _carbsController =>
-      FixedExtentScrollController(initialItem: macroData.indexWhere((element) => element == _userProfile?.carbsPercent));
+      FixedExtentScrollController(
+          initialItem: macroData
+              .indexWhere((element) => element == _userProfile?.carbsPercent));
 
-  FixedExtentScrollController get _proteinController =>
-      FixedExtentScrollController(initialItem: macroData.indexWhere((element) => element == _userProfile?.proteinPercent));
+  FixedExtentScrollController
+      get _proteinController => FixedExtentScrollController(
+          initialItem: macroData.indexWhere(
+              (element) => element == _userProfile?.proteinPercent));
 
-  FixedExtentScrollController get _fatController =>
-      FixedExtentScrollController(initialItem: macroData.indexWhere((element) => element == _userProfile?.fatPercent));
+  FixedExtentScrollController get _fatController => FixedExtentScrollController(
+      initialItem: macroData
+          .indexWhere((element) => element == _userProfile?.fatPercent));
 
   /// [_gender] contains the list of gender data.
   List<String> get _gender => [
@@ -91,16 +104,21 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void didChangeDependencies() {
     _handleUnitsUpdateSuccessState();
-    _dailyCaloriesController.text = _userProfile?.caloriesTarget.toString() ?? context.localization?.typeIn ?? '';
+    _dailyCaloriesController.text = _userProfile?.caloriesTarget.toString() ??
+        context.localization?.typeIn ??
+        '';
     super.didChangeDependencies();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
+    return PopScope(
+      canPop: true,
+      onPopInvoked: (didPop) async {
+        if (didPop) {
+          return;
+        }
         _bloc.add(DoSaveProfileEvent(userProfile: _userProfile));
-        return true;
       },
       child: BlocConsumer(
         bloc: _bloc,
@@ -164,8 +182,10 @@ class _ProfilePageState extends State<ProfilePage> {
                     behavior: HitTestBehavior.translucent,
                     onTap: _showHeightDialog,
                     child: EditPickerWidget(
-                      title: '${context.localization?.height} ($_selectedHeightUnit) ',
-                      selectedValue: _userProfile?.heightDescription ?? context.localization?.select,
+                      title:
+                          '${context.localization?.height} ($_selectedHeightUnit) ',
+                      selectedValue: _userProfile?.heightDescription ??
+                          context.localization?.select,
                     ),
                   ),
                   const Divider(),
@@ -222,10 +242,12 @@ class _ProfilePageState extends State<ProfilePage> {
       title: '${context.localization?.height ?? ''} $_selectedHeightUnit',
       meterController: _meterController,
       centimeterController: _centimeterController,
-      meter: _userProfile?.units.name.toLowerCase() == Units.metric.name.toLowerCase()
+      meter: _userProfile?.units.name.toLowerCase() ==
+              Units.metric.name.toLowerCase()
           ? _userProfile?.heightArrayForPicker.meter
           : _userProfile?.heightArrayForPicker.feet,
-      centimeter: _userProfile?.units.name.toLowerCase() == Units.metric.name.toLowerCase()
+      centimeter: _userProfile?.units.name.toLowerCase() ==
+              Units.metric.name.toLowerCase()
           ? _userProfile?.heightArrayForPicker.centimeter
           : _userProfile?.heightArrayForPicker.inches,
       onSaveHeight: (meter, centimeter) {
@@ -242,7 +264,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _handleCaloriesUpdateSuccessState() {
-    _dailyCaloriesController.text = _userProfile?.caloriesTarget.toString() ?? '';
+    _dailyCaloriesController.text =
+        _userProfile?.caloriesTarget.toString() ?? '';
   }
 
   // END: Calories
@@ -265,7 +288,10 @@ class _ProfilePageState extends State<ProfilePage> {
       proteinsController: _proteinController,
       fatsController: _fatController,
       onSaveMacroTarget: () {
-        _bloc.add(DoMacroUpdateEvent(carbsPercent: macros.carbsPercent, proteinPercent: macros.proteinPercent, fatPercent: macros.fatPercent));
+        _bloc.add(DoMacroUpdateEvent(
+            carbsPercent: macros.carbsPercent,
+            proteinPercent: macros.proteinPercent,
+            fatPercent: macros.fatPercent));
       },
     );
   }
@@ -285,7 +311,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void _handleUnitsUpdateSuccessState() {
-    _weightController.text = _userProfile?.weightDescription ?? context.localization?.typeIn ?? '';
+    _weightController.text =
+        _userProfile?.weightDescription ?? context.localization?.typeIn ?? '';
   }
 
 // END: Gender
