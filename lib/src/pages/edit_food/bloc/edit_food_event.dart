@@ -2,6 +2,7 @@ part of 'edit_food_bloc.dart';
 
 abstract class EditFoodEvent {}
 
+
 // Event will update the food record in DB.
 class DoFoodUpdateEvent extends EditFoodEvent {
   final FoodRecord? data;

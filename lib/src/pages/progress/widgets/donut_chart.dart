@@ -19,9 +19,7 @@ class DonutChart extends StatelessWidget {
   List<ChartDataModel> get chartData {
     return [
       ChartDataModel(y: value, color: progressColor),
-      ChartDataModel(
-          y: (value > totalValue) ? 0 : totalValue - value,
-          color: AppColors.chartColorGGray),
+      ChartDataModel(y: (value > totalValue) ? 0 : totalValue - value, color: AppColors.chartColorGGray),
     ];
   }
 

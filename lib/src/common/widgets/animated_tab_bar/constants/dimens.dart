@@ -1,4 +1,4 @@
-part of '../segment_animation.dart';
+part of animated_segment;
 
 /// [AnimatedSegmentDimens] class have all the static and const members.
 /// Here, we have defined used dimensions inside the package.

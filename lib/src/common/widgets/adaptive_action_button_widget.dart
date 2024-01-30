@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget adaptiveAction(
-    {required BuildContext context,
-    VoidCallback? onPressed,
-    required Widget child}) {
+Widget adaptiveAction({required BuildContext context, VoidCallback? onPressed, required Widget child}) {
   final ThemeData theme = Theme.of(context);
   switch (theme.platform) {
     case TargetPlatform.android:

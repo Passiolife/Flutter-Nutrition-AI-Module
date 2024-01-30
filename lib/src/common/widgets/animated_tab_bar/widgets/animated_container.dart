@@ -1,4 +1,4 @@
-part of '../segment_animation.dart';
+part of animated_segment;
 
 /// [AnimatedContainerWidget] class is [StatelessWidget] class.
 /// So, it create a animation when segment will change.
@@ -11,8 +11,8 @@ class AnimatedContainerWidget extends StatelessWidget {
     required this.color,
     required this.isCircular,
     required this.currentIndex,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   /// [width] is use to animate current selection with animation.
   final double width;
@@ -38,8 +38,7 @@ class AnimatedContainerWidget extends StatelessWidget {
     return AnimatedContainer(
       onEnd: onEndComplete,
       margin: EdgeInsets.only(left: leftMargin),
-      duration: const Duration(
-          milliseconds: AnimatedSegmentDimens.animationDurationNormal),
+      duration: const Duration(milliseconds: AnimatedSegmentDimens.animationDurationNormal),
       width: width,
       height: height,
       decoration: BoxDecoration(
@@ -48,14 +47,11 @@ class AnimatedContainerWidget extends StatelessWidget {
             ? (currentIndex == 0
                 ? const BorderRadius.only(
                     topLeft: Radius.circular(AnimatedSegmentDimens.radiusLarge),
-                    bottomLeft:
-                        Radius.circular(AnimatedSegmentDimens.radiusLarge),
+                    bottomLeft: Radius.circular(AnimatedSegmentDimens.radiusLarge),
                   )
                 : const BorderRadius.only(
-                    topRight:
-                        Radius.circular(AnimatedSegmentDimens.radiusLarge),
-                    bottomRight:
-                        Radius.circular(AnimatedSegmentDimens.radiusLarge),
+                    topRight: Radius.circular(AnimatedSegmentDimens.radiusLarge),
+                    bottomRight: Radius.circular(AnimatedSegmentDimens.radiusLarge),
                   ))
             : null,
       ),

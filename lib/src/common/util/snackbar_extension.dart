@@ -7,8 +7,7 @@ extension SnackbarExtension on BuildContext {
     VoidCallback? onPressAction,
   }) {
     ScaffoldMessenger.of(this).hideCurrentSnackBar();
-    ScaffoldMessenger.of(this).showSnackBar(getSnackBar(
-        text: text, actionLabel: actionLabel, onPressAction: onPressAction));
+    ScaffoldMessenger.of(this).showSnackBar(getSnackBar(text: text, actionLabel: actionLabel, onPressAction: onPressAction));
   }
 }
 
@@ -18,8 +17,7 @@ extension SnackbarStateExtension on ScaffoldMessengerState {
     String? actionLabel,
     VoidCallback? onPressAction,
   }) {
-    showSnackBar(getSnackBar(
-        text: text, actionLabel: actionLabel, onPressAction: onPressAction));
+    showSnackBar(getSnackBar(text: text, actionLabel: actionLabel, onPressAction: onPressAction));
   }
 }
 

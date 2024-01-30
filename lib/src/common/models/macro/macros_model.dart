@@ -1,14 +1,6 @@
 class Macros {
-  Macros(
-      {required int caloriesTarget,
-      required int carbsPercent,
-      required int proteinPercent,
-      required int fatPercent}) {
-    if (caloriesTarget >= 0 &&
-        carbsPercent >= 0 &&
-        proteinPercent >= 0 &&
-        fatPercent >= 0 &&
-        (carbsPercent + proteinPercent + fatPercent == 100)) {
+  Macros({required int caloriesTarget, required int carbsPercent, required int proteinPercent, required int fatPercent}) {
+    if (caloriesTarget >= 0 && carbsPercent >= 0 && proteinPercent >= 0 && fatPercent >= 0 && (carbsPercent + proteinPercent + fatPercent == 100)) {
       this.caloriesTarget = caloriesTarget;
       this.carbsPercent = carbsPercent;
       this.proteinPercent = proteinPercent;
@@ -38,8 +30,7 @@ class Macros {
 
   /// [carbsPercent] is setter for the [_carbsPercent].
   set carbsPercent(int carbs) {
-    final values = (balance3Values(
-        first: carbs, second: _proteinPercent, third: _fatPercent));
+    final values = (balance3Values(first: carbs, second: _proteinPercent, third: _fatPercent));
     _carbsPercent = values.$1;
     _proteinPercent = values.$2;
     _fatPercent = values.$3;
@@ -52,8 +43,7 @@ class Macros {
 
   /// [proteinPercent] is setter for the [_proteinPercent].
   set proteinPercent(int protein) {
-    final values = (balance3Values(
-        first: protein, second: _fatPercent, third: _carbsPercent));
+    final values = (balance3Values(first: protein, second: _fatPercent, third: _carbsPercent));
     _proteinPercent = values.$1;
     _fatPercent = values.$2;
     _carbsPercent = values.$3;
@@ -64,8 +54,7 @@ class Macros {
 
   /// [fatPercent] is setter for the [_fatPercent].
   set fatPercent(int fat) {
-    final values = (balance3Values(
-        first: fat, second: _proteinPercent, third: _carbsPercent));
+    final values = (balance3Values(first: fat, second: _proteinPercent, third: _carbsPercent));
     _fatPercent = values.$1;
     _proteinPercent = values.$2;
     _carbsPercent = values.$3;
@@ -82,8 +71,7 @@ class Macros {
   /// [fatGrams] is [int] so it calculates the carbs in gram.
   int get fatGrams => _caloriesTarget * _fatPercent / 100 ~/ 9;
 
-  (int, int, int) balance3Values(
-      {required int first, required int second, required int third}) {
+  (int, int, int) balance3Values({required int first, required int second, required int third}) {
     final validateFirst = _validatePercent(value: first);
     if ((validateFirst + third) > 100) {
       return (validateFirst, 0, 100 - validateFirst);
@@ -93,7 +81,7 @@ class Macros {
   }
 
   int _validatePercent({required int value}) {
-    return switch (value) {
+    return switch(value) {
       > 100 => 100,
       < 0 => 0,
       _ => value,

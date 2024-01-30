@@ -48,15 +48,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
 
   @override
   void initState() {
-    _getFoodIcon(PassioIDAttributes(
-        widget.data?.passioID ?? '',
-        widget.data?.name ?? '',
-        PassioIDEntityType.item,
-        null,
-        null,
-        null,
-        null,
-        null));
+    _getFoodIcon(PassioIDAttributes(widget.data?.passioID ?? '', widget.data?.name ?? '', PassioIDEntityType.item, null, null, null, null, null));
     super.initState();
   }
 
@@ -67,13 +59,10 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
       // The end action pane is the one at the right or the bottom side.
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        dismissible: DismissiblePane(
-            onDismissed: () =>
-                widget.onDeleteItem?.call(widget.index, widget.data)),
+        dismissible: DismissiblePane(onDismissed: () => widget.onDeleteItem?.call(widget.index, widget.data)),
         children: [
           SlidableAction(
-            onPressed: (context) =>
-                widget.onDeleteItem?.call(widget.index, widget.data),
+            onPressed: (context) => widget.onDeleteItem?.call(widget.index, widget.data),
             backgroundColor: AppColors.errorColor,
             foregroundColor: Colors.white,
             label: context.localization?.delete ?? '',
@@ -87,8 +76,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
         child: Card(
           color: AppColors.passioInset,
           surfaceTintColor: AppColors.passioInset,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Dimens.r16)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.r16)),
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: Dimens.h4),
             child: Row(
@@ -131,9 +119,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                           type: MaterialType.transparency,
                           child: AutoSizeText(
                             widget.data?.name?.toUpperCaseWord ?? '',
-                            style: AppStyles.style17.copyWith(
-                                fontSize: Dimens.fontSizeFix17.toDouble(),
-                                fontWeight: FontWeight.w500),
+                            style: AppStyles.style17.copyWith(fontSize: Dimens.fontSizeFix17.toDouble(), fontWeight: FontWeight.w500),
                             minFontSize: Dimens.fontSizeFix11.toDouble(),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
@@ -143,14 +129,12 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                       Row(
                         children: [
                           Hero(
-                            tag:
-                                '${context.localization?.calories}${widget.index}',
+                            tag: '${context.localization?.calories}${widget.index}',
                             child: Material(
                               type: MaterialType.transparency,
                               child: Text(
                                 "${context.localization?.calories}: ",
-                                style: AppStyles.style15
-                                    .copyWith(fontWeight: FontWeight.w300),
+                                style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),
@@ -162,8 +146,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                               type: MaterialType.transparency,
                               child: Text(
                                 "${widget.data?.totalCalories.toInt()}",
-                                style: AppStyles.style15
-                                    .copyWith(fontWeight: FontWeight.w300),
+                                style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                               ),
                             ),
                           ),
@@ -179,20 +162,17 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                                 Wrap(
                                   children: [
                                     Hero(
-                                      tag:
-                                          '${context.localization?.carbs}${widget.index}',
+                                      tag: '${context.localization?.carbs}${widget.index}',
                                       child: Material(
                                         type: MaterialType.transparency,
                                         child: Text(
                                           "${context.localization?.carbs}: ",
-                                          style: AppStyles.style15.copyWith(
-                                              fontWeight: FontWeight.w300),
+                                          style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                                         ),
                                       ),
                                     ),
                                     Hero(
-                                      tag:
-                                          '${AppConstants.carbs}${widget.index}',
+                                      tag: '${AppConstants.carbs}${widget.index}',
                                       child: Material(
                                         type: MaterialType.transparency,
                                         child: Text(
@@ -210,28 +190,24 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                                 Wrap(
                                   children: [
                                     Hero(
-                                      tag:
-                                          '${context.localization?.protein}${widget.index}',
+                                      tag: '${context.localization?.protein}${widget.index}',
                                       child: Material(
                                         type: MaterialType.transparency,
                                         child: Text(
                                           "${context.localization?.protein}: ",
-                                          style: AppStyles.style15.copyWith(
-                                              fontWeight: FontWeight.w300),
+                                          style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
                                       ),
                                     ),
                                     Hero(
-                                      tag:
-                                          '${AppConstants.protein}${widget.index}',
+                                      tag: '${AppConstants.protein}${widget.index}',
                                       child: Material(
                                         type: MaterialType.transparency,
                                         child: Text(
                                           "${widget.data?.totalProteins.toInt()} ",
-                                          style: AppStyles.style15.copyWith(
-                                              fontWeight: FontWeight.w300),
+                                          style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                                         ),
                                       ),
                                     ),
@@ -242,14 +218,12 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                                 Wrap(
                                   children: [
                                     Hero(
-                                      tag:
-                                          '${context.localization?.fat}${widget.index}',
+                                      tag: '${context.localization?.fat}${widget.index}',
                                       child: Material(
                                         type: MaterialType.transparency,
                                         child: Text(
                                           "${context.localization?.fat}: ",
-                                          style: AppStyles.style15.copyWith(
-                                              fontWeight: FontWeight.w300),
+                                          style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                                           maxLines: 1,
                                           overflow: TextOverflow.ellipsis,
                                         ),
@@ -261,8 +235,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                                         type: MaterialType.transparency,
                                         child: Text(
                                           "${widget.data?.totalFat.toInt()} ",
-                                          style: AppStyles.style15.copyWith(
-                                              fontWeight: FontWeight.w300),
+                                          style: AppStyles.style15.copyWith(fontWeight: FontWeight.w300),
                                         ),
                                       ),
                                     ),
@@ -278,14 +251,11 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
                 ),
                 SizedBox(width: Dimens.w4),
                 AnimatedOpacity(
-                  opacity: (widget.isAddToLogLoading ?? false)
-                      ? Dimens.opacity0
-                      : Dimens.opacity100,
+                  opacity: (widget.isAddToLogLoading ?? false) ? Dimens.opacity0 : Dimens.opacity100,
                   duration: const Duration(milliseconds: Dimens.duration500),
                   child: GestureDetector(
                     behavior: HitTestBehavior.translucent,
-                    onTap: () =>
-                        widget.onAddToLog?.call(widget.index, widget.data),
+                    onTap: () => widget.onAddToLog?.call(widget.index, widget.data),
                     child: Padding(
                       padding: EdgeInsets.all(Dimens.r16),
                       child: Image.asset(
@@ -312,9 +282,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
       return;
     }
 
-    PassioFoodIcons passioFoodIcons = await NutritionAI.instance.lookupIconsFor(
-        passioIDAttributes.passioID,
-        type: passioIDAttributes.entityType);
+    PassioFoodIcons passioFoodIcons = await NutritionAI.instance.lookupIconsFor(passioIDAttributes.passioID, type: passioIDAttributes.entityType);
 
     if (passioFoodIcons.cachedIcon != null) {
       _image.value = passioFoodIcons.cachedIcon;
@@ -322,8 +290,7 @@ class _FavoriteListRowState extends State<FavoriteListRow> {
     }
     _image.value = passioFoodIcons.defaultIcon;
 
-    var remoteIcon =
-        await NutritionAI.instance.fetchIconFor(passioIDAttributes.passioID);
+    var remoteIcon = await NutritionAI.instance.fetchIconFor(passioIDAttributes.passioID);
     if (remoteIcon != null) {
       _image.value = remoteIcon;
     }

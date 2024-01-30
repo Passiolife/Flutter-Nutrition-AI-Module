@@ -25,14 +25,11 @@ class StackedCalorieChart extends StatelessWidget {
 
   DateTime get currentDateTime => DateTime.now();
 
-  DateTime get lastMonthDateTime =>
-      currentDateTime.copyWith(month: currentDateTime.month - 1);
+  DateTime get lastMonthDateTime => currentDateTime.copyWith(month: currentDateTime.month - 1);
 
   double get maxValue => math.max(
       timeLog.isNotEmpty
-          ? timeLog
-              .map((e) => e.foodRecords.isNotEmpty ? e.totalCalories : 0.0)
-              .reduce((value, element) => math.max(value, element))
+          ? timeLog.map((e) => e.foodRecords.isNotEmpty ? e.totalCalories : 0.0).reduce((value, element) => math.max(value, element))
           : 0,
       5);
 
@@ -40,9 +37,7 @@ class StackedCalorieChart extends StatelessWidget {
     return List.generate(timeLog.length, (index) {
       final data = timeLog.elementAt(index);
       return ChartDataModel(
-        timeLog.length > 7
-            ? data.dateTime.day.toString()
-            : data.dateTime.format(format10),
+        timeLog.length > 7 ? data.dateTime.day.toString() : data.dateTime.format(format10),
         data.foodRecords.isNotEmpty ? data.totalCalories.roundNumber(1) : 0,
       );
     });
@@ -58,8 +53,7 @@ class StackedCalorieChart extends StatelessWidget {
           isVisible: true,
           position: LegendPosition.bottom,
           alignment: ChartAlignment.near,
-          legendItemBuilder:
-              (String name, dynamic series, dynamic point, int index) {
+          legendItemBuilder: (String name, dynamic series, dynamic point, int index) {
             if (series is StackedColumnSeries) {
               return Wrap(
                 crossAxisAlignment: WrapCrossAlignment.center,
@@ -83,8 +77,7 @@ class StackedCalorieChart extends StatelessWidget {
         ),
         primaryYAxis: NumericAxis(
           axisLabelFormatter: (value) {
-            return ChartAxisLabel('${value.text}${isAbsoluteValue ? 'g' : '%'}',
-                AppStyles.style14);
+            return ChartAxisLabel('${value.text}${isAbsoluteValue ? 'g' : '%'}', AppStyles.style14);
           },
           borderWidth: 0,
           labelStyle: AppStyles.style14,
@@ -96,12 +89,11 @@ class StackedCalorieChart extends StatelessWidget {
           decimalPlaces: 0,
         ),
         primaryXAxis: CategoryAxis(
-          majorGridLines:
-              const MajorGridLines(color: AppColors.passioBlack50, width: 0),
+          majorGridLines: const MajorGridLines(color: AppColors.passioBlack50, width: 0),
           desiredIntervals: 6,
           labelStyle: AppStyles.style15,
           majorTickLines: const MajorTickLines(width: 1),
-          plotBands: const <PlotBand>[
+          plotBands: <PlotBand>[
             PlotBand(
               verticalTextPadding: '5%',
               horizontalTextPadding: '5%',
@@ -115,7 +107,7 @@ class StackedCalorieChart extends StatelessWidget {
         ),
         series: [
           StackedColumnSeries<ChartDataModel, String>(
-            width: chartData.length > 2 ? 0 : 0.1,
+            width: chartData.length > 2 ? null : 0.1,
             name: context.localization?.calories ?? '',
             dataSource: chartData,
             xValueMapper: (ChartDataModel data, _) => data.x,

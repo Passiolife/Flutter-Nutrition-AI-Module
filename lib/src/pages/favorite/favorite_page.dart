@@ -17,8 +17,7 @@ class FavoritePage extends StatefulWidget {
   const FavoritePage({super.key});
 
   static Future navigate(BuildContext context) async {
-    return Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const FavoritePage()));
+    return Navigator.push(context, MaterialPageRoute(builder: (_) => const FavoritePage()));
   }
 
   @override
@@ -41,13 +40,10 @@ class _FavoritePageState extends State<FavoritePage> {
 
   @override
   Widget build(BuildContext context) {
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (didPop) {
-        if (didPop) {
-          return;
-        }
+    return WillPopScope(
+      onWillPop: () async {
         Navigator.pop(context, _hasFoodLogged);
+        return false;
       },
       child: BlocConsumer(
         bloc: _bloc,
@@ -94,8 +90,7 @@ class _FavoritePageState extends State<FavoritePage> {
                     key: ValueKey(data?.passioID),
                     index: index,
                     data: data,
-                    isAddToLogLoading: (state is FoodRecordLogLoadingState) &&
-                        state.index == index,
+                    isAddToLogLoading: (state is FoodRecordLogLoadingState) && state.index == index,
                     onEditItem: _handleOnEditItem,
                     onDeleteItem: _handleOnDeleteItem,
                     onAddToLog: _handleOnAddToLog,
@@ -113,8 +108,7 @@ class _FavoritePageState extends State<FavoritePage> {
     _bloc.add(GetAllFavoritesEvent());
   }
 
-  void _handleGetAllFavouritesSuccessState(
-      {required GetAllFavouritesSuccessState state}) {
+  void _handleGetAllFavouritesSuccessState({required GetAllFavouritesSuccessState state}) {
     _foodRecordList = state.data;
     if (_foodRecordList?.isEmpty ?? true) {
       _showNoDataFoundDialog();
@@ -123,8 +117,7 @@ class _FavoritePageState extends State<FavoritePage> {
 
   Future<void> _handleOnEditItem(int index, FoodRecord? data) async {
     // Opening edit food page and awaiting for the result from edit page based on user action if action is save or favourite then perform action.
-    bool? result = await EditFoodPage.navigate(context,
-        foodRecord: data, isFromFavorite: true);
+    bool? result = await EditFoodPage.navigate(context, foodRecord: data, isFromFavorite: true);
 
     // Checking result is null or not.
     if (result != null && result) {
@@ -138,8 +131,7 @@ class _FavoritePageState extends State<FavoritePage> {
     _bloc.add(DoFavoriteDeleteEvent(data: data));
   }
 
-  void _handleFavoriteDeleteFailureState(
-      {required FavoriteDeleteFailureState state}) {
+  void _handleFavoriteDeleteFailureState({required FavoriteDeleteFailureState state}) {
     context.showSnackbar(text: state.message);
   }
 
@@ -161,13 +153,11 @@ class _FavoritePageState extends State<FavoritePage> {
     _bloc.add(DoLogEvent(data: data, index: index));
   }
 
-  void _handleFoodRecordLogFailureState(
-      {required FoodRecordLogFailureState state}) {
+  void _handleFoodRecordLogFailureState({required FoodRecordLogFailureState state}) {
     context.showSnackbar(text: state.message);
   }
 
-  void _handleFoodRecordLogSuccessState(
-      {required FoodRecordLogSuccessState state}) {
+  void _handleFoodRecordLogSuccessState({required FoodRecordLogSuccessState state}) {
     context.showSnackbar(text: context.localization?.logSuccessMessage);
   }
 }

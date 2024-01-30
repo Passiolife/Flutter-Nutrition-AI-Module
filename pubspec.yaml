@@ -1,9 +1,7 @@
 name: nutrition_ai_module
 description: Passio Nutrition AI Module for Flutter. Supports Android and iOS.
-version: 2.3.15
-homepage: https://www.passio.ai
-repository: https://github.com/Passiolife/Flutter-Nutrition-AI-Module
-issue_tracker: https://github.com/Passiolife/Flutter-Nutrition-AI-Module/issues
+version: 0.0.1
+homepage: https://www.passio.ai/
 
 environment:
   sdk: '>=3.0.6 <4.0.0'
@@ -12,70 +10,78 @@ dependencies:
   flutter:
     sdk: flutter
 
-  # https://pub.dev/packages/auto_size_text
-  # Flutter widget that automatically resizes text to fit perfectly within its bounds.
-  auto_size_text: ^3.0.0
-
-  # https://pub.dev/packages/flutter_bloc
-  # It is a design pattern which helps separate the presentation layer from the business logic.
-  flutter_bloc: ^8.1.3
+  # https://pub.dev/packages/nutrition_ai
+  # When integrated into your app the SDK provides you with food recognition and nutrition assistant technology.
+  nutrition_ai: ^0.0.6
 
   # https://pub.dev/packages/flutter_screenutil
   # A flutter plugin for adapting screen and font size.Let your UI display a reasonable layout on different screen sizes!
-  flutter_screenutil: ^5.9.0
+  flutter_screenutil: ^5.5.4
 
-  # https://pub.dev/packages/flutter_slidable
-  # A Flutter implementation of slidable list item with directional slide actions that can be dismissed.
-  flutter_slidable: ^3.0.1
+  # https://pub.dev/packages/flutter_bloc
+  # It is a design pattern which helps separate the presentation layer from the business logic.
+  flutter_bloc: ^8.1.1
 
-  # https://pub.dev/packages/get_it
-  # This is a simple Service Locator for Dart and Flutter projects.
-  get_it: ^7.6.6
-
-  # https://pub.dev/packages/intl
-  # Provides internationalization and localization facilities
-  intl: ^0.18.0
+  # https://pub.dev/packages/json_serializable
+  # Provides Dart Build System builders for handling JSON.
+  json_serializable: ^6.7.0
 
   # https://pub.dev/packages/json_annotation
   # Defines the annotations used by json_serializable to create code for JSON serialization and deserialization.
   json_annotation: ^4.8.1
 
-  # https://pub.dev/packages/json_serializable
-  # Provides Dart Build System builders for handling JSON.
-  json_serializable: ^6.7.1
+  # https://pub.dev/packages/shared_preferences
+  # Wraps platform-specific persistent storage for simple data (NSUserDefaults on iOS and macOS, SharedPreferences on Android, etc.).
+  shared_preferences: ^2.1.2
+
+  # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
+  # https://pub.dev/packages/permission_handler
+  permission_handler: ^10.2.0
+
+  # https://pub.dev/packages/connectivity_plus
+  # This plugin allows Flutter apps to discover network connectivity and configure themselves accordingly. It can distinguish between cellular vs WiFi connection.
+  connectivity_plus: ^4.0.1
+
+  # https://pub.dev/packages/get_it
+  # This is a simple Service Locator for Dart and Flutter projects.
+  get_it: ^7.6.0
+
+  # https://pub.dev/packages/syncfusion_flutter_charts
+  # The Flutter Charts package
+  syncfusion_flutter_charts: ^22.2.11
 
   # https://pub.dev/packages/loading_indicator
   # A collection of out of the box loading animations written in pure dart, no extra dependency
   loading_indicator: ^3.1.1
 
-  # https://pub.dev/packages/nutrition_ai
-  # When integrated into your app the SDK provides you with food recognition and nutrition assistant technology.
-  nutrition_ai: ^2.3.15
-
-  # https://pub.dev/packages/path
-  # A comprehensive, cross-platform path manipulation library for Dart.
-  path: ^1.8.3
-
-  # https://pub.dev/packages/permission_handler
-  # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
-  permission_handler: ^11.1.0
+  # https://pub.dev/packages/envied
+  # A cleaner way to handle your environment variables in Dart/Flutter.
+  envied: ^0.3.0+3
 
   # https://pub.dev/packages/sqflite
   # SQLite plugin for Flutter.
   sqflite: ^2.3.0
 
-  # https://pub.dev/packages/syncfusion_flutter_charts
-  # The Flutter Charts package
-  syncfusion_flutter_charts: ^24.1.47+2
+  # https://pub.dev/packages/path
+  # A comprehensive, cross-platform path manipulation library for Dart.
+  path: ^1.8.3
+
+  # https://pub.dev/packages/flutter_slidable
+  # A Flutter implementation of slidable list item with directional slide actions that can be dismissed.
+  flutter_slidable: ^3.0.0
+
+  # https://pub.dev/packages/auto_size_text
+  # Flutter widget that automatically resizes text to fit perfectly within its bounds.
+  auto_size_text: ^3.0.0
+
+  # https://pub.dev/packages/intl
+  # Provides internationalization and localization facilities
+  intl: ^0.18.0
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^3.0.1
-
-  # https://pub.dev/packages/build_runner
-  # The build_runner package provides a concrete way of generating files using Dart code.
-  build_runner: ^2.4.8
+  flutter_lints: ^2.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

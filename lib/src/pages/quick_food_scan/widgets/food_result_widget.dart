@@ -55,8 +55,7 @@ class _FoodResultWidgetState extends State<FoodResultWidget> {
       child: Card(
         color: AppColors.passioInset,
         surfaceTintColor: AppColors.passioInset,
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(Dimens.r16)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.r16)),
         child: Container(
           height: Dimens.h100,
           padding: EdgeInsets.only(top: Dimens.h16),
@@ -84,17 +83,13 @@ class _FoodResultWidgetState extends State<FoodResultWidget> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          context.localization?.detected.format(
-                                  [widget.title ?? ''])?.toUpperCaseWord ??
-                              '',
+                          context.localization?.detected.format([widget.title ?? ''])?.toUpperCaseWord ?? '',
                           style: AppStyles.style14,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                         ),
                         Text(
-                          context.localization?.nutrition.format(
-                                  [widget.subTitle ?? ''])?.toUpperCaseWord ??
-                              '',
+                          context.localization?.nutrition.format([widget.subTitle ?? ''])?.toUpperCaseWord ?? '',
                           style: AppStyles.style14,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -129,8 +124,7 @@ class _FoodResultWidgetState extends State<FoodResultWidget> {
 
     _foodImage.value = passioFoodIcons.defaultIcon;
 
-    var remoteIcon =
-        await NutritionAI.instance.fetchIconFor(widget.passioID ?? '');
+    var remoteIcon = await NutritionAI.instance.fetchIconFor(widget.passioID ?? '');
     if (remoteIcon != null) {
       _foodImage.value = remoteIcon;
     }

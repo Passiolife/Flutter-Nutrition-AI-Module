@@ -50,8 +50,7 @@ class _EditTextWidgetState extends State<EditTextWidget> {
       children: [
         Expanded(
           child: Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: Dimens.h16, vertical: Dimens.h12),
+            padding: EdgeInsets.symmetric(horizontal: Dimens.h16, vertical: Dimens.h12),
             child: Text(
               widget.title ?? '',
               style: AppStyles.style17,

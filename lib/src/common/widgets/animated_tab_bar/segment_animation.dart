@@ -28,8 +28,8 @@ class AnimatedSegment extends StatefulWidget {
     this.segmentTextColor = AnimatedSegmentAppColors.primary,
     this.selectedSegmentColor = AnimatedSegmentAppColors.white,
     this.rippleEffectColor = AnimatedSegmentAppColors.white,
-    super.key,
-  });
+    Key? key,
+  }) : super(key: key);
 
   /// [segmentNames] property takes List<String> as a parameter and segmentNames is useful to display items in segment.
   final List<String> segmentNames;
@@ -96,15 +96,12 @@ class AnimatedSegmentState extends State<AnimatedSegment> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, snapshot) {
       return Padding(
-        padding: const EdgeInsets.symmetric(
-            vertical: AnimatedSegmentDimens.paddingNormal,
-            horizontal: AnimatedSegmentDimens.paddingNormal),
+        padding: const EdgeInsets.symmetric(vertical: AnimatedSegmentDimens.paddingNormal, horizontal: AnimatedSegmentDimens.paddingNormal),
         child: Container(
           width: snapshot.maxWidth,
           height: AnimatedSegmentDimens.heightSmall,
           decoration: BoxDecoration(
-            border:
-                Border.all(color: AnimatedSegmentAppColors.themeButtonColor),
+            border: Border.all(color: AnimatedSegmentAppColors.themeButtonColor),
             borderRadius: BorderRadius.circular(widget.borderRadius),
           ),
           child: TweenAnimationBuilder(
@@ -137,22 +134,17 @@ class AnimatedSegmentState extends State<AnimatedSegment> {
                     },
                   ),
                   Positioned(
-                    top: (AnimatedSegmentDimens.heightNormal -
-                                AnimatedSegmentDimens.heightSmall) /
-                            2 -
-                        3.h,
+                    top: (AnimatedSegmentDimens.heightNormal - AnimatedSegmentDimens.heightSmall) / 2 - 3.h,
                     child: ValueListenableBuilder(
                       valueListenable: _refreshAnimatedContainer,
-                      builder:
-                          (BuildContext context, bool value, Widget? child) {
+                      builder: (BuildContext context, bool value, Widget? child) {
                         return AnimatedContainerWidget(
                           width: _animatedContainerWidth,
                           height: AnimatedSegmentDimens.heightSmall,
                           leftMargin: _animatedContainerLeftMargin,
                           color: widget.selectedSegmentColor,
                           onEndComplete: _onEndCallback,
-                          isCircular: _currentIndex == 0 ||
-                              _currentIndex == widget.segmentNames.length - 1,
+                          isCircular: _currentIndex == 0 || _currentIndex == widget.segmentNames.length - 1,
                           currentIndex: _currentIndex,
                         );
                       },
@@ -160,13 +152,10 @@ class AnimatedSegmentState extends State<AnimatedSegment> {
                   ),
                   ValueListenableBuilder(
                       valueListenable: _refreshedAnimatedContainer,
-                      builder:
-                          (BuildContext context, bool value, Widget? child) {
+                      builder: (BuildContext context, bool value, Widget? child) {
                         return SegmentItems(
                           widgets: widget.segmentNames,
-                          width: snapshot.maxWidth -
-                              AnimatedSegmentDimens.paddingLarge -
-                              2.w,
+                          width: snapshot.maxWidth - AnimatedSegmentDimens.paddingLarge - 2.w,
                           height: AnimatedSegmentDimens.heightNormal,
                           segmentTextColor: widget.segmentTextColor,
                           eventBus: _eventBus,

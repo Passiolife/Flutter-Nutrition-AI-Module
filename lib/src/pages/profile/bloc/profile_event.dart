@@ -26,10 +26,7 @@ class DoMacroUpdateEvent extends ProfileEvent {
   final int proteinPercent;
   final int fatPercent;
 
-  DoMacroUpdateEvent(
-      {required this.carbsPercent,
-      required this.proteinPercent,
-      required this.fatPercent});
+  DoMacroUpdateEvent({required this.carbsPercent, required this.proteinPercent, required this.fatPercent});
 }
 
 class DoGenderUpdateEvent extends ProfileEvent {
