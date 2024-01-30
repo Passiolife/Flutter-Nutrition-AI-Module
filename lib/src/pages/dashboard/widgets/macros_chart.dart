@@ -12,14 +12,7 @@ class MacrosChart extends StatelessWidget {
     super.key,
   });
 
-  final ({
-    int totalCarbs,
-    int totalProtiens,
-    int totalFats,
-    String carbsValue,
-    String proteinsValue,
-    String fatsValue
-  }) data;
+  final ({int totalCarbs, int totalProtiens, int totalFats, String carbsValue, String proteinsValue, String fatsValue}) data;
 
   List<ChartDataModel> get chartData {
     return [
@@ -36,13 +29,12 @@ class MacrosChart extends StatelessWidget {
         color: AppColors.chartColorGRed,
       ),
       ChartDataModel(
-        y: (data.totalCarbs > 0 || data.totalProtiens > 0 || data.totalFats > 0)
-            ? 0
-            : 1,
+        y: (data.totalCarbs > 0 || data.totalProtiens > 0 || data.totalFats > 0) ? 0 : 1,
         color: AppColors.chartColorGGray,
       ),
     ];
   }
+
 
   @override
   Widget build(BuildContext context) {

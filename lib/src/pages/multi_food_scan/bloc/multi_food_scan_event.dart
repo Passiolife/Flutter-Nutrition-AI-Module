@@ -8,11 +8,7 @@ class RecognitionResultEvent extends MultiFoodScanEvent {
   final List<FoodRecord?> removedList;
   final DateTime dateTime;
 
-  RecognitionResultEvent(
-      {required this.foodCandidates,
-      required this.list,
-      required this.removedList,
-      required this.dateTime});
+  RecognitionResultEvent({required this.foodCandidates, required this.list, required this.removedList, required this.dateTime});
 }
 
 class ShowFoodDetailsViewEvent extends MultiFoodScanEvent {
@@ -34,8 +30,9 @@ class DoNewRecipeEvent extends MultiFoodScanEvent {
   final List<FoodRecord?> data;
   final DateTime dateTime;
 
-  DoNewRecipeEvent(
-      {required this.name, required this.data, required this.dateTime});
+  DoNewRecipeEvent({required this.name, required this.data, required this.dateTime});
 }
 
-class DoClearAllEvent extends MultiFoodScanEvent {}
+class DoClearAllEvent extends MultiFoodScanEvent {
+
+}

@@ -12,6 +12,7 @@ part 'multi_food_scan_event.dart';
 part 'multi_food_scan_state.dart';
 
 class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
+
   // [insertFoodRecordUseCase] is use to insert food record into DB.
   // final UpdateFoodRecordUseCase? updateFoodRecordUseCase;
 
@@ -20,8 +21,7 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
   final _passioIds = <String>{};
 
   /// [_connector] use to perform operations.
-  PassioConnector get _connector =>
-      NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
 
   MultiFoodScanBloc() : super(QuickFoodScanInitial()) {
     on<RecognitionResultEvent>(_handleRecognitionResultEvent);
@@ -31,37 +31,32 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
     on<DoClearAllEvent>(_handleDoClearAllEvent);
   }
 
-  Future _handleRecognitionResultEvent(
-      RecognitionResultEvent event, Emitter<MultiFoodScanState> emit) async {
+  Future _handleRecognitionResultEvent(RecognitionResultEvent event, Emitter<MultiFoodScanState> emit) async {
     /// [foodCandidates] from recognition result.
     final foodCandidates = event.foodCandidates;
 
     var passioID = foodCandidates.detectedCandidates.firstOrNull?.passioID;
     var barcode = foodCandidates.barcodeCandidates?.firstOrNull?.value;
-    var packagedFoodCode =
-        foodCandidates.packagedFoodCandidates?.firstOrNull?.packagedFoodCode;
+    var packagedFoodCode = foodCandidates.packagedFoodCandidates?.firstOrNull?.packagedFoodCode;
 
     PassioIDAttributes? attributes;
 
     // If the scan result is Bar code.
     if (barcode != null) {
       if (_passioIds.add(barcode)) {
-        attributes =
-            await NutritionAI.instance.fetchAttributesForBarcode(barcode);
+        attributes = await NutritionAI.instance.fetchAttributesForBarcode(barcode);
       }
     }
     // If the scan result is food package.
     else if (packagedFoodCode != null) {
       if (_passioIds.add(packagedFoodCode)) {
-        attributes = await NutritionAI.instance
-            .fetchAttributesForPackagedFoodCode(packagedFoodCode);
+        attributes = await NutritionAI.instance.fetchAttributesForPackagedFoodCode(packagedFoodCode);
       }
     }
     // If the scan result is passioID.
     else if (passioID != null) {
       if (_passioIds.add(passioID)) {
-        attributes =
-            await NutritionAI.instance.lookupPassioAttributesFor(passioID);
+        attributes = await NutritionAI.instance.lookupPassioAttributesFor(passioID);
       }
     }
     // There is no any result then show searching UI.
@@ -70,20 +65,16 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
     }
 
     if (attributes != null) {
-      final foodRecord = FoodRecord.from(
-          passioIDAttributes: attributes, dateTime: event.dateTime);
+      final foodRecord = FoodRecord.from(passioIDAttributes: attributes, dateTime: event.dateTime);
       emit(QuickFoodSuccessState(foodRecord: foodRecord));
     }
   }
 
-  Future _handleShowFoodDetailsViewEvent(
-      ShowFoodDetailsViewEvent event, Emitter<MultiFoodScanState> emit) async {
-    emit(ShowFoodDetailsViewState(
-        isVisible: event.isVisible, index: event.index));
+  Future _handleShowFoodDetailsViewEvent(ShowFoodDetailsViewEvent event, Emitter<MultiFoodScanState> emit) async {
+    emit(ShowFoodDetailsViewState(isVisible: event.isVisible, index: event.index));
   }
 
-  Future<void> _handleDoAddAllEvent(
-      DoAddAllEvent event, Emitter<MultiFoodScanState> emit) async {
+  Future<void> _handleDoAddAllEvent(DoAddAllEvent event, Emitter<MultiFoodScanState> emit) async {
     try {
       for (var element in event.data.reversed) {
         if (element != null) {
@@ -98,8 +89,8 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
     }
   }
 
-  FutureOr<void> _handleDoNewRecipeEvent(
-      DoNewRecipeEvent event, Emitter<MultiFoodScanState> emit) async {
+  FutureOr<void> _handleDoNewRecipeEvent(DoNewRecipeEvent event, Emitter<MultiFoodScanState> emit) async {
+
     try {
       // Here, clearing the [_passioIds] So next time same food item can be insert into the set.
       _passioIds.clear();
@@ -109,12 +100,8 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
       // Here, updating the name of the food record which user has inputted.
       // Here clearing the ingredients.
       latestFoodRecord?.ingredients?.asMap().forEach((index, ingredient) {
-        PassioFoodItemData? updatedIngredient =
-            (latestFoodRecord.entityType != PassioIDEntityType.recipe)
-                ? ingredient.copyWith(
-                    passioID: latestFoodRecord.passioID,
-                    name: latestFoodRecord.name)
-                : ingredient;
+        PassioFoodItemData? updatedIngredient = (latestFoodRecord.entityType != PassioIDEntityType.recipe) ? ingredient.copyWith(
+            passioID: latestFoodRecord.passioID, name: latestFoodRecord.name) : ingredient;
         latestFoodRecord.ingredients?[index] = updatedIngredient;
       });
 
@@ -123,13 +110,9 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
         // Checking if index is > 0, because already we have took first record [latestFoodRecord] from data, so no need to add same ingredients twice.
         if (index > 0) {
           value?.ingredients?.forEach((ingredient) {
-            PassioFoodItemData? updatedIngredient =
-                (value.entityType != PassioIDEntityType.recipe)
-                    ? ingredient.copyWith(
-                        passioID: value.passioID, name: value.name)
-                    : ingredient;
-            latestFoodRecord?.addIngredients(
-                ingredient: updatedIngredient, isFirst: false);
+            PassioFoodItemData? updatedIngredient = (value.entityType != PassioIDEntityType.recipe) ? ingredient.copyWith(
+                passioID: value.passioID, name: value.name) : ingredient;
+            latestFoodRecord?.addIngredients(ingredient: updatedIngredient, isFirst: false);
           });
         }
       });
@@ -137,8 +120,7 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
       // We are updating the name here because it overrides name with "Recipe with" text.
       latestFoodRecord?.name = event.name;
       if (latestFoodRecord == null) {
-        emit(NewRecipeFailureState(
-            message: 'Something went wrong while parsing data.'));
+        emit(NewRecipeFailureState(message: 'Something went wrong while parsing data.'));
         return;
       }
       await _connector.updateRecord(foodRecord: latestFoodRecord, isNew: true);
@@ -148,8 +130,7 @@ class MultiFoodScanBloc extends Bloc<MultiFoodScanEvent, MultiFoodScanState> {
     }
   }
 
-  FutureOr<void> _handleDoClearAllEvent(
-      DoClearAllEvent event, Emitter<MultiFoodScanState> emit) async {
+  FutureOr<void> _handleDoClearAllEvent(DoClearAllEvent event, Emitter<MultiFoodScanState> emit) async {
     _passioIds.clear();
   }
 }

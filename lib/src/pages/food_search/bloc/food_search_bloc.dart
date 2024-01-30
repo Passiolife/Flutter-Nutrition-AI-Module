@@ -7,12 +7,12 @@ part 'food_search_event.dart';
 part 'food_search_state.dart';
 
 class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
+
   FoodSearchBloc() : super(FoodSearchInitial()) {
     on<DoFoodSearchEvent>(_doFoodSearchEvent);
   }
 
-  Future<void> _doFoodSearchEvent(
-      DoFoodSearchEvent event, Emitter<FoodSearchState> emit) async {
+  Future<void> _doFoodSearchEvent(DoFoodSearchEvent event, Emitter<FoodSearchState> emit) async {
     /// Here, checking the length of [searchQuery] and based on that we will do operations.
     ///
     /// If the [_searchQuery] is empty then do nothing.

@@ -23,6 +23,7 @@ class UpdateAmountEditableState extends EditFoodState {
   UpdateAmountEditableState({required this.isEditable});
 }
 
+
 /// States for Ingredients
 class AddIngredientsSuccessState extends EditFoodState {}
 

@@ -13,9 +13,8 @@ import 'widgets/loading_widget.dart';
 class SplashPage extends StatefulWidget {
   const SplashPage({super.key});
 
-  static void navigate(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const SplashPage()));
+  static void navigate(BuildContext context){
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const SplashPage()));
   }
 
   @override
@@ -62,8 +61,7 @@ class _SplashPageState extends State<SplashPage> {
                         ? Text(
                             state.message,
                             textAlign: TextAlign.center,
-                            style: AppStyles.style18
-                                .copyWith(color: AppColors.errorColor),
+                            style: AppStyles.style18.copyWith(color: AppColors.errorColor),
                           )
                         : const SizedBox.shrink(),
               ),

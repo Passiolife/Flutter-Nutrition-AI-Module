@@ -2,7 +2,6 @@ import 'package:flutter/foundation.dart';
 
 import 'common/connectors/passio_connector.dart';
 
-/// Configuration class for setting up nutrition-related SDK parameters.
 @protected
 class NutritionConfiguration {
   /// [_key] accepts a string key to configure the SDK.
@@ -13,12 +12,9 @@ class NutritionConfiguration {
   ///
   final PassioConnector connector;
 
-  /// Constructs a [NutritionConfiguration] with the specified [connector] and optional [key].
   const NutritionConfiguration({required this.connector, this.key});
 
-  /// Creates a new [NutritionConfiguration] with the specified values, allowing for partial updates.
-  NutritionConfiguration copyWith({String? key, PassioConnector? connector}) {
-    return NutritionConfiguration(
-        connector: connector ?? this.connector, key: key ?? this.key);
+  copyWith({String? key, PassioConnector? connector, String? databaseName}) {
+    return NutritionConfiguration(connector: connector ?? this.connector, key: key ?? this.key);
   }
 }

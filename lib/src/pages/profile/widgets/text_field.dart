@@ -12,7 +12,7 @@ class MyTextField extends StatelessWidget {
     this.onTapOutside,
     this.contentPadding,
     this.textStyle,
-    this.textAlign = TextAlign.start,
+    this.textAlign =  TextAlign.start,
     this.border,
     this.inputType,
     this.inputFormatters,

@@ -25,8 +25,7 @@ class EditSwitchWidget extends StatelessWidget {
     return Row(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: Dimens.w16, vertical: Dimens.h12),
+          padding: EdgeInsets.symmetric(horizontal: Dimens.w16, vertical: Dimens.h12),
           child: Text(
             title ?? '',
             style: AppStyles.style17,
@@ -34,8 +33,7 @@ class EditSwitchWidget extends StatelessWidget {
         ),
         const Spacer(),
         Padding(
-          padding:
-              EdgeInsets.symmetric(horizontal: Dimens.w16, vertical: Dimens.h8),
+          padding: EdgeInsets.symmetric(horizontal: Dimens.w16, vertical: Dimens.h8),
           child: CupertinoSlidingSegmentedControl<String>(
             // This represents the currently selected segmented control.
             groupValue: selected,
@@ -45,10 +43,8 @@ class EditSwitchWidget extends StatelessWidget {
               for (var v in items)
                 (v)?.toLowerCase() ?? '': Text(
                   v ?? '',
-                  style: AppStyles.style12.copyWith(
-                      color: selected?.toLowerCase() == (v)?.toLowerCase()
-                          ? AppColors.passioInset
-                          : AppColors.blackColor),
+                  style:
+                      AppStyles.style12.copyWith(color: selected?.toLowerCase() == (v)?.toLowerCase() ? AppColors.passioInset : AppColors.blackColor),
                 )
             },
             onValueChanged: (value) => onChangeSegment?.call(value),

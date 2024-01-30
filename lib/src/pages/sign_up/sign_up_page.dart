@@ -19,9 +19,8 @@ import 'bloc/sign_up_bloc.dart';
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key});
 
-  static void navigate(BuildContext context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (_) => const SignUpPage()));
+  static void navigate(BuildContext context){
+    Navigator.push(context, MaterialPageRoute(builder: (_) => const SignUpPage()));
   }
 
   @override
@@ -30,12 +29,10 @@ class SignUpPage extends StatefulWidget {
 
 class _SignUpPageState extends State<SignUpPage> {
   /// [_emailController] is use to get the value of email text field.
-  final TextEditingController _emailController =
-      TextEditingController(text: kDebugMode ? '' : '');
+  final TextEditingController _emailController = TextEditingController(text: kDebugMode ? '' : '');
 
   /// [_passwordController] is use to get the value of password text field.
-  final TextEditingController _passwordController =
-      TextEditingController(text: kDebugMode ? '' : '');
+  final TextEditingController _passwordController = TextEditingController(text: kDebugMode ? '' : '');
 
   /// [_bloc] is use to fire the appropriate event and bloc will emit the state.
   /// So, based on that we will display the widget.
@@ -51,11 +48,9 @@ class _SignUpPageState extends State<SignUpPage> {
       bloc: _bloc,
       listener: (context, state) {
         if (state is SignUpValidEmailErrorState) {
-          showDialogBox(
-              context, context.localization?.enterValidEmailAddress ?? '');
+          showDialogBox(context, context.localization?.enterValidEmailAddress ?? '');
         } else if (state is SignUpValidPasswordErrorState) {
-          showDialogBox(
-              context, context.localization?.enterValidPassword ?? '');
+          showDialogBox(context, context.localization?.enterValidPassword ?? '');
         }
       },
       builder: (context, state) {
@@ -94,8 +89,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         hintText: context.localization?.email ?? '',
                         textInputAction: TextInputAction.next,
                         onFieldSubmitted: (value) {
-                          _bloc.add(ValidateEmailAddressEvent(
-                              email: _emailController.text));
+                          _bloc.add(ValidateEmailAddressEvent(email: _emailController.text));
                         },
                       ),
                       Dimens.h32.verticalSpace,
@@ -109,10 +103,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       const Spacer(),
                       Text(
                         context.localization?.youHaveReadThePrivacyPolicy ?? "",
-                        style: AppStyles.style14.copyWith(
-                            fontSize: Dimens.fontSize18,
-                            color: AppColors.whiteColor,
-                            fontWeight: FontWeight.w300),
+                        style: AppStyles.style14.copyWith(fontSize: Dimens.fontSize18, color: AppColors.whiteColor, fontWeight: FontWeight.w300),
                         textAlign: TextAlign.center,
                       ),
                       Dimens.h16.verticalSpace,
@@ -120,8 +111,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         children: [
                           Expanded(
                             child: AppButton(
-                              buttonName:
-                                  context.localization?.privacyPolicy ?? '',
+                              buttonName: context.localization?.privacyPolicy ?? '',
                               onTap: () {},
                               color: Colors.black12,
                               fontSize: Dimens.fontSize16,
@@ -130,8 +120,7 @@ class _SignUpPageState extends State<SignUpPage> {
                           Dimens.w8.horizontalSpace,
                           Expanded(
                             child: AppButton(
-                              buttonName:
-                                  context.localization?.termsOfService ?? '',
+                              buttonName: context.localization?.termsOfService ?? '',
                               onTap: () {},
                               color: Colors.black12,
                               fontSize: Dimens.fontSize16,
@@ -143,8 +132,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       _isLoading
                           ? const AppButtonLoadingWidget()
                           : AppButton(
-                              buttonName:
-                                  context.localization?.acceptSignUp ?? '',
+                              buttonName: context.localization?.acceptSignUp ?? '',
                               onTap: () {
                                 context.hideKeyboard();
                               },

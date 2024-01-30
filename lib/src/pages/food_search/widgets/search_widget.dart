@@ -21,14 +21,13 @@ class _SearchWidgetState extends State<SearchWidget> {
   ///
   /// Cannot be null. The size of the icon is scaled using the accessibility
   /// font scale settings. Defaults to `20.0`.
-  final itemSize = 20.0;
+  final itemSize = 20;
 
   // The icon size will be scaled by a factor of the accessibility text scale,
   // to follow the behavior of `UISearchTextField`.
-  double get scaledIconSize => MediaQuery.textScalerOf(context).scale(itemSize);
+  double get scaledIconSize => MediaQuery.textScaleFactorOf(context) * itemSize;
 
-  IconThemeData iconThemeData({Color color = CupertinoColors.secondaryLabel}) =>
-      IconThemeData(
+  IconThemeData iconThemeData({Color color = CupertinoColors.secondaryLabel}) => IconThemeData(
         color: CupertinoDynamicColor.resolve(color, context),
         size: scaledIconSize,
       );

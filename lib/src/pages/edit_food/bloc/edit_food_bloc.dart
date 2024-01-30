@@ -10,21 +10,18 @@ part 'edit_food_state.dart';
 
 class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
   /// [_connector] use to perform operations.
-  PassioConnector get _connector =>
-      NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
 
   EditFoodBloc() : super(EditFoodInitial()) {
     on<DoFoodUpdateEvent>(_handleDoFoodUpdateEvent);
     on<DoFavouriteEvent>(_handleDoFavouriteEvent);
   }
 
-  Future<void> _handleDoFoodUpdateEvent(
-      DoFoodUpdateEvent event, Emitter<EditFoodState> emit) async {
+  Future<void> _handleDoFoodUpdateEvent(DoFoodUpdateEvent event, Emitter<EditFoodState> emit) async {
     try {
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FoodUpdateFailureState(
-            message: 'Something went wrong while parsing data.'));
+        emit(FoodUpdateFailureState(message: 'Something went wrong while parsing data.'));
         return;
       }
 
@@ -39,13 +36,11 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
     }
   }
 
-  Future<void> _handleDoFavouriteEvent(
-      DoFavouriteEvent event, Emitter<EditFoodState> emit) async {
+  Future<void> _handleDoFavouriteEvent(DoFavouriteEvent event, Emitter<EditFoodState> emit) async {
     try {
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FavoriteFailureState(
-            message: 'Something went wrong while parsing data.'));
+        emit(FavoriteFailureState(message: 'Something went wrong while parsing data.'));
         return;
       }
       await _connector.updateFavorite(foodRecord: foodRecord, isNew: true);

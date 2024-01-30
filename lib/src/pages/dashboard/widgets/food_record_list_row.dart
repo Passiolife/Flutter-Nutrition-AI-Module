@@ -17,12 +17,7 @@ typedef OnDeleteItem = Function(int index, FoodRecord? data);
 typedef OnEditItem = Function(int index, FoodRecord? data);
 
 class FoodRecordListRow extends StatefulWidget {
-  const FoodRecordListRow(
-      {required this.index,
-      this.data,
-      this.onDeleteItem,
-      this.onEditItem,
-      super.key});
+  const FoodRecordListRow({required this.index, this.data, this.onDeleteItem, this.onEditItem, super.key});
 
   final int index;
 
@@ -51,20 +46,16 @@ class _FoodRecordListRowState extends State<FoodRecordListRow> {
       // The end action pane is the one at the right or the bottom side.
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
-        dismissible: DismissiblePane(
-            onDismissed: () =>
-                widget.onDeleteItem?.call(widget.index, widget.data)),
+        dismissible: DismissiblePane(onDismissed: () => widget.onDeleteItem?.call(widget.index, widget.data)),
         children: [
           SlidableAction(
-            onPressed: (context) =>
-                widget.onEditItem?.call(widget.index, widget.data),
+            onPressed: (context) => widget.onEditItem?.call(widget.index, widget.data),
             backgroundColor: AppColors.customBase,
             foregroundColor: Colors.white,
             label: context.localization?.edit ?? '',
           ),
           SlidableAction(
-            onPressed: (context) =>
-                widget.onDeleteItem?.call(widget.index, widget.data),
+            onPressed: (context) => widget.onDeleteItem?.call(widget.index, widget.data),
             backgroundColor: AppColors.errorColor,
             foregroundColor: Colors.white,
             label: context.localization?.delete ?? '',
@@ -76,8 +67,7 @@ class _FoodRecordListRowState extends State<FoodRecordListRow> {
         child: Card(
           color: AppColors.passioInset,
           surfaceTintColor: AppColors.passioInset,
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Dimens.r50)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(Dimens.r50)),
           child: Row(
             children: [
               Padding(
@@ -118,8 +108,7 @@ class _FoodRecordListRowState extends State<FoodRecordListRow> {
                         type: MaterialType.transparency,
                         child: AutoSizeText(
                           widget.data?.name?.toUpperCaseWord ?? '',
-                          style: AppStyles.style17.copyWith(
-                              fontSize: Dimens.fontSizeFix17.toDouble()),
+                          style: AppStyles.style17.copyWith(fontSize: Dimens.fontSizeFix17.toDouble()),
                           minFontSize: Dimens.fontSizeFix11.toDouble(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
@@ -142,8 +131,7 @@ class _FoodRecordListRowState extends State<FoodRecordListRow> {
                     Row(
                       children: [
                         Hero(
-                          tag:
-                              '${context.localization?.calories}${widget.index}',
+                          tag: '${context.localization?.calories}${widget.index}',
                           child: Material(
                             type: MaterialType.transparency,
                             child: Text(
@@ -196,9 +184,8 @@ class _FoodRecordListRowState extends State<FoodRecordListRow> {
       return;
     }
 
-    PassioFoodIcons passioFoodIcons = await NutritionAI.instance.lookupIconsFor(
-        widget.data?.passioID ?? '',
-        type: widget.data?.entityType ?? PassioIDEntityType.item);
+    PassioFoodIcons passioFoodIcons =
+        await NutritionAI.instance.lookupIconsFor(widget.data?.passioID ?? '', type: widget.data?.entityType ?? PassioIDEntityType.item);
 
     if (passioFoodIcons.cachedIcon != null) {
       _image.value = passioFoodIcons.cachedIcon;
@@ -206,8 +193,7 @@ class _FoodRecordListRowState extends State<FoodRecordListRow> {
     }
     _image.value = passioFoodIcons.defaultIcon;
 
-    var remoteIcon =
-        await NutritionAI.instance.fetchIconFor(widget.data?.passioID ?? '');
+    var remoteIcon = await NutritionAI.instance.fetchIconFor(widget.data?.passioID ?? '');
     if (remoteIcon != null) {
       _image.value = remoteIcon;
     }

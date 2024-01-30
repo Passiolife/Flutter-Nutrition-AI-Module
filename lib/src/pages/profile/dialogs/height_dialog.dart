@@ -22,6 +22,7 @@ class HeightDialog {
     showGeneralDialog(
       context: context,
       transitionDuration: const Duration(milliseconds: Dimens.duration300),
+      barrierDismissible: false,
       transitionBuilder: (context, a1, a2, child) {
         return SlideTransition(
           position: Tween(
@@ -32,111 +33,100 @@ class HeightDialog {
         );
       },
       pageBuilder: (dialogContext, animation, animation2) {
-        return StatefulBuilder(builder: (builderContext, setState) {
-          return Material(
-            type: MaterialType.transparency,
-            child: Align(
-              alignment: Alignment.center,
-              child: IntrinsicHeight(
-                child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: Dimens.w8),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(Dimens.r16),
-                  ),
-                  child: SizedBox.expand(
-                    child: Column(
-                      children: [
-                        SizedBox(height: Dimens.h20),
-                        Text(
-                          title ?? '',
-                          style: AppStyles.style22,
-                        ),
-                        SizedBox(
-                          height: Dimens.h214,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
+        return WillPopScope(
+          onWillPop: () async {
+            return false;
+          },
+          child: StatefulBuilder(builder: (builderContext, setState) {
+            return Material(
+              type: MaterialType.transparency,
+              child: Align(
+                alignment: Alignment.center,
+                child: IntrinsicHeight(
+                  child: Container(
+                    margin: EdgeInsets.symmetric(horizontal: Dimens.w8),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(Dimens.r16),
+                    ),
+                    child: SizedBox.expand(
+                      child: Column(
+                        children: [
+                          SizedBox(height: Dimens.h20),
+                          Text(
+                            title ?? '',
+                            style: AppStyles.style22,
+                          ),
+                          SizedBox(
+                            height: Dimens.h214,
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Expanded(
+                                  child: CupertinoPicker(
+                                    magnification: 1.22,
+                                    scrollController: meterController,
+                                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                                      capEndEdge: false,
+                                    ),
+                                    itemExtent: Dimens.r22,
+                                    onSelectedItemChanged: (selectedItem) {},
+                                    squeeze: 1.22,
+                                    children: meter?.map((e) => Center(child: Text(e, style: AppStyles.style17))).toList() ?? [],
+                                  ),
+                                ),
+                                Expanded(
+                                  child: CupertinoPicker(
+                                    magnification: 1.22,
+                                    scrollController: centimeterController,
+                                    selectionOverlay: const CupertinoPickerDefaultSelectionOverlay(
+                                      capStartEdge: false,
+                                    ),
+                                    itemExtent: Dimens.r22,
+                                    onSelectedItemChanged: (selectedItem) {},
+                                    squeeze: 1.22,
+                                    children: centimeter?.map((e) => Center(child: Text(e, style: AppStyles.style17))).toList() ?? [],
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Row(
                             children: [
+                              SizedBox(width: Dimens.w16),
                               Expanded(
-                                child: CupertinoPicker(
-                                  magnification: 1.22,
-                                  scrollController: meterController,
-                                  selectionOverlay:
-                                      const CupertinoPickerDefaultSelectionOverlay(
-                                    capEndEdge: false,
-                                  ),
-                                  itemExtent: Dimens.r22,
-                                  onSelectedItemChanged: (selectedItem) {},
-                                  squeeze: 1.22,
-                                  children: meter
-                                          ?.map((e) => Center(
-                                              child: Text(e,
-                                                  style: AppStyles.style17)))
-                                          .toList() ??
-                                      [],
+                                child: AppButton(
+                                  buttonName: context.localization?.cancel ?? '',
+                                  textStyle: AppStyles.style15.copyWith(color: AppColors.passioInset),
+                                  onTap: () {
+                                    Navigator.pop(dialogContext);
+                                  },
                                 ),
                               ),
+                              SizedBox(width: Dimens.w8),
                               Expanded(
-                                child: CupertinoPicker(
-                                  magnification: 1.22,
-                                  scrollController: centimeterController,
-                                  selectionOverlay:
-                                      const CupertinoPickerDefaultSelectionOverlay(
-                                    capStartEdge: false,
-                                  ),
-                                  itemExtent: Dimens.r22,
-                                  onSelectedItemChanged: (selectedItem) {},
-                                  squeeze: 1.22,
-                                  children: centimeter
-                                          ?.map((e) => Center(
-                                              child: Text(e,
-                                                  style: AppStyles.style17)))
-                                          .toList() ??
-                                      [],
+                                child: AppButton(
+                                  buttonName: context.localization?.ok ?? '',
+                                  textStyle: AppStyles.style15.copyWith(color: AppColors.passioInset),
+                                  onTap: () {
+                                    onSaveHeight?.call(meterController?.selectedItem ?? 0, centimeterController?.selectedItem ?? 0);
+                                    Navigator.pop(dialogContext);
+                                  },
                                 ),
                               ),
+                              SizedBox(width: Dimens.w16),
                             ],
                           ),
-                        ),
-                        Row(
-                          children: [
-                            SizedBox(width: Dimens.w16),
-                            Expanded(
-                              child: AppButton(
-                                buttonName: context.localization?.cancel ?? '',
-                                textStyle: AppStyles.style15
-                                    .copyWith(color: AppColors.passioInset),
-                                onTap: () {
-                                  Navigator.pop(dialogContext);
-                                },
-                              ),
-                            ),
-                            SizedBox(width: Dimens.w8),
-                            Expanded(
-                              child: AppButton(
-                                buttonName: context.localization?.ok ?? '',
-                                textStyle: AppStyles.style15
-                                    .copyWith(color: AppColors.passioInset),
-                                onTap: () {
-                                  onSaveHeight?.call(
-                                      meterController?.selectedItem ?? 0,
-                                      centimeterController?.selectedItem ?? 0);
-                                  Navigator.pop(dialogContext);
-                                },
-                              ),
-                            ),
-                            SizedBox(width: Dimens.w16),
-                          ],
-                        ),
-                        SizedBox(height: Dimens.h20),
-                      ],
+                          SizedBox(height: Dimens.h20),
+                        ],
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          }),
+        );
       },
     );
   }

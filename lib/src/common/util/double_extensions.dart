@@ -3,8 +3,7 @@ import 'dart:math' as math;
 import 'package:intl/intl.dart';
 
 extension Util on double? {
-  String get removeDecimalZeroFormat =>
-      NumberFormat('##.##', 'en_US').format(this);
+  String get removeDecimalZeroFormat => NumberFormat('##.##', 'en_US').format(this);
 
   double roundNumber(int places) {
     if (this != null && !this!.isNaN) {

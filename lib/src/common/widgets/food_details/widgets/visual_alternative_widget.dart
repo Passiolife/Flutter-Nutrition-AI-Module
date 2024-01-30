@@ -10,8 +10,7 @@ import '../../../util/string_extensions.dart';
 typedef OnTapAlternative = Function(PassioAlternative? alternative);
 
 class VisualAlternativeWidget extends StatelessWidget {
-  const VisualAlternativeWidget(
-      {required this.alternatives, this.onTapAlternative, super.key});
+  const VisualAlternativeWidget({required this.alternatives, this.onTapAlternative, super.key});
 
   final List<PassioAlternative?> alternatives;
   final OnTapAlternative? onTapAlternative;
@@ -47,8 +46,7 @@ class VisualAlternativeWidget extends StatelessWidget {
                     behavior: HitTestBehavior.translucent,
                     onTap: () => onTapAlternative?.call(data),
                     child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(canvasColor: AppColors.passioLowContrast),
+                      data: Theme.of(context).copyWith(canvasColor: AppColors.passioLowContrast),
                       child: Chip(
                         label: Text(
                           (data?.name ?? "").toCapitalized() ?? "",

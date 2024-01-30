@@ -132,11 +132,9 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
                             onTap: () {
                               widget.quantityController.clear();
                             },
-                            keyboardType: const TextInputType.numberWithOptions(
-                                decimal: true),
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             decoration: InputDecoration(
-                              contentPadding: EdgeInsets.symmetric(
-                                  vertical: Dimens.h4, horizontal: Dimens.w4),
+                              contentPadding: EdgeInsets.symmetric(vertical: Dimens.h4, horizontal: Dimens.w4),
                               isDense: true,
                               filled: true,
                               fillColor: AppColors.passioLowContrast,
@@ -158,8 +156,7 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
                           },
                           child: Container(
                             height: Dimens.h34,
-                            padding: EdgeInsets.symmetric(
-                                vertical: Dimens.h4, horizontal: Dimens.w16),
+                            padding: EdgeInsets.symmetric(vertical: Dimens.h4, horizontal: Dimens.w16),
                             decoration: BoxDecoration(
                               color: AppColors.dropDownFieldColor,
                               borderRadius: BorderRadius.circular(Dimens.r8),
@@ -178,8 +175,7 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
                     if (widget.computedWeight?.value != null)
                       Flexible(
                         child: AnimatedSwitcher(
-                          duration:
-                              const Duration(milliseconds: Dimens.duration200),
+                          duration: const Duration(milliseconds: Dimens.duration200),
                           child: Text(
                             "(${double.parse(widget.computedWeight?.value.removeDecimalZeroFormat ?? '0')} ${widget.computedWeight?.symbol})",
                             style: AppStyles.style16,
@@ -215,17 +211,14 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
           SizedBox(
             width: double.infinity,
             child: Theme(
-              data: ThemeData(
-                  sliderTheme: SliderThemeData(
-                      tickMarkShape: SliderTickMarkShape.noTickMark)),
+              data: ThemeData(sliderTheme: SliderThemeData(tickMarkShape: SliderTickMarkShape.noTickMark)),
               child: Slider.adaptive(
                 value: widget.sliderData.sliderValue,
                 divisions: widget.sliderData.sliderStep.round(),
                 max: widget.sliderData.sliderMax,
                 min: widget.sliderData.sliderMin,
                 activeColor: AppColors.customBase,
-                onChanged: (value) =>
-                    widget.onQuantityChange?.call(true, value),
+                onChanged: (value) => widget.onQuantityChange?.call(true, value),
               ),
             ),
           ),
@@ -240,26 +233,21 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
                 scrollDirection: Axis.horizontal,
                 itemCount: widget.servingSizes?.length ?? 0,
                 itemBuilder: (BuildContext context, int index) {
-                  final passioServingSize =
-                      widget.servingSizes?.elementAt(index);
+                  final passioServingSize = widget.servingSizes?.elementAt(index);
                   return GestureDetector(
                     behavior: HitTestBehavior.translucent,
                     onTap: () {
                       widget.onServingSizeChange?.call(passioServingSize);
                     },
                     child: Theme(
-                      data: Theme.of(context)
-                          .copyWith(canvasColor: AppColors.passioLowContrast),
+                      data: Theme.of(context).copyWith(canvasColor: AppColors.passioLowContrast),
                       child: ChoiceChip(
                         label: Text(
                           "${passioServingSize?.quantity.removeDecimalZeroFormat} ${passioServingSize?.unitName ?? ''}",
-                          style: AppStyles.style14
-                              .copyWith(fontWeight: FontWeight.w500),
+                          style: AppStyles.style14.copyWith(fontWeight: FontWeight.w500),
                         ),
-                        selected: (widget.selectedServingSize?.quantity ==
-                                passioServingSize?.quantity &&
-                            widget.selectedServingSize?.unitName ==
-                                passioServingSize?.unitName),
+                        selected: (widget.selectedServingSize?.quantity == passioServingSize?.quantity &&
+                            widget.selectedServingSize?.unitName == passioServingSize?.unitName),
                         selectedColor: AppColors.passioMedContrast,
                       ),
                     ),
@@ -289,12 +277,9 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
             child: CustomElevatedButton(
               onTap: () {
                 if (widget.quantityController.text.isNotEmpty) {
-                  widget.onQuantityChange?.call(
-                      false, double.parse(widget.quantityController.text));
+                  widget.onQuantityChange?.call(false, double.parse(widget.quantityController.text));
                 } else {
-                  widget.quantityController.text = widget
-                      .sliderData.sliderValue.removeDecimalZeroFormat
-                      .toString();
+                  widget.quantityController.text = widget.sliderData.sliderValue.removeDecimalZeroFormat.toString();
                 }
                 context.hideKeyboard();
               },
@@ -318,9 +303,7 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
   void _showServingUnitsDialog() {
     int selectedServingUnitIndex = 0;
     if (widget.selectedServingUnitName != null) {
-      selectedServingUnitIndex = widget.servingUnits?.indexWhere((element) =>
-              element.unitName == widget.selectedServingUnitName) ??
-          0;
+      selectedServingUnitIndex = widget.servingUnits?.indexWhere((element) => element.unitName == widget.selectedServingUnitName) ?? 0;
     }
     showDialog(
       context: context,
@@ -342,8 +325,7 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
                 child: CupertinoPicker(
                   squeeze: 1.2,
                   useMagnifier: false,
-                  scrollController: FixedExtentScrollController(
-                      initialItem: selectedServingUnitIndex),
+                  scrollController: FixedExtentScrollController(initialItem: selectedServingUnitIndex),
                   onSelectedItemChanged: (int selectedItem) {
                     selectedServingUnitIndex = selectedItem;
                   },
@@ -362,8 +344,7 @@ class _ServingSizeViewWidgetState extends State<ServingSizeViewWidget> {
               CustomElevatedButton(
                 onTap: () {
                   Navigator.pop(dialogContext);
-                  widget.onChangeServingUnit?.call(
-                      widget.servingUnits?.elementAt(selectedServingUnitIndex));
+                  widget.onChangeServingUnit?.call(widget.servingUnits?.elementAt(selectedServingUnitIndex));
                 },
                 text: context.localization?.select ?? '',
               )

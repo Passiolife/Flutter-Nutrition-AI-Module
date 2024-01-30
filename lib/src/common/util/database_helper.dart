@@ -11,6 +11,7 @@ class DatabaseHelper {
 
   /// Here, actual code for database related operations.
   ///
+
   late Database database;
 
   // Database

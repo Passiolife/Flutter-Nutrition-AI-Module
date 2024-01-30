@@ -11,10 +11,7 @@ import '../../../common/widgets/app_button.dart';
 typedef OnTapSave = Function(DateTime dateTime);
 
 class LogDatePickerDialog {
-  LogDatePickerDialog.show(
-      {required BuildContext context,
-      required DateTime initialDate,
-      OnTapSave? onTapSave}) {
+  LogDatePickerDialog.show({required BuildContext context, required DateTime initialDate, OnTapSave? onTapSave}) {
     DateTime selectedDate = initialDate;
     if (Platform.isIOS) {
       /// Display a CupertinoDatePicker in date picker mode.

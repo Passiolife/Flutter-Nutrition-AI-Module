@@ -16,8 +16,7 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     on<DoForgotPasswordEvent>(_doForgotPassword);
   }
 
-  Future<void> _doSignInEvent(
-      DoSignInEvent event, Emitter<SignInState> emit) async {
+  Future<void> _doSignInEvent(DoSignInEvent event, Emitter<SignInState> emit) async {
     if (!event.email.isValidEmail) {
       emit(SignInValidEmailErrorState());
     } else if (event.password.isEmpty || event.password.length < 6) {
@@ -25,22 +24,19 @@ class SignInBloc extends Bloc<SignInEvent, SignInState> {
     } else {}
   }
 
-  Future _validateEmailAddressEvent(
-      ValidateEmailAddressEvent event, Emitter<SignInState> emit) async {
+  Future _validateEmailAddressEvent(ValidateEmailAddressEvent event, Emitter<SignInState> emit) async {
     if (!event.email.isValidEmail) {
       emit(SignInValidEmailErrorState());
     }
   }
 
-  Future _validatePasswordEvent(
-      ValidatePasswordEvent event, Emitter<SignInState> emit) async {
+  Future _validatePasswordEvent(ValidatePasswordEvent event, Emitter<SignInState> emit) async {
     if (event.password.isEmpty) {
       emit(SignInValidPasswordErrorState());
     }
   }
 
-  Future _doForgotPassword(
-      DoForgotPasswordEvent event, Emitter<SignInState> emit) async {
+  Future _doForgotPassword(DoForgotPasswordEvent event, Emitter<SignInState> emit) async {
     /// Here, we are checking email address is valid or not.
     if (!event.email.isValidEmail) {
       /// If, email address is not valid then show validation message.
