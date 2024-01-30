@@ -99,7 +99,7 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
         child: ElevatedButton(
           onPressed: () async {
             await NutritionAIModule.instance
-                .setPassioKey('9xL917n5RlTHhNttWTE4PQ6y7sdzD3mJWxJ36duPvL1Y')
+                .setPassioKey(PUT_YOUR_PASSIO_KEY_HERE)
                 .setPassioConnector(this) // This is optional
                 .launch(context);
           },
