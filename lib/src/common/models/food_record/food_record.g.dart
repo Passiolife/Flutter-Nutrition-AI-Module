@@ -16,10 +16,10 @@ FoodRecord _$FoodRecordFromJson(Map<String, dynamic> json) => FoodRecord(
       visualName: json['visualName'] as String?,
       nutritionalPassioID: json['nutritionalPassioID'] as String?,
       servingSizes: (json['servingSizes'] as List<dynamic>?)
-          ?.map(const PassioServingSizeConverter().fromJson)
+          ?.map((e) => PassioServingSize.fromJson(e as Map<String, dynamic>))
           .toList(),
       servingUnits: (json['servingUnits'] as List<dynamic>?)
-          ?.map(const PassioServingUnitConverter().fromJson)
+          ?.map((e) => PassioServingUnit.fromJson(e as Map<String, dynamic>))
           .toList(),
       scannedUnitName: json['scannedUnitName'] as String? ?? "scanned amount",
       entityType:
@@ -27,19 +27,19 @@ FoodRecord _$FoodRecordFromJson(Map<String, dynamic> json) => FoodRecord(
       selectedUnit: json['selectedUnit'] as String?,
       selectedQuantity: (json['selectedQuantity'] as num?)?.toDouble() ?? 0,
       ingredients: (json['ingredients'] as List<dynamic>?)
-          ?.map(const PassioFoodItemDataConverter().fromJson)
+          ?.map((e) => PassioFoodItemData.fromJson(e as Map<String, dynamic>))
           .toList(),
       condiments: (json['condiments'] as List<dynamic>?)
-          ?.map(const PassioFoodItemDataConverter().fromJson)
+          ?.map((e) => PassioFoodItemData.fromJson(e as Map<String, dynamic>))
           .toList(),
       parents: (json['parents'] as List<dynamic>?)
-          ?.map(const PassioAlternativeConverter().fromJson)
+          ?.map((e) => PassioAlternative.fromJson(e as Map<String, dynamic>))
           .toList(),
       siblings: (json['siblings'] as List<dynamic>?)
-          ?.map(const PassioAlternativeConverter().fromJson)
+          ?.map((e) => PassioAlternative.fromJson(e as Map<String, dynamic>))
           .toList(),
       children: (json['children'] as List<dynamic>?)
-          ?.map(const PassioAlternativeConverter().fromJson)
+          ?.map((e) => PassioAlternative.fromJson(e as Map<String, dynamic>))
           .toList(),
       tags: (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList(),
     );
@@ -54,31 +54,17 @@ Map<String, dynamic> _$FoodRecordToJson(FoodRecord instance) =>
       'visualPassioID': instance.visualPassioID,
       'visualName': instance.visualName,
       'nutritionalPassioID': instance.nutritionalPassioID,
-      'servingSizes': instance.servingSizes
-          ?.map(const PassioServingSizeConverter().toJson)
-          .toList(),
-      'servingUnits': instance.servingUnits
-          ?.map(const PassioServingUnitConverter().toJson)
-          .toList(),
+      'servingSizes': instance.servingSizes?.map((e) => e.toJson()).toList(),
+      'servingUnits': instance.servingUnits?.map((e) => e.toJson()).toList(),
       'scannedUnitName': instance.scannedUnitName,
-      'condiments': instance.condiments
-          ?.map(const PassioFoodItemDataConverter().toJson)
-          .toList(),
+      'condiments': instance.condiments?.map((e) => e.toJson()).toList(),
       'entityType': _$PassioIDEntityTypeEnumMap[instance.entityType],
       'selectedUnit': instance.selectedUnit,
       'selectedQuantity': instance.selectedQuantity,
-      'ingredients': instance.ingredients
-          ?.map(const PassioFoodItemDataConverter().toJson)
-          .toList(),
-      'parents': instance.parents
-          ?.map(const PassioAlternativeConverter().toJson)
-          .toList(),
-      'siblings': instance.siblings
-          ?.map(const PassioAlternativeConverter().toJson)
-          .toList(),
-      'children': instance.children
-          ?.map(const PassioAlternativeConverter().toJson)
-          .toList(),
+      'ingredients': instance.ingredients?.map((e) => e.toJson()).toList(),
+      'parents': instance.parents?.map((e) => e.toJson()).toList(),
+      'siblings': instance.siblings?.map((e) => e.toJson()).toList(),
+      'children': instance.children?.map((e) => e.toJson()).toList(),
       'tags': instance.tags,
     };
 
