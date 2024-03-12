@@ -1,3 +1,4 @@
+/*
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import 'double_extensions.dart';
@@ -124,3 +125,4 @@ extension PassioFoodItemDataExtension on PassioFoodItemData {
     );
   }
 }
+*/

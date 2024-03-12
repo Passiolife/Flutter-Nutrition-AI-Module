@@ -1,13 +1,26 @@
 // main_default.dart file launches the functionality by default.
 
+import 'dart:async';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+import 'app_secret.dart';
 
-  runApp(const MyApp());
+void main() {
+  runZonedGuarded(
+    () {
+      WidgetsFlutterBinding.ensureInitialized();
+      runApp(const MyApp());
+    },
+    (error, stack) {
+      // Handle the error gracefully
+      log('Error: $error');
+    },
+  );
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -16,6 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -39,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
       Navigator.pop(context);
       await NutritionAIModule.instance
-          .setPassioKey(PUT_YOUR_PASSIO_KEY_HERE)
+          .setPassioKey(AppSecret.passioKey)
           .launch(context);
     });
     super.initState();

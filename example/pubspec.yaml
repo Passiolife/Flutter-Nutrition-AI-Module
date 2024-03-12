@@ -37,10 +37,11 @@ dependencies:
   nutrition_ai_module:
     path: ../
 
-  hive: ^2.2.3
   hive_flutter: ^1.1.0
 
-  intl: ^0.18.1
+  intl: ^0.19.0
+
+  envied: ^0.3.0+3
 
 dev_dependencies:
   flutter_test:

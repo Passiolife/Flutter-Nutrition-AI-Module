@@ -1,28 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:nutrition_ai/nutrition_ai.dart';
 
 import 'common/connectors/local_db_connector.dart';
 import 'common/connectors/passio_connector.dart';
 import 'common/constant/app_constants.dart';
-import 'common/constant/dimens.dart';
+import 'common/locale/app_localizations.dart';
 import 'common/util/database_helper.dart';
+import 'common/util/preference_store.dart';
 import 'common/util/string_extensions.dart';
-import 'locale/app_localizations.dart';
+import 'common/widgets/nutrition_ai_widget.dart';
 import 'nutrition_ai_module_configuration.dart';
-import 'pages/splash/splash_page.dart';
 
-/// Singleton class for managing Nutrition AI functionality.
 class NutritionAIModule {
   /// Here, implementing the code for singleton class.
   ///
   static final NutritionAIModule _instance =
       NutritionAIModule._privateConstructor();
 
-  /// Private constructor for [NutritionAIModule].
   NutritionAIModule._privateConstructor();
 
-  /// Getter for the singleton instance.
   static NutritionAIModule get instance => _instance;
 
   /// [configuration] holds the key & connector data.
@@ -45,28 +43,48 @@ class NutritionAIModule {
 
   /// [launch] function requires a [BuildContext] parameter to initiate the Nutrition AI module.
   ///
-  Future launch(BuildContext context) async {
+  Future<void> launch(BuildContext context) async {
     assert(
         configuration.key.isNotNullOrEmpty, 'Passio key should not be empty.');
 
-    /// Checking the type of connector and based on that will perform the operator.
-    /// If user passes the connector to the configuration then we will not initialize the Database
-    /// Else we have to initialize the local database.
-    ///
+    final passioConfig = PassioConfiguration(configuration.key ?? '');
+    final passioStatus = await NutritionAI.instance.configureSDK(passioConfig);
+
+    if (passioStatus.mode != PassioMode.isReadyForDetection) {
+      return;
+    }
+    // Checking the type of connector and based on that will peform the operator.
+    // If user passes the connector to the configuration then we will not initialize the Database
+    // Else we have to initialize the local database.
+    //
     if (configuration.connector is LocalDBConnector) {
-      DatabaseHelper.instance.init();
+      await DatabaseHelper.instance.init();
     }
 
+    // Set preferred device orientation to portrait mode
     await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-    /// Launching the [Main] to set up the module.
-    ///
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: AppColors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+    ));
+
+    // Load language file for localization
+    await AppLocalizations.instance.loadLanguageFile(
+        'packages/${AppCommonConstants.packageName}/assets/translation/app_en.json');
+
+    await PreferenceStore.instance.init();
+
+    // Check if the current widget is mounted before proceeding
     if (context.mounted) {
-      AppLocalizations.instance.loadLanguageFile(
-          'packages/${AppConstants.packageName}/assets/translation/app_en.json');
-      ScreenUtil.init(context,
-          designSize: const Size(Dimens.designWidth, Dimens.designHeight));
-      SplashPage.navigate(context);
+      // Initialize ScreenUtil for responsive UI
+      ScreenUtil.init(
+        context,
+        designSize: Size(AppDimens.designWidth, AppDimens.designHeight),
+      );
+
+      // Navigate to the NutritionAIWidget screen
+      NutritionAIWidget.navigate(context);
     }
   }
 }

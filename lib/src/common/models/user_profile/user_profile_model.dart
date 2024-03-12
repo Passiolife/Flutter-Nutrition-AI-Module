@@ -76,7 +76,7 @@ class UserProfileModel {
         height != null &&
         (height ?? 0) > 0 &&
         (weight ?? 0) > 0) {
-      return ((weight ?? 0) / pow((height ?? 0), 2)).roundNumber(1);
+      return ((weight ?? 0) / pow((height ?? 0), 2)).roundNumber(places: 1) as double;
     }
     return null;
   }
@@ -93,9 +93,9 @@ class UserProfileModel {
   String? get weightDescription {
     if (weight != null) {
       return switch (units) {
-        UnitSelection.metric => weight.roundNumber(1).toString(),
+        UnitSelection.metric => weight.roundNumber(places: 1).toString(),
         _ =>
-          ((weight ?? 0) * Conversion.lbsToKg.value).roundNumber(1).toString(),
+          ((weight ?? 0) * Conversion.lbsToKg.value).roundNumber(places: 1).toString(),
       };
     }
     return null;
@@ -110,7 +110,7 @@ class UserProfileModel {
     if (height != null) {
       switch (units) {
         case UnitSelection.metric:
-          return height.roundNumber(2).toString();
+          return height.roundNumber(places: 2).toString();
         default:
           int inches = ((height ?? 0) * Conversion.inchToMeter.value).toInt();
           int inch = (inches % Conversion.inchToFeet.value).toInt();

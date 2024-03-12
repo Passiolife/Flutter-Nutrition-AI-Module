@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:intl/intl.dart';
 
-import '../models/food_record/food_record.dart';
+import '../models/food_record/food_record_v3.dart';
 import '../models/user_profile/user_profile_model.dart';
 import '../util/database_helper.dart';
 import 'passio_connector.dart';
@@ -15,8 +15,9 @@ class LocalDBConnector implements PassioConnector {
       {required FoodRecord foodRecord, required bool isNew}) async {
     // If [isNew] is [true] then perform the insert operation.
     if (isNew) {
-      DateTime createdAt = DateTime.fromMillisecondsSinceEpoch(
-          foodRecord.createdAt?.toInt() ?? 0);
+      DateTime? createdAt = foodRecord.getCreatedAt();
+      if (createdAt == null) return;
+
       final date = DateFormat('yyyyMMdd').format(createdAt);
 
       final values = {
@@ -36,8 +37,7 @@ class LocalDBConnector implements PassioConnector {
   }
 
   @override
-  Future<List<FoodRecord>?> fetchDayRecords(
-      {required DateTime dateTime}) async {
+  Future<List<FoodRecord>> fetchDayRecords({required DateTime dateTime}) async {
     final date = DateFormat('yyyyMMdd').format(dateTime);
     List<Map>? data = await _databaseHelper.database.query(
       _databaseHelper.tblFoodRecord,
@@ -55,17 +55,18 @@ class LocalDBConnector implements PassioConnector {
 
   @override
   Future<void> deleteRecord({required FoodRecord foodRecord}) async {
-    await _databaseHelper.database.delete(_databaseHelper.tblFoodRecord,
-        where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);
+    return;
+    /*await _databaseHelper.database.delete(_databaseHelper.tblFoodRecord,
+        where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);*/
   }
 
   @override
   Future<void> updateFavorite(
       {required FoodRecord foodRecord, required bool isNew}) async {
-    if (isNew) {
+    /*if (isNew) {
       DateTime createdAt = DateTime.fromMillisecondsSinceEpoch(
           foodRecord.createdAt?.toInt() ?? 0);
-      final date = DateFormat('yyyyMMdd').format(createdAt);
+      final date = DateFormat(format9).format(createdAt);
 
       final values = {
         _databaseHelper.colCreatedAt: date,
@@ -80,12 +81,12 @@ class LocalDBConnector implements PassioConnector {
       final row = {_databaseHelper.colData: jsonEncode(foodRecord)};
       await _databaseHelper.database.update(_databaseHelper.tblFavorite, row,
           where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);
-    }
+    }*/
   }
 
   @override
   Future<List<FoodRecord>?> fetchFavorites() async {
-    List<Map?>? data = await _databaseHelper.database.query(
+    /*List<Map?>? data = await _databaseHelper.database.query(
         _databaseHelper.tblFavorite,
         orderBy: '${_databaseHelper.colId} DESC');
     return data.map((e) {
@@ -93,13 +94,14 @@ class LocalDBConnector implements PassioConnector {
           FoodRecord.fromJson(jsonDecode(e?[_databaseHelper.colData]));
       foodRecordResponse.id = e?[_databaseHelper.colId].toString();
       return foodRecordResponse;
-    }).toList();
+    }).toList();*/
   }
 
   @override
   Future<void> deleteFavorite({required FoodRecord foodRecord}) async {
-    await _databaseHelper.database.delete(_databaseHelper.tblFavorite,
-        where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);
+    return;
+    /*await _databaseHelper.database.delete(_databaseHelper.tblFavorite,
+        where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);*/
   }
 
   @override
@@ -129,5 +131,27 @@ class LocalDBConnector implements PassioConnector {
           jsonDecode(data?[_databaseHelper.colData]));
     }
     return null;
+  }
+
+  @override
+  Future<List<FoodRecord>> fetchRecords({
+    required DateTime fromDate,
+    required DateTime endDate,
+  }) async {
+    return [];
+    /*final formattedFromDate = DateFormat('yyyyMMdd').format(fromDate);
+    final formattedEndDate = DateFormat('yyyyMMdd').format(endDate);
+    List<Map>? data = await _databaseHelper.database.query(
+      _databaseHelper.tblFoodRecord,
+      where: '${_databaseHelper.colCreatedAt} BETWEEN ? AND ?',
+      whereArgs: [formattedFromDate, formattedEndDate],
+      orderBy: '${_databaseHelper.colId} DESC',
+    );
+    return data.map((e) {
+      final foodRecordResponse =
+          FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
+      foodRecordResponse.id = e[_databaseHelper.colId].toString();
+      return foodRecordResponse;
+    }).toList();*/
   }
 }

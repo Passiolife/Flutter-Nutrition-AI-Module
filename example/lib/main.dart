@@ -2,8 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:intl/intl.dart';
 import 'package:nutrition_ai_module/nutrition_ai_module.dart';
+
+import 'app_secret.dart';
 
 String foodRecordBoxName = 'foodRecordBox';
 String userProfileBoxName = 'userProfileBox';
@@ -15,7 +16,7 @@ Future<void> main() async {
   // Initialize hive
   await Hive.initFlutter();
   // Registering the adapter
-  Hive.registerAdapter(FoodRecordAdapter());
+  // Hive.registerAdapter(FoodRecordAdapter());
   Hive.registerAdapter(UserProfileAdapter());
   // Open the foodRecordBox
   await Hive.openBox<FoodRecord>(foodRecordBoxName);
@@ -32,6 +33,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -54,7 +56,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
   /// [_foodRecordBox] helps to stores the food record data inside the hive db.
   ///
-  Box<FoodRecord>? _foodRecordBox;
+  late Box<FoodRecord> _foodRecordBox;
 
   /// [_userProfileBox] helps to stores the user profile data inside the hive db.
   ///
@@ -66,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
 
   /// [_foodRecords] contains the food record list.
   ///
-  List<FoodRecord>? _foodRecords;
+  late List<FoodRecord> _foodRecords;
 
   /// [_favoriteRecords] contains the favorite record list.
   ///
@@ -91,28 +93,35 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            await NutritionAIModule.instance
-                .setPassioKey(PUT_YOUR_PASSIO_KEY_HERE)
-                .setPassioConnector(this) // This is optional
-                .launch(context);
-          },
-          child: const Text('Launch'),
-        ),
+      body: Stack(
+        children: [
+          Center(
+            child: ElevatedButton(
+              onPressed: () async {
+                await NutritionAIModule.instance
+                    .setPassioKey(AppSecret.passioKey)
+                    // TODO: Uncomment below line.
+                    // .setPassioConnector(this) // This is optional
+                    .launch(context);
+              },
+              child: const Text('Launch'),
+            ),
+          ),
+        ],
       ),
     );
   }
 
   @override
-  Future<List<FoodRecord>?> fetchDayRecords(
-      {required DateTime dateTime}) async {
-    _foodRecords = _foodRecordBox?.values
+  Future<List<FoodRecord>> fetchDayRecords({required DateTime dateTime}) async {
+    return [];
+    /*
+    _foodRecords = _foodRecordBox.values
         .toList()
         .asMap()
         .entries
@@ -131,34 +140,39 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
         .reversed
         .toList();
     return _foodRecords;
+    */
   }
 
   @override
   Future<void> updateRecord(
       {required FoodRecord foodRecord, required bool isNew}) async {
-    if (isNew) {
-      await _foodRecordBox?.add(foodRecord);
+    _foodRecordBox.values.toList();
+    return;
+    /*if (isNew) {
+      await _foodRecordBox.add(foodRecord);
     } else {
       final key = int.tryParse(foodRecord.id ?? '');
       if (key != null) {
-        await _foodRecordBox?.putAt(key, foodRecord);
+        await _foodRecordBox.putAt(key, foodRecord);
       }
-    }
+    }*/
   }
 
   @override
   Future<void> deleteRecord({required FoodRecord foodRecord}) async {
-    final key = int.tryParse(foodRecord.id ?? '');
+    return;
+    /*final key = int.tryParse(foodRecord.id ?? '');
     if (key != null) {
-      await _foodRecordBox?.deleteAt(key);
-    }
+      await _foodRecordBox.deleteAt(key);
+    }*/
   }
 
   /// Methods related to favorites.
   ///
   @override
   Future<List<FoodRecord>?> fetchFavorites() async {
-    _favoriteRecords = _favoriteBox?.values
+    return [];
+    /*_favoriteRecords = _favoriteBox?.values
         .toList()
         .asMap()
         .entries
@@ -169,28 +183,29 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
         .toList()
         .reversed
         .toList();
-    return _favoriteRecords;
+    return _favoriteRecords;*/
   }
 
   @override
   Future<void> updateFavorite(
       {required FoodRecord foodRecord, required bool isNew}) async {
-    if (isNew) {
+    return;
+    /*if (isNew) {
       await _favoriteBox?.add(foodRecord);
     } else {
       final key = int.tryParse(foodRecord.id ?? '');
       if (key != null) {
         await _favoriteBox?.putAt(key, foodRecord);
       }
-    }
+    }*/
   }
 
   @override
   Future<void> deleteFavorite({required FoodRecord foodRecord}) async {
-    final key = int.tryParse(foodRecord.id ?? '');
+    /*final key = int.tryParse(foodRecord.id ?? '');
     if (key != null) {
       await _favoriteBox?.deleteAt(key);
-    }
+    }*/
   }
 
   /// Methods related to UserProfile.
@@ -210,25 +225,32 @@ class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
           _userProfileBox?.keys.firstOrNull, userProfile);
     }
   }
+
+  @override
+  Future<List<FoodRecord>> fetchRecords(
+      {required DateTime fromDate, required DateTime endDate}) {
+    // TODO: implement fetchRecords
+    throw UnimplementedError();
+  }
 }
 
 /// Declaring the Type Adapters for Hive.
 ///
 
-class FoodRecordAdapter extends TypeAdapter<FoodRecord> {
-  @override
-  FoodRecord read(BinaryReader reader) {
-    return FoodRecord.fromJson(jsonDecode(reader.read()));
-  }
-
-  @override
-  int get typeId => 0;
-
-  @override
-  void write(BinaryWriter writer, FoodRecord obj) {
-    writer.write(jsonEncode(obj));
-  }
-}
+// class FoodRecordAdapter extends TypeAdapter<FoodRecord> {
+//   @override
+//   FoodRecord read(BinaryReader reader) {
+//     return FoodRecord.fromJson(jsonDecode(reader.read()));
+//   }
+//
+//   @override
+//   int get typeId => 0;
+//
+//   @override
+//   void write(BinaryWriter writer, FoodRecord obj) {
+//     writer.write(jsonEncode(obj));
+//   }
+// }
 
 class UserProfileAdapter extends TypeAdapter<UserProfileModel> {
   @override

@@ -1,51 +1,75 @@
 import 'package:flutter/material.dart';
 
 class AppColors {
-  static const blackColor = Colors.black;
-  static const whiteColor = Colors.white;
-  static const transparentColor = Colors.transparent;
+  static const Color transparent = Colors.transparent;
 
-  static const bgColor = Color(0xffe6ebf5);
+  // Greys
+  static const Color gray900 = Color(0xFF111827);
+  static const Color gray800 = Color(0xFF1F2937);
+  static const Color gray700 = Color(0xFF374151);
+  static const Color gray600 = Color(0xFF4B5563);
+  static const Color gray500 = Color(0xFF6B7280);
+  static const Color gray400 = Color(0xFF9CA3AF);
+  static const Color gray300 = Color(0xFFD1D5DB);
+  static const Color gray200 = Color(0xFFE5E7EB);
+  static const Color gray100 = Color(0xFFF3F4F6);
 
-  static const hintColor = Colors.grey;
-  static const textFieldBgColor = Color(0xffd8dce5);
-  static const textFieldIconBgColor = Color(0xffc2c8d6);
-  static const buttonColor = Color(0xff0042b2);
+  // Primitives
+  static const Color white = Colors.white;
+  static const Color black = Colors.black;
 
-  static const errorColor = Colors.red;
+  // Primary
+  static const Color indigo600Main = Color(0xFF4F46E5);
+  static const Color indigo600Light = Color(0xFF6366F1);
+  static const Color indigo600Dark = Color(0xFF3730A3);
+  static const Color indigo700 = Color(0xFF4338CA);
 
-  static const Color borderColor = Color(0xffbbbfc7);
-  static const Color quantityFieldColor = Color(0xffe6ebf5);
-  static const Color dropDownFieldColor = Color(0xffbac5d6);
+  // Secondary
+  static const Color indigo50 = Color(0xFFEEF2FF);
+  static const Color indigo100 = Color(0xFFE0E7FF);
 
-  /// Colors from demo app.
-  static const bodyText = Color(0xFF4E4B66);
-  static const customBack = Color(0xFF2A1658);
-  static const customBase = Color(0xFF0041AC);
-  static const customDark = Color.fromRGBO(0, 0, 0, 0.5);
-  static const passioBackgroundWhite = Color.fromRGBO(230, 237, 245, 1);
-  static const passioBlack10 = Color.fromRGBO(0, 0, 0, 0.10);
-  static const passioBlack25 = Color.fromRGBO(0, 0, 0, 0.25);
-  static const passioBlack40 = Color.fromRGBO(0, 0, 0, 0.40);
-  static const passioBlack50 = Color.fromRGBO(0, 0, 0, 0.50);
-  static const passioBlack75 = Color.fromRGBO(0, 0, 0, 0.75);
-  static const passioBlack85 = Color.fromRGBO(0, 0, 0, 0.85);
-  static const passioGray55 = Color.fromRGBO(85, 85, 85, 1);
-  static const passioGrayDark = Color.fromRGBO(140, 140, 140, 1);
-  static const passioGrayLight = Color.fromRGBO(241, 241, 241, 1);
-  static const passioInset = Color.fromRGBO(255, 255, 255, 1);
-  static const passioLowContrast = Color.fromRGBO(230, 237, 245, 1);
-  static const passioMedContrast = Color.fromRGBO(185, 198, 213, 1);
-  static const passioWhite25 = Color.fromRGBO(255, 255, 255, 0.25);
-  static const passioWhite50 = Color.fromRGBO(255, 255, 255, 0.50);
+  // Background
+  static const Color gray50 = Color(0xFFF9FAFB);
 
-  /// Chart color
-  static const chartColorGBlue = Color(0xFF005BD4);
-  static const chartColorGGray = Color(0xFFF7F7FC);
-  static const chartColorGGreen = Color(0xFF008A00);
-  static const chartColorGOrange = Color(0xFFEAAC30);
-  static const chartColorGRed = Color(0xFFCA024F);
+  // Text
+  static const Color grey900Normal = Color(0xFF111827);
+  static const Color grey500Placeholder = Color(0xFF6B7280);
+  static const Color grey400Disabled = Color(0xFF9CA3AF);
 
-  /// Profile screen colors
-  static const darkGreyColor = Color(0xff5A5A5A);
+  // Data
+  static const Color yellow400Normal = Color(0xFFFBBF24);
+  static const Color yellow500 = Color(0xFFF59E0B);
+  static const Color yellow900Dark = Color(0xFF78350F);
+
+  static const Color blue50 = Color(0xFFEFF6FF);
+  static const Color lBlue500Normal = Color(0xFF0EA5E9);
+  static const Color blue500 = Color(0xFF3B82F6);
+  static const Color blue600 = Color(0xFF2563EB);
+  static const Color lBlue900Dark = Color(0xFF0C4A6E);
+
+  static const Color green500Normal = Color(0xFF10B981);
+  static const Color green900Dark = Color(0xFF064E3B);
+
+  static const Color indigo500Normal = Color(0xFF6366F1);
+  static const Color indigo900Dark = Color(0xFF312E81);
+
+  // Opacity
+  static const Color white20Opacity = Color.fromRGBO(255, 255, 255, 0.2);
+  static const Color black75Opacity = Color.fromRGBO(0, 0, 0, 0.75);
+
+  // Feedback
+  static const Color green100 = Color(0xFFD1FAE5);
+  static const Color green800 = Color(0xFF065F46);
+  static const Color green500Success = Color(0xFF10B981);
+  static const Color red500 = Color(0xFFEF4444);
+  static const Color red600Error = Color(0xFFDC2626);
+  static const Color red100 = Color(0xFFFEE2E2);
+  static const Color red800 = Color(0xFF991B1B);
+
+  static const Color purple500 = Color(0xFF8B5CF6);
+  static const Color purple600 = Color(0xFF7C3AED);
+  static const Color purple900 = Color(0xFF4C1D95);
+
+  static const Color backgroundBlueGray = Color(0xFFF2F5FB);
+  static const Color slateGray75 = Color(0xBF6B7280);
 }

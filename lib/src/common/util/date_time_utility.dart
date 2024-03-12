@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
-  String format(String format) {
+  String formatToString(String format) {
     return DateFormat(format).format(this);
   }
 
@@ -22,6 +22,19 @@ extension DateTimeExtension on DateTime {
     final fromDae = DateTime(year, month, day);
     final toDate = DateTime(to.year, to.month, to.day);
     return (toDate.difference(fromDae).inHours / 24).round();
+  }
+
+  bool isToday() {
+    return isSameDate(DateTime.now());
+  }
+
+  ({DateTime startDate, DateTime endDate}) weekStartEndDates() {
+    // Find the Sunday of the current week (start date)
+    DateTime startDate = subtract(Duration(days: weekday));
+
+    // Find the Saturday of the current week (end date)
+    DateTime endDate = startDate.add(const Duration(days: 6));
+    return (startDate: startDate, endDate: endDate);
   }
 }
 
@@ -101,3 +114,6 @@ String format9 = 'yyyyMMdd';
 
 /// Wed
 String format10 = 'EEE';
+
+/// Tuesday, February 14, 2024
+String format12 = 'EEEE, MMMM d yyyy';

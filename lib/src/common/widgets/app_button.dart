@@ -1,45 +1,31 @@
 import 'package:flutter/material.dart';
-import '../constant/app_colors.dart';
-import '../constant/dimens.dart';
-import '../constant/styles.dart';
-import '../util/context_extension.dart';
+
+import '../constant/app_button_styles.dart';
 
 class AppButton extends StatelessWidget {
-  final String buttonName;
-  final double? fontSize;
-  final Color? color;
-  final VoidCallback onTap;
-  final TextStyle? textStyle;
-
   const AppButton({
+    required this.buttonText,
+    required this.appButtonModel,
+    this.onTap,
     super.key,
-    required this.buttonName,
-    required this.onTap,
-    this.color,
-    this.fontSize,
-    this.textStyle,
   });
+
+  final AppButtonModel appButtonModel;
+  final String? buttonText;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: context.width,
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          padding: const EdgeInsets.all(8),
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(Dimens.r8)),
-          backgroundColor: color ?? AppColors.buttonColor,
-        ),
-        onPressed: onTap,
-        child: Text(
-          buttonName,
-          style: textStyle ??
-              AppStyles.style17.copyWith(
-                fontSize: fontSize ?? Dimens.fontSize20,
-                color: AppColors.whiteColor,
-                fontWeight: FontWeight.w400,
-              ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: appButtonModel.decoration,
+        padding: appButtonModel.padding,
+        child: Center(
+          child: Text(
+            buttonText ?? '',
+            style: appButtonModel.textStyle,
+          ),
         ),
       ),
     );

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../../locale/app_localizations.dart';
+import '../locale/app_localizations.dart';
 
 extension Util on BuildContext {
   MediaQueryData get info => MediaQuery.of(this);
@@ -28,12 +28,30 @@ extension Dimension on BuildContext {
 
   /// [showCupertinoPopup] displays a CupertinoModalPopup with a reasonable fixed height
   /// which hosts CupertinoDatePicker.
-  void showCupertinoPopup(
-      {required Widget child,
-      required double height,
-      bool barrierDismissible = true,
-      Color? backgroundColor}) {
-    showCupertinoModalPopup<void>(
+  void showCupertinoPopup({
+    required Widget child,
+    required double height,
+    bool barrierDismissible = true,
+    Color? backgroundColor,
+  }) {
+    /*showGeneralDialog(
+      context: this,
+      pageBuilder: (context, anim1, anim2) {
+        return Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            height: 300,
+            child: SizedBox.expand(child: FlutterLogo()),
+            margin: EdgeInsets.only(top: 50, left: 12, right: 12, bottom: 50),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(40),
+            ),
+          ),
+        );
+      },
+    );*/
+    /*showCupertinoModalPopup<void>(
       barrierDismissible: barrierDismissible,
       context: this,
       builder: (BuildContext context) => Container(
@@ -47,11 +65,8 @@ extension Dimension on BuildContext {
         color: backgroundColor ??
             CupertinoColors.systemBackground.resolveFrom(context),
         // Use a SafeArea widget to avoid system overlaps.
-        child: SafeArea(
-          top: false,
-          child: child,
-        ),
+        child: child,
       ),
-    );
+    );*/
   }
 }
