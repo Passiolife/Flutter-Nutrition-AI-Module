@@ -17,3 +17,29 @@ class FetchRecordsSuccessState extends DiaryState {
   @override
   List<Object?> get props => [dayLog];
 }
+
+class RecordDeletedSuccessState extends DiaryState {
+  final String id;
+
+  const RecordDeletedSuccessState({required this.id});
+
+  @override
+  List<Object?> get props => [id];
+}
+
+final class FetchSuggestionsSuccessState extends DiaryState {
+  final List<PassioFoodDataInfo> data;
+
+  const FetchSuggestionsSuccessState({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
+final class LogSuccessState extends DiaryState {
+  const LogSuccessState({required this.createdAt});
+  final int createdAt;
+
+  @override
+  List<Object?> get props => [createdAt];
+}

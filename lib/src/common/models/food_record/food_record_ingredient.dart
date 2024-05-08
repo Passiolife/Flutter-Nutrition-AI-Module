@@ -1,12 +1,14 @@
 import 'package:flutter/foundation.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
-import 'food_record_v3.dart';
+import 'food_record.dart';
 
 /// Represents an ingredient of a food record.
 class FoodRecordIngredient {
   /// Unique identifier for the ingredient.
   String id = '';
+
+  String passioID;
 
   /// Name of the ingredient.
   String name = '';
@@ -32,81 +34,100 @@ class FoodRecordIngredient {
   /// License information for open food data.
   String? openFoodLicense;
 
+  PassioIDEntityType entityType;
+
   /// Private constructor for creating a FoodRecordIngredient instance with specified properties.
   FoodRecordIngredient._({
     required this.id,
+    required this.passioID,
     required this.name,
     required this.iconId,
     required this.servingSizes,
     required this.servingUnits,
     required this.selectedQuantity,
     required this.selectedUnit,
+    required this.entityType,
     required this.referenceNutrients,
     this.openFoodLicense,
   });
 
   /// Factory constructor to create a FoodRecordIngredient from a FoodRecord instance.
-  factory FoodRecordIngredient.fromFoodRecord(FoodRecord foodRecord) {
+  factory FoodRecordIngredient.fromFoodRecord(FoodRecord foodRecord,
+      {PassioIDEntityType entityType = PassioIDEntityType.item}) {
     return FoodRecordIngredient._(
       id: foodRecord.id,
+      passioID: foodRecord.passioID,
       name: foodRecord.name,
       iconId: foodRecord.iconId,
       servingSizes: foodRecord.servingSizes,
       servingUnits: foodRecord.servingUnits,
       selectedQuantity: foodRecord.getSelectedQuantity(),
       selectedUnit: foodRecord.getSelectedUnit(),
+      entityType: entityType,
       referenceNutrients: foodRecord.nutrients(),
       openFoodLicense: foodRecord.openFoodLicense,
     );
   }
 
   /// Factory constructor to create a FoodRecordIngredient from a PassioIngredient instance.
-  factory FoodRecordIngredient.fromPassioIngredient(
-      PassioIngredient ingredient) {
+  factory FoodRecordIngredient.fromPassioIngredient(PassioIngredient ingredient,
+      {PassioIDEntityType entityType = PassioIDEntityType.item}) {
     return FoodRecordIngredient._(
-      id: ingredient.id,
-      name:ingredient.name,
+      id: '',
+      passioID: ingredient.id,
+      name: ingredient.name,
       iconId: ingredient.iconId,
       servingSizes: ingredient.amount.servingSizes,
       servingUnits: ingredient.amount.servingUnits,
       selectedQuantity: ingredient.amount.selectedQuantity,
       selectedUnit: ingredient.amount.selectedUnit,
+      entityType: entityType,
       referenceNutrients: ingredient.referenceNutrients,
-      openFoodLicense: ingredient.metadata.foodOrigins
-          ?.cast<PassioFoodOrigin?>()
-          .firstWhere((element) => element?.source == 'openfood',
-              orElse: () => null)
-          ?.licenseCopy,
+      openFoodLicense: ingredient.metadata.openFoodLicense(),
     );
   }
 
-  factory FoodRecordIngredient.fromJson(Map<String, dynamic> json) => FoodRecordIngredient._(
-    id: json['id'] as String,
-    name: json['name'] as String,
-    iconId: json['iconId'] as String,
-    selectedUnit: json['selectedUnit'] as String,
-    selectedQuantity: (json['selectedQuantity'] as num).toDouble(),
-    servingSizes: List<PassioServingSize>.from(
-      json['servingSizes']?.map((dynamic s) => PassioServingSize.fromJson(s)) ?? [],
-    ),
-    servingUnits: List<PassioServingUnit>.from(
-      json['servingUnits']?.map((dynamic s) => PassioServingUnit.fromJson(s)) ?? [],
-    ),
-    referenceNutrients: PassioNutrients.fromJson(json['referenceNutrients'] as Map<String, dynamic>),
-    openFoodLicense: json['openFoodLicense'] as String?,
-  );
+  factory FoodRecordIngredient.fromJson(Map<String, dynamic> json) =>
+      FoodRecordIngredient._(
+        id: json['id'] as String,
+        passioID: json['passioID'] as String,
+        name: json['name'] as String,
+        iconId: json['iconId'] as String,
+        selectedUnit: json['selectedUnit'] as String,
+        selectedQuantity: (json['selectedQuantity'] as num).toDouble(),
+        servingSizes: List<PassioServingSize>.from(
+          json['servingSizes']
+                  ?.map((dynamic s) => PassioServingSize.fromJson(s)) ??
+              [],
+        ),
+        servingUnits: List<PassioServingUnit>.from(
+          json['servingUnits']
+                  ?.map((dynamic s) => PassioServingUnit.fromJson(s)) ??
+              [],
+        ),
+        entityType: PassioIDEntityType.values.firstWhere(
+            (element) => element.name == json['entityType'],
+            orElse: () => PassioIDEntityType.item),
+        referenceNutrients: PassioNutrients.fromJson(
+            json['referenceNutrients'] as Map<String, dynamic>),
+        openFoodLicense: json['openFoodLicense'] as String?,
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'name': name,
-    'iconId': iconId,
-    'selectedUnit': selectedUnit,
-    'selectedQuantity': selectedQuantity,
-    'servingSizes': servingSizes.map((PassioServingSize s) => s.toJson()).toList(),
-    'servingUnits': servingUnits.map((PassioServingUnit s) => s.toJson()).toList(),
-    'referenceNutrients': referenceNutrients.toJson(),
-    'openFoodLicense': openFoodLicense,
-  };
+        'id': id,
+        'passioID': passioID,
+        'name': name,
+        'iconId': iconId,
+        'selectedUnit': selectedUnit,
+        'selectedQuantity': selectedQuantity,
+        'servingSizes':
+            servingSizes.map((PassioServingSize s) => s.toJson()).toList(),
+        'servingUnits':
+            servingUnits.map((PassioServingUnit s) => s.toJson()).toList(),
+        'entityType': entityType.name,
+        'referenceNutrients': referenceNutrients.toJson(),
+        'openFoodLicense': openFoodLicense,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -114,12 +135,14 @@ class FoodRecordIngredient {
 
     return other is FoodRecordIngredient &&
         id == other.id &&
+        passioID == other.passioID &&
         name == other.name &&
         iconId == other.iconId &&
         selectedUnit == other.selectedUnit &&
         selectedQuantity == other.selectedQuantity &&
         listEquals(servingSizes, other.servingSizes) &&
         listEquals(servingUnits, other.servingUnits) &&
+        entityType == other.entityType &&
         referenceNutrients == other.referenceNutrients &&
         openFoodLicense == other.openFoodLicense;
   }
@@ -128,28 +151,16 @@ class FoodRecordIngredient {
   int get hashCode {
     return Object.hash(
       id,
+      passioID,
       name,
       iconId,
       selectedUnit,
       selectedQuantity,
       servingSizes,
       servingUnits,
+      entityType,
       referenceNutrients,
       openFoodLicense,
-    );
-  }
-
-  FoodRecordIngredient clone() {
-    return FoodRecordIngredient._(
-      id: id,
-      name: name,
-      iconId: iconId,
-      servingSizes: servingSizes,
-      servingUnits: servingUnits,
-      selectedQuantity: selectedQuantity,
-      selectedUnit: selectedUnit,
-      referenceNutrients: referenceNutrients,
-      openFoodLicense: openFoodLicense,
     );
   }
 

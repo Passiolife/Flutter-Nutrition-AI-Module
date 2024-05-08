@@ -24,7 +24,12 @@ extension Util on String? {
   bool get isValidPassword => RegExps.password.hasMatch(this ?? '');
 
   String get toTitleCase =>
-      isBlank ? '' : '${this![0].toUpperCase()}${this!.substring(1)}';
+      this
+          ?.replaceAll(RegExp(' +'), ' ')
+          .split(' ')
+          .map((str) => str.toCapitalized())
+          .join(' ') ??
+      '';
 
   String get toBase64 => base64.encode(utf8.encode(this ?? ''));
 

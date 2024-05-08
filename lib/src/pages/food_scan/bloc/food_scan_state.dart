@@ -5,51 +5,64 @@ abstract class FoodScanState extends Equatable {
 }
 
 class FoodScanInitial extends FoodScanState {
+  const FoodScanInitial();
+
   @override
   List<Object> get props => [];
 }
 
 // Define a state class to manage the visibility of the intro screen
-class IntroVisibilityState extends FoodScanState {
+class IntroScreenVisibilityState extends FoodScanState {
   // Indicates whether it should be visible or not
   final bool shouldVisible;
 
-  const IntroVisibilityState({required this.shouldVisible});
+  const IntroScreenVisibilityState({required this.shouldVisible});
 
   @override
   List<Object?> get props => [shouldVisible];
 }
 
 class ScanningState extends FoodScanState {
+  const ScanningState();
+
   @override
   List<Object?> get props => [];
 }
 
-class ScanResultVisibilityState extends FoodScanState {
-  final PassioID passioID;
+class ScanLoadingState extends FoodScanState {
+  const ScanLoadingState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class ScanResultState extends FoodScanState {
+  /*final PassioID passioID;
   final String foodName;
-  final String iconId;
+  final String iconId;*/
+  final PassioFoodItem? foodItem;
+  final DetectedCandidate? detectedCandidate;
   final List<DetectedCandidate> alternatives;
 
-  const ScanResultVisibilityState({
-    required this.passioID,
+  const ScanResultState({
+    /*required this.passioID,
     required this.foodName,
-    required this.iconId,
-    required this.alternatives,
+    required this.iconId,*/
+    this.foodItem,
+    this.detectedCandidate,
+    this.alternatives = const [],
   });
 
   @override
-  List<Object?> get props => [passioID, foodName, iconId, alternatives];
+  List<Object?> get props => [foodItem, detectedCandidate, alternatives];
 }
 
 class AddedToDiaryVisibilityState extends FoodScanState {
-  const AddedToDiaryVisibilityState({required this.shouldVisible});
+  const AddedToDiaryVisibilityState();
 
-  // Indicates whether it should be visible or not
-  final bool shouldVisible;
 
   @override
-  List<Object?> get props => [shouldVisible];
+  List<Object?> get props => [];
 }
 
 // State representing the visibility of the barcode not recognized UI
@@ -58,6 +71,16 @@ class BarcodeNotRecognizedState extends FoodScanState {
   final bool shouldVisible;
 
   const BarcodeNotRecognizedState({required this.shouldVisible});
+
+  @override
+  List<Object?> get props => [shouldVisible];
+}
+
+class PackagedFoodNotRecognizedState extends FoodScanState {
+  // Indicates whether it should be visible or not
+  final bool shouldVisible;
+
+  const PackagedFoodNotRecognizedState({required this.shouldVisible});
 
   @override
   List<Object?> get props => [shouldVisible];
@@ -77,4 +100,20 @@ class ScanningAnimationState extends FoodScanState {
 
   @override
   List<Object?> get props => [shouldAnimate];
+}
+
+class ConversionSuccessState extends FoodScanState {
+  final PassioFoodItem? foodItem;
+
+  const ConversionSuccessState({required this.foodItem});
+
+  @override
+  List<Object?> get props => [foodItem];
+}
+
+class ConversionFailureState extends FoodScanState {
+  const ConversionFailureState();
+
+  @override
+  List<Object?> get props => [];
 }

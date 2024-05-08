@@ -58,7 +58,7 @@ class _MealTimeWidgetState extends State<MealTimeWidget> {
                       _selectedMealLabel.value = value.first;
                       if (_selectedMealLabel.value != null) {
                         widget.listener
-                            ?.onChangeMealTime(_selectedMealLabel.value!);
+                            ?.onMealTimeChanged(_selectedMealLabel.value!);
                       }
                     },
                     segments: MealLabel.values

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 
 import '../../../common/constant/app_colors.dart';
 import '../../../common/constant/app_dimens.dart';
@@ -12,18 +11,29 @@ import '../../../common/models/day_log/day_log.dart';
 import '../../../common/models/day_logs/day_logs.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/util/date_time_utility.dart';
+import 'interfaces.dart';
 
 class WeeklyAdherenceWidget extends StatelessWidget {
   const WeeklyAdherenceWidget({
     required this.selectedDate,
+    required this.focusedDate,
+    required this.calendarFormat,
     this.dayLogs,
-    this.onPageChanged,
+    this.listener,
+    this.startDateTime,
+    this.endDateTime,
+    this.isMonthRange = false,
     super.key,
   });
 
   final DateTime selectedDate;
+  final DateTime focusedDate;
   final DayLogs? dayLogs;
-  final Function(DateTime focusedDay)? onPageChanged;
+  final HomeListener? listener;
+  final CalendarFormat calendarFormat;
+  final DateTime? startDateTime;
+  final DateTime? endDateTime;
+  final bool isMonthRange;
 
   @override
   Widget build(BuildContext context) {
@@ -49,20 +59,32 @@ class WeeklyAdherenceWidget extends StatelessWidget {
                   ]).copyWith(color: AppColors.gray900),
                 ),
               ),
-              /*SvgPicture.asset(
-                AppImages.icExternalLink,
-                width: AppDimens.r24,
-                height: AppDimens.r24,
-              ),*/
+              GestureDetector(
+                behavior: HitTestBehavior.opaque,
+                onTap: () {
+                  listener?.onTapCalendarFormat();
+                },
+                child: SvgPicture.asset(
+                  AppImages.icChevronDown,
+                  width: AppDimens.r24,
+                  height: AppDimens.r24,
+                  colorFilter: const ColorFilter.mode(
+                      AppColors.gray400, BlendMode.srcIn),
+                ),
+              ),
             ],
           ),
           TableCalendar(
             firstDay: DateTime.utc(1, 1, 1),
             lastDay: DateTime(9999, 12, 31),
-            focusedDay: selectedDate,
+            focusedDay: focusedDate,
             rowHeight: AppDimens.r40,
-            calendarFormat: CalendarFormat.week,
-            onPageChanged: onPageChanged,
+            calendarFormat: calendarFormat,
+            onPageChanged: (date) => listener?.onDateChanged.call(date, false),
+            calendarStyle: const CalendarStyle(
+              // Use `CalendarStyle` to customize the UI
+              outsideDaysVisible: false,
+            ),
             enabledDayPredicate: (dateTime) {
               // Compare the current date and time with the provided dateTime.
               // If the current date and time are equal to or greater than dateTime, return true.
@@ -72,17 +94,17 @@ class WeeklyAdherenceWidget extends StatelessWidget {
               formatButtonVisible: false,
               titleCentered: true,
               titleTextFormatter: (DateTime date, dynamic locale) {
-                ({DateTime startDate, DateTime endDate}) rangeDates =
-                    date.weekStartEndDates();
-
                 // Format the start and end dates
-                String formattedStartDate =
-                    DateFormat('M/d/yy', locale).format(rangeDates.startDate);
-                String formattedEndDate =
-                    DateFormat('M/d/yy', locale).format(rangeDates.endDate);
+                // String formattedStartDate = rangeDates?.startDate != null
+                //     ? DateFormat('M/d/yy', locale).format(rangeDates!.startDate)
+                //     : '';
+                // String formattedEndDate = rangeDates?.endDate != null
+                //     ? DateFormat('M/d/yy', locale).format(rangeDates!.endDate)
+                //     : '';
 
                 // Return the formatted date range
-                return '$formattedStartDate - $formattedEndDate';
+                // return '$formattedStartDate - $formattedEndDate';
+                return (startDateTime ?? DateTime.now()).rangeString(isMonthRange: isMonthRange, endDateTime: endDateTime ?? DateTime.now());
               },
               headerPadding: EdgeInsets.symmetric(vertical: AppDimens.h16),
               leftChevronPadding: EdgeInsets.only(right: AppDimens.w32),
@@ -119,35 +141,38 @@ class WeeklyAdherenceWidget extends StatelessWidget {
             ),
             calendarBuilders: CalendarBuilders(
               disabledBuilder: (context, day, focusedDay) {
-                if (isSameDay(selectedDate, day)) {
-                  return _CustomCircleAvatar(
-                    backgroundColor: AppColors.indigo600Main,
-                    day: day.day,
-                    textColor: AppColors.white,
-                  );
-                }
+                bool isSameDate = isSameDay(selectedDate, day);
+                bool containsRecords = dayLogs?.dayLog.any((element) =>
+                isSameDay(element.date, day) &&
+                    element.records.isNotEmpty) ??
+                    false;
+
                 return _CustomCircleAvatar(
-                  backgroundColor: AppColors.indigo50,
+                  backgroundColor: isSameDate
+                      ? AppColors.indigo600Main
+                      : containsRecords
+                      ? AppColors.green100
+                      : AppColors.indigo50,
                   day: day.day,
-                  textColor: AppColors.gray400,
+                  textColor: isSameDate
+                      ? AppColors.white
+                      : containsRecords
+                      ? AppColors.green800
+                      : AppColors.gray400,
                 );
               },
               todayBuilder: (context, day, focusedDay) {
-                bool containsRecords = dayLogs?.dayLog
-                        .cast<DayLog?>()
-                        .firstWhere(
-                            (element) => element?.date.isSameDate(day) ?? false,
-                            orElse: () => null)
-                        ?.records
-                        .isNotEmpty ??
+                bool containsRecords = dayLogs?.dayLog.any((element) =>
+                isSameDay(element.date, day) &&
+                    element.records.isNotEmpty) ??
                     false;
 
                 return _CustomBorderedCircleAvatar(
                   backgroundColor:
-                      containsRecords ? AppColors.green100 : AppColors.red100,
+                  containsRecords ? AppColors.green100 : AppColors.red100,
                   day: day.day,
                   textColor:
-                      containsRecords ? AppColors.green800 : AppColors.red800,
+                  containsRecords ? AppColors.green800 : AppColors.red800,
                   borderColor: AppColors.indigo600Main,
                 );
               },
@@ -160,38 +185,38 @@ class WeeklyAdherenceWidget extends StatelessWidget {
               },
               defaultBuilder: (context, day, focusedDay) {
                 bool containsRecords = dayLogs?.dayLog
-                        .cast<DayLog?>()
-                        .firstWhere(
-                            (element) => element?.date.isSameDate(day) ?? false,
-                            orElse: () => null)
-                        ?.records
-                        .isNotEmpty ??
+                    .cast<DayLog?>()
+                    .firstWhere(
+                        (element) => element?.date.isSameDate(day) ?? false,
+                    orElse: () => null)
+                    ?.records
+                    .isNotEmpty ??
                     false;
 
                 return _CustomCircleAvatar(
                   backgroundColor:
-                      containsRecords ? AppColors.green100 : AppColors.red100,
+                  containsRecords ? AppColors.green100 : AppColors.red100,
                   day: day.day,
                   textColor:
-                      containsRecords ? AppColors.green800 : AppColors.red800,
+                  containsRecords ? AppColors.green800 : AppColors.red800,
                 );
               },
               outsideBuilder: (context, day, focusedDay) {
                 bool containsRecords = dayLogs?.dayLog
-                        .cast<DayLog?>()
-                        .firstWhere(
-                            (element) => element?.date.isSameDate(day) ?? false,
-                            orElse: () => null)
-                        ?.records
-                        .isNotEmpty ??
+                    .cast<DayLog?>()
+                    .firstWhere(
+                        (element) => element?.date.isSameDate(day) ?? false,
+                    orElse: () => null)
+                    ?.records
+                    .isNotEmpty ??
                     false;
 
                 return _CustomCircleAvatar(
                   backgroundColor:
-                      containsRecords ? AppColors.green100 : AppColors.red100,
+                  containsRecords ? AppColors.green100 : AppColors.red100,
                   day: day.day,
                   textColor:
-                      containsRecords ? AppColors.green800 : AppColors.red800,
+                  containsRecords ? AppColors.green800 : AppColors.red800,
                 );
               },
             ),

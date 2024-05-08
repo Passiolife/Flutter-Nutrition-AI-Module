@@ -23,6 +23,13 @@ class IntroScreenCompleteEvent extends FoodScanEvent {
   List<Object?> get props => [];
 }
 
+class ScanningEvent extends FoodScanEvent {
+  const ScanningEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class ScanningAnimationEvent extends FoodScanEvent {
   final bool shouldAnimate;
 
@@ -56,7 +63,7 @@ class StopFoodDetectionEvent extends FoodScanEvent {
 
 class DetectedEvent extends FoodScanEvent {
   final List<BarcodeCandidate>? barcodeCandidates;
-  final List<DetectedCandidate> detectedCandidates;
+  final List<DetectedCandidate>? detectedCandidates;
   final List<PackagedFoodCandidate>? packagedFoodCandidates;
 
   const DetectedEvent({
@@ -92,22 +99,27 @@ class BarcodeNotRecognizedEvent extends FoodScanEvent {
   List<Object?> get props => [shouldVisible];
 }
 
+class PackagedFoodNotRecognizedEvent extends FoodScanEvent {
+  // Indicates whether it should be visible or not
+  final bool shouldVisible;
+
+  const PackagedFoodNotRecognizedEvent({required this.shouldVisible});
+
+  @override
+  List<Object?> get props => [shouldVisible];
+}
+
 class DoFoodLogEvent extends FoodScanEvent {
-  const DoFoodLogEvent({required this.dateTime, required this.attributes});
+  const DoFoodLogEvent({required this.dateTime, this.foodItem, this.detectedCandidate});
 
   final DateTime dateTime;
-  final PassioFoodItem? attributes;
-
+  final PassioFoodItem? foodItem;
+  final DetectedCandidate? detectedCandidate;
+  
   @override
-  List<Object?> get props => [dateTime, attributes];
+  List<Object?> get props => [dateTime, foodItem, detectedCandidate];
 }
 
-class CancelBarcodeNotRecognizedEvent extends FoodScanEvent {
-  const CancelBarcodeNotRecognizedEvent();
-
-  @override
-  List<Object?> get props => [];
-}
 
 class ScanNutritionFactsEvent extends FoodScanEvent {
   const ScanNutritionFactsEvent();
@@ -124,4 +136,14 @@ class AddedToDiaryVisibilityEvent extends FoodScanEvent {
 
   @override
   List<Object?> get props => [shouldVisible];
+}
+
+class DoConversionEvent extends FoodScanEvent {
+  // Indicates whether it should be visible or not
+  final DetectedCandidate? detectedCandidate;
+
+  const DoConversionEvent({this.detectedCandidate});
+
+  @override
+  List<Object?> get props => [detectedCandidate];
 }

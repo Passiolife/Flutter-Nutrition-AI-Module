@@ -21,7 +21,7 @@ class BarcodeNotRecognizedDialog {
           ),
         );
       },
-      transitionDuration: const Duration(milliseconds: AppDimens.duration400),
+      transitionDuration: const Duration(milliseconds: AppDimens.duration250),
       transitionBuilder: (context, animation1, animation2, child) {
         return SlideTransition(
           position: Tween(

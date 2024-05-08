@@ -10,7 +10,7 @@ class RowWidget extends StatelessWidget {
   const RowWidget({required this.index, required this.data, this.listener, super.key});
 
   final int index;
-  final PassioSearchResult data;
+  final PassioFoodDataInfo data;
   final PassioSearchListener? listener;
 
   @override
@@ -41,8 +41,6 @@ class RowWidget extends StatelessWidget {
                         tag: '${data.foodName}$index',
                         child: Text(
                           data.foodName,
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
                           style: AppTextStyle.textSm.addAll([
                             AppTextStyle.textSm.leading5,
                             AppTextStyle.semiBold

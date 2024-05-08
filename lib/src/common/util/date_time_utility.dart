@@ -24,17 +24,72 @@ extension DateTimeExtension on DateTime {
     return (toDate.difference(fromDae).inHours / 24).round();
   }
 
+  bool isAfterOrEqual(DateTime other) {
+    return isAtSameMomentAs(other) || isAfter(other);
+  }
+
+  bool isBeforeOrEqual(DateTime other) {
+    return isAtSameMomentAs(other) || isBefore(other);
+  }
+
+  bool isBetween({required DateTime from, required DateTime to}) {
+    return isAfterOrEqual(from) && isBeforeOrEqual(to);
+  }
+
   bool isToday() {
     return isSameDate(DateTime.now());
   }
 
-  ({DateTime startDate, DateTime endDate}) weekStartEndDates() {
+  ({DateTime startDate, DateTime endDate}) weekStartEndDates(
+      {int weekDay = DateTime.sunday}) {
     // Find the Sunday of the current week (start date)
-    DateTime startDate = subtract(Duration(days: weekday));
+    /*DateTime startDate = subtract(Duration(days: weekDay));
+    if(weekday == DateTime.sunday) {
+      startDate = this;
+    }*/
+
+    DateTime startDate = DateTime(year, month, day - (weekday - weekDay) % 7);
 
     // Find the Saturday of the current week (end date)
     DateTime endDate = startDate.add(const Duration(days: 6));
     return (startDate: startDate, endDate: endDate);
+  }
+
+  ({DateTime startDate, DateTime endDate}) monthStartEndDates() {
+    // Use DateTime.now() or provided date as reference
+    // Get the first day of the month
+    final startDate = DateTime(year, month, 1);
+
+    // Get the last day of the month (handles leap year)
+    final endDate = DateTime(
+      year,
+      month + 1,
+    ).subtract(const Duration(days: 1));
+
+    return (startDate: startDate, endDate: endDate);
+  }
+
+  List<DateTime> getDatesBetween({required DateTime endDate}) {
+    final difference = endDate.difference(this).inDays;
+    return [
+      for (int i = 0; i <= difference; i++) add(Duration(days: i)),
+    ];
+  }
+
+  String rangeString({
+    required bool isMonthRange,
+    required DateTime endDateTime,
+  }) {
+    final now = DateTime.now();
+    final isBetweenDifference = now.isBetween(from: this, to: endDateTime);
+
+    return isMonthRange
+        ? isBetweenDifference
+            ? 'This Month'
+            : formatToString(format17)
+        : isBetweenDifference
+            ? 'This Week'
+            : '${formatToString(format14)} - ${endDateTime.formatToString(format14)}';
   }
 }
 
@@ -117,3 +172,17 @@ String format10 = 'EEE';
 
 /// Tuesday, February 14, 2024
 String format12 = 'EEEE, MMMM d yyyy';
+
+/// February 14, 2024
+String format13 = 'MMMM d, yyyy';
+
+// 2/10/24
+String format14 = 'M/d/yy';
+
+//  Wed, August 24,
+String format15 = 'EEE, MMM d';
+
+// Mar 29
+String format16 = 'MMM d';
+
+String format17 = 'MMMM - yyyy';

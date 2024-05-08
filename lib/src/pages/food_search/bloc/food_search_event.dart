@@ -12,12 +12,3 @@ class DoFoodSearchEvent extends FoodSearchEvent {
   @override
   List<Object?> get props => [searchText];
 }
-
-class DoFetchSearchResultEvent extends FoodSearchEvent {
-  final PassioSearchResult result;
-
-  const DoFetchSearchResultEvent({required this.result});
-
-  @override
-  List<Object?> get props => [result];
-}

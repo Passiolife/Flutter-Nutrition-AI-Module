@@ -4,10 +4,11 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/day_log/day_log.dart';
-import '../../../common/models/food_record/food_record_v3.dart';
+import '../../../common/models/food_record/food_record.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/string_extensions.dart';
+import '../../../common/widgets/custom_expansion_tile_widget.dart';
 import '../../../common/widgets/passio_image_widget.dart';
 import 'interfaces.dart';
 
@@ -115,7 +116,7 @@ class _MealTileWidgetState extends State<MealTileWidget> {
           itemBuilder: (context, index) {
             final data = _mealTimes(context).elementAt(index);
             return _ExpansionTile(
-              key: GlobalObjectKey(data.mealTime),
+              // key: GlobalObjectKey(data.mealTime),
               data: data.mealTime,
               foodRecords: data.foodRecords,
             );
@@ -136,61 +137,29 @@ class _ExpansionTile extends StatelessWidget {
   const _ExpansionTile({
     required this.data,
     required this.foodRecords,
-    super.key,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: AppShadows.base,
-      child: Theme(
-        data: ThemeData(
-          splashColor: AppColors.transparent,
-          highlightColor: AppColors.transparent,
-        ),
-        child: ExpansionTile(
-          initiallyExpanded: true,
-          shape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimens.r16),
-          ),
-          collapsedShape: ContinuousRectangleBorder(
-            borderRadius: BorderRadius.circular(AppDimens.r16),
-          ),
-          title: Text(
-            data,
-            style: AppTextStyle.textBase.addAll([
-              AppTextStyle.textBase.leading6,
-              AppTextStyle.semiBold,
-            ]).copyWith(color: AppColors.gray900),
-          ),
-          children: [
-            foodRecords.isNotEmpty
-                ? const Divider(color: AppColors.gray200)
-                : const SizedBox.shrink(),
-            Column(
-              children: foodRecords
-                  .map((e) => _ExpansionTileChildWidget(
-                        iconId: e.iconId,
-                        foodName: e.name.toUpperCaseWord,
-                        foodSize:
-                            '${e.getSelectedQuantity().formatWithoutTrailingZeros} ${e.getSelectedUnit().toUpperCaseWord} (${e.computedWeight.value.formatWithoutTrailingZeros} ${e.computedWeight.symbol})',
-                        foodCalories:
-                            '${e.nutrientsSelectedSize().calories?.value ?? 0}  ${context.localization?.cal}',
-                        onEdit: () => MealTileInherited.of(context)
-                            ?.listener
-                            ?.onEditRecord(e),
-                        onDelete: () => MealTileInherited.of(context)
-                            ?.listener
-                            ?.onDeleteRecord(e),
-                      ))
-                  .toList(),
+    return CustomExpansionTileWidget(
+      title: data,
+      initiallyExpanded: true,
+      children: foodRecords
+          .map(
+            (e) => _ExpansionTileChildWidget(
+              iconId: e.iconId,
+              foodName: e.name.toUpperCaseWord,
+              foodSize:
+                  '${e.getSelectedQuantity().format(places: 1)} ${e.getSelectedUnit().toUpperCaseWord} (${e.computedWeight.value.format(places: 0)} ${e.computedWeight.symbol})',
+              foodCalories:
+                  '${e.nutrientsSelectedSize().calories?.value.round() ?? 0} ${context.localization?.cal}',
+              onEdit: () =>
+                  MealTileInherited.of(context)?.listener?.onEditRecord(e),
+              onDelete: () =>
+                  MealTileInherited.of(context)?.listener?.onDeleteRecord(e),
             ),
-            foodRecords.isNotEmpty
-                ? SizedBox(height: AppDimens.h8)
-                : const SizedBox.shrink(),
-          ],
-        ),
-      ),
+          )
+          .toList(),
     );
   }
 }

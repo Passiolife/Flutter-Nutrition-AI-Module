@@ -2,14 +2,13 @@ import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/food_record/meal_label.dart';
 
 abstract interface class EditFoodListener {
-  void onChangeDate(DateTime dateTime);
-  void onChangeMealTime(MealLabel mealLabel);
-  void onChangeFavorite(bool isFavorite);
-  void onChangeServingUnit(String unit);
-  void onChangeServingQuantity(double quantity, bool resetSlider);
-  void onAddIngredient();
-  void onTapIngredient(FoodRecordIngredient foodRecordIngredient);
-  void onDeleteIngredient(FoodRecordIngredient foodRecordIngredient);
-  void onTapMoreDetails();
-  void onTapOpenFoodFacts();
+  void onDateChanged(DateTime dateTime);
+  void onMealTimeChanged(MealLabel mealLabel);
+  void onServingUnitChanged(String unit);
+  void onServingQuantityChanged(double quantity, bool resetSlider);
+  void onAddIngredientRequested();
+  void onIngredientTapped(FoodRecordIngredient foodRecordIngredient);
+  void onIngredientDeleted(int index);
+  void onLogTapped();
+  void onCancelTapped();
 }

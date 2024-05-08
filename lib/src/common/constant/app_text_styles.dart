@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
-import 'app_dimens.dart';
 
 class AppTextStyle {
   // Font family for the entire app
@@ -25,26 +25,20 @@ class AppTextStyle {
   }
 
   // Text styles for different sizes using the getTextStyle function
-  static TextStyle textXs = _getTextStyle(AppDimens.font12,
-      calculateLineHeight(14.52, AppDimens.font12)); // text-xs
-  static TextStyle textSm = _getTextStyle(AppDimens.font14,
-      calculateLineHeight(16.94, AppDimens.font14)); // text-sm
-  static TextStyle textBase = _getTextStyle(AppDimens.font16,
-      calculateLineHeight(19.36, AppDimens.font16)); // text-base
-  static TextStyle textLg = _getTextStyle(AppDimens.font18,
-      calculateLineHeight(21.78, AppDimens.font18)); // text-lg
-  static TextStyle textXl = _getTextStyle(
-      AppDimens.font20, calculateLineHeight(24.2, AppDimens.font20)); // text-xl
-  static TextStyle text2xl = _getTextStyle(AppDimens.font24,
-      calculateLineHeight(29.05, AppDimens.font24)); // text-2xl
-  static TextStyle text3xl = _getTextStyle(AppDimens.font30,
-      calculateLineHeight(36.31, AppDimens.font30)); // text-3xl
-  static TextStyle text4xl = _getTextStyle(AppDimens.font36,
-      calculateLineHeight(43.57, AppDimens.font36)); // text-4xl
-  static TextStyle text5xl = _getTextStyle(AppDimens.font48,
-      calculateLineHeight(58.09, AppDimens.font48)); // text-5xl
-  static TextStyle text6xl = _getTextStyle(AppDimens.font60,
-      calculateLineHeight(72.61, AppDimens.font60)); // text-6xl
+  static TextStyle textXs =
+      _getTextStyle(12.sp, calculateLineHeight(14.52, 12.sp)); // text-xs
+  static TextStyle textSm =
+      _getTextStyle(14.sp, calculateLineHeight(16.94, 14.sp)); // text-sm
+  static TextStyle textBase =
+      _getTextStyle(16.sp, calculateLineHeight(19.36, 16.sp)); // text-base
+  static TextStyle textLg =
+      _getTextStyle(18.sp, calculateLineHeight(21.78, 18.sp)); // text-lg
+  static TextStyle textXl =
+      _getTextStyle(20.sp, calculateLineHeight(24.2, 20.sp)); // text-xl
+  static TextStyle text2xl =
+      _getTextStyle(24.sp, calculateLineHeight(29.05, 24.sp)); // text-2xl
+  static TextStyle text3xl = _getTextStyle(30.sp,
+      calculateLineHeight(36.31, 30.sp)); // text-3xl
 
   static TextStyle get medium => const TextStyle(fontWeight: FontWeight.w500);
 

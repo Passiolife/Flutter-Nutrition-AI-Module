@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/constant/app_colors.dart';
-import '../../common/constant/app_common_constants.dart';
 import '../../common/router/routes.dart';
 import '../../common/util/context_extension.dart';
-import '../../common/widgets/custom_app_bar_widget.dart';
 import '../diary/diary_page.dart';
+import '../favorites/favorites_page.dart';
+import '../food_scan/food_scan_page.dart';
 import '../home/home_page.dart';
+import '../meal_plan/meal_plan_page.dart';
+import '../progress/progress_page.dart';
+import 'bloc/dashboard_bloc.dart';
 import 'widgets/widgets.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -24,66 +28,69 @@ class _DashboardPageState extends State<DashboardPage> {
 
   // Widgets mapped with their corresponding titles
   Map<String?, Widget> get _widgets => {
-        context.localization?.home: HomePage(
-          customAppBarKey: _customAppBarKey,
-          key: _homePageKey,
-        ),
+        context.localization?.home: const HomePage(),
         context.localization?.diary: const DiaryPage(),
         '': const SizedBox.shrink(),
-        context.localization?.mealPlan: const Center(child: Text('Meal Plan')),
-        context.localization?.progress: const Center(child: Text('Progress')),
+        context.localization?.mealPlan: const MealPlanPage(),
+        context.localization?.progress: const ProgressPage(),
       };
 
-  final GlobalKey<CustomAppBarWidgetState> _customAppBarKey =
-      GlobalKey<CustomAppBarWidgetState>();
-
-  final GlobalKey<HomePageState> _homePageKey = GlobalKey<HomePageState>();
-
-  int get defaultIndex => widget.page != null
+  int get _defaultIndex => widget.page != null
       ? _widgets.keys.toList().indexWhere((element) => element == widget.page)
-      : 0;
+      : 4;
+
+  final _bloc = DashboardBloc();
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        // Hides the custom app bar menu
-        _customAppBarKey.currentState?.hideMenu();
-      },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        backgroundColor: AppColors.gray50,
-        extendBody: true,
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        floatingActionButton:
-            NotchFABWidget(onTapQuickAction: _navigateOnAction),
-        bottomNavigationBar: BottomNavigationWidget(
-          selectedPage: _selectedNavigationItem?.item?.name ?? widget.page,
-          onNavigationItemChange: (item, index) {
-            setState(() {
-              _selectedNavigationItem = (index: index, item: item);
-            });
-          },
-        ),
-        body: IndexedStack(
-          index: _selectedNavigationItem?.index ?? defaultIndex,
-          children: _widgets.values.toList(),
-        ),
+    return BlocProvider(
+      create: (context) => _bloc,
+      child: BlocConsumer<DashboardBloc, DashboardState>(
+        bloc: _bloc,
+        listener: (context, state) {
+          if (state is PageUpdateState) {
+            _selectedNavigationItem = (index: state.index, item: state.item);
+          }
+        },
+        builder: (context, state) {
+          return Scaffold(
+            resizeToAvoidBottomInset: false,
+            backgroundColor: AppColors.gray50,
+            extendBody: true,
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.centerDocked,
+            floatingActionButton:
+                NotchFABWidget(onTapQuickAction: _navigateOnAction),
+            bottomNavigationBar: BottomNavigationWidget(
+              selectedPage: _selectedNavigationItem?.item?.name ?? widget.page,
+              onNavigationItemChange: (item, index) {
+                if (index != _selectedNavigationItem?.index) {
+                  _bloc.add(PageUpdateEvent(index: index, item: item));
+                }
+              },
+            ),
+            body: IndexedStack(
+              key: UniqueKey(),
+              index: _selectedNavigationItem?.index ?? _defaultIndex,
+              children: _widgets.values.toList(),
+            ),
+          );
+        },
       ),
     );
   }
 
-  void _navigateOnAction(String? action) {
+  Future<void> _navigateOnAction(String? action) async {
     // Check the value of e.text against context.localization and perform actions accordingly.
     //
     // Action for when the text matches the 'scan' localization.
     if (action == context.localization?.foodScanner) {
-      Navigator.pushNamed(
+      Navigator.push(
         context,
-        Routes.foodScanPage,
-        arguments: {
-          AppCommonConstants.dateTime: _homePageKey.currentState?.selectedDate
-        },
+        MaterialPageRoute(
+          builder: (_) => FoodScanPage(selectedDateTime: DateTime.now()),
+          maintainState: false,
+        ),
       );
     }
     // Action for when the text matches the 'search' localization.
@@ -91,7 +98,9 @@ class _DashboardPageState extends State<DashboardPage> {
       Navigator.pushNamed(context, Routes.foodSearchPage, arguments: false);
     }
     // Action for when the text matches the 'favourite' localization.
-    else if (action == context.localization?.favourite) {
+    else if (action == context.localization?.favourites) {
+      await FavoritesPage.navigate(context: context);
+      _bloc.add(const RefreshEvent());
     }
     // Default action if none of the above conditions are met.
     else {}

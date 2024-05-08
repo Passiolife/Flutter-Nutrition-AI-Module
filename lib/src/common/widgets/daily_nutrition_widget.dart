@@ -23,19 +23,19 @@ class DailyNutritionWidget extends StatelessWidget {
   });
 
   // Calories
-  final double? consumedCalories;
+  final int? consumedCalories;
   final double? totalCalories;
 
   // Carbs
-  final double? consumedCarbs;
+  final int? consumedCarbs;
   final double? totalCarbs;
 
   // Proteins
-  final double? consumedProteins;
+  final int? consumedProteins;
   final double? totalProteins;
 
   // Fat
-  final double? consumedFat;
+  final int? consumedFat;
   final double? totalFat;
 
   @override

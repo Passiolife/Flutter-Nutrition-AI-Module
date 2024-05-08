@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
-import '../../../common/util/date_time_picker.dart';
+import '../../../common/util/date_picker.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/widgets/app_text_field.dart';
 import 'interfaces.dart';
@@ -57,12 +57,12 @@ class _DateWidgetState extends State<DateWidget> {
             controller: _controller,
             readOnly: true,
             onTap: () {
-              DateTimePicker.showAdaptive(
+              DatePicker.showAdaptive(
                 context: context,
                 selectedDate: widget.selectedDate,
                 onDateTimeChanged: (dateTime) {
                   _controller.text = dateTime.formatToString(format12);
-                  widget.listener?.onChangeDate(dateTime);
+                  widget.listener?.onDateChanged(dateTime);
                 },
               );
             },

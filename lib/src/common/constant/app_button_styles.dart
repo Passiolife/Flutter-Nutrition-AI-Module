@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_constants.dart';
 
@@ -9,11 +10,11 @@ class AppButtonStyles {
             color: AppColors.white),
     decoration: BoxDecoration(
       color: AppColors.indigo600Main,
-      borderRadius: BorderRadius.circular(AppDimens.r4),
+      borderRadius: BorderRadius.circular(4.r),
     ),
     padding: EdgeInsets.symmetric(
-      vertical: AppDimens.h13,
-      horizontal: AppDimens.w16,
+      vertical: 13.h,
+      horizontal: 16.w,
     ),
   );
 
@@ -24,11 +25,11 @@ class AppButtonStyles {
     decoration: BoxDecoration(
       color: AppColors.white,
       border: Border.all(color: AppColors.indigo600Main),
-      borderRadius: BorderRadius.circular(AppDimens.r4),
+      borderRadius: BorderRadius.circular(4.r),
     ),
     padding: EdgeInsets.symmetric(
-      vertical: AppDimens.h13,
-      horizontal: AppDimens.w16,
+      vertical: 13.h,
+      horizontal: 16.w,
     ),
   );
 
@@ -38,9 +39,9 @@ class AppButtonStyles {
             color: AppColors.white),
     decoration: BoxDecoration(
       color: AppColors.indigo600Main,
-      borderRadius: BorderRadius.circular(AppDimens.r8),
+      borderRadius: BorderRadius.circular(8.r),
     ),
-    padding: EdgeInsets.symmetric(vertical: AppDimens.h8),
+    padding: EdgeInsets.symmetric(vertical: 8.h),
   );
 
   static AppButtonModel primaryCustomBordered = AppButtonModel(
@@ -50,11 +51,11 @@ class AppButtonStyles {
     decoration: BoxDecoration(
       color: AppColors.white,
       border: Border.all(color: AppColors.indigo600Main),
-      borderRadius: BorderRadius.circular(AppDimens.r8),
+      borderRadius: BorderRadius.circular(8.r),
     ),
     padding: EdgeInsets.symmetric(
-      vertical: AppDimens.h8,
-      horizontal: AppDimens.w16,
+      vertical: 8.h,
+      horizontal: 16.w,
     ),
   );
 
@@ -64,11 +65,11 @@ class AppButtonStyles {
             color: AppColors.indigo700),
     decoration: BoxDecoration(
       color: AppColors.indigo100,
-      borderRadius: BorderRadius.circular(AppDimens.r4),
+      borderRadius: BorderRadius.circular(4.r),
     ),
     padding: EdgeInsets.symmetric(
-      vertical: AppDimens.h13,
-      horizontal: AppDimens.w16,
+      vertical: 13.h,
+      horizontal: 16.w,
     ),
   );
 }

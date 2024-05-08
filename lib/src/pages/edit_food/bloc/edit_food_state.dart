@@ -11,15 +11,33 @@ class EditFoodInitial extends EditFoodState {
   List<Object> get props => [];
 }
 
+class ConversionLoadingState extends EditFoodState {
+  const ConversionLoadingState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 class ConversionSuccessState extends EditFoodState {
-  const ConversionSuccessState(
-      {required this.foodRecord, required this.sliderData});
+  const ConversionSuccessState({
+    required this.foodRecord,
+    required this.sliderData,
+  });
 
   final FoodRecord? foodRecord;
   final SliderData sliderData;
 
   @override
-  List<Object?> get props => throw UnimplementedError();
+  List<Object?> get props => [foodRecord, sliderData];
+}
+
+class ConversionFailureState extends EditFoodState {
+  const ConversionFailureState({required this.message});
+
+  final String message;
+
+  @override
+  List<Object?> get props => [message];
 }
 
 class UpdateServingQuantitySuccessState extends EditFoodState {
@@ -83,6 +101,25 @@ class ReplaceIngredientSuccessState extends EditFoodState {
 }
 
 class LogSuccessState extends EditFoodState {
+  const LogSuccessState();
+
   @override
   List<Object?> get props => [];
+}
+
+class FavoriteChangeSuccessState extends EditFoodState {
+  final bool isFavorite;
+
+  const FavoriteChangeSuccessState({required this.isFavorite});
+
+  @override
+  List<Object?> get props => [isFavorite];
+}
+
+class LogDeleteSuccessState extends EditFoodState {
+  const LogDeleteSuccessState({required this.milliseconds});
+  final int milliseconds;
+
+  @override
+  List<Object?> get props => [milliseconds];
 }

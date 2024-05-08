@@ -1,13 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
-
 import '../../pages/dashboard/dashboard_page.dart';
-import '../../pages/edit_food/edit_food_page.dart';
 import '../../pages/food_scan/food_scan_page.dart';
 import '../../pages/food_search/food_search_page.dart';
 import '../constant/app_common_constants.dart';
-import '../models/food_record/food_record_ingredient.dart';
-import '../models/food_record/food_record_v3.dart';
 
 class Routes {
   // Define the initial page route name
@@ -64,7 +59,7 @@ class Routes {
             return FoodScanPage(selectedDateTime: dateTime);
           },
         );
-      case editFoodPage:
+      /*case editFoodPage:
         return MaterialPageRoute(
           settings: settings,
           builder: (_) {
@@ -74,6 +69,7 @@ class Routes {
             FoodRecordIngredient? foodRecordIngredient;
             String? iconHeroTag;
             bool needsReturn = false;
+            bool visibleSwitch = false;
             if (arguments is Map) {
               final data = arguments.containsKey(AppCommonConstants.data)
                   ? arguments[AppCommonConstants.data]
@@ -89,17 +85,23 @@ class Routes {
                   arguments.containsKey(AppCommonConstants.iconHeroTag)
                       ? arguments[AppCommonConstants.iconHeroTag]
                       : null;
-              needsReturn = arguments.containsKey(AppCommonConstants.needsReturn)
-                  ? arguments[AppCommonConstants.needsReturn]
-                  : false;
+              needsReturn =
+                  arguments.containsKey(AppCommonConstants.needsReturn)
+                      ? arguments[AppCommonConstants.needsReturn]
+                      : false;
+              visibleSwitch =
+                  arguments.containsKey(AppCommonConstants.visibleSwitch)
+                      ? arguments[AppCommonConstants.visibleSwitch]
+                      : false;
             }
             if (foodItem != null) {
               return EditFoodPage.fromPassioFoodItem(
                 foodItem: foodItem,
                 needsReturn: needsReturn,
                 iconHeroTag: iconHeroTag,
+                visibleSwitch: visibleSwitch,
               );
-            } else if(foodRecordIngredient != null) {
+            } else if (foodRecordIngredient != null) {
               return EditFoodPage.fromFoodRecordIngredient(
                 foodRecordIngredient: foodRecordIngredient,
                 needsReturn: needsReturn,
@@ -107,17 +109,18 @@ class Routes {
                 visibleDateView: false,
                 visibleAddIngredient: false,
                 visibleMoreDetails: false,
-                visibleOpenFoodFacts: false,
                 iconHeroTag: iconHeroTag,
+                visibleSwitch: visibleSwitch,
               );
             }
             return EditFoodPage.fromFoodRecord(
               foodRecord: foodRecord,
               needsReturn: needsReturn,
               iconHeroTag: iconHeroTag,
+              visibleSwitch: visibleSwitch,
             );
           },
-        );
+        );*/
       // Default case when route name is not found
       default:
         return MaterialPageRoute(

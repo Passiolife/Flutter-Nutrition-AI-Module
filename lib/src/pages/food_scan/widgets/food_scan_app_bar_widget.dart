@@ -18,7 +18,6 @@ class FoodScanAppBarWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: AppDimens.h48),
           CustomAppBarWidget(
             title: context.localization?.foodScanner,
             isMenuVisible: false,

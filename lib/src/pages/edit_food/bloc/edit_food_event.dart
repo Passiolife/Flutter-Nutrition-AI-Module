@@ -5,14 +5,35 @@ abstract class EditFoodEvent extends Equatable {
 }
 
 class DoConversionEvent extends EditFoodEvent {
-  const DoConversionEvent({this.foodItem, this.foodRecord, this.foodRecordIngredient});
+  const DoConversionEvent({
+    this.foodItem,
+    this.foodRecord,
+    this.foodRecordIngredient,
+    this.detectedCandidate,
+    this.foodDataInfo,
+    this.mealLabel,
+    this.shouldUpdateServingUnit = false,
+  });
 
   final PassioFoodItem? foodItem;
   final FoodRecord? foodRecord;
   final FoodRecordIngredient? foodRecordIngredient;
+  final DetectedCandidate? detectedCandidate;
+  final PassioFoodDataInfo? foodDataInfo;
+  final MealLabel? mealLabel;
+  final bool shouldUpdateServingUnit;
 
   @override
-  List<Object?> get props => [foodItem, foodRecord, foodRecordIngredient];
+  List<Object?> get props =>
+      [
+        foodItem,
+        foodRecord,
+        foodRecordIngredient,
+        detectedCandidate,
+        foodDataInfo,
+        mealLabel,
+        shouldUpdateServingUnit
+      ];
 }
 
 class DoUpdateServingQuantityEvent extends EditFoodEvent {
@@ -57,29 +78,38 @@ class DoUpdateDateEvent extends EditFoodEvent {
 
 class DoAddIngredientEvent extends EditFoodEvent {
   const DoAddIngredientEvent({
-    required this.foodItem,
+    required this.searchResult,
   });
 
-  final PassioFoodItem foodItem;
+  final PassioFoodDataInfo searchResult;
 
   @override
-  List<Object?> get props => [foodItem];
+  List<Object?> get props => [searchResult];
 }
 
 class DoLogEvent extends EditFoodEvent {
-  const DoLogEvent();
+  const DoLogEvent({required this.isUpdate});
+
+  final bool isUpdate;
+
+  @override
+  List<Object?> get props => [isUpdate];
+}
+
+class DoDeleteLogEvent extends EditFoodEvent {
+  const DoDeleteLogEvent();
 
   @override
   List<Object?> get props => [];
 }
 
 class DoRemoveIngredientEvent extends EditFoodEvent {
-  const DoRemoveIngredientEvent({required this.ingredient});
+  const DoRemoveIngredientEvent({required this.index});
 
-  final FoodRecordIngredient ingredient;
+  final int index;
 
   @override
-  List<Object?> get props => [ingredient];
+  List<Object?> get props => [index];
 }
 
 class DoReplaceIngredientEvent extends EditFoodEvent {
@@ -93,4 +123,13 @@ class DoReplaceIngredientEvent extends EditFoodEvent {
 
   @override
   List<Object?> get props => [index, ingredient];
+}
+
+class DoFavoriteChangeEvent extends EditFoodEvent {
+  const DoFavoriteChangeEvent({this.name});
+
+  final String? name;
+
+  @override
+  List<Object?> get props => [name];
 }

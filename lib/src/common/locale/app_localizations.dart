@@ -94,6 +94,9 @@ class AppLocalizations {
 
   String? get cameraPermissionMessage => getLabel('cameraPermissionMessage');
 
+  String? get notificationPermissionMessage =>
+      getLabel('notificationPermissionMessage');
+
   String? get logSuccessMessage => getLabel('logSuccessMessage');
 
   String? get recipeAddedMessage => getLabel('recipeAddedMessage');
@@ -207,8 +210,6 @@ class AppLocalizations {
 
   String? get weeklyAdherence => getLabel('weeklyAdherence');
 
-  String? get thisWeek => getLabel('thisWeek');
-
   String? get water => getLabel('water');
 
   String? get oz => getLabel('oz');
@@ -278,6 +279,9 @@ class AppLocalizations {
 
   String? get barcodeNotRecognized => getLabel('barcodeNotRecognized');
 
+  String? get packagedFoodNotRecognized =>
+      getLabel('packagedFoodNotRecognized');
+
   String? get tryScanningNutritionFactsInstead =>
       getLabel('tryScanningNutritionFactsInstead');
 
@@ -312,7 +316,7 @@ class AppLocalizations {
 
   String? get scanResults => getLabel('scanResults');
 
-  String? get scanResultsDescription => getLabel('scanResultsDescription');
+  String? get scanResultsIntro => getLabel('scanResultsIntro');
 
   String? get mealTime => getLabel('mealTime');
 
@@ -321,6 +325,8 @@ class AppLocalizations {
   String? get addIngredient => getLabel('addIngredient');
 
   String? get addedToFavorites => getLabel('addedToFavorites');
+
+  String? get removedFromFavorites => getLabel('removedFromFavorites');
 
   String? get favourites => getLabel('favourites');
 
@@ -333,4 +339,162 @@ class AppLocalizations {
   String? get openFoodFacts => getLabel('openFoodFacts');
 
   String? get moreDetails => getLabel('moreDetails');
+
+  String? get noDataFound => getLabel('noDataFound');
+
+  String? get createRecipe => getLabel('createRecipe');
+
+  String? get createRecipeDescription => getLabel('createRecipeDescription');
+
+  String? get create => getLabel('create');
+
+  String? get weightTrend => getLabel('weightTrend');
+
+  String? get currentWeight => getLabel('currentWeight');
+
+  String? get remaining => getLabel('remaining');
+
+  String? get newEntry => getLabel('newEntry');
+
+  String? get editEntry => getLabel('editEntry');
+
+  String? get time => getLabel('time');
+
+  String? get waterTrend => getLabel('waterTrend');
+
+  String? get consumed => getLabel('consumed');
+
+  String? get waterValidationMessage => getLabel('waterValidationMessage');
+
+  String? get quickAdd => getLabel('quickAdd');
+
+  String? get glass => getLabel('glass');
+
+  String? get smBottle => getLabel('smBottle');
+
+  String? get lgBottle => getLabel('lgBottle');
+
+  String? get waterRecorded => getLabel('waterRecorded');
+
+  String? get waterRecordUpdateMessage => getLabel('waterRecordUpdateMessage');
+
+  String? get waterRecordDeleteMessage => getLabel('waterRecordDeleteMessage');
+
+  String? get nutritionInformation => getLabel('nutritionInformation');
+
+  String? get nutritionInformationMessage =>
+      getLabel('nutritionInformationMessage');
+
+  String? get total => getLabel('total');
+
+  String? get showMore => getLabel('showMore');
+
+  String? get showLess => getLabel('showLess');
+
+  String? get addedToLog => getLabel('addedToLog');
+
+  String? get nameYourFavorite => getLabel('nameYourFavorite');
+
+  String? get weightRecorded => getLabel('weightRecorded');
+
+  String? get weightRecordDeleteMessage =>
+      getLabel('weightRecordDeleteMessage');
+
+  String? get weightRecordUpdateMessage =>
+      getLabel('weightRecordUpdateMessage');
+
+  String? get personalInformation => getLabel('personalInformation');
+
+  String? get name => getLabel('name');
+
+  String? get age => getLabel('age');
+
+  String? get nutritionGoals => getLabel('nutritionGoals');
+
+  String? get targetWeight => getLabel('targetWeight');
+
+  String? get activityLevel => getLabel('activityLevel');
+
+  String? get calorieDeficit => getLabel('calorieDeficit');
+
+  String? get diet => getLabel('diet');
+
+  String? get notActive => getLabel('notActive');
+
+  String? get lightlyActive => getLabel('lightlyActive');
+
+  String? get moderatelyActive => getLabel('moderatelyActive');
+
+  String? get active => getLabel('active');
+
+  String? get calculatedBMI => getLabel('calculatedBMI');
+
+  String? get waterTarget => getLabel('waterTarget');
+
+  String? get dailyNutritionTarget => getLabel('dailyNutritionTarget');
+
+  String? get saveChanges => getLabel('saveChanges');
+
+  String? get profileSaved => getLabel('profileSaved');
+
+  String? get dailyNutritionTargetDescription =>
+      getLabel('dailyNutritionTargetDescription');
+
+  String? get calorieGoal => getLabel('calorieGoal');
+
+  String? get unitsForMyProfile => getLabel('unitsForMyProfile');
+
+  String? get length => getLabel('length');
+
+  String? get feet => getLabel('feet');
+
+  String? get inches => getLabel('inches');
+
+  String? get meter => getLabel('meter');
+
+  String? get centimeter => getLabel('centimeter');
+
+  String? get reminders => getLabel('reminders');
+
+  String? get reminderBreakfast => getLabel('reminderBreakfast');
+
+  String? get reminderLunch => getLabel('reminderLunch');
+
+  String? get reminderDinner => getLabel('reminderDinner');
+
+  String? get underweight => getLabel('underweight');
+
+  String? get normal => getLabel('normal');
+
+  String? get overweight => getLabel('overweight');
+
+  String? get obese => getLabel('obese');
+
+  String? get lose => getLabel('lose');
+
+  String? get gain => getLabel('gain');
+
+  String? get maintainWeight => getLabel('maintainWeight');
+
+  String? get ml => getLabel('ml');
+
+  String? get mealReminder => getLabel('mealReminder');
+
+  String? get mealReminderMessage => getLabel('mealReminderMessage');
+
+  String? get balancedDiet => getLabel('balancedDiet');
+
+  String? get logEntireMeal => getLabel('logEntireMeal');
+
+  String? get loggedEntireMealMessage => getLabel('loggedEntireMealMessage');
+
+  String? get quickSuggestions => getLabel('quickSuggestions');
+
+  String? get quickSuggestionsDescription =>
+      getLabel('quickSuggestionsDescription');
+
+  String? get macros => getLabel('macros');
+  String? get micros => getLabel('micros');
+
+
 }

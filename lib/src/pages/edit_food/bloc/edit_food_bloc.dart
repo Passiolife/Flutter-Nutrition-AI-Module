@@ -29,7 +29,7 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
   ({String? unit, double value}) _cachedMaxForSlider = (unit: null, value: 0);
 
   EditFoodBloc() : super(const EditFoodInitial()) {
-    on<DoConversionEvent>(_handleDoFoodItemToFoodRecordConversionEvent);
+    on<DoConversionEvent>(_handleDoConversionEvent);
     on<DoUpdateServingQuantityEvent>(_handleDoUpdateServingSizeEvent);
     on<DoUpdateServingUnitEvent>(_handleDoUpdateServingUnitEvent);
     on<DoUpdateMealLabelEvent>(_handleDoUpdateMealLabelEvent);
@@ -37,20 +37,58 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
     on<DoAddIngredientEvent>(_handleDoAddIngredientEvent);
     on<DoRemoveIngredientEvent>(_handleDoRemoveIngredientEvent);
     on<DoReplaceIngredientEvent>(_handleDoReplaceIngredientEvent);
+    on<DoFavoriteChangeEvent>(_handleDoFavoriteChangeEvent);
     on<DoLogEvent>(_handleDoLogEvent);
+    on<DoDeleteLogEvent>(_handleDoDeleteLogEvent);
   }
 
-  FutureOr<void> _handleDoFoodItemToFoodRecordConversionEvent(
-      DoConversionEvent event, Emitter<EditFoodState> emit) {
+  FutureOr<void> _handleDoConversionEvent(
+      DoConversionEvent event, Emitter<EditFoodState> emit) async {
+    emit(const ConversionLoadingState());
     if (event.foodItem != null) {
       _foodRecord = FoodRecord.fromPassioFoodItem(event.foodItem!);
     } else if (event.foodRecordIngredient != null) {
       _foodRecord =
           FoodRecord.fromFoodRecordIngredient(event.foodRecordIngredient!);
+    } else if (event.detectedCandidate != null) {
+      final foodItem = await NutritionAI.instance
+          .fetchFoodItemForPassioID(event.detectedCandidate!.passioID);
+      if (foodItem != null) {
+        _foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
+      }
+    } else if (event.foodDataInfo != null) {
+      PassioFoodItem? foodItem = await NutritionAI.instance
+          .fetchFoodItemForDataInfo(event.foodDataInfo!);
+
+      if (foodItem != null) {
+        _foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
+      }
+
+      if (event.shouldUpdateServingUnit) {
+        bool hasUnit = _foodRecord?.setSelectedUnit(
+                event.foodDataInfo?.nutritionPreview.servingUnit ?? '') ??
+            false;
+        if (!hasUnit) {
+          _foodRecord?.setSelectedUnit('gram');
+        }
+        _foodRecord?.setSelectedQuantity(hasUnit
+            ? event.foodDataInfo?.nutritionPreview.servingQuantity ?? 1
+            : event.foodDataInfo?.nutritionPreview.weightQuantity ?? 1);
+      }
     } else {
       _foodRecord = event.foodRecord;
     }
-    if (_foodRecord == null) return null;
+    if (_foodRecord != null) {
+      _foodRecord?.isFavorite =
+          await _connector.favoriteExists(foodRecord: _foodRecord!);
+    }
+    if (_foodRecord == null) {
+      emit(const ConversionFailureState(message: 'Something went wrong.'));
+      return;
+    }
+    if (event.mealLabel != null) {
+      _foodRecord?.mealLabel = event.mealLabel;
+    }
     _updateSliderData(true);
     emit(ConversionSuccessState(
         foodRecord: _foodRecord, sliderData: _sliderData));
@@ -60,17 +98,20 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
       DoUpdateServingQuantityEvent event, Emitter<EditFoodState> emit) async {
     _foodRecord?.setSelectedQuantity(event.quantity);
     _updateSliderData(event.resetSlider);
-    emit(UpdateServingQuantitySuccessState(
-      quantity: event.quantity,
-      foodRecord: _foodRecord,
-      sliderData: _sliderData,
-    ));
+    if (_foodRecord != null) {
+      emit(UpdateServingQuantitySuccessState(
+        quantity: _foodRecord!.getSelectedQuantity(),
+        foodRecord: _foodRecord,
+        sliderData: _sliderData,
+      ));
+    }
   }
 
   FutureOr<void> _handleDoUpdateServingUnitEvent(
       DoUpdateServingUnitEvent event, Emitter<EditFoodState> emit) async {
     _foodRecord?.setSelectedUnitKeepWeight(event.unit);
-    add(DoUpdateServingQuantityEvent(quantity: _foodRecord?.getSelectedQuantity() ?? 1, resetSlider: true));
+    add(DoUpdateServingQuantityEvent(
+        quantity: _foodRecord?.getSelectedQuantity() ?? 1, resetSlider: true));
   }
 
   FutureOr<void> _handleDoUpdateMealLabelEvent(
@@ -86,11 +127,70 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
 
   FutureOr<void> _handleDoAddIngredientEvent(
       DoAddIngredientEvent event, Emitter<EditFoodState> emit) async {
-    final ingredientFoodRecord = FoodRecord.fromPassioFoodItem(event.foodItem);
-    _foodRecord?.addIngredient(ingredientFoodRecord, index: _foodRecord?.ingredients.length ?? 0);
-    add(DoUpdateServingQuantityEvent(quantity: _foodRecord?.getSelectedQuantity() ?? 1, resetSlider: true));
-    // emit(AddIngredientSuccessState(
-    //     ingredientsCount: _foodRecord?.ingredients.length ?? 0));
+    PassioFoodItem? foodItem =
+        await NutritionAI.instance.fetchFoodItemForDataInfo(event.searchResult);
+    if (foodItem == null) return;
+    final ingredientFoodRecord = FoodRecord.fromPassioFoodItem(foodItem);
+    _foodRecord?.addIngredient(ingredientFoodRecord,
+        index: _foodRecord?.ingredients.length ?? 0);
+    add(DoUpdateServingQuantityEvent(
+      quantity: _foodRecord?.getSelectedQuantity() ?? 1,
+      resetSlider: true,
+    ));
+  }
+
+  FutureOr<void> _handleDoRemoveIngredientEvent(
+      DoRemoveIngredientEvent event, Emitter<EditFoodState> emit) {
+    _foodRecord?.removeIngredient(event.index);
+    add(DoUpdateServingQuantityEvent(
+      quantity: _foodRecord?.getSelectedQuantity() ?? 1,
+      resetSlider: true,
+    ));
+  }
+
+  FutureOr<void> _handleDoReplaceIngredientEvent(
+      DoReplaceIngredientEvent event, Emitter<EditFoodState> emit) {
+    if (_foodRecord != null) {
+      _foodRecord!.replaceIngredient(event.ingredient, event.index);
+      add(DoUpdateServingQuantityEvent(
+          quantity: _foodRecord?.getSelectedQuantity() ?? 1,
+          resetSlider: true));
+    }
+  }
+
+  FutureOr<void> _handleDoLogEvent(
+      DoLogEvent event, Emitter<EditFoodState> emit) async {
+    if (_foodRecord != null) {
+      await _connector.updateRecord(
+          foodRecord: _foodRecord!, isNew: !event.isUpdate);
+      emit(const LogSuccessState());
+    }
+  }
+
+  FutureOr<void> _handleDoFavoriteChangeEvent(
+      DoFavoriteChangeEvent event, Emitter<EditFoodState> emit) async {
+    if (_foodRecord != null) {
+      if (_foodRecord?.isFavorite ?? false) {
+        await _connector.deleteFavorite(foodRecord: _foodRecord!);
+        _foodRecord?.isFavorite = false;
+      } else {
+        final updatedRecord = FoodRecord.fromJson(_foodRecord!.toJson())
+          ..name = event.name ?? '';
+        await _connector.updateFavorite(foodRecord: updatedRecord, isNew: true);
+        _foodRecord?.isFavorite = true;
+      }
+      emit(FavoriteChangeSuccessState(
+          isFavorite: _foodRecord?.isFavorite ?? false));
+    }
+  }
+
+  Future<void> _handleDoDeleteLogEvent(
+      DoDeleteLogEvent event, Emitter<EditFoodState> emit) async {
+    if (_foodRecord != null) {
+      _connector.deleteRecord(foodRecord: _foodRecord!);
+      emit(LogDeleteSuccessState(
+          milliseconds: DateTime.now().millisecondsSinceEpoch));
+    }
   }
 
   void _updateSliderData(bool shouldReset) {
@@ -117,7 +217,7 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
       if (maxSlider >= 500) {
         maxSlider = (maxSlider / 10).ceilToDouble() * 10;
       } else {
-        maxSlider = maxSlider.roundToDouble();
+        maxSlider = maxSlider.ceilToDouble();
       }
       _sliderData = (
         minSlider: _sliderData.minSlider,
@@ -128,30 +228,6 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
           _ => (maxSlider / 10).round(),
         },
       );
-    }
-  }
-
-  FutureOr<void> _handleDoLogEvent(
-      DoLogEvent event, Emitter<EditFoodState> emit) async {
-    if (_foodRecord != null) {
-      _connector.updateRecord(foodRecord: _foodRecord!, isNew: true);
-      emit(LogSuccessState());
-    }
-  }
-
-  FutureOr<void> _handleDoRemoveIngredientEvent(
-      DoRemoveIngredientEvent event, Emitter<EditFoodState> emit) {
-    _foodRecord?.ingredients.remove(event.ingredient);
-    emit(RemoveIngredientSuccessState(
-        ingredientsCount: _foodRecord?.ingredients.length ?? 0));
-  }
-
-  FutureOr<void> _handleDoReplaceIngredientEvent(
-      DoReplaceIngredientEvent event, Emitter<EditFoodState> emit) {
-    if (_foodRecord != null) {
-      _foodRecord!.replaceIngredient(event.ingredient, event.index);
-      emit(ReplaceIngredientSuccessState(
-          ingredient: _foodRecord!.ingredients.elementAt(event.index)));
     }
   }
 }

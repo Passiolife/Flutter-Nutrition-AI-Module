@@ -11,12 +11,11 @@ part 'food_search_state.dart';
 class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
   String _previousSearchText = '';
 
-  List<PassioSearchResult> _results = [];
+  List<PassioFoodDataInfo> _results = [];
   List<String> _alternatives = [];
 
   FoodSearchBloc() : super(const FoodSearchInitial()) {
     on<DoFoodSearchEvent>(_handleDoFoodSearchEvent);
-    on<DoFetchSearchResultEvent>(_handleDoFetchSearchResultEvent);
   }
 
   FutureOr<void> _handleDoFoodSearchEvent(
@@ -41,42 +40,38 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
     } else {
       _results = List.generate(
           20,
-          (index) => const PassioSearchResult(
+          (index) => const PassioFoodDataInfo(
                 brandName: '',
                 foodName: '',
                 iconID: '',
                 labelId: '',
                 nutritionPreview: PassioSearchNutritionPreview(
                   calories: 0,
+                  carbs: 0,
+                  fat: 0,
+                  protein: 0,
                   servingUnit: '',
                   servingQuantity: 0,
-                  servingWeight: '',
+                  weightUnit: '',
+                  weightQuantity: 0
                 ),
                 resultId: '-1',
                 scoredName: '',
                 score: 0,
                 type: '',
+                useShortName: false,
               ));
       _alternatives = List.generate(10, (index) => '-1');
 
-      emit(SearchForFoodSuccessState(results: _results, alternatives: _alternatives));
+      emit(SearchForFoodSuccessState(
+          results: _results, alternatives: _alternatives));
       final searchResponse =
           await NutritionAI.instance.searchForFood(searchText);
 
       _results = searchResponse.results;
       _alternatives = searchResponse.alternateNames;
-      emit(SearchForFoodSuccessState(results: _results, alternatives: _alternatives));
-    }
-  }
-
-  FutureOr<void> _handleDoFetchSearchResultEvent(
-      DoFetchSearchResultEvent event, Emitter<FoodSearchState> emit) async {
-    PassioFoodItem? foodItem =
-        await NutritionAI.instance.fetchSearchResult(event.result);
-    if (foodItem != null) {
-      emit(FetchSearchResultSuccessState(index: 0, foodItem: foodItem));
-    } else {
-      emit(const FetchSearchResultFailureState(message: 'Something went wrong.'));
+      emit(SearchForFoodSuccessState(
+          results: _results, alternatives: _alternatives));
     }
   }
 }

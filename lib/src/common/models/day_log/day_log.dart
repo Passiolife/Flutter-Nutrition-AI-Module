@@ -1,4 +1,4 @@
-import '../food_record/food_record_v3.dart';
+import '../food_record/food_record.dart';
 import '../food_record/meal_label.dart';
 
 class DayLog {

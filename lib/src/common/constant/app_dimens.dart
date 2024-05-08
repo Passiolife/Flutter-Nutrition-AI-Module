@@ -109,6 +109,7 @@ class AppDimens {
   static double r120 = 120.r;
 
   // Animation duration
+  static const int duration150 = 150;
   static const int duration250 = 250;
   static const int duration400 = 400;
   static const int duration1000 = 1000;

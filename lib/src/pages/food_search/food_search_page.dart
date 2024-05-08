@@ -3,9 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../common/constant/app_constants.dart';
-import '../../common/router/routes.dart';
 import '../../common/util/debouncer.dart';
-import '../../common/util/snackbar_extension.dart';
+import '../edit_food/edit_food_page.dart';
 import 'bloc/food_search_bloc.dart';
 import 'widgets/alternative_list_widget.dart';
 import 'widgets/widgets.dart';
@@ -25,14 +24,26 @@ class _FoodSearchPageState extends State<FoodSearchPage>
 
   final FoodSearchBloc _bloc = FoodSearchBloc();
 
-  List<PassioSearchResult> _results = [];
+  List<PassioFoodDataInfo> _results = [];
   List<String> _alternatives = [];
 
   /// [_searchDeBouncer] when user stops typing then waits [500] milliseconds and do the search operation.
   final _searchDeBouncer = DeBouncer(milliseconds: 500);
 
+  final FocusNode _searchNode = FocusNode();
+
+  @override
+  void onNameSelected(String name) {
+    _searchController.text = name;
+  }
+
   @override
   void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(const Duration(milliseconds: 100), () {
+        _searchNode.requestFocus();
+      });
+    });
     _searchController.addListener(() {
       /// Here managing the debounce so it will wait until user stops the typing.
       _searchDeBouncer.run(() {
@@ -56,10 +67,6 @@ class _FoodSearchPageState extends State<FoodSearchPage>
       listener: (context, state) {
         _handleStates(context: context, state: state);
       },
-      buildWhen: (_, state) {
-        return state is! FetchSearchResultSuccessState &&
-            state is! FetchSearchResultFailureState;
-      },
       builder: (context, state) {
         return Scaffold(
           backgroundColor: AppColors.gray50,
@@ -67,7 +74,10 @@ class _FoodSearchPageState extends State<FoodSearchPage>
           body: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              FoodSearchAppBarWidget(searchController: _searchController),
+              FoodSearchAppBarWidget(
+                searchController: _searchController,
+                focusNode: _searchNode,
+              ),
               state is KeepTypingState
                   ? const KeepTypingWidget()
                   : const SizedBox.shrink(),
@@ -80,10 +90,14 @@ class _FoodSearchPageState extends State<FoodSearchPage>
                     )
                   : const SizedBox.shrink(),
               state is SearchForFoodSuccessState
-                  ? ListWidget(
-                      results: _results,
-                      listener: this,
-                    )
+                  ? _alternatives.isNotEmpty || _results.isNotEmpty
+                      ? ListWidget(
+                          results: _results,
+                          listener: this,
+                        )
+                      : NoDataFoundWidget(
+                          searchQuery: _searchController.text,
+                        )
                   : const SizedBox.shrink(),
             ],
           ),
@@ -93,41 +107,31 @@ class _FoodSearchPageState extends State<FoodSearchPage>
   }
 
   @override
-  void onFoodItemSelected(PassioSearchResult result) {
-    _bloc.add(DoFetchSearchResultEvent(result: result));
+  void onFoodItemSelected(PassioFoodDataInfo result) {
+    if (widget.needsReturn) {
+      Navigator.pop(context, result);
+    } else {
+      EditFoodPage.navigate(context: context, passioFoodDataInfo: result, visibleSwitch: true, redirectToDiaryOnLog: true);
+     /* Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditFoodPage(
+            searchResult: result,
+            visibleSwitch: true,
+            redirectToDiaryOnLog: true,
+          ),
+        ),
+      );*/
+    }
   }
 
-  @override
-  void onNameSelected(String name) {
-    _searchController.text = name;
-  }
+
 
   void _handleStates(
       {required BuildContext context, required FoodSearchState state}) {
     if (state is SearchForFoodSuccessState) {
       _results = state.results;
       _alternatives = state.alternatives;
-    } else if (state is FetchSearchResultSuccessState) {
-      final data = state.foodItem;
-      if (widget.needsReturn) {
-        Navigator.pop(context, data);
-      } else {
-        Navigator.pushNamed(
-          context,
-          Routes.editFoodPage,
-          arguments: {
-            AppCommonConstants.data: state.foodItem,
-            AppCommonConstants.iconHeroTag:
-                '${state.foodItem.iconId}${state.index}',
-            AppCommonConstants.titleHeroTag:
-            '${state.foodItem.name}${state.index}',
-            AppCommonConstants.subtitleHeroTag:
-            '${state.foodItem.details}${state.index}',
-          },
-        );
-      }
-    } else if (state is FetchSearchResultFailureState) {
-      context.showSnackbar(text: state.message);
     }
   }
 }

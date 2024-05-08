@@ -3,13 +3,43 @@ import 'package:flutter/material.dart';
 import '../constant/app_button_styles.dart';
 import '../constant/app_colors.dart';
 import '../util/context_extension.dart';
+import '../util/keyboard_extension.dart';
 import '../widgets/app_button.dart';
 
 class OkButtonWithKeyboard {
   OverlayEntry? overlayEntry;
 
-  OkButtonWithKeyboard.show(
-      {required BuildContext context, VoidCallback? onTap}) {
+  OkButtonWithKeyboard.setup({
+    required BuildContext context,
+    FocusNode? focusNode,
+    VoidCallback? onTap,
+  }) {
+    OkButtonWithKeyboard? okButtonWithKeyboard;
+    focusNode?.addListener(() {
+      if(focusNode.hasFocus) {
+        okButtonWithKeyboard = OkButtonWithKeyboard.show(
+          context: context,
+          onTap: () {
+            context.hideKeyboard();
+            okButtonWithKeyboard?.hide();
+            okButtonWithKeyboard = null;
+            onTap?.call();
+          },
+        );
+      } else {
+        context.hideKeyboard();
+        okButtonWithKeyboard?.hide();
+        okButtonWithKeyboard = null;
+        onTap?.call();
+      }
+    });
+
+  }
+
+  OkButtonWithKeyboard.show({
+    required BuildContext context,
+    VoidCallback? onTap,
+  }) {
     if (overlayEntry != null) return;
 
     OverlayState overlayState = Overlay.of(context);

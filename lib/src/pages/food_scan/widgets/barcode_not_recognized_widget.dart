@@ -46,14 +46,14 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              SizedBox(height: AppDimens.h4),
+              /*SizedBox(height: AppDimens.h4),
               Text(
                 context.localization?.tryScanningNutritionFactsInstead ?? '',
                 style: AppTextStyle.textSm,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-              ),
+              ),*/
               SizedBox(height: AppDimens.h16),
               Row(
                 children: [

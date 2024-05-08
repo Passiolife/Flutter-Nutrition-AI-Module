@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,6 +26,7 @@ class SingleTextFieldDialog {
       builder: (BuildContext context) => StatefulBuilder(
         builder: (context, setState) {
           return AlertDialog.adaptive(
+            backgroundColor: Platform.isAndroid ? AppColors.white : null,
             title: title != null
                 ? Text(
                     title,

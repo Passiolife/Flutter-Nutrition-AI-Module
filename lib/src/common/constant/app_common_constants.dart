@@ -11,4 +11,9 @@ class AppCommonConstants {
   static const titleHeroTag = 'title_tag';
   static const subtitleHeroTag = 'subtitle_tag';
   static const needsReturn = 'needs_return';
+  static const visibleSwitch = 'visible_switch';
+
+  // Recipe
+  static const recipePrefix = 'MyRec';
+
 }

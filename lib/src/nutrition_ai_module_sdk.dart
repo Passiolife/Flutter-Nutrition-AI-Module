@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import 'common/connectors/local_db_connector.dart';
 import 'common/connectors/passio_connector.dart';
 import 'common/constant/app_constants.dart';
 import 'common/locale/app_localizations.dart';
+import 'common/models/user_profile/user_profile_model.dart';
 import 'common/util/database_helper.dart';
 import 'common/util/preference_store.dart';
-import 'common/util/string_extensions.dart';
+import 'common/util/user_session.dart';
 import 'common/widgets/nutrition_ai_widget.dart';
 import 'nutrition_ai_module_configuration.dart';
 
@@ -44,7 +44,7 @@ class NutritionAIModule {
   /// [launch] function requires a [BuildContext] parameter to initiate the Nutrition AI module.
   ///
   Future<void> launch(BuildContext context) async {
-    assert(
+    /*assert(
         configuration.key.isNotNullOrEmpty, 'Passio key should not be empty.');
 
     final passioConfig = PassioConfiguration(configuration.key ?? '');
@@ -52,7 +52,7 @@ class NutritionAIModule {
 
     if (passioStatus.mode != PassioMode.isReadyForDetection) {
       return;
-    }
+    }*/
     // Checking the type of connector and based on that will peform the operator.
     // If user passes the connector to the configuration then we will not initialize the Database
     // Else we have to initialize the local database.
@@ -74,6 +74,21 @@ class NutritionAIModule {
         'packages/${AppCommonConstants.packageName}/assets/translation/app_en.json');
 
     await PreferenceStore.instance.init();
+
+    // Getting user profile from connector.
+    final userProfile = await configuration.connector.fetchUserProfile();
+    if (userProfile != null) {
+      UserSession.instance.userProfile = userProfile;
+    } else {
+      UserSession.instance.userProfile = UserProfileModel();
+      if (UserSession.instance.userProfile != null) {
+        // Storing user profile data in database.
+        await configuration.connector.updateUserProfile(
+          userProfile: UserSession.instance.userProfile!,
+          isNew: true,
+        );
+      }
+    }
 
     // Check if the current widget is mounted before proceeding
     if (context.mounted) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'app_colors.dart';
-import 'app_dimens.dart';
 
 class AppShadows {
   // Small Shadow
@@ -9,16 +9,16 @@ class AppShadows {
     // Background color for the box
     color: AppColors.white,
     // Border radius for rounded corners
-    borderRadius: BorderRadius.circular(AppDimens.r8),
+    borderRadius: BorderRadius.circular(8.r),
     // Box shadow settings
     boxShadow: [
       BoxShadow(
         // Shadow color with opacity
-        color: AppColors.black.withOpacity(AppDimens.opacity5),
+        color: AppColors.black.withOpacity(0.05),
         // Shadow offset (x, y)
         offset: const Offset(0, 1),
         // Blur radius of the shadow
-        blurRadius: AppDimens.r2,
+        blurRadius: 2.r,
         // Spread radius of the shadow
         spreadRadius: 0,
       ),
@@ -30,12 +30,12 @@ class AppShadows {
     // Background color for the box
     color: AppColors.white,
     // Border radius for rounded corners
-    borderRadius: BorderRadius.circular(AppDimens.r8),
+    borderRadius: BorderRadius.circular(8.r),
     // Box shadow settings
     boxShadow: [
       BoxShadow(
         // Shadow color with opacity
-        color: AppColors.black.withOpacity(AppDimens.opacity6),
+        color: AppColors.black.withOpacity(0.06),
         // Shadow offset (x, y)
         offset: const Offset(0, 1),
         // Blur radius of the shadow
@@ -45,7 +45,7 @@ class AppShadows {
       ),
       BoxShadow(
         // Shadow color with opacity
-        color: AppColors.black.withOpacity(AppDimens.opacity10),
+        color: AppColors.black.withOpacity(0.1),
         // Shadow offset (x, y)
         offset: const Offset(0, 1),
         // Blur radius of the shadow
@@ -61,12 +61,12 @@ class AppShadows {
     // Background color for the box
     color: AppColors.white,
     // Border radius for rounded corners
-    borderRadius: BorderRadius.circular(AppDimens.r8),
+    borderRadius: BorderRadius.circular(8.r),
     // Box shadow settings
     boxShadow: [
       BoxShadow(
         // Shadow color with opacity
-        color: AppColors.black.withOpacity(AppDimens.opacity5),
+        color: AppColors.black.withOpacity(0.05),
         // Shadow offset (x, y)
         offset: const Offset(0, 4),
         // Blur radius of the shadow
@@ -76,7 +76,7 @@ class AppShadows {
       ),
       BoxShadow(
         // Shadow color with opacity
-        color: AppColors.black.withOpacity(AppDimens.opacity10),
+        color: AppColors.black.withOpacity(0.1),
         // Shadow offset (x, y)
         offset: const Offset(0, 10),
         // Blur radius of the shadow
@@ -92,16 +92,16 @@ class AppShadows {
     // Background color for the box
     color: AppColors.white,
     // Border radius for rounded corners
-    borderRadius: BorderRadius.circular(AppDimens.r8),
+    borderRadius: BorderRadius.circular(8.r),
     // Box shadow settings
     boxShadow: [
       BoxShadow(
         // Shadow color with opacity
-        color: AppColors.black.withOpacity(AppDimens.opacity10),
+        color: AppColors.black.withOpacity(0.1),
         // Shadow offset (x, y)
         offset: const Offset(0, 2),
         // Blur radius of the shadow
-        blurRadius: AppDimens.r8,
+        blurRadius: 8.r,
         // Spread radius of the shadow
         spreadRadius: 0,
       ),
@@ -110,13 +110,13 @@ class AppShadows {
 
   static BoxShadow ring1BlackOpacity5 = BoxShadow(
     // Shadow color with opacity
-    color: AppColors.black.withOpacity(AppDimens.opacity5),
+    color: AppColors.black.withOpacity(0.05),
     // Shadow offset (x, y)
     offset: const Offset(0, 0),
     // Blur radius of the shadow
     blurRadius: 0,
     // Spread radius of the shadow
-    spreadRadius: AppDimens.r1,
+    spreadRadius: 1.r,
   );
 }
 

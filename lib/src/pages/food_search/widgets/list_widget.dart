@@ -13,7 +13,7 @@ class ListWidget extends StatelessWidget {
     super.key,
   });
 
-  final List<PassioSearchResult> results;
+  final List<PassioFoodDataInfo> results;
   final PassioSearchListener? listener;
 
   @override

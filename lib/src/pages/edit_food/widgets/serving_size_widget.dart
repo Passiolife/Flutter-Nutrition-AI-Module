@@ -6,9 +6,12 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/dialogs/ok_button_with_keyboard.dart';
+import '../../../common/models/food_record/food_record.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
+import '../../../common/util/keyboard_extension.dart';
 import '../../../common/util/string_extensions.dart';
+import '../../../common/widgets/app_slider.dart';
 import '../../../common/widgets/app_text_field.dart';
 import 'interfaces.dart';
 import 'typedefs.dart';
@@ -111,7 +114,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
               children: [
                 TextSpan(
                   text:
-                      ' (${widget.servingSize?.value.formatNumber(places: 0) ?? 0} ${widget.servingSize?.symbol})',
+                      ' (${widget.servingSize?.value.format(places: 0) ?? 0} ${widget.servingSize?.symbol})',
                   style: AppTextStyle.textBase
                       .addAll([AppTextStyle.textBase.leading6]).copyWith(
                     color: AppColors.gray900,
@@ -194,7 +197,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
                           setState(() {
                             _selectedUnit = value?.unitName;
                             widget.listener
-                                ?.onChangeServingUnit(_selectedUnit ?? '');
+                                ?.onServingUnitChanged(_selectedUnit ?? '');
                             // dropdownValue = value!;
                           });
                         },
@@ -206,39 +209,20 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
             ],
           ),
           SizedBox(height: AppDimens.h16),
-          Theme(
-            data: ThemeData(
-              sliderTheme: SliderThemeData(
-                trackHeight: AppDimens.h8,
-                activeTrackColor: AppColors.indigo600Main,
-                inactiveTrackColor: AppColors.indigo50,
-                thumbColor: AppColors.indigo600Main,
-                valueIndicatorColor: AppColors.indigo600Main,
-                valueIndicatorTextStyle:
-                    AppTextStyle.textXs.copyWith(color: AppColors.white),
-                trackShape: const _CustomTrackShape(),
-                tickMarkShape: SliderTickMarkShape.noTickMark,
-                thumbShape:
-                    RoundSliderThumbShape(enabledThumbRadius: AppDimens.r12),
-              ),
-            ),
-            child: Slider(
-              value: _selectedQuantity,
-              min: widget.sliderData?.minSlider ?? 0,
-              max: widget.sliderData?.maxSlider ?? 1,
-              divisions: widget.sliderData?.divisions ?? 10,
-              onChanged: (value) {
-                // setState(() {
-                _selectedQuantity = value;
-                _quantityController.text =
-                    _selectedQuantity.formatNumber(places: 2);
-                widget.listener?.onChangeServingQuantity(
-                  double.parse(_quantityController.text).roundNumber(),
-                  false,
-                );
-                // });
-              },
-            ),
+          AppSlider(
+            value: _selectedQuantity,
+            min: widget.sliderData?.minSlider ?? 0,
+            max: widget.sliderData?.maxSlider ?? 1,
+            divisions: widget.sliderData?.divisions ?? 10,
+            onChanged: (value) {
+              _selectedQuantity = value;
+              _quantityController.text =
+                  _selectedQuantity.format(places: 2);
+              widget.listener?.onServingQuantityChanged(
+                double.parse(_quantityController.text).roundTo(),
+                false,
+              );
+            },
           ),
         ],
       ),
@@ -247,7 +231,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
 
   void _updateQuantityFromWidget() {
     _selectedQuantity = widget.selectedQuantity;
-    _quantityController.text = _selectedQuantity.formatNumber(places: 2);
+    _quantityController.text = _selectedQuantity.format(places: 2);
   }
 
   void _updateUnitFromWidget() {
@@ -272,34 +256,17 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
   }
 
   void _handleOkButtonTap() {
+    context.hideKeyboard();
     if (_quantityController.text.isNotEmpty) {
-      _selectedQuantity = double.parse(_quantityController.text);
-      widget.listener?.onChangeServingQuantity(
-        double.parse(_quantityController.text).roundNumber(),
+      double quantity = double.parse(_quantityController.text);
+      _selectedQuantity = (quantity > 0) ? quantity : FoodRecord.zeroQuantity;
+      widget.listener?.onServingQuantityChanged(
+        _selectedQuantity,
         true,
       );
     } else {
       // Restore previous quantity if text field is empty after OK is tapped
-      _quantityController.text = _selectedQuantity.formatNumber(places: 2);
+      _quantityController.text = _selectedQuantity.format(places: 2);
     }
-  }
-}
-
-class _CustomTrackShape extends RoundedRectSliderTrackShape {
-  const _CustomTrackShape();
-
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final trackHeight = sliderTheme.trackHeight;
-    final trackLeft = offset.dx;
-    final trackTop = offset.dy + (parentBox.size.height - trackHeight!) / 2;
-    final trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }

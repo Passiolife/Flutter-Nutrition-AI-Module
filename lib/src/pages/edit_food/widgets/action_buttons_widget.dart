@@ -3,20 +3,19 @@ import 'package:flutter/material.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/widgets/app_button.dart';
+import 'interfaces.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   const ActionButtonsWidget({
     this.cancelButtonText,
     this.logButtonText,
-    this.onTapCancel,
-    this.onTapLog,
+    this.listener,
     super.key,
   });
 
   final String? cancelButtonText;
   final String? logButtonText;
-  final VoidCallback? onTapCancel;
-  final VoidCallback? onTapLog;
+  final EditFoodListener? listener;
 
   @override
   Widget build(BuildContext context) {
@@ -31,15 +30,15 @@ class ActionButtonsWidget extends StatelessWidget {
             child: AppButton(
               buttonText: cancelButtonText ?? context.localization?.cancel,
               appButtonModel: AppButtonStyles.primaryBordered,
-              onTap: onTapCancel,
+              onTap: () => listener?.onCancelTapped(),
             ),
           ),
           SizedBox(width: AppDimens.w16),
           Expanded(
             child: AppButton(
-              buttonText: logButtonText ?? context.localization?.log,
+              buttonText: logButtonText ?? context.localization?.save,
               appButtonModel: AppButtonStyles.primary,
-              onTap: onTapLog,
+              onTap: () => listener?.onLogTapped(),
             ),
           ),
         ],

@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -40,6 +42,7 @@ class AppColors {
   static const Color yellow400Normal = Color(0xFFFBBF24);
   static const Color yellow500 = Color(0xFFF59E0B);
   static const Color yellow900Dark = Color(0xFF78350F);
+  static const Color yellow100 = Color(0xFFFFE082); // Generated based on yellow400Normal and yellow500
 
   static const Color blue50 = Color(0xFFEFF6FF);
   static const Color lBlue500Normal = Color(0xFF0EA5E9);
@@ -72,4 +75,16 @@ class AppColors {
 
   static const Color backgroundBlueGray = Color(0xFFF2F5FB);
   static const Color slateGray75 = Color(0xBF6B7280);
+  static const Color iOSAlertDialog = Color(0xFFF0F0F0);
+  static const Color snackBarBackground = Color.fromRGBO(107, 114, 128, 0.75);
+
+  static Color? adaptiveDialogColor = Platform.isAndroid ? blue50 : null;
+  static const Color androidDialogColor = blue50;
+
+  // BMI Graph Colors
+  static const bmiGraphColor1 = Color(0xFF27B1FF);
+  static const bmiGraphColor2 = Color(0xFFA2E40C);
+  static const bmiGraphColor3 = Color(0xFFACD90B);
+  static const bmiGraphColor4 = Color(0xFFF18300);
+  static const bmiGraphColor5 = Color(0xFFE7221A);
 }

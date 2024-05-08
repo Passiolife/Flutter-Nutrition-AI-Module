@@ -6,9 +6,14 @@ import '../../../common/util/context_extension.dart';
 import '../../../common/util/keyboard_extension.dart';
 
 class FoodSearchAppBarWidget extends StatelessWidget {
-  const FoodSearchAppBarWidget({required this.searchController, super.key});
+  const FoodSearchAppBarWidget({
+    required this.searchController,
+    this.focusNode,
+    super.key,
+  });
 
   final TextEditingController searchController;
+  final FocusNode? focusNode;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +27,10 @@ class FoodSearchAppBarWidget extends StatelessWidget {
         ),
         child: Row(
           children: [
-            _SearchWidget(controller: searchController),
+            _SearchWidget(
+              controller: searchController,
+              focusNode: focusNode,
+            ),
             _CancelWidget(
               onTap: () {
                 Navigator.pop(context);
@@ -36,9 +44,10 @@ class FoodSearchAppBarWidget extends StatelessWidget {
 }
 
 class _SearchWidget extends StatelessWidget {
-  const _SearchWidget({required this.controller});
+  const _SearchWidget({required this.controller, this.focusNode});
 
   final TextEditingController controller;
+  final FocusNode? focusNode;
 
   IconThemeData _clearIconTheme(BuildContext context) => IconThemeData(
         color: CupertinoDynamicColor.resolve(AppColors.gray700, context),
@@ -49,11 +58,11 @@ class _SearchWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: CupertinoTextField(
+        focusNode: focusNode,
         decoration: BoxDecoration(
           color: AppColors.white,
           borderRadius: BorderRadius.circular(AppDimens.r10),
         ),
-        autofocus: true,
         textCapitalization: TextCapitalization.sentences,
         controller: controller,
         textInputAction: TextInputAction.search,

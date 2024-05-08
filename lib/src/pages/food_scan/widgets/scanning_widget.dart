@@ -8,38 +8,41 @@ class ScanningWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Positioned(
-      left: AppDimens.w24,
-      top: AppDimens.h180 +
-          AppDimens.h100 +
-          AppDimens.h110 +
-          AppDimens.h100 +
-          AppDimens.h24,
-      right: AppDimens.w24,
-      child: Container(
-        decoration: BoxDecoration(
-          color: AppColors.slateGray75,
-          borderRadius: BorderRadius.circular(AppDimens.r6),
-        ),
-        padding: EdgeInsets.all(AppDimens.r16),
-        child: RichText(
-          textAlign: TextAlign.center,
-          text: TextSpan(
-            text: '${context.localization?.scanning ?? ''} \n',
-            style: AppTextStyle.textSm.addAll(
-                [AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(
-              color: AppColors.white,
+    return Align(
+      alignment: Alignment.topCenter,
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: AppDimens.r16, top: AppDimens.r24, right: AppDimens.r16),
+        child: Row(
+          children: [
+            SizedBox(
+              width: AppDimens.r40,
+              height: AppDimens.r40,
+              child: const CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation(AppColors.indigo600Main),
+              ),
             ),
-            children: [
-              TextSpan(
-                text: context.localization?.scanningDescription ?? '',
+            SizedBox(width: AppDimens.w16),
+            RichText(
+              text: TextSpan(
+                text: '${context.localization?.scanning ?? ''} \n',
                 style: AppTextStyle.textSm.addAll([
                   AppTextStyle.textSm.leading5,
-                  AppTextStyle.medium
-                ]).copyWith(color: AppColors.white),
+                  AppTextStyle.semiBold
+                ]).copyWith(
+                  color: AppColors.gray900,
+                ),
+                children: [
+                  TextSpan(
+                    text: context.localization?.scanningDescription ?? '',
+                    style: AppTextStyle.textSm.addAll([
+                      AppTextStyle.textSm.leading5,
+                    ]).copyWith(color: AppColors.gray500),
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

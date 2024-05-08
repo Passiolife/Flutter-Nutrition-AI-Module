@@ -1,30 +1,27 @@
-import 'dart:convert';
+// main_default.dart file launches the functionality by default.
+
+import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:nutrition_ai/nutrition_ai.dart';
 import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 
 import 'app_secret.dart';
 
-String foodRecordBoxName = 'foodRecordBox';
-String userProfileBoxName = 'userProfileBox';
-String favoriteBoxName = 'favoriteBox';
-
-Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Initialize hive
-  await Hive.initFlutter();
-  // Registering the adapter
-  // Hive.registerAdapter(FoodRecordAdapter());
-  Hive.registerAdapter(UserProfileAdapter());
-  // Open the foodRecordBox
-  await Hive.openBox<FoodRecord>(foodRecordBoxName);
-  // Open the userProfileBox
-  await Hive.openBox<UserProfileModel?>(userProfileBoxName);
-  // Open the favoriteBox
-  await Hive.openBox<FoodRecord>(favoriteBoxName);
-  runApp(const MyApp());
+void main() {
+  runZonedGuarded(
+    () {
+      WidgetsFlutterBinding.ensureInitialized();
+      runApp(const MyApp());
+    },
+    (error, stack) {
+      // Handle the error gracefully
+      log('Error: $error StackTrace: $stack');
+    },
+  );
+  // runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
@@ -39,230 +36,58 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Nutrition AI Module Demo'),
+      home: const MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> implements PassioConnector {
-  /// [_foodRecordBox] helps to stores the food record data inside the hive db.
-  ///
-  late Box<FoodRecord> _foodRecordBox;
+class _MyHomePageState extends State<MyHomePage> {
+  PassioStatus? _passioStatus;
 
-  /// [_userProfileBox] helps to stores the user profile data inside the hive db.
-  ///
-  Box<UserProfileModel?>? _userProfileBox;
-
-  /// [_favoriteBox] helps to stores the favorite data inside the hive db.
-  ///
-  Box<FoodRecord>? _favoriteBox;
-
-  /// [_foodRecords] contains the food record list.
-  ///
-  late List<FoodRecord> _foodRecords;
-
-  /// [_favoriteRecords] contains the favorite record list.
-  ///
-  List<FoodRecord>? _favoriteRecords;
+  final _passioConfig = PassioConfiguration(AppSecret.passioKey);
 
   @override
   void initState() {
-    // Get reference to an already opened box
-    _foodRecordBox = Hive.box(foodRecordBoxName);
-    _userProfileBox = Hive.box(userProfileBoxName);
-    _favoriteBox = Hive.box(favoriteBoxName);
+    _initialize();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    // Closes all Hive boxes
-    Hive.close();
-    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Stack(
-        children: [
-          Center(
-            child: ElevatedButton(
-              onPressed: () async {
-                await NutritionAIModule.instance
-                    .setPassioKey(AppSecret.passioKey)
-                    // TODO: Uncomment below line.
-                    // .setPassioConnector(this) // This is optional
-                    .launch(context);
-              },
-              child: const Text('Launch'),
-            ),
-          ),
-        ],
+      body: Center(
+        child: _passioStatus == null
+            ? const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(),
+                  Text("Configuring SDK"),
+                ],
+              )
+            : Text(_passioStatus?.mode.name ?? 'Something wrong'),
       ),
     );
   }
 
-  @override
-  Future<List<FoodRecord>> fetchDayRecords({required DateTime dateTime}) async {
-    return [];
-    /*
-    _foodRecords = _foodRecordBox.values
-        .toList()
-        .asMap()
-        .entries
-        .map((e) {
-          e.value.id = e.key.toString();
-          return e.value;
-        })
-        .where((element) {
-          String createdAt = DateFormat('yyyyMMdd').format(
-              DateTime.fromMillisecondsSinceEpoch(
-                  element.createdAt?.toInt() ?? 0));
-          String date = DateFormat('yyyyMMdd').format(dateTime);
-          return createdAt == date;
-        })
-        .toList()
-        .reversed
-        .toList();
-    return _foodRecords;
-    */
-  }
-
-  @override
-  Future<void> updateRecord(
-      {required FoodRecord foodRecord, required bool isNew}) async {
-    _foodRecordBox.values.toList();
-    return;
-    /*if (isNew) {
-      await _foodRecordBox.add(foodRecord);
-    } else {
-      final key = int.tryParse(foodRecord.id ?? '');
-      if (key != null) {
-        await _foodRecordBox.putAt(key, foodRecord);
-      }
-    }*/
-  }
-
-  @override
-  Future<void> deleteRecord({required FoodRecord foodRecord}) async {
-    return;
-    /*final key = int.tryParse(foodRecord.id ?? '');
-    if (key != null) {
-      await _foodRecordBox.deleteAt(key);
-    }*/
-  }
-
-  /// Methods related to favorites.
-  ///
-  @override
-  Future<List<FoodRecord>?> fetchFavorites() async {
-    return [];
-    /*_favoriteRecords = _favoriteBox?.values
-        .toList()
-        .asMap()
-        .entries
-        .map((e) {
-          e.value.id = e.key.toString();
-          return e.value;
-        })
-        .toList()
-        .reversed
-        .toList();
-    return _favoriteRecords;*/
-  }
-
-  @override
-  Future<void> updateFavorite(
-      {required FoodRecord foodRecord, required bool isNew}) async {
-    return;
-    /*if (isNew) {
-      await _favoriteBox?.add(foodRecord);
-    } else {
-      final key = int.tryParse(foodRecord.id ?? '');
-      if (key != null) {
-        await _favoriteBox?.putAt(key, foodRecord);
-      }
-    }*/
-  }
-
-  @override
-  Future<void> deleteFavorite({required FoodRecord foodRecord}) async {
-    /*final key = int.tryParse(foodRecord.id ?? '');
-    if (key != null) {
-      await _favoriteBox?.deleteAt(key);
-    }*/
-  }
-
-  /// Methods related to UserProfile.
-  ///
-  @override
-  Future<UserProfileModel?> fetchUserProfile() async {
-    return _userProfileBox?.values.firstOrNull;
-  }
-
-  @override
-  Future<void> updateUserProfile(
-      {required UserProfileModel userProfile, required bool isNew}) async {
-    if (isNew) {
-      await _userProfileBox?.add(userProfile);
-    } else {
-      await _userProfileBox?.putAt(
-          _userProfileBox?.keys.firstOrNull, userProfile);
-    }
-  }
-
-  @override
-  Future<List<FoodRecord>> fetchRecords(
-      {required DateTime fromDate, required DateTime endDate}) {
-    // TODO: implement fetchRecords
-    throw UnimplementedError();
-  }
-}
-
-/// Declaring the Type Adapters for Hive.
-///
-
-// class FoodRecordAdapter extends TypeAdapter<FoodRecord> {
-//   @override
-//   FoodRecord read(BinaryReader reader) {
-//     return FoodRecord.fromJson(jsonDecode(reader.read()));
-//   }
-//
-//   @override
-//   int get typeId => 0;
-//
-//   @override
-//   void write(BinaryWriter writer, FoodRecord obj) {
-//     writer.write(jsonEncode(obj));
-//   }
-// }
-
-class UserProfileAdapter extends TypeAdapter<UserProfileModel> {
-  @override
-  UserProfileModel read(BinaryReader reader) {
-    return UserProfileModel.fromJson(jsonDecode(reader.read()));
-  }
-
-  @override
-  int get typeId => 1;
-
-  @override
-  void write(BinaryWriter writer, UserProfileModel obj) {
-    return writer.write(jsonEncode(obj));
+  void _initialize() {
+    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
+      NutritionAI.instance.configureSDK(_passioConfig).then((value) async {
+        setState(() {
+          _passioStatus = value;
+        });
+        if (value.mode == PassioMode.isReadyForDetection) {
+          await NutritionAIModule.instance
+              .setPassioKey(AppSecret.passioKey)
+              .launch(context);
+        }
+      });
+    });
   }
 }

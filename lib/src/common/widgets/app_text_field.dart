@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 import '../constant/app_constants.dart';
+import '../util/keyboard_extension.dart';
 
 class AppTextField extends StatelessWidget {
   const AppTextField({
@@ -13,6 +14,7 @@ class AppTextField extends StatelessWidget {
     this.hintStyle,
     this.contentPadding,
     this.readOnly = false,
+    this.autofocus = false,
     this.onTap,
     this.textAlign,
     this.keyboardType,
@@ -21,6 +23,14 @@ class AppTextField extends StatelessWidget {
     this.focusNode,
     this.onTapOutside,
     this.inputFormatters,
+    this.suffix,
+    this.suffixText,
+    this.suffixStyle,
+    this.suffixIcon,
+    this.validator,
+    this.suffixIconConstraints,
+    this.maxLength,
+    this.onChanged,
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.borderColor = AppColors.gray300,
     this.cursorColor = AppColors.indigo600Main,
@@ -38,6 +48,7 @@ class AppTextField extends StatelessWidget {
   final Color borderColor;
   final EdgeInsets scrollPadding;
   final bool readOnly;
+  final bool autofocus;
   final GestureTapCallback? onTap;
   final TextAlign? textAlign;
   final TextInputType? keyboardType;
@@ -46,6 +57,15 @@ class AppTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final TapRegionCallback? onTapOutside;
   final List<TextInputFormatter>? inputFormatters;
+  final Widget? suffix;
+  final String? suffixText;
+  final TextStyle? suffixStyle;
+  final Widget? suffixIcon;
+  final BoxConstraints? suffixIconConstraints;
+  final FormFieldValidator? validator;
+  final int? maxLength;
+  final ValueChanged<String>? onChanged;
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,8 +74,12 @@ class AppTextField extends StatelessWidget {
       height: height,
       decoration: AppShadows.sm,
       child: TextFormField(
+        onChanged: onChanged,
+        autofocus: autofocus,
         inputFormatters: inputFormatters,
-        onTapOutside: onTapOutside,
+        onTapOutside: onTapOutside ?? (_) {
+          context.hideKeyboard();
+        },
         focusNode: focusNode,
         keyboardType: keyboardType,
         textInputAction: inputAction,
@@ -66,6 +90,8 @@ class AppTextField extends StatelessWidget {
         onTap: onTap,
         cursorColor: cursorColor,
         scrollPadding: scrollPadding,
+        validator: validator,
+        maxLength: maxLength,
         style: style ??
             AppTextStyle.textBase
                 .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -88,6 +114,11 @@ class AppTextField extends StatelessWidget {
           border: OutlineInputBorder(
             borderSide: BorderSide(color: borderColor),
           ),
+          suffix: suffix,
+          suffixIcon: suffixIcon,
+          suffixStyle: suffixStyle,
+          suffixText: suffixText,
+          suffixIconConstraints: suffixIconConstraints,
         ),
       ),
     );

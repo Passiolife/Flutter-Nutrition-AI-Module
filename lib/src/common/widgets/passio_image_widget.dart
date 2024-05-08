@@ -3,14 +3,18 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../constant/app_common_constants.dart';
+import '../constant/app_images.dart';
+
 class PassioImageWidget extends StatefulWidget {
-  PassioImageWidget({
+  const PassioImageWidget({
     required this.iconId,
     this.type = PassioIDEntityType.item,
     this.iconSize = IconSize.px90,
     this.radius = 30,
     this.heroTag,
-  }) : super(key: ValueKey(iconId));
+    super.key,
+  });
 
   final String iconId;
   final PassioIDEntityType type;
@@ -24,6 +28,9 @@ class PassioImageWidget extends StatefulWidget {
 
 class _PassioImageWidgetState extends State<PassioImageWidget> {
   final ValueNotifier<PlatformImage?> _image = ValueNotifier(null);
+
+  bool get _isRecipeIcon =>
+      widget.iconId.startsWith(AppCommonConstants.recipePrefix);
 
   @override
   void initState() {
@@ -39,21 +46,29 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return ValueListenableBuilder<PlatformImage?>(
-      valueListenable: _image,
-      builder: (context, value, child) => value != null
-          ? Hero(
-              tag: widget.heroTag ?? UniqueKey(),
-              child: CircleAvatar(
-                radius: widget.radius,
-                backgroundImage: MemoryImage(value.pixels),
-              ),
-            )
-          : const CircularProgressIndicator(),
-    );
+    return _isRecipeIcon
+        ? CircleAvatar(
+            radius: widget.radius,
+            backgroundImage: const AssetImage(AppImages.imgRecipe),
+          )
+        : ValueListenableBuilder<PlatformImage?>(
+            valueListenable: _image,
+            builder: (context, value, child) => value != null
+                ? Hero(
+                    tag: widget.heroTag ?? UniqueKey(),
+                    child: CircleAvatar(
+                      radius: widget.radius,
+                      backgroundImage: MemoryImage(value.pixels),
+                    ),
+                  )
+                : const CircularProgressIndicator(),
+          );
   }
 
   Future<void> _fetchImage() async {
+    if (_isRecipeIcon) {
+      return;
+    }
     try {
       final result = await NutritionAI.instance.lookupIconsFor(
         widget.iconId,
@@ -61,7 +76,10 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
         type: widget.type,
       );
 
-      _image.value = result.cachedIcon ?? result.defaultIcon;
+      setImageValue(result.cachedIcon ?? result.defaultIcon);
+      if (result.cachedIcon != null) {
+        return;
+      }
 
       if (result.cachedIcon == null && widget.iconId.isNotEmpty) {
         final fetchedImage = await NutritionAI.instance.fetchIconFor(
@@ -69,12 +87,18 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
           iconSize: widget.iconSize,
         );
         if (fetchedImage != null) {
-          _image.value = fetchedImage;
+          setImageValue(fetchedImage);
         }
       }
     } catch (error) {
       // Handle potential errors during image fetching
       log("Error fetching image: $error");
+    }
+  }
+
+  void setImageValue(PlatformImage? image) {
+    if (mounted) {
+      _image.value = image;
     }
   }
 }

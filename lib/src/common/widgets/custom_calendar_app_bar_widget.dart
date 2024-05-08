@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../constant/app_constants.dart';
 import '../util/context_extension.dart';
-import '../util/date_time_picker.dart';
+import '../util/date_picker.dart';
 import '../util/date_time_utility.dart';
 
 class CustomCalendarAppBarWidget extends StatelessWidget {
@@ -31,7 +31,7 @@ class CustomCalendarAppBarWidget extends StatelessWidget {
         GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: () {
-            DateTimePicker.showAdaptive(
+            DatePicker.showAdaptive(
               context: context,
               selectedDate: selectedDate,
               onDateTimeChanged: onDateTimeChanged,

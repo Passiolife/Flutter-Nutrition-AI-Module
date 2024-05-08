@@ -25,7 +25,7 @@ class AlternativeRowWidget extends StatelessWidget {
             padding: EdgeInsets.all(AppDimens.r16),
             child: Center(
               child: Text(
-                data.toUpperCaseWord ?? '',
+                data.toUpperCaseWord,
                 maxLines: 1,
                 textAlign: TextAlign.center,
                 style: AppTextStyle.textSm.addAll([

@@ -100,6 +100,7 @@ class ScanningAnimationWidgetState extends State<ScanningAnimationWidget>
 
   void stopScanningAnimation() {
     if (isRunningAnimation()) {
+      _scanningAnimationController.reset();
       _scanningAnimationController.stop();
     }
   }

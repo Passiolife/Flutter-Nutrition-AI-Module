@@ -1,1059 +1,605 @@
-import 'package:json_annotation/json_annotation.dart';
+import 'package:flutter/foundation.dart';
+import 'package:nutrition_ai/nutrition_ai.dart';
 
-// part 'food_record.g.dart';
+import '../../constant/app_common_constants.dart';
+import 'food_record_ingredient.dart';
+import 'meal_label.dart';
 
-enum MealLabel {
-  @JsonValue('Breakfast')
-  breakfast('Breakfast'),
-  @JsonValue('Lunch')
-  lunch('Lunch'),
-  @JsonValue('Dinner')
-  dinner('Dinner'),
-  @JsonValue('Snack')
-  snack('Snack');
-
-  const MealLabel(this.value);
-
-  final String value;
-
-  static MealLabel mealLabelBy(DateTime dateTime) {
-    return switch ((dateTime.hour * 60) + dateTime.minute) {
-      (>= 4 * 60) && (<= (10 * 60) + 30) => MealLabel.breakfast,
-      (>= (11 * 60) + 30) && (<= (14 * 60)) => MealLabel.lunch,
-      (>= (17 * 60)) && (<= (21 * 60)) => MealLabel.dinner,
-      _ => MealLabel.snack,
-    };
-  }
-}
-
-/*@JsonSerializable(converters: [
-  PassioServingUnitConverter(),
-  PassioServingSizeConverter(),
-  PassioAlternativeConverter(),
-  PassioFoodOriginConverter(),
-  PassioFoodItemDataConverter(),
-  UnitEnergyConverter(),
-  UnitMassConverter(),
-  UnitIUConverter(),
-])*/
+/// Represents a record of food items, including their ingredients, serving sizes, and other properties.
 class FoodRecord {
-  /*FoodRecord({
+  /// Unique identifier for the food record.
+  String id = '';
+
+  String passioID;
+
+  /// Name of the food item.
+  String name;
+
+  /// Additional data for the food item.
+  String additionalData = '';
+
+  /// Identifier for the food item's icon.
+  String iconId = '';
+
+  /// List of ingredients in the food item.
+  late List<FoodRecordIngredient> ingredients;
+
+  /// The selected unit for measurement.
+  String _selectedUnit = '';
+
+  /// The selected quantity of the food item.
+  double _selectedQuantity = zeroQuantity;
+
+  /// List of serving sizes available for the food item.
+  late List<PassioServingSize> servingSizes;
+
+  /// List of serving units available for the food item.
+  late List<PassioServingUnit> servingUnits;
+
+  PassioIDEntityType? entityType;
+
+  /// Label for the meal type.
+  MealLabel? mealLabel;
+
+  // Timestamp for when the food record was created.
+  int? _createdAt;
+
+  // License information for open food data.
+  String? openFoodLicense;
+
+  // Constant for zero quantity.
+  static const zeroQuantity = 0.00001;
+
+  bool isFavorite = false;
+
+  /// Sets the selected unit for the food item while keeping the weight consistent.
+  bool setSelectedUnitKeepWeight(String unit) {
+    if (_selectedUnit == unit) return true;
+    final servingWeight = servingUnits
+        .cast<PassioServingUnit?>()
+        .firstWhere((element) => element?.unitName == unit, orElse: () => null)
+        ?.weight;
+    if (servingWeight == null) {
+      return false;
+    }
+
+    _selectedUnit = unit;
+    _selectedQuantity = ingredientWeight() / servingWeight;
+    return true;
+  }
+
+  /// Private constructor for creating a FoodRecord instance with specified properties.
+  FoodRecord._(
     this.id,
-    this.name,
-    this.uuid,
-    this.createdAt,
-    this.mealLabel,
     this.passioID,
-    this.visualPassioID,
-    this.visualName,
-    this.nutritionalPassioID,
+    this.name,
+    this.additionalData,
+    this.iconId,
     this.servingSizes,
     this.servingUnits,
-    this.scannedUnitName = "scanned amount",
+    this._selectedQuantity,
+    this._selectedUnit,
     this.entityType,
-    this.selectedUnit,
-    this.selectedQuantity = 0,
     this.ingredients,
-    this.condiments,
-    this.parents,
-    this.siblings,
-    this.children,
-    this.tags,
-  });*/
+    this._createdAt, {
+    this.mealLabel,
+    this.openFoodLicense,
+  });
 
-  /*FoodRecord.from({
-    PassioIDAttributes? passioIDAttributes,
-    PassioFoodItemData? passioFoodItemData,
-    DateTime? dateTime,
-    PassioID? replaceVisualPassioID,
-    String? replaceVisualName,
-    double? scannedWeight,
-  })  : scannedUnitName = 'scanned amount',
-        selectedQuantity = 0,
-        tags = [] {
-    PassioID passioAttributeId =
-        passioIDAttributes?.passioID ?? passioFoodItemData?.passioID ?? '';
-
-    final selectedDateTime = dateTime ?? DateTime.now();
-
-    passioID = passioAttributeId;
-    name = passioIDAttributes?.name ?? passioFoodItemData?.name;
-    uuid = '';
-    entityType =
-        passioIDAttributes?.entityType ?? passioFoodItemData?.entityType;
-    selectedQuantity = passioIDAttributes?.recipe?.selectedQuantity ??
-        passioFoodItemData?.selectedQuantity ??
-        0;
-    parents = passioIDAttributes?.parents ?? passioFoodItemData?.parents;
-    siblings = passioIDAttributes?.siblings ?? passioIDAttributes?.siblings;
-    children = passioIDAttributes?.children ?? passioIDAttributes?.children;
-    createdAt = selectedDateTime.millisecondsSinceEpoch.toDouble();
-    mealLabel = MealLabel.mealLabelBy(selectedDateTime);
-
-    // Below code is for [visualPassioID].
-    if (replaceVisualPassioID != null) {
-      visualPassioID = replaceVisualPassioID;
-    } else {
-      visualPassioID = passioID;
-    }
-    // Below code is for [replaceVisualName]
-    if (replaceVisualName != null) {
-      visualName = replaceVisualName;
-    } else {
-      visualName = name;
-    }
-    if (passioIDAttributes?.entityType == PassioIDEntityType.recipe) {
-      final recipe = passioIDAttributes?.recipe;
-
-      ingredients = recipe?.foodItems;
-      nutritionalPassioID = recipe?.passioID;
-      selectedUnit = recipe?.selectedUnit;
-      selectedQuantity = recipe?.selectedQuantity ?? 0;
-      servingUnits = recipe?.servingUnits;
-      servingSizes = recipe?.servingSizes;
-      nutritionalPassioID = recipe?.passioID;
-    } else if (passioIDAttributes?.foodItem != null) {
-      PassioFoodItemData foodItemData = passioIDAttributes!.foodItem!;
-
-      ingredients = [foodItemData];
-      nutritionalPassioID = foodItemData.passioID;
-      selectedUnit = foodItemData.selectedUnit;
-      selectedQuantity = foodItemData.selectedQuantity;
-      servingUnits = foodItemData.servingUnits;
-      servingSizes = foodItemData.servingSize;
-      // Here, updating the ingredients [PassioID] and Name with food record data.
-      ingredients?.asMap().forEach((index, ingredient) {
-        ingredients?[index] =
-            ingredient.copyWith(passioID: passioID, name: name);
-      });
-    } else if (passioFoodItemData != null) {
-      ingredients = [passioFoodItemData];
-      nutritionalPassioID = passioID;
-      selectedUnit = passioFoodItemData.selectedUnit;
-      selectedQuantity = passioFoodItemData.selectedQuantity;
-      servingUnits = passioFoodItemData.servingUnits;
-      servingSizes = passioFoodItemData.servingSize;
-    } else {
-      ingredients = [];
-      nutritionalPassioID = passioID;
-      selectedUnit = "gram";
-      selectedQuantity = 0.0;
-      servingUnits = [];
-      servingSizes = [];
-    }
-
-    if (scannedWeight != null) {
-      addScannedWeight(scannedWeight);
-    } else {
-      setFoodRecordServing(selectedUnit ?? '', selectedQuantity);
-    }
+  /// Factory constructor to create a FoodRecord from a FoodRecordIngredient instance.
+  factory FoodRecord.fromFoodRecordIngredient(FoodRecordIngredient ingredient,
+      {PassioIDEntityType entityType = PassioIDEntityType.item}) {
+    return FoodRecord._(
+      ingredient.id,
+      ingredient.passioID,
+      ingredient.name,
+      '',
+      ingredient.iconId,
+      ingredient.servingSizes,
+      ingredient.servingUnits,
+      ingredient.selectedQuantity,
+      ingredient.selectedUnit,
+      entityType,
+      [ingredient],
+      null,
+      openFoodLicense: ingredient.openFoodLicense,
+    );
   }
 
-  PassioFoodItemData get toFoodItem => PassioFoodItemData(
-        passioID ?? '',
-        name ?? '',
-        tags ?? [],
-        selectedQuantity,
-        selectedUnit ?? '',
-        entityType ?? PassioIDEntityType.item,
-        servingUnits ?? [],
-        servingSizes ?? [],
-        ingredients?.firstOrNull?.ingredientsDescription ?? '',
-        ingredients?.firstOrNull?.barcode ?? '',
-        ingredients?.firstOrNull?.foodOrigins,
-        parents,
-        siblings,
-        children,
-        actualUnitEnergy(
-            ingredients!.first, ingredients?.firstOrNull?.totalCalories()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalCarbs()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalFat()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalProteins()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalSaturatedFat()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalTransFat()),
-        actualUnitMass(ingredients!.first,
-            ingredients?.firstOrNull?.totalMonounsaturatedFat()),
-        actualUnitMass(ingredients!.first,
-            ingredients?.firstOrNull?.totalPolyunsaturatedFat()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalCholesterol()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalSodium()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalFibers()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalSugars()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalSugarsAdded()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminD()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalCalcium()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalIron()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalPotassium()),
-        actualUnitIU(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminA()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminC()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalAlcohol()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalSugarAlcohol()),
-        actualUnitMass(ingredients!.first,
-            ingredients?.firstOrNull?.totalVitaminB12Added()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminB12()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminB6()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminE()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalVitaminEAdded()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalMagnesium()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalPhosphorus()),
-        actualUnitMass(
-            ingredients!.first, ingredients?.firstOrNull?.totalIodine()),
+  /// Factory constructor to create a FoodRecord from a PassioFoodItem instance.
+  factory FoodRecord.fromPassioFoodItem(PassioFoodItem foodItem,
+      {PassioIDEntityType entityType = PassioIDEntityType.item}) {
+    final foodRecord = FoodRecord._(
+      '',
+      foodItem.id,
+      foodItem.name,
+      foodItem.details,
+      foodItem.iconId,
+      foodItem.amount.servingSizes,
+      foodItem.amount.servingUnits,
+      foodItem.amount.selectedQuantity,
+      foodItem.amount.selectedUnit,
+      entityType,
+      foodItem.ingredients
+          .map(FoodRecordIngredient.fromPassioIngredient)
+          .toList(),
+      null,
+      openFoodLicense: foodItem.isOpenFood(),
+    );
+    foodRecord._calculateQuantityForIngredients();
+    foodRecord.logMeal();
+    return foodRecord;
+  }
+
+  factory FoodRecord.fromJson(Map<String, dynamic> json) => FoodRecord._(
+        json['id'] as String,
+        json['passioID'] as String,
+        json['name'] as String,
+        json['additionalData'] as String,
+        json['iconId'] as String,
+        List<PassioServingSize>.from(
+          json['servingSizes']
+                  ?.map((dynamic s) => PassioServingSize.fromJson(s)) ??
+              [],
+        ),
+        List<PassioServingUnit>.from(
+          json['servingUnits']
+                  ?.map((dynamic s) => PassioServingUnit.fromJson(s)) ??
+              [],
+        ),
+        json['selectedQuantity'] as double,
+        json['selectedUnit'] as String,
+        PassioIDEntityType.values.cast<PassioIDEntityType?>().firstWhere(
+              (element) => element?.name == json['entityType'] as String?,
+              orElse: () => PassioIDEntityType.item,
+            ),
+        List<FoodRecordIngredient>.from(
+          json['ingredients']
+                  ?.map((dynamic s) => FoodRecordIngredient.fromJson(s)) ??
+              [],
+        ),
+        json['createdAt'] as int?,
+        mealLabel: json.containsKey('mealLabel')
+            ? MealLabel.values.cast<MealLabel?>().firstWhere(
+                (element) => element?.value == json['mealLabel'],
+                orElse: () => null)
+            : null,
+        openFoodLicense: json['openFoodLicense'] as String?,
       );
 
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  String? id;
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'passioID': passioID,
+        'name': name,
+        'additionalData': additionalData,
+        'iconId': iconId,
+        'ingredients':
+            ingredients.map((FoodRecordIngredient s) => s.toJson()).toList(),
+        'selectedUnit': _selectedUnit,
+        'selectedQuantity': _selectedQuantity,
+        'servingSizes':
+            servingSizes.map((PassioServingSize s) => s.toJson()).toList(),
+        'servingUnits':
+            servingUnits.map((PassioServingUnit s) => s.toJson()).toList(),
+        'entityType': entityType?.name,
+        'createdAt': _createdAt,
+        'mealLabel': mealLabel?.value,
+        'openFoodLicense': openFoodLicense,
+      };
 
-  String? name;
-  String? uuid;
-  double? createdAt;
-  MealLabel? mealLabel;
-  PassioID? passioID;
-  String? visualPassioID;
-  String? visualName;
-  PassioID? nutritionalPassioID;
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
 
-  List<PassioServingSize>? servingSizes;
-  List<PassioServingUnit>? servingUnits;
-  String scannedUnitName;
-
-  List<PassioFoodItemData>? condiments;
-  PassioIDEntityType? entityType;
-  String? selectedUnit;
-  double selectedQuantity;
-
-  List<PassioFoodItemData>? ingredients;
-
-  /// Below is for alternatives.
-  List<PassioAlternative>? parents;
-  List<PassioAlternative>? siblings;
-  List<PassioAlternative>? children;
-
-  final List<String>? tags;
-
-  factory FoodRecord.fromJson(dynamic json) =>
-      _$FoodRecordFromJson(Map<String, dynamic>.from(json));
-
-  Map<String, dynamic> toJson() => _$FoodRecordToJson(this);
-
-  /// Methods for the Food Record class.
-  double get totalCalories {
-    return ingredients
-            ?.map((e) => e.totalCalories()?.value)
-            .reduce((value, element) => (value ?? 0) + (element ?? 0))
-            ?.roundNumber(0) ??
-        0;
+    return other is FoodRecord &&
+        other.id == id &&
+        other.passioID == passioID &&
+        other.name == name &&
+        other.additionalData == additionalData &&
+        other.iconId == iconId &&
+        listEquals(ingredients, other.ingredients) &&
+        other._selectedUnit == _selectedUnit &&
+        other._selectedQuantity == _selectedQuantity &&
+        listEquals(servingSizes, other.servingSizes) &&
+        listEquals(servingUnits, other.servingUnits) &&
+        other.entityType == entityType &&
+        other.mealLabel == mealLabel &&
+        other._createdAt == _createdAt &&
+        other.openFoodLicense == openFoodLicense;
   }
 
-  double get totalCarbs {
-    return ingredients
-            ?.map((e) => e.totalCarbs()?.value)
-            .reduce((value, element) => (value ?? 0) + (element ?? 0))
-            ?.roundNumber(1) ??
-        0;
+  @override
+  int get hashCode => Object.hash(
+        id,
+        passioID,
+        name,
+        additionalData,
+        iconId,
+        ingredients,
+        _selectedUnit,
+        _selectedQuantity,
+        servingSizes,
+        servingUnits,
+        entityType,
+        mealLabel,
+        _createdAt,
+        openFoodLicense,
+      );
+
+  /// Calculates the quantity of ingredients based on the ratio of serving weight to ingredient weight.
+  void _calculateQuantityForIngredients() {
+    final ratio =
+        servingWeight().gramsValue() / ingredientWeight().gramsValue();
+    for (var element in ingredients) {
+      element.selectedQuantity *= ratio;
+    }
   }
 
-  double get totalProteins {
-    return ingredients
-            ?.map((e) => e.totalProteins()?.value)
-            .reduce((value, element) => (value ?? 0) + (element ?? 0))
-            ?.roundNumber(1) ??
-        0;
+  /// Adds an ingredient to the food record at the specified index.
+  ///
+  /// If the added record contains multiple ingredients, they are added individually to the current list of ingredients.
+  void addIngredient(FoodRecord record, {int index = 0}) {
+    if (record.ingredients.length == 1) {
+      ingredients.insert(index, FoodRecordIngredient.fromFoodRecord(record));
+    } else {
+      ingredients.insertAll(index, record.ingredients);
+    }
+    calculateQuantity();
+    setSelectedUnitKeepWeight('gram');
+    servingSizes = [PassioServingSize(_selectedQuantity, _selectedUnit)];
+
+    // Recipe logic
+    if (ingredients.length > 1) {
+      entityType = PassioIDEntityType.recipe;
+    }
+    if (!iconId.startsWith(AppCommonConstants.recipePrefix)) {
+      iconId = AppCommonConstants.recipePrefix + iconId;
+      name = 'Recipe with $name';
+    }
   }
 
-  double get totalFat {
-    return ingredients
-            ?.map((e) => e.totalFat()?.value)
-            .reduce((value, element) => (value ?? 0) + (element ?? 0))
-            .roundNumber(1) ??
-        0;
+  /// Removes an ingredient from the food record at the specified index.
+  ///
+  /// Recalculates the quantity of ingredients after removal.
+  void removeIngredient(int index) {
+    if (index >= ingredients.length) return;
+
+    ingredients.removeAt(index);
+
+    if (ingredients.length == 1 && ingredients.firstOrNull != null) {
+      final ingredient = ingredients.firstOrNull;
+      if (ingredient != null) {
+        name = ingredient.name;
+        iconId = ingredient.iconId;
+        _selectedUnit = ingredient.selectedUnit;
+        _selectedQuantity = ingredient.selectedQuantity;
+        servingSizes = ingredient.servingSizes;
+        servingUnits = ingredient.servingUnits;
+        entityType = ingredient.entityType;
+      }
+    }
+
+    calculateQuantity();
   }
+
+  /// Replaces an ingredient in the food record with a new ingredient at the specified index.
+  ///
+  /// Returns true if the replacement was successful, false otherwise.
+  bool replaceIngredient(FoodRecord newIngredient, int index) {
+    if (index >= ingredients.length) {
+      return false;
+    }
+    ingredients[index] = FoodRecordIngredient.fromFoodRecord(newIngredient);
+    calculateQuantity();
+    return true;
+  }
+
+  /// Calculates the quantity of the food item based on the selected serving unit.
+  void calculateQuantity() {
+    final weight = ingredientWeight().gramsValue();
+    final unitWeight = servingUnits
+        .firstWhere((element) => element.unitName == _selectedUnit)
+        .weight
+        .gramsValue();
+    _selectedQuantity = weight / unitWeight;
+  }
+
+  /// Calculates the total weight of all ingredients in the food item.
+  UnitMass ingredientWeight() {
+    return ingredients
+        .map((e) => e.servingWeight())
+        .reduce((value, element) => (value + element) as UnitMass);
+  }
+
+  /// Calculates the serving weight of the food item based on the selected unit.
+  UnitMass servingWeight() {
+    final unit = servingUnits.cast<PassioServingUnit?>().firstWhere(
+        (element) => element?.unitName == _selectedUnit,
+        orElse: () => null);
+    if (unit == null) {
+      return UnitMass(0, UnitMassType.grams);
+    }
+    return (unit.weight * _selectedQuantity) as UnitMass;
+  }
+
+  /// Calculates the nutrients of the food item based on the current serving size.
+  PassioNutrients nutrients() {
+    final currentWeight = ingredientWeight();
+    final ingredientNutrients = ingredients
+        .map((ingredient) => (
+              ingredient.referenceNutrients,
+              ingredient.servingWeight() / currentWeight
+            ))
+        .toList();
+    return PassioNutrients.fromIngredientsData(
+        ingredientNutrients, currentWeight);
+  }
+
+  /// Retrieves the currently selected unit for measurement.
+  String getSelectedUnit() => _selectedUnit;
+
+  /// Sets the selected unit for measurement and recalculates ingredient quantities accordingly.
+  ///
+  /// Returns true if the unit was successfully set, false otherwise.
+  bool setSelectedUnit(String unit) {
+    if (_selectedUnit == unit) return true;
+    if (servingUnits.cast<PassioServingUnit?>().firstWhere(
+            (element) => element?.unitName == unit,
+            orElse: () => null) ==
+        null) return false;
+
+    _selectedUnit = unit;
+    _calculateQuantityForIngredients();
+    return true;
+  }
+
+  /// Retrieves the currently selected quantity of the food item.
+  double getSelectedQuantity() => _selectedQuantity;
+
+  /// Sets the selected quantity for the food item and recalculates ingredient quantities accordingly.
+  void setSelectedQuantity(double quantity) {
+    if (_selectedQuantity == quantity) return;
+    _selectedQuantity = (quantity != 0.0) ? quantity : zeroQuantity;
+    _calculateQuantityForIngredients();
+  }
+
+  /// Logs the meal with the specified date and time, or defaults to the current date and time if not provided.
+  void logMeal({DateTime? dateTime}) {
+    dateTime ??= DateTime.now();
+    setCreatedAt(dateTime);
+    mealLabel = MealLabel.dateToMealLabel(dateTime);
+  }
+
+  void setCreatedAt(DateTime dateTime) {
+    _createdAt = dateTime.toUtc().millisecondsSinceEpoch;
+  }
+
+  DateTime? getCreatedAt() {
+    if (_createdAt == null) return null;
+    return DateTime.fromMillisecondsSinceEpoch(_createdAt!, isUtc: true)
+        .toLocal();
+  }
+
+  /// Calculates the nutrients of the food item based on the selected serving size.
+  PassioNutrients nutrientsSelectedSize() {
+    final currentWeight = servingWeight();
+
+    final ingredientNutrients = ingredients
+        .map((e) => (e.referenceNutrients, e.servingWeight() / currentWeight))
+        .toList();
+    return PassioNutrients.fromIngredientsData(
+        ingredientNutrients, currentWeight);
+  }
+
+  /// Calculates the nutrients of the food item based on a reference serving size of 100 grams.
+  PassioNutrients nutrientsReference() {
+    final currentWeight = servingWeight();
+
+    final ingredientNutrients = ingredients
+        .map((e) => (e.referenceNutrients, e.servingWeight() / currentWeight))
+        .toList();
+    return PassioNutrients.fromIngredientsData(
+        ingredientNutrients, UnitMass(100, UnitMassType.grams));
+  }
+
+  /// OLD STRUCTURE
 
   /// [computedWeight] is [UnitMass] class and contains weight.
   UnitMass get computedWeight {
     final weight2UnitRatio = servingUnits
-        ?.cast<PassioServingUnit?>()
-        .firstWhere((element) => element?.unitName == selectedUnit,
+        .cast<PassioServingUnit?>()
+        .firstWhere((element) => element?.unitName == _selectedUnit,
             orElse: () => null)
         ?.weight
         .value;
     if (weight2UnitRatio != null) {
-      return UnitMass(weight2UnitRatio * selectedQuantity, UnitMassType.grams);
+      return UnitMass(weight2UnitRatio * _selectedQuantity, UnitMassType.grams);
     }
     return UnitMass(0, UnitMassType.grams);
   }
-
-  void addScannedWeight(double scannedWeight) {
-    if (scannedWeight > 1 && scannedWeight < 50000) {
-      final scannedServingUnit = PassioServingUnit(
-          scannedUnitName, UnitMass(scannedWeight, UnitMassType.grams));
-      final scannedServingSize = PassioServingSize(1, scannedUnitName);
-      servingUnits?.insert(0, scannedServingUnit);
-      servingSizes?.insert(0, scannedServingSize);
-      setFoodRecordServing(scannedUnitName, 1);
-    } else {
-      return;
-    }
-  }
-
-  bool setFoodRecordServing(String unitName, double quantity) {
-    bool unit = servingUnits
-            ?.cast<PassioServingUnit?>()
-            .firstWhere((element) => element?.unitName == unitName,
-                orElse: () => null)
-            ?.weight !=
-        null;
-    if (!unit) {
-      return false;
-    }
-    selectedUnit = unitName;
-    selectedQuantity = quantity;
-    computeQuantityForIngredients();
-    return true;
-  }
-
-  bool setSelectedUnitKeepWeight(String unitName) {
-    final weight2Quantity = servingUnits
-        ?.cast<PassioServingUnit?>()
-        .firstWhere((element) => element?.unitName == unitName,
-            orElse: () => null)
-        ?.weight;
-    if (weight2Quantity != null) {
-      selectedQuantity = computedWeight.value / weight2Quantity.value;
-      selectedUnit = unitName;
-      computeQuantityForIngredients();
-      return true;
-    }
-    return false;
-  }
-
-  void computeQuantityForIngredients() {
-    double totalWeight = ingredients
-            ?.map((e) => e.computedWeight().value)
-            .reduce((value, element) => value + element) ??
-        0;
-    double ratioMultiply = 0;
-    if (totalWeight > 0) {
-      ratioMultiply = computedWeight.value / totalWeight;
-    }
-
-    List<PassioFoodItemData> newIngredient = [];
-    ingredients?.forEach((element) {
-      final tempFood = element;
-      element.setServingSize(
-          element.selectedUnit, element.selectedQuantity * ratioMultiply);
-      newIngredient.add(tempFood);
-    });
-    ingredients = newIngredient;
-  }
-
-  void addIngredients({PassioFoodItemData? ingredient, bool isFirst = false}) {
-    if ((ingredients?.length ?? 0) == 1) {
-      name = "Recipe with ${ingredients?.firstOrNull?.name ?? ''}";
-    }
-    if (ingredient != null) {
-      if (isFirst) {
-        ingredients?.insert(0, ingredient);
-      } else {
-        ingredients?.add(ingredient);
-      }
-      computeQuantityForRecipe();
-      setSelectedUnitKeepWeight('gram');
-      servingSizes = [PassioServingSize(selectedQuantity, selectedUnit ?? '')];
-      if ((ingredients?.length ?? 0) > 1) {
-        entityType = PassioIDEntityType.recipe;
-      }
-    }
-  }
-
-  bool replaceIngredient(PassioFoodItemData updatedIngredient, int atIndex) {
-    if (atIndex < (ingredients?.length ?? 0)) {
-      ingredients?[atIndex] = updatedIngredient;
-      computeQuantityForRecipe();
-      return true;
-    }
-    return false;
-  }
-
-  bool removeIngredient(int index) {
-    if (index > (ingredients?.length ?? 0)) {
-      return false;
-    }
-    ingredients?.removeAt(index);
-    if (ingredients?.length == 1) {
-      final ingredient = ingredients?.first;
-      passioID = ingredient?.passioID;
-      name = ingredient?.name;
-      selectedUnit = ingredient?.selectedUnit;
-      selectedQuantity = ingredient?.selectedQuantity ?? 1;
-      servingSizes = ingredient?.servingSize;
-      servingUnits = ingredient?.servingUnits;
-      entityType = ingredient?.entityType;
-    }
-    computeQuantityForRecipe();
-    return true;
-  }
-
-  void computeQuantityForRecipe() {
-    final totalWeight = ingredients
-        ?.map((e) => e.computedWeight().value)
-        .reduce((value, element) => value + element);
-    final servingUnit = servingUnits?.cast<PassioServingUnit?>().firstWhere(
-        (element) => element?.unitName == selectedUnit,
-        orElse: () => null);
-    if (servingUnit != null) {
-      selectedQuantity = (totalWeight ?? 1) / servingUnit.weight.value;
-    }
-  }*/
 }
 
-/// Converters:
-
-/// [PassioServingUnitsConverter]
-/*class PassioServingUnitConverter
-    extends JsonConverter<PassioServingUnit, dynamic> {
-  const PassioServingUnitConverter();
-
-  @override
-  PassioServingUnit fromJson(dynamic json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    String unitName = '';
-    UnitMass unitMass;
-
-    // Parse the [unitName] from [jsonData].
-    if (jsonData.containsKey('unitName')) {
-      unitName = jsonData['unitName'];
-    }
-
-    // Parse the [weight] from [jsonData].
-    if (jsonData.containsKey('weight')) {
-      unitMass = const UnitMassConverter().fromJson(jsonData['weight']) ??
-          UnitMass(0, UnitMassType.values.first);
-    } else {
-      unitMass = UnitMass(0, UnitMassType.values.first);
-    }
-    return PassioServingUnit(unitName, unitMass);
+/// Extension to calculate the sum of nutritional values for a list of [FoodRecord] objects.
+extension FoodRecordListExtension on List<FoodRecord> {
+  /// Calculates the sum of calories for all food records in the list.
+  double get caloriesSum {
+    return fold(
+        0,
+        (previousValue, foodRecord) =>
+            previousValue +
+            (foodRecord.nutrientsSelectedSize().calories?.value ?? 0));
   }
 
-  @override
-  Map<String, dynamic>? toJson(PassioServingUnit object) {
-    return {
-      'unitName': object.unitName,
-      'weight': {
-        'value': object.weight.value,
-        'unit': {
-          'converter': {
-            'constant': '0', // TODO: Pending need to discuss with marin
-            'coefficient': object.weight.unit.converter,
-          },
-          'symbol': object.weight.unit.symbol,
-        }
-      },
-    };
+  /// Calculates the sum of carbohydrates for all food records in the list.
+  double get carbsSum {
+    return isNotEmpty
+        ? map((foodRecord) =>
+                foodRecord.nutrientsSelectedSize().carbs?.value ?? 0.0)
+            .reduce((value, element) => value + element)
+        : 0;
+  }
+
+  /// Calculates the sum of proteins for all food records in the list.
+  double get proteinSum {
+    return isNotEmpty
+        ? map((foodRecord) =>
+                foodRecord.nutrientsSelectedSize().proteins?.value ?? 0.0)
+            .reduce((value, element) => value + element)
+        : 0;
+  }
+
+  /// Calculates the sum of fats for all food records in the list.
+  double get fatSum {
+    return isNotEmpty
+        ? map((foodRecord) =>
+                foodRecord.nutrientsSelectedSize().fat?.value ?? 0.0)
+            .reduce((value, element) => value + element)
+        : 0;
   }
 }
 
-/// [PassioServingUnitsConverter]
-class PassioServingSizeConverter
-    extends JsonConverter<PassioServingSize, dynamic> {
-  const PassioServingSizeConverter();
-
-  @override
-  PassioServingSize fromJson(dynamic json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    double quantity = 0;
-    String unitName = '';
-
-    // Parse the [quantity] from [jsonData].
-    if (jsonData.containsKey('quantity')) {
-      quantity = double.tryParse(jsonData['quantity'].toString()) ?? 0;
-    }
-
-    // Parse the [unitName] from [jsonData].
-    if (jsonData.containsKey('unitName')) {
-      unitName = jsonData['unitName'];
-    }
-    return PassioServingSize(quantity, unitName);
+extension FoodRecordExtension on FoodRecord {
+  double get totalAlcohol {
+    return nutrientsSelectedSize().alcohol?.value ?? 0;
   }
 
-  @override
-  Map<String, dynamic>? toJson(PassioServingSize object) {
-    return {
-      'quantity': object.quantity,
-      'unitName': object.unitName,
-    };
-  }
-}
-
-/// [PassioAlternativeConverter]
-class PassioAlternativeConverter
-    extends JsonConverter<PassioAlternative, dynamic> {
-  const PassioAlternativeConverter();
-
-  @override
-  PassioAlternative fromJson(dynamic json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    PassioID passioID = '';
-    String name = '';
-    double? quantity;
-    String? unitName;
-
-    // Parse the [passioID] from [jsonData].
-    if (jsonData.containsKey('passioID')) {
-      passioID = jsonData['passioID'];
-    }
-
-    // Parse the [name] from [jsonData].
-    if (jsonData.containsKey('name')) {
-      name = jsonData['name'];
-    }
-
-    // Parse the [quantity] from [jsonData].
-    if (jsonData.containsKey('quantity')) {
-      quantity = double.tryParse(jsonData['quantity'].toString()) ?? 0;
-    }
-
-    // Parse the [unitName] from [jsonData].
-    if (jsonData.containsKey('unitName')) {
-      unitName = jsonData['unitName'];
-    }
-
-    return PassioAlternative(passioID, name, quantity, unitName);
+  double get totalCalcium {
+    return nutrientsSelectedSize().calcium?.value ?? 0;
   }
 
-  @override
-  Map<String, dynamic>? toJson(PassioAlternative object) {
-    return {
-      'passioID': object.passioID,
-      'name': object.name,
-      'quantity': object.quantity,
-      'unitName': object.unitName,
-    };
-  }
-}
-
-/// [PassioFoodOriginConverter]
-class PassioFoodOriginConverter
-    extends JsonConverter<PassioFoodOrigin, dynamic> {
-  const PassioFoodOriginConverter();
-
-  @override
-  PassioFoodOrigin fromJson(dynamic json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    String id = '';
-    String source = '';
-    String? licenseCopy;
-
-    // Parse the [id] from [jsonData].
-    if (jsonData.containsKey('id')) {
-      id = jsonData['id'];
-    }
-
-    // Parse the [source] from [jsonData].
-    if (jsonData.containsKey('source')) {
-      source = jsonData['source'];
-    }
-
-    // Parse the [licenseCopy] from [jsonData].
-    if (jsonData.containsKey('licenseCopy')) {
-      licenseCopy = jsonData['licenseCopy'];
-    }
-
-    return PassioFoodOrigin(id, source, licenseCopy);
+  double get totalCalories {
+    return nutrientsSelectedSize().calories?.value ?? 0;
   }
 
-  @override
-  Map<String, dynamic>? toJson(PassioFoodOrigin object) {
-    return {
-      'id': object.id,
-      'source': object.source,
-      'licenseCopy': object.licenseCopy,
-    };
-  }
-}
-
-/// [PassioFoodItemDataConverter]
-class PassioFoodItemDataConverter
-    extends JsonConverter<PassioFoodItemData, dynamic> {
-  const PassioFoodItemDataConverter();
-
-  @override
-  PassioFoodItemData fromJson(dynamic json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    PassioID passioId =
-        jsonData.containsKey('passioID') ? jsonData['passioID'] : '';
-    String name = jsonData.containsKey('name') ? jsonData['name'] : '';
-    List<String>? tags = jsonData.containsKey('tags')
-        ? List<String>.from(jsonData['tags'] ?? [])
-        : <String>[];
-    double selectedQuantity = jsonData.containsKey('selectedQuantity')
-        ? double.parse(jsonData['selectedQuantity'].toString())
-        : double.parse('0');
-    String selectedUnit =
-        jsonData.containsKey('selectedUnit') ? jsonData['selectedUnit'] : '';
-
-    String? ingredientsDescription =
-        jsonData.containsKey('ingredientsDescription')
-            ? jsonData['ingredientsDescription']
-            : '';
-    Barcode? barcode =
-        jsonData.containsKey('barcode') ? jsonData['barcode'] : null;
-
-    PassioIDEntityType entityType = jsonData.containsKey('entityType')
-        ? PassioIDEntityType.values.firstWhere(
-            (element) => element.name == jsonData['entityType'],
-            orElse: () => PassioIDEntityType.item)
-        : PassioIDEntityType.item;
-
-    /// [servingUnits]
-    List<PassioServingUnit> servingUnits =
-        (jsonData['servingUnits'] as List<dynamic>?)
-                ?.map<PassioServingUnit>(
-                    const PassioServingUnitConverter().fromJson)
-                .toList() ??
-            [];
-
-    /// [servingSize]
-    List<PassioServingSize> servingSize =
-        (jsonData['servingSize'] as List<dynamic>?)
-                ?.map<PassioServingSize>(
-                    const PassioServingSizeConverter().fromJson)
-                .toList() ??
-            [];
-
-    /// [foodOriginsData]
-    List<PassioFoodOrigin> foodOrigins =
-        (jsonData['foodOrigins'] as List<dynamic>?)
-                ?.map(const PassioFoodOriginConverter().fromJson)
-                .toList() ??
-            [];
-
-    /// [parentsData]
-    List<PassioAlternative> parents = (jsonData['parents'] as List<dynamic>?)
-            ?.map(const PassioAlternativeConverter().fromJson)
-            .toList() ??
-        [];
-
-    /// [siblings]
-    List<PassioAlternative> siblings = (jsonData['siblings'] as List<dynamic>?)
-            ?.map(const PassioAlternativeConverter().fromJson)
-            .toList() ??
-        [];
-
-    /// [children]
-    List<PassioAlternative> children = (jsonData['children'] as List<dynamic>?)
-            ?.map(const PassioAlternativeConverter().fromJson)
-            .toList() ??
-        [];
-
-    UnitEnergy? calories = jsonData.containsKey('calories')
-        ? const UnitEnergyConverter().fromJson(jsonData['calories'])
-        : null;
-    UnitMass? carbs = jsonData.containsKey('carbs')
-        ? const UnitMassConverter().fromJson(jsonData['carbs'])
-        : null;
-    UnitMass? fat = jsonData.containsKey('fat')
-        ? const UnitMassConverter().fromJson(jsonData['fat'])
-        : null;
-    UnitMass? proteins = jsonData.containsKey('proteins')
-        ? const UnitMassConverter().fromJson(jsonData['proteins'])
-        : null;
-    UnitMass? saturatedFat = jsonData.containsKey('saturatedFat')
-        ? const UnitMassConverter().fromJson(jsonData['saturatedFat'])
-        : null;
-    UnitMass? transFat = jsonData.containsKey('transFat')
-        ? const UnitMassConverter().fromJson(jsonData['transFat'])
-        : null;
-    UnitMass? monounsaturatedFat = jsonData.containsKey('monounsaturatedFat')
-        ? const UnitMassConverter().fromJson(jsonData['monounsaturatedFat'])
-        : null;
-    UnitMass? polyunsaturatedFat = jsonData.containsKey('polyunsaturatedFat')
-        ? const UnitMassConverter().fromJson(jsonData['polyunsaturatedFat'])
-        : null;
-    UnitMass? cholesterol = jsonData.containsKey('cholesterol')
-        ? const UnitMassConverter().fromJson(jsonData['cholesterol'])
-        : null;
-    UnitMass? sodium = jsonData.containsKey('sodium')
-        ? const UnitMassConverter().fromJson(jsonData['sodium'])
-        : null;
-    UnitMass? fibers = jsonData.containsKey('fibers')
-        ? const UnitMassConverter().fromJson(jsonData['fibers'])
-        : null;
-    UnitMass? sugars = jsonData.containsKey('sugars')
-        ? const UnitMassConverter().fromJson(jsonData['sugars'])
-        : null;
-    UnitMass? sugarsAdded = jsonData.containsKey('sugarsAdded')
-        ? const UnitMassConverter().fromJson(jsonData['sugarsAdded'])
-        : null;
-    UnitMass? vitaminD = jsonData.containsKey('vitaminD')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminD'])
-        : null;
-    UnitMass? calcium = jsonData.containsKey('calcium')
-        ? const UnitMassConverter().fromJson(jsonData['calcium'])
-        : null;
-    UnitMass? iron = jsonData.containsKey('iron')
-        ? const UnitMassConverter().fromJson(jsonData['iron'])
-        : null;
-    UnitMass? potassium = jsonData.containsKey('potassium')
-        ? const UnitMassConverter().fromJson(jsonData['potassium'])
-        : null;
-    UnitIU? vitaminA = jsonData.containsKey('vitaminA')
-        ? const UnitIUConverter().fromJson(jsonData['vitaminA'])
-        : null;
-    UnitMass? vitaminC = jsonData.containsKey('vitaminC')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminC'])
-        : null;
-    UnitMass? alcohol = jsonData.containsKey('alcohol')
-        ? const UnitMassConverter().fromJson(jsonData['alcohol'])
-        : null;
-    UnitMass? sugarAlcohol = jsonData.containsKey('sugarAlcohol')
-        ? const UnitMassConverter().fromJson(jsonData['sugarAlcohol'])
-        : null;
-    UnitMass? vitaminB12Added = jsonData.containsKey('vitaminB12Added')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminB12Added'])
-        : null;
-    UnitMass? vitaminB12 = jsonData.containsKey('vitaminB12')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminB12'])
-        : null;
-    UnitMass? vitaminB6 = jsonData.containsKey('vitaminB6')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminB6'])
-        : null;
-    UnitMass? vitaminE = jsonData.containsKey('vitaminE')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminE'])
-        : null;
-    UnitMass? vitaminEAdded = jsonData.containsKey('vitaminEAdded')
-        ? const UnitMassConverter().fromJson(jsonData['vitaminEAdded'])
-        : null;
-    UnitMass? magnesium = jsonData.containsKey('magnesium')
-        ? const UnitMassConverter().fromJson(jsonData['magnesium'])
-        : null;
-    UnitMass? phosphorus = jsonData.containsKey('phosphorus')
-        ? const UnitMassConverter().fromJson(jsonData['phosphorus'])
-        : null;
-    UnitMass? iodine = jsonData.containsKey('iodine')
-        ? const UnitMassConverter().fromJson(jsonData['iodine'])
-        : null;
-
-    return PassioFoodItemData(
-      passioId,
-      name,
-      tags,
-      selectedQuantity,
-      selectedUnit,
-      entityType,
-      servingUnits,
-      servingSize,
-      ingredientsDescription,
-      barcode,
-      foodOrigins,
-      parents,
-      siblings,
-      children,
-      calories,
-      carbs,
-      fat,
-      proteins,
-      saturatedFat,
-      transFat,
-      monounsaturatedFat,
-      polyunsaturatedFat,
-      cholesterol,
-      sodium,
-      fibers,
-      sugars,
-      sugarsAdded,
-      vitaminD,
-      calcium,
-      iron,
-      potassium,
-      vitaminA,
-      vitaminC,
-      alcohol,
-      sugarAlcohol,
-      vitaminB12Added,
-      vitaminB12,
-      vitaminB6,
-      vitaminE,
-      vitaminEAdded,
-      magnesium,
-      phosphorus,
-      iodine,
-    );
+  double get totalCarbs {
+    return nutrientsSelectedSize().carbs?.value ?? 0;
   }
 
-  UnitEnergy? actualUnitEnergy(
-      PassioFoodItemData foodItemData, UnitEnergy? unitEnergy) {
-    if (unitEnergy != null) {
-      double actualUnitEnergy = (unitEnergy.value) /
-          (foodItemData.computedWeight().gramsValue() / 100);
-      return UnitEnergy(actualUnitEnergy, unitEnergy.unit);
-    }
-    return unitEnergy;
+  double get totalCholesterol {
+    return nutrientsSelectedSize().cholesterol?.value ?? 0;
   }
 
-  UnitMass? actualUnitMass(
-      PassioFoodItemData foodItemData, UnitMass? unitMass) {
-    if (unitMass != null) {
-      double actualUnitMass =
-          (unitMass.value) / (foodItemData.computedWeight().gramsValue() / 100);
-      return UnitMass(actualUnitMass, unitMass.unit);
-    }
-    return null;
+  double get totalFibers {
+    return nutrientsSelectedSize().fibers?.value ?? 0;
   }
 
-  UnitIU? actualUnitIU(PassioFoodItemData foodItemData, UnitIU? unitIU) {
-    if (unitIU != null) {
-      double actualUnitMass =
-          (unitIU.value) / (foodItemData.computedWeight().gramsValue() / 100);
-      return UnitIU(actualUnitMass);
-    }
-    return null;
+  double get totalFat {
+    return nutrientsSelectedSize().fat?.value ?? 0;
   }
 
-  @override
-  Map<String, dynamic>? toJson(PassioFoodItemData object) {
-    return {
-      'passioID': object.passioID,
-      'name': object.name,
-      'tags': object.tags,
-      'selectedQuantity': object.selectedQuantity,
-      'selectedUnit': object.selectedUnit,
-      'entityType': object.entityType.name,
-      'servingUnits': object.servingUnits
-          .map((e) => const PassioServingUnitConverter().toJson(e))
-          .toList(),
-      'servingSize': object.servingSize
-          .map((e) => const PassioServingSizeConverter().toJson(e))
-          .toList(),
-      'ingredientsDescription': object.ingredientsDescription,
-      'barcode': object.barcode,
-      'foodOrigins': object.foodOrigins
-          ?.map((e) => const PassioFoodOriginConverter().toJson(e))
-          .toList(),
-      'parents': object.parents
-          ?.map((e) => const PassioAlternativeConverter().toJson(e))
-          .toList(),
-      'siblings': object.siblings
-          ?.map((e) => const PassioAlternativeConverter().toJson(e))
-          .toList(),
-      'children': object.children
-          ?.map((e) => const PassioAlternativeConverter().toJson(e))
-          .toList(),
-      'calories': const UnitEnergyConverter()
-          .toJson(actualUnitEnergy(object, object.totalCalories())),
-      'vitaminA': const UnitIUConverter()
-          .toJson(actualUnitIU(object, object.totalVitaminA())),
-      'carbs': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalCarbs())),
-      'fat': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalFat())),
-      'proteins': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalProteins())),
-      'saturatedFat': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalSaturatedFat())),
-      'transFat': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalTransFat())),
-      'monounsaturatedFat': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalMonounsaturatedFat())),
-      'polyunsaturatedFat': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalPolyunsaturatedFat())),
-      'cholesterol': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalCholesterol())),
-      'sodium': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalSodium())),
-      'fibers': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalFibers())),
-      'sugars': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalSugars())),
-      'sugarsAdded': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalSugarsAdded())),
-      'vitaminD': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminD())),
-      'calcium': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalCalcium())),
-      'iron': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalIron())),
-      'potassium': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalPotassium())),
-      'vitaminC': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminC())),
-      'alcohol': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalAlcohol())),
-      'sugarAlcohol': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalSugarAlcohol())),
-      'vitaminB12Added': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminB12Added())),
-      'vitaminB12': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminB12())),
-      'vitaminB6': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminB6())),
-      'vitaminE': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminE())),
-      'vitaminEAdded': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalVitaminEAdded())),
-      'magnesium': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalMagnesium())),
-      'phosphorus': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalPhosphorus())),
-      'iodine': const UnitMassConverter()
-          .toJson(actualUnitMass(object, object.totalIodine())),
-    };
+  double get totalIodine {
+    return nutrientsSelectedSize().iodine?.value ?? 0;
+  }
+
+  double get totalIron {
+    return nutrientsSelectedSize().iron?.value ?? 0;
+  }
+
+  double get totalMagnesium {
+    return nutrientsSelectedSize().magnesium?.value ?? 0;
+  }
+
+  double get totalMonounsaturatedFat {
+    return nutrientsSelectedSize().monounsaturatedFat?.value ?? 0;
+  }
+
+  double get totalPhosphorus {
+    return nutrientsSelectedSize().phosphorus?.value ?? 0;
+  }
+
+  double get totalPolyunsaturatedFat {
+    return nutrientsSelectedSize().polyunsaturatedFat?.value ?? 0;
+  }
+
+  double get totalPotassium {
+    return nutrientsSelectedSize().potassium?.value ?? 0;
+  }
+
+  double get totalProteins {
+    return nutrientsSelectedSize().proteins?.value ?? 0;
+  }
+
+  double get totalSatFat {
+    return nutrientsSelectedSize().satFat?.value ?? 0;
+  }
+
+  double get totalSodium {
+    return nutrientsSelectedSize().sodium?.value ?? 0;
+  }
+
+  double get totalSugars {
+    return nutrientsSelectedSize().sugars?.value ?? 0;
+  }
+
+  double get totalSugarsAdded {
+    return nutrientsSelectedSize().sugarsAdded?.value ?? 0;
+  }
+
+  double get totalSugarsAlcohol {
+    return nutrientsSelectedSize().sugarAlcohol?.value ?? 0;
+  }
+
+  double get totalTransFat {
+    return nutrientsSelectedSize().transFat?.value ?? 0;
+  }
+
+  double get totalVitaminA {
+    return nutrientsSelectedSize().vitaminA?.value ?? 0;
+  }
+
+  double get totalVitaminB6 {
+    return nutrientsSelectedSize().vitaminB6?.value ?? 0;
+  }
+
+  double get totalVitaminB12 {
+    return nutrientsSelectedSize().vitaminB12?.value ?? 0;
+  }
+
+  double get totalVitaminB12Added {
+    return nutrientsSelectedSize().vitaminB12Added?.value ?? 0;
+  }
+
+  double get totalVitaminC {
+    return nutrientsSelectedSize().vitaminC?.value ?? 0;
+  }
+
+  double get totalVitaminD {
+    return nutrientsSelectedSize().vitaminD?.value ?? 0;
+  }
+
+  double get totalVitaminE {
+    return nutrientsSelectedSize().vitaminE?.value ?? 0;
+  }
+
+  double get totalVitaminEAdded {
+    return nutrientsSelectedSize().vitaminEAdded?.value ?? 0;
+  }
+
+  double get totalZinc {
+    return nutrientsSelectedSize().zinc?.value ?? 0;
+  }
+
+  double get totalSelenium {
+    return nutrientsSelectedSize().selenium?.value ?? 0;
+  }
+
+  double get totalFolicAcid {
+    return nutrientsSelectedSize().folicAcid?.value ?? 0;
+  }
+
+  double get totalChromium {
+    return nutrientsSelectedSize().chromium?.value ?? 0;
+  }
+
+  double get totalVitaminKPhylloquinone {
+    return nutrientsSelectedSize().vitaminKPhylloquinone?.value ?? 0;
+  }
+
+  double get totalVitaminKMenaquinone4 {
+    return nutrientsSelectedSize().vitaminKMenaquinone4?.value ?? 0;
+  }
+
+  double get totalVitaminKDihydrophylloquinone {
+    return nutrientsSelectedSize().vitaminKDihydrophylloquinone?.value ?? 0;
   }
 }
-
-class UnitEnergyConverter extends JsonConverter<UnitEnergy?, dynamic> {
-  const UnitEnergyConverter();
-
-  @override
-  UnitEnergy? fromJson(json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    double value = 0;
-    String? symbol;
-
-    if (jsonData.containsKey('value')) {
-      value = double.tryParse(jsonData['value'].toString()) ?? 0;
-    }
-    if (jsonData.containsKey('symbol')) {
-      symbol = jsonData['symbol'];
-    } else {
-      if (jsonData.containsKey('unit')) {
-        if (jsonData['unit'] is Map && jsonData.containsKey('symbol')) {
-          symbol = jsonData['unit']['symbol'];
-        }
-      }
-    }
-    if (symbol != null) {
-      return UnitEnergy(
-          value,
-          UnitEnergyType.values.firstWhere(
-              (element) => element.symbol == symbol,
-              orElse: () => UnitEnergyType.values.first));
-    }
-    return null;
-  }
-
-  @override
-  toJson(UnitEnergy? object) {
-    return {
-      'value': object?.value.roundNumber(2),
-      'converter': object?.converter,
-      'symbol': object?.symbol,
-      'unit': {
-        'index': object?.unit.index,
-        'name': object?.unit.name,
-        'converter': object?.converter,
-        'symbol': object?.symbol,
-      }
-    };
-  }
-}
-
-class UnitMassConverter extends JsonConverter<UnitMass?, dynamic> {
-  const UnitMassConverter();
-
-  @override
-  UnitMass? fromJson(json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    double value = 0;
-    String? symbol;
-
-    if (jsonData.containsKey('value')) {
-      value = double.tryParse(jsonData['value'].toString()) ?? 0;
-    }
-    if (jsonData.containsKey('symbol')) {
-      symbol = jsonData['symbol'];
-    } else {
-      if (jsonData.containsKey('unit')) {
-        if (jsonData['unit'] is Map && jsonData['unit'].containsKey('symbol')) {
-          symbol = jsonData['unit']['symbol'];
-        }
-      }
-    }
-    if (symbol != null) {
-      return UnitMass(
-          value,
-          UnitMassType.values.firstWhere((element) => element.symbol == symbol,
-              orElse: () => UnitMassType.values.first));
-    }
-    return null;
-  }
-
-  @override
-  toJson(UnitMass? object) {
-    return {
-      'value': object?.value.roundNumber(2),
-      'converter': object?.converter,
-      'symbol': object?.symbol,
-      'unit': {
-        'index': object?.unit.index,
-        'name': object?.unit.name,
-        'converter': object?.converter,
-        'symbol': object?.symbol,
-      }
-    };
-  }
-}
-
-class UnitIUConverter extends JsonConverter<UnitIU?, dynamic> {
-  const UnitIUConverter();
-
-  @override
-  UnitIU? fromJson(json) {
-    /// Parsing the json response.
-    final jsonData = Map<String, dynamic>.from(json);
-
-    double? value;
-
-    if (jsonData.containsKey('value')) {
-      value = double.tryParse(jsonData['value'].toString());
-    }
-    if (value != null) {
-      return UnitIU(value);
-    }
-    return null;
-  }
-
-  @override
-  toJson(UnitIU? object) {
-    return {
-      'value': object?.value.roundNumber(2),
-    };
-  }
-}*/

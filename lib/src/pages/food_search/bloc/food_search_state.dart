@@ -26,30 +26,12 @@ class SearchingState extends FoodSearchState {
 }
 
 class SearchForFoodSuccessState extends FoodSearchState {
-  const SearchForFoodSuccessState({required this.results, required this.alternatives});
+  const SearchForFoodSuccessState(
+      {required this.results, required this.alternatives});
 
-  final List<PassioSearchResult> results;
+  final List<PassioFoodDataInfo> results;
   final List<String> alternatives;
 
   @override
   List<Object?> get props => [results, alternatives];
-}
-
-class FetchSearchResultSuccessState extends FoodSearchState {
-  const FetchSearchResultSuccessState({required this.index, required this.foodItem});
-
-  final int index;
-  final PassioFoodItem foodItem;
-
-  @override
-  List<Object?> get props => [index, foodItem];
-}
-
-class FetchSearchResultFailureState extends FoodSearchState {
-  const FetchSearchResultFailureState({required this.message});
-
-  final String message;
-
-  @override
-  List<Object?> get props => [message];
 }

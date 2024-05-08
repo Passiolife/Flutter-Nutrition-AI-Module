@@ -3,23 +3,29 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../widgets/adaptive_action_button_widget.dart';
 
-typedef PermissionCallback = Function(
-    Permission? permission, bool isOpenSettingDialogVisible);
+typedef PermissionCallback = Function(Permission? permission);
 
 typedef OnTapCancel = Function(BuildContext context);
 
 class PermissionManagerUtility {
   /// This flag will update once the setting is opened after permission denied.
   static bool _openedSetting = false;
-  static PermissionCallback? permissionCallback;
+  static PermissionCallback? _permissionCallback;
   static Permission? _permission;
-  static bool isOpenSettingDialogVisible = false;
+  static BuildContext? _dialogContext;
 
   Future didChangeAppLifecycleState(AppLifecycleState state) async {
     /// This block executes if state is resumed.
     if (state == AppLifecycleState.resumed && _openedSetting) {
       _openedSetting = false;
-      permissionCallback?.call(_permission, isOpenSettingDialogVisible);
+      if ((await _permission?.isGranted ?? false) ||
+          (await _permission?.isLimited ?? false)) {
+        if (_dialogContext != null) {
+          Navigator.pop(_dialogContext!);
+          _dialogContext = null;
+        }
+      }
+      _permissionCallback?.call(_permission);
     }
   }
 
@@ -37,38 +43,40 @@ class PermissionManagerUtility {
     String? message,
     OnTapCancel? onTapCancelForSettings,
   }) async {
-    isOpenSettingDialogVisible = false;
-    permissionCallback = onUpdateStatus;
+    _dialogContext = null;
+    _permissionCallback = onUpdateStatus;
     _permission = permission;
     PermissionStatus result = await permission.request();
 
     if (result.isGranted) {
-      permissionCallback?.call(_permission, isOpenSettingDialogVisible);
+      _permissionCallback?.call(_permission);
     } else if ((result.isDenied || result.isPermanentlyDenied) &&
         askForSettings) {
-      isOpenSettingDialogVisible = true;
       if (context.mounted) {
         showDialog<String>(
           barrierDismissible: false,
           context: context,
-          builder: (BuildContext context) => AlertDialog.adaptive(
-            title: Text(title ?? ''),
-            content: Text(message ?? ''),
-            actions: <Widget>[
-              adaptiveAction(
-                context: context,
-                onPressed: () => onTapCancelForSettings?.call(context),
-                child: const Text('Cancel'),
-              ),
-              adaptiveAction(
-                context: context,
-                onPressed: () async {
-                  _openedSetting = await openAppSettings();
-                },
-                child: const Text('Open Settings'),
-              ),
-            ],
-          ),
+          builder: (BuildContext context) {
+            _dialogContext = context;
+            return AlertDialog.adaptive(
+              title: Text(title ?? 'Permission'),
+              content: Text(message ?? 'Please allow permission access.'),
+              actions: <Widget>[
+                adaptiveAction(
+                  context: context,
+                  onPressed: () => onTapCancelForSettings?.call(context) ?? Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+                adaptiveAction(
+                  context: context,
+                  onPressed: () async {
+                    _openedSetting = await openAppSettings();
+                  },
+                  child: const Text('Open Settings'),
+                ),
+              ],
+            );
+          },
         );
       }
     }

@@ -44,7 +44,7 @@ class _IngredientWidgetState extends State<IngredientWidget> {
             children: [
               // Add Ingredient View
               InkWell(
-                onTap: () => widget.listener?.onAddIngredient(),
+                onTap: () => widget.listener?.onAddIngredientRequested(),
                 splashColor: AppColors.blue50,
                 highlightColor: AppColors.blue50,
                 child: Padding(
@@ -95,8 +95,8 @@ class _IngredientWidgetState extends State<IngredientWidget> {
                           final data = widget.ingredients.elementAt(index);
                           return _IngredientRow(
                             ingredient: data,
-                            onTap: () => widget.listener?.onTapIngredient(data),
-                            onTapDelete: () => widget.listener?.onDeleteIngredient(data),
+                            onTap: () => widget.listener?.onIngredientTapped(data),
+                            onTapDelete: () => widget.listener?.onIngredientDeleted(index),
                           );
                         },
                       ),
@@ -168,7 +168,7 @@ class _IngredientRow extends StatelessWidget {
               .addAll([AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
         ),
         subtitle: Text(
-          '${ingredient.selectedQuantity} ${ingredient.selectedUnit.toUpperCaseWord} (${ingredient.computedWeight.value.formatNumber(places: 0)} ${ingredient.computedWeight.symbol})',
+          '${ingredient.selectedQuantity.format(places: 2)} ${ingredient.selectedUnit.toUpperCaseWord} (${ingredient.computedWeight.value.format(places: 0)} ${ingredient.computedWeight.symbol})',
           style: AppTextStyle.textSm.addAll([AppTextStyle.textSm.leading5]),
         ),
         trailing: Text(

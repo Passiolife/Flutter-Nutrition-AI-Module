@@ -20,19 +20,19 @@ class MacrosGraphWidget extends StatelessWidget {
   });
 
   // Calories
-  final double consumedCalories;
+  final int consumedCalories;
   final double totalCalories;
 
   // Carbs
-  final double consumedCarbs;
+  final int consumedCarbs;
   final double totalCarbs;
 
   // Proteins
-  final double consumedProteins;
+  final int consumedProteins;
   final double totalProteins;
 
   // Fat
-  final double consumedFat;
+  final int consumedFat;
   final double totalFat;
 
   @override
@@ -43,8 +43,8 @@ class MacrosGraphWidget extends StatelessWidget {
         Expanded(
           child: _DonutGraph(
             label: context.localization?.calories,
-            consumedNutrient: consumedCalories.formatWithoutTrailingZeros,
-            totalNutrient: totalCalories.formatWithoutTrailingZeros,
+            consumedNutrient: '$consumedCalories',
+            totalNutrient: totalCalories.format(),
             graphColor: AppColors.yellow500,
             overFilledGraphColor: AppColors.yellow900Dark,
           ),
@@ -53,8 +53,8 @@ class MacrosGraphWidget extends StatelessWidget {
         Expanded(
           child: _DonutGraph(
             label: context.localization?.carbs,
-            consumedNutrient: '${consumedCarbs.formatWithoutTrailingZeros} g',
-            totalNutrient: '${totalCarbs.formatWithoutTrailingZeros} g',
+            consumedNutrient: '$consumedCarbs g',
+            totalNutrient: '${totalCarbs.format()} g',
             graphColor: AppColors.lBlue500Normal,
             overFilledGraphColor: AppColors.lBlue900Dark,
           ),
@@ -63,8 +63,8 @@ class MacrosGraphWidget extends StatelessWidget {
         Expanded(
           child: _DonutGraph(
             label: context.localization?.protein,
-            consumedNutrient: '${consumedProteins.formatWithoutTrailingZeros} g',
-            totalNutrient: '${totalProteins.formatWithoutTrailingZeros} g',
+            consumedNutrient: '$consumedProteins g',
+            totalNutrient: '${totalProteins.format()} g',
             graphColor: AppColors.green500Normal,
             overFilledGraphColor: AppColors.green900Dark,
           ),
@@ -73,8 +73,8 @@ class MacrosGraphWidget extends StatelessWidget {
         Expanded(
           child: _DonutGraph(
             label: context.localization?.fat,
-            consumedNutrient: '${consumedFat.formatWithoutTrailingZeros} g',
-            totalNutrient: '${totalFat.formatWithoutTrailingZeros} g',
+            consumedNutrient: '$consumedFat g',
+            totalNutrient: '${totalFat.format()} g',
             graphColor: AppColors.purple500,
             overFilledGraphColor: AppColors.purple900,
           ),
@@ -118,7 +118,7 @@ class _DonutGraph extends StatelessWidget {
       ChartDataModel(y: _overNutrient, color: overFilledGraphColor),
       ChartDataModel(y: _consumedNutrient, color: graphColor),
       ChartDataModel(
-        y: _remainsNutrient,
+        y: _totalNutrient == 0 ? 100 : _remainsNutrient,
         color: AppColors.gray200,
       ),
     ];

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -9,11 +8,14 @@ import '../../common/models/settings/settings.dart';
 import '../../common/router/routes.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/permission_manager_utility.dart';
+import '../edit_food/edit_food_page.dart';
 import 'bloc/food_scan_bloc.dart';
 import 'dialog/added_to_diary_dialog.dart';
 import 'dialog/barcode_not_recognized_dialog.dart';
 import 'dialog/intro_dialog.dart';
+import 'dialog/packaged_food_not_recognized_dialog.dart';
 import 'dialog/scanned_nutrition_facts_dialog.dart';
+import 'widgets/bottom_background_widget.dart';
 import 'widgets/widgets.dart';
 
 class FoodScanPage extends StatefulWidget {
@@ -41,9 +43,18 @@ class _FoodScanPageState extends State<FoodScanPage>
   final GlobalKey<ScanningAnimationWidgetState> _scanningAnimationKey =
       GlobalKey<ScanningAnimationWidgetState>();
 
+  // This flag controls the visibility of the Passio preview,
+  // ensuring it's only shown after the screen has rendered to provide a smoother navigation experience.
   bool _showPassioPreview = false;
 
-  final GlobalKey<ResultWidgetState> _resultKey = GlobalKey();
+  final GlobalKey<BottomBackgroundWidgetState> _bottomBackgroundWidgetKey =
+      GlobalKey();
+
+  bool _sheetDraggable = false;
+
+  PassioFoodItem? _foodItem;
+  DetectedCandidate? _detectedCandidate;
+  List<DetectedCandidate> _alternatives = [];
 
   @override
   void initState() {
@@ -63,7 +74,9 @@ class _FoodScanPageState extends State<FoodScanPage>
         listener: (context, state) {
           _handleStateChanges(state, context);
         },
-        buildWhen: (_, state) => state is! ScanningAnimationState,
+        buildWhen: (_, state) =>
+            state is! ScanningAnimationState &&
+            state is! ConversionSuccessState,
         builder: (context, state) {
           return Column(
             children: [
@@ -81,24 +94,37 @@ class _FoodScanPageState extends State<FoodScanPage>
                         : Container(color: AppColors.black),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
-                      onTap: state is ScanResultVisibilityState
-                          ? () => _resultKey.currentState?.setInitialHeight()
+                      onTap: state is ScanResultState
+                          ? () => _bottomBackgroundWidgetKey.currentState
+                              ?.setInitialHeight()
                           : null,
                       child:
                           ScanningAnimationWidget(key: _scanningAnimationKey),
                     ),
-                    (state is ScanningState)
-                        ? const ScanningWidget()
-                        : const SizedBox.shrink(),
-                    (state is ScanResultVisibilityState)
-                        ? ResultWidget(
-                            key: _resultKey,
-                            iconId: state.iconId,
-                            foodName: state.foodName,
-                            alternatives: state.alternatives,
+                    (state is ScanLoadingState || state is ScanResultState)
+                        ? BottomBackgroundWidget(
+                            key: _bottomBackgroundWidgetKey,
+                            shouldDraggable: _sheetDraggable,
+                            visibleDragIntro:
+                                !Settings.instance.getDragIntroSeen(),
                             listener: this,
-                            shouldDraggable: state.alternatives.isNotEmpty,
-                            visibleDragIntro: Settings.instance.getDragIntroSeen(),
+                            child: state is ScanResultState
+                                ? ResultWidget(
+                                    bottomBackgroundWidgetKey:
+                                        _bottomBackgroundWidgetKey,
+                                    iconId: _foodItem?.iconId ??
+                                        _detectedCandidate?.passioID ??
+                                        '',
+                                    foodName: _foodItem?.name ??
+                                        _detectedCandidate?.foodName ??
+                                        '',
+                                    alternatives: _alternatives,
+                                    listener: this,
+                                    shouldDraggable: _sheetDraggable,
+                                    visibleDragIntro:
+                                        !Settings.instance.getDragIntroSeen(),
+                                  )
+                                : const ScanningWidget(),
                           )
                         : const SizedBox.shrink(),
                   ],
@@ -131,7 +157,6 @@ class _FoodScanPageState extends State<FoodScanPage>
 
     // Trigger the IntroScreenEvent in the bloc to initialize the intro screen
     _bloc.add(const IntroScreenEvent());
-    // _bloc.add(const ScanResultVisibilityEvent(shouldVisible: true));
   }
 
   // Handle different state changes
@@ -140,7 +165,9 @@ class _FoodScanPageState extends State<FoodScanPage>
       ScannedNutritionFactsDialog.show(context: context);
     } else if (state is BarcodeNotRecognizedState) {
       _handleBarcodeNotRecognizedState(state);
-    } else if (state is IntroVisibilityState) {
+    } else if (state is PackagedFoodNotRecognizedState) {
+      _handlePackagedFoodNotRecognizedState(state);
+    } else if (state is IntroScreenVisibilityState) {
       _handleIntroVisibilityState(state);
     } else if (state is ScanningState) {
       _handleScanningState(state);
@@ -148,18 +175,33 @@ class _FoodScanPageState extends State<FoodScanPage>
       _handleAddedToDiaryVisibilityState(state);
     } else if (state is ScanningAnimationState) {
       _handleScanningAnimationState(state.shouldAnimate);
+    } else if (state is ScanResultState) {
+      _foodItem = state.foodItem;
+      _detectedCandidate = state.detectedCandidate;
+      _alternatives = state.alternatives;
+      _sheetDraggable = _alternatives.isNotEmpty;
+      if (_alternatives.isNotEmpty) {
+        _bottomBackgroundWidgetKey.currentState?.setMaxSizeWithInitialInPixels(
+            AppDimens.h32 + (_alternatives.length * AppDimens.h56));
+      }
+    } else if (state is ConversionSuccessState) {
+      _redirectToEdit(state.foodItem);
     }
   }
 
   // Handle intro screen visibility
-  void _handleIntroVisibilityState(IntroVisibilityState state) {
+  void _handleIntroVisibilityState(IntroScreenVisibilityState state) {
     if (state.shouldVisible) {
       IntroDialog.show(
         context: context,
         onTapOk: (context) {
           Navigator.pop(context);
-          _checkPermission();
-          _bloc.add(const IntroScreenCompleteEvent());
+
+          Future.delayed(const Duration(milliseconds: AppDimens.duration250),
+              () {
+            _checkPermission();
+            _bloc.add(const IntroScreenCompleteEvent());
+          });
         },
       );
     } else {
@@ -170,29 +212,22 @@ class _FoodScanPageState extends State<FoodScanPage>
 
   // Check camera permission
   Future _checkPermission() async {
-    SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      await PermissionManagerUtility().request(
-        context,
-        Permission.camera,
-        title: context.localization?.permission,
-        message: context.localization?.cameraPermissionMessage,
-        onTapCancelForSettings: (contextPermission) {
-          Navigator.pop(contextPermission);
-          Navigator.pop(context);
-        },
-        onUpdateStatus:
-            (Permission? permission, bool isOpenSettingDialogVisible) async {
-          if ((await permission?.isGranted) ?? false) {
-            if (isOpenSettingDialogVisible) {
-              if (context.mounted) {
-                Navigator.of(context, rootNavigator: true).pop();
-              }
-            }
-            _bloc.add(const StartScanningEvent());
-          }
-        },
-      );
-    });
+    await PermissionManagerUtility().request(
+      context,
+      Permission.camera,
+      title: context.localization?.permission,
+      message: context.localization?.cameraPermissionMessage,
+      onTapCancelForSettings: (contextPermission) {
+        Navigator.pop(contextPermission);
+        Navigator.pop(context);
+      },
+      onUpdateStatus:
+          (Permission? permission) async {
+        if ((await permission?.isGranted) ?? false) {
+          _bloc.add(const StartScanningEvent());
+        }
+      },
+    );
   }
 
   // Handle scanning animation
@@ -200,6 +235,7 @@ class _FoodScanPageState extends State<FoodScanPage>
     if (!_showPassioPreview) {
       _showPassioPreview = true;
     }
+    _sheetDraggable = false;
     _handleScanningAnimationState(true);
   }
 
@@ -239,7 +275,27 @@ class _FoodScanPageState extends State<FoodScanPage>
       context: context,
       onTapCancel: (context) {
         Navigator.pop(context);
+        Future.delayed(const Duration(milliseconds: AppDimens.duration150), () {
+          _bloc.add(const StartScanningEvent());
+        });
+      },
+      onTapScanNutrition: (context) {
+        Navigator.pop(context);
         _bloc.add(const StartScanningEvent());
+      },
+    );
+  }
+
+  void _handlePackagedFoodNotRecognizedState(
+      PackagedFoodNotRecognizedState state) {
+    _handleScanningAnimationState(!state.shouldVisible);
+    PackagedFoodNotRecognizedDialog.show(
+      context: context,
+      onTapCancel: (context) {
+        Navigator.pop(context);
+        Future.delayed(const Duration(milliseconds: AppDimens.duration150), () {
+          _bloc.add(const StartScanningEvent());
+        });
       },
       onTapScanNutrition: (context) {
         Navigator.pop(context);
@@ -250,16 +306,51 @@ class _FoodScanPageState extends State<FoodScanPage>
 
   @override
   void onDragResult(bool isCollapsed) {
-    _bloc.add(ScanResultDragEvent(isCollapsed: isCollapsed));
+    if (isCollapsed) {
+      Future.delayed(const Duration(milliseconds: AppDimens.duration150), () {
+        _bloc.add(ScanResultDragEvent(isCollapsed: isCollapsed));
+      });
+    } else {
+      _scanningAnimationKey.currentState?.stopScanningAnimation();
+      _bloc.add(ScanResultDragEvent(isCollapsed: isCollapsed));
+    }
   }
 
   @override
-  void onEdit() {
-    // TODO: implement onEdit
+  Future<void> onEdit(int? index) async {
+    DetectedCandidate? candidate;
+    if (index != null) {
+      candidate = _alternatives.elementAt(index);
+    } else {
+      candidate = _detectedCandidate;
+    }
+    EditFoodPage.navigate(context: context, foodItem: _foodItem, detectedCandidate: candidate, redirectToDiaryOnLog: true);
   }
 
   @override
   void onLog() {
-    // TODO: implement onLog
+    _bloc.add(DoFoodLogEvent(
+        dateTime: DateTime.now(),
+        foodItem: _foodItem,
+        detectedCandidate: _detectedCandidate));
+  }
+
+  void _redirectToEdit(PassioFoodItem? foodItem) {
+    Navigator.pushNamed(
+      context,
+      Routes.editFoodPage,
+      arguments: {
+        AppCommonConstants.data: foodItem,
+        AppCommonConstants.iconHeroTag: '${foodItem?.iconId}',
+        AppCommonConstants.titleHeroTag: '${foodItem?.name}',
+        AppCommonConstants.subtitleHeroTag: '${foodItem?.details}',
+        AppCommonConstants.visibleSwitch: true,
+      },
+    );
+  }
+
+  @override
+  void onTapSearch() {
+    Navigator.pushNamed(context, Routes.foodSearchPage, arguments: false);
   }
 }
