@@ -494,7 +494,8 @@ class AppLocalizations {
       getLabel('quickSuggestionsDescription');
 
   String? get macros => getLabel('macros');
+
   String? get micros => getLabel('micros');
 
-
+  String? get generateReport => getLabel('generateReport');
 }

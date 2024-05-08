@@ -239,5 +239,6 @@
   "loggedEntireMealMessage": "Meal logged successfully",
   "quickSuggestions": "Quick Suggestions",
   "macros": "Macros",
-  "micros": "Micros"
+  "micros": "Micros",
+  "generateReport": "Generate Report"
 }

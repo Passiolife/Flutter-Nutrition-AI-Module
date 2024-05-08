@@ -40,7 +40,7 @@ class _NutritionInformationWidgetState
             Expanded(
               flex: 1,
               child: Text(
-                context.localization?.total ?? '',
+                context.localization?.consumed ?? '',
                 style: AppTextStyle.textBase.addAll(
                     [AppTextStyle.textBase.leading6, AppTextStyle.semiBold]),
                 textAlign: TextAlign.right,
@@ -104,7 +104,7 @@ class _NutritionInformationWidgetState
                     ]).copyWith(color: AppColors.indigo600Main),
                   ),
                 ),
-                SizedBox(height: context.bottomPadding + 64.h),
+                SizedBox(height: context.bottomPadding + 32.h + 48.h),
               ],
             ),
           ),

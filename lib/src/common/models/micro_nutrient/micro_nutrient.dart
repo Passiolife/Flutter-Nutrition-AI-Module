@@ -16,165 +16,169 @@ class MicroNutrient {
   });
 
   static List<MicroNutrient> nutrientsFromFoodRecord(FoodRecord? foodRecord) {
-    if (foodRecord == null) return [];
+    return nutrientsFromFoodRecords([foodRecord]);
+  }
+
+  static List<MicroNutrient> nutrientsFromFoodRecords(List<FoodRecord?>? foodRecords) {
+    if (foodRecords == null) return [];
     return [
       MicroNutrient(
         name: 'Saturated Fat',
-        value: foodRecord.totalSatFat,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalSatFat ?? 0)),
         recommendedValue: 20,
-        unitSymbol: foodRecord.nutrientsSelectedSize().satFat?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().satFat?.symbol ??
             UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Trans Fat',
-        value: foodRecord.totalTransFat,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalTransFat ?? 0)),
         recommendedValue: 0,
-        unitSymbol: foodRecord.nutrientsSelectedSize().transFat?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().transFat?.symbol ??
             UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Cholesterol',
-        value: foodRecord.totalCholesterol,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalCholesterol ?? 0)),
         recommendedValue: 300,
-        unitSymbol: foodRecord.nutrientsSelectedSize().cholesterol?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().cholesterol?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Sodium',
-        value: foodRecord.totalSodium,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalSodium ?? 0)),
         recommendedValue: 2300,
-        unitSymbol: foodRecord.nutrientsSelectedSize().sodium?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().sodium?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Dietary Fiber',
-        value: foodRecord.totalFibers,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalFibers ?? 0)),
         recommendedValue: 28,
-        unitSymbol: foodRecord.nutrientsSelectedSize().fibers?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().fibers?.symbol ??
             UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Total Sugar',
-        value: foodRecord.totalSugars,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalSugars ?? 0)),
         recommendedValue: 50,
-        unitSymbol: foodRecord.nutrientsSelectedSize().sugars?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().sugars?.symbol ??
             UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Vitamin D',
-        value: foodRecord.totalVitaminD,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminD ?? 0)),
         recommendedValue: 20,
-        unitSymbol: foodRecord.nutrientsSelectedSize().vitaminD?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminD?.symbol ??
             UnitMassType.micrograms.symbol,
       ),
       MicroNutrient(
         name: 'Calcium',
-        value: foodRecord.totalCalcium,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalCalcium ?? 0)),
         recommendedValue: 1000,
-        unitSymbol: foodRecord.nutrientsSelectedSize().calcium?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().calcium?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Iron',
-        value: foodRecord.totalIron,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalIron ?? 0)),
         recommendedValue: 18,
-        unitSymbol: foodRecord.nutrientsSelectedSize().iron?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().iron?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Potassium',
-        value: foodRecord.totalPotassium,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalPotassium ?? 0)),
         recommendedValue: 4700,
-        unitSymbol: foodRecord.nutrientsSelectedSize().potassium?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().potassium?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Polyunsaturated Fat',
-        value: foodRecord.totalPolyunsaturatedFat,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalPolyunsaturatedFat ?? 0)),
         recommendedValue: 22,
         unitSymbol:
-            foodRecord.nutrientsSelectedSize().polyunsaturatedFat?.symbol ??
+        foodRecords.firstOrNull?.nutrientsSelectedSize().polyunsaturatedFat?.symbol ??
                 UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Monounsaturated Fat',
-        value: foodRecord.totalMonounsaturatedFat,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalMonounsaturatedFat ?? 0)),
         recommendedValue: 44,
         unitSymbol:
-            foodRecord.nutrientsSelectedSize().monounsaturatedFat?.symbol ??
+        foodRecords.firstOrNull?.nutrientsSelectedSize().monounsaturatedFat?.symbol ??
                 UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Magnesium',
-        value: foodRecord.totalMagnesium,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalMagnesium ?? 0)),
         recommendedValue: 420,
-        unitSymbol: foodRecord.nutrientsSelectedSize().magnesium?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().magnesium?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Iodine',
-        value: foodRecord.totalIodine,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalIodine ?? 0)),
         recommendedValue: 150,
-        unitSymbol: foodRecord.nutrientsSelectedSize().iodine?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().iodine?.symbol ??
             UnitMassType.micrograms.symbol,
       ),
       MicroNutrient(
         name: 'Vitamin B6',
-        value: foodRecord.totalVitaminB6,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminB6 ?? 0)),
         recommendedValue: 1.7,
-        unitSymbol: foodRecord.nutrientsSelectedSize().vitaminB6?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminB6?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Vitamin B12',
-        value: foodRecord.totalVitaminB12,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminB12 ?? 0)),
         recommendedValue: 2.4,
-        unitSymbol: foodRecord.nutrientsSelectedSize().vitaminB12?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminB12?.symbol ??
             UnitMassType.micrograms.symbol,
       ),
       MicroNutrient(
         name: 'Vitamin E',
-        value: foodRecord.totalVitaminE,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminE ?? 0)),
         recommendedValue: 15,
-        unitSymbol: foodRecord.nutrientsSelectedSize().vitaminE?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminE?.symbol ??
             UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Vitamin A',
-        value: foodRecord.totalVitaminA,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminA ?? 0)),
         recommendedValue: 3000,
-        unitSymbol: foodRecord.nutrientsSelectedSize().vitaminA?.symbol ?? 'iu',
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminA?.symbol ?? 'iu',
       ),
       MicroNutrient(
         name: 'Vitamin C',
-        value: foodRecord.totalVitaminC,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminC ?? 0)),
         recommendedValue: 90,
-        unitSymbol: foodRecord.nutrientsSelectedSize().vitaminC?.symbol ??
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminC?.symbol ??
             UnitMassType.micrograms.symbol,
       ),
       MicroNutrient(
         name: 'Zinc',
-        value: foodRecord.totalZinc,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalZinc ?? 0)),
         recommendedValue: 10,
-        unitSymbol: foodRecord.nutrientsSelectedSize().zinc?.symbol ?? UnitMassType.milligrams.symbol,
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().zinc?.symbol ?? UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Selenium',
-        value: foodRecord.totalSelenium,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalSelenium ?? 0)),
         recommendedValue: 55,
-        unitSymbol: foodRecord.nutrientsSelectedSize().selenium?.symbol ?? UnitMassType.micrograms.symbol,
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().selenium?.symbol ?? UnitMassType.micrograms.symbol,
       ),
       MicroNutrient(
         name: 'Folic Acid',
-        value: foodRecord.totalFolicAcid,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalFolicAcid ?? 0)),
         recommendedValue: 400,
-        unitSymbol: foodRecord.nutrientsSelectedSize().folicAcid?.symbol ?? UnitMassType.micrograms.symbol,
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().folicAcid?.symbol ?? UnitMassType.micrograms.symbol,
       ),
       MicroNutrient(
         name: 'Chromium',
-        value: foodRecord.totalChromium,
+        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalChromium ?? 0)),
         recommendedValue: 35,
-        unitSymbol: foodRecord.nutrientsSelectedSize().chromium?.symbol ?? UnitMassType.micrograms.symbol,
+        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().chromium?.symbol ?? UnitMassType.micrograms.symbol,
       ),
     ];
   }
