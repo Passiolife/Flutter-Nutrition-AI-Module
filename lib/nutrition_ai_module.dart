@@ -1,3 +1,5 @@
+export 'package:nutrition_ai/nutrition_ai.dart';
+
 export 'src/common/connectors/passio_connector.dart';
 export 'src/common/models/food_record/food_record.dart';
 export 'src/common/models/food_record/food_record_ingredient.dart';

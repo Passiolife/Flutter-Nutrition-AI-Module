@@ -68,7 +68,8 @@ class _FavoritesPageState extends State<FavoritesPage> implements RowListener {
                           listener: this,
                         );
                       },
-                      separatorBuilder: (BuildContext context, int index) => 8.verticalSpace,
+                      separatorBuilder: (BuildContext context, int index) =>
+                          8.verticalSpace,
                     ),
                   ),
                 ),
@@ -91,7 +92,7 @@ class _FavoritesPageState extends State<FavoritesPage> implements RowListener {
       context: context,
       foodRecord: _list.elementAt(index),
     );
-    if (data != null && data is bool &&  data && context.mounted) {
+    if (data != null && data is bool && data && mounted) {
       context.showSnackbar(text: context.localization?.addedToLog);
     }
   }

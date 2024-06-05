@@ -27,9 +27,11 @@ class WaterDayLogs {
         dayLog.add(WaterDayLog(date: date));
       }
     }
-    dayLog.sort((a,b) => a.date.compareTo(b.date));
+    dayLog.sort((a, b) => a.date.compareTo(b.date));
   }
 
-  double getConsumedWater(MeasurementSystem unit) => dayLog.fold(0, (previousValue, element) => previousValue + element.getConsumedWater(unit));
-
+  double getConsumedWater(MeasurementSystem unit) => dayLog.fold(
+      0,
+      (previousValue, element) =>
+          previousValue + element.getConsumedWater(unit));
 }

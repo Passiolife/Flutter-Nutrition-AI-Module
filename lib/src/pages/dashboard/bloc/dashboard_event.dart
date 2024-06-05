@@ -6,12 +6,11 @@ sealed class DashboardEvent extends Equatable {
 
 class PageUpdateEvent extends DashboardEvent {
   final int index;
-  final NavigationItem? item;
 
-  const PageUpdateEvent({required this.index, this.item});
+  const PageUpdateEvent({required this.index});
 
   @override
-  List<Object?> get props => [index, item];
+  List<Object?> get props => [index];
 }
 
 final class RefreshEvent extends DashboardEvent {

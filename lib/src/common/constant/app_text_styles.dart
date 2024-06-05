@@ -37,8 +37,8 @@ class AppTextStyle {
       _getTextStyle(20.sp, calculateLineHeight(24.2, 20.sp)); // text-xl
   static TextStyle text2xl =
       _getTextStyle(24.sp, calculateLineHeight(29.05, 24.sp)); // text-2xl
-  static TextStyle text3xl = _getTextStyle(30.sp,
-      calculateLineHeight(36.31, 30.sp)); // text-3xl
+  static TextStyle text3xl =
+      _getTextStyle(30.sp, calculateLineHeight(36.31, 30.sp)); // text-3xl
 
   static TextStyle get medium => const TextStyle(fontWeight: FontWeight.w500);
 

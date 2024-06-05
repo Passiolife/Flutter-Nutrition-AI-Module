@@ -109,7 +109,6 @@ class FoodHeaderWidget extends StatelessWidget {
                       key: ValueKey(iconId),
                       iconId: iconId,
                       radius: AppDimens.r20,
-                      heroTag: iconHeroTag,
                       type: entityType,
                     ),
                     SizedBox(width: AppDimens.w8),

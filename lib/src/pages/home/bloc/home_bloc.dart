@@ -55,12 +55,18 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     // Fetch consumed water
     double consumedWater =
         await _connector.fetchConsumedWater(dateTime: event.dateTime);
-    consumedWater = ((event.weightUnit == MeasurementSystem.imperial) ? consumedWater * Conversion.mlToOz.value : consumedWater).parseFormatted();
+    consumedWater = ((event.weightUnit == MeasurementSystem.imperial)
+            ? consumedWater * Conversion.mlToOz.value
+            : consumedWater)
+        .parseFormatted();
 
     // Fetch measured weight
     double measuredWeight =
         await _connector.fetchMeasuredWeight(dateTime: event.dateTime);
-    measuredWeight = ((event.weightUnit == MeasurementSystem.imperial) ? measuredWeight * Conversion.kgToLbs.value : measuredWeight).parseFormatted();
+    measuredWeight = ((event.weightUnit == MeasurementSystem.imperial)
+            ? measuredWeight * Conversion.kgToLbs.value
+            : measuredWeight)
+        .parseFormatted();
 
     emit(FetchRecordsSuccessState(
       selectedDateTime: event.dateTime,
@@ -80,6 +86,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
         ? CalendarFormat.month
         : CalendarFormat.week;
     _rangeDates = null;
-    add(FetchRecordsEvent(dateTime: event.dateTime, weightUnit: event.weightUnit));
+    add(FetchRecordsEvent(
+        dateTime: event.dateTime, weightUnit: event.weightUnit));
   }
 }

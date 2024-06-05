@@ -53,10 +53,14 @@ class _MyProfilePageState extends State<MyProfilePage>
           resizeToAvoidBottomInset: false,
           body: Column(
             children: [
-              CustomAppBarWidget(title: context.localization?.myProfile, isMenuVisible: false,),
+              CustomAppBarWidget(
+                title: context.localization?.myProfile,
+                isMenuVisible: false,
+              ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(left: 16.w, right: 16.w, bottom: context.keyboardHeight),
+                  padding: EdgeInsets.only(
+                      left: 16.w, right: 16.w, bottom: context.keyboardHeight),
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -67,13 +71,15 @@ class _MyProfilePageState extends State<MyProfilePage>
                           name: _profileModel?.name,
                           age: _profileModel?.getAge(),
                           gender: _profileModel?.gender,
-                          heightUnit: _profileModel?.heightUnit ?? MeasurementSystem.imperial,
+                          heightUnit: _profileModel?.heightUnit ??
+                              MeasurementSystem.imperial,
                           height: _profileModel?.heightInMeasurementSystem,
                           heightDescription: _profileModel?.getHeight() != null
                               ? _profileModel?.heightDescription
                               : '',
                           weight: _profileModel?.getWeight(),
-                          weightUnit: _profileModel?.weightUnit ?? MeasurementSystem.imperial,
+                          weightUnit: _profileModel?.weightUnit ??
+                              MeasurementSystem.imperial,
                           listener: this,
                         ),
                         16.verticalSpace,
@@ -81,7 +87,8 @@ class _MyProfilePageState extends State<MyProfilePage>
                           key: ValueKey(
                               '${_profileModel?.weightUnit}-${_profileModel?.getActivityLevel()}-${_profileModel?.getCalorieDeficit()}'),
                           targetWeight: _profileModel?.getTargetWeight(),
-                          weightUnit: _profileModel?.weightUnit ?? MeasurementSystem.imperial,
+                          weightUnit: _profileModel?.weightUnit ??
+                              MeasurementSystem.imperial,
                           activityLevel: _profileModel?.getActivityLevel(),
                           calorieDeficit: _profileModel?.getCalorieDeficit(),
                           targetWater: _profileModel?.getTargetWater(),

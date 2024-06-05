@@ -144,8 +144,8 @@ class _MacrosPageState extends State<MacrosPage>
                   children: [
                     ListView(
                       shrinkWrap: true,
-                      padding:
-                          EdgeInsets.only(bottom: context.bottomPadding + 32.h + 48.h),
+                      padding: EdgeInsets.only(
+                          bottom: context.bottomPadding + 40.h + 48.h),
                       children: [
                         24.verticalSpace,
                         Container(
@@ -187,7 +187,7 @@ class _MacrosPageState extends State<MacrosPage>
                       left: 0,
                       right: 0,
                       child: Container(
-                        color:  AppColors.gray50,
+                        color: AppColors.gray50,
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           child: AppButton(

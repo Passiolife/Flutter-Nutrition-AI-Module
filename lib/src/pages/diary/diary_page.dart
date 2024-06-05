@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../common/constant/app_constants.dart';
 import '../../common/models/day_log/day_log.dart';
 import '../../common/models/food_record/food_record.dart';
+import '../../common/models/quick_suggestion/quick_suggestion.dart';
 import '../../common/models/user_profile/user_profile_model.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/util/user_session.dart';
 import '../../common/widgets/bottom_nav_bar_space_widget.dart';
+import '../dashboard/bloc/dashboard_bloc.dart';
 import '../edit_food/edit_food_page.dart';
 import 'bloc/diary_bloc.dart';
 import 'widgets/widgets.dart';
@@ -22,7 +23,7 @@ class DiaryPage extends StatefulWidget {
 }
 
 class _DiaryPageState extends State<DiaryPage>
-    implements DiaryListener, QuickSuggestionsListener {
+    implements DailyNutritionListener, DiaryListener, QuickSuggestionsListener {
   final _bloc = DiaryBloc();
 
   DateTime _selectedDate = DateTime.now();
@@ -31,7 +32,7 @@ class _DiaryPageState extends State<DiaryPage>
   UserProfileModel? userProfileModel = UserSession.instance.userProfile;
 
   // Members for quick suggestions
-  final List<PassioFoodDataInfo> _suggestions = [];
+  final List<QuickSuggestion> _suggestions = [];
   final ValueNotifier<double> _sheetSize = ValueNotifier(0);
 
   @override
@@ -109,6 +110,7 @@ class _DiaryPageState extends State<DiaryPage>
                               consumedFat: _dayLog?.consumedFat.round() ?? 0,
                               totalFat:
                                   userProfileModel?.fatGram.toDouble() ?? 0,
+                              listener: this,
                             ),
                             SizedBox(height: AppDimens.h16),
                             MealTileWidget(
@@ -127,14 +129,14 @@ class _DiaryPageState extends State<DiaryPage>
                         ),
                       ),
                     ),
-                    /* AnimatedOpacity(
-                      opacity: 0.0,
+                    AnimatedOpacity(
+                      opacity: _suggestions.isEmpty ? 0.0 : 1.0,
                       duration: const Duration(milliseconds: 250),
                       child: QuickSuggestionsWidget(
                         data: _suggestions,
                         listener: this,
                       ),
-                    ),*/
+                    ),
                   ],
                 ),
               ),
@@ -174,17 +176,28 @@ class _DiaryPageState extends State<DiaryPage>
   }
 
   @override
-  void onTap(PassioFoodDataInfo data) {
-    EditFoodPage.navigate(
+  Future<void> onTap(QuickSuggestion data) async {
+    bool? isLogged = await EditFoodPage.navigate(
       context: context,
-      passioFoodDataInfo: data,
+      passioFoodDataInfo: data.passioFoodDataInfo,
+      foodRecord: data.foodRecord,
       visibleSwitch: true,
       message: context.localization?.itemAddedToDiary,
     );
+    if (isLogged != null && isLogged) {
+      _bloc.add(const FetchSuggestionsEvent());
+      _doFetchRecords();
+    }
   }
 
   @override
-  void onTapAdd(PassioFoodDataInfo data) {
+  void onTapAdd(QuickSuggestion data) {
     _bloc.add(DoLogEvent(data: data));
+  }
+
+  @override
+  void onTapDailyNutrition() {
+    final bloc = BlocProvider.of<DashboardBloc>(context);
+    bloc.add(const PageUpdateEvent(index: 4));
   }
 }

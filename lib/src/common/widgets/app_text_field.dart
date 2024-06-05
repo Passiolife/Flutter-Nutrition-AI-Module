@@ -23,6 +23,11 @@ class AppTextField extends StatelessWidget {
     this.focusNode,
     this.onTapOutside,
     this.inputFormatters,
+    this.prefix,
+    this.prefixText,
+    this.prefixStyle,
+    this.prefixIcon,
+    this.prefixIconConstraints,
     this.suffix,
     this.suffixText,
     this.suffixStyle,
@@ -57,6 +62,11 @@ class AppTextField extends StatelessWidget {
   final FocusNode? focusNode;
   final TapRegionCallback? onTapOutside;
   final List<TextInputFormatter>? inputFormatters;
+  final Widget? prefix;
+  final String? prefixText;
+  final TextStyle? prefixStyle;
+  final Widget? prefixIcon;
+  final BoxConstraints? prefixIconConstraints;
   final Widget? suffix;
   final String? suffixText;
   final TextStyle? suffixStyle;
@@ -65,7 +75,6 @@ class AppTextField extends StatelessWidget {
   final FormFieldValidator? validator;
   final int? maxLength;
   final ValueChanged<String>? onChanged;
-
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +86,10 @@ class AppTextField extends StatelessWidget {
         onChanged: onChanged,
         autofocus: autofocus,
         inputFormatters: inputFormatters,
-        onTapOutside: onTapOutside ?? (_) {
-          context.hideKeyboard();
-        },
+        onTapOutside: onTapOutside ??
+            (_) {
+              context.hideKeyboard();
+            },
         focusNode: focusNode,
         keyboardType: keyboardType,
         textInputAction: inputAction,
@@ -114,6 +124,11 @@ class AppTextField extends StatelessWidget {
           border: OutlineInputBorder(
             borderSide: BorderSide(color: borderColor),
           ),
+          prefix: prefix,
+          prefixIcon: prefixIcon,
+          prefixStyle: prefixStyle,
+          prefixText: prefixText,
+          prefixIconConstraints: prefixIconConstraints,
           suffix: suffix,
           suffixIcon: suffixIcon,
           suffixStyle: suffixStyle,

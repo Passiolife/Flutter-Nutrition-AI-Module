@@ -33,8 +33,8 @@ class AppDropDownMenu<T> extends StatelessWidget {
               ),
             ),
             menuStyle: MenuStyle(
-              backgroundColor: MaterialStateProperty.all(AppColors.white),
-              surfaceTintColor: MaterialStateProperty.all(AppColors.white),
+              backgroundColor: WidgetStateProperty.all(AppColors.white),
+              surfaceTintColor: WidgetStateProperty.all(AppColors.white),
             ),
           ),
         ),

@@ -95,8 +95,10 @@ class _IngredientWidgetState extends State<IngredientWidget> {
                           final data = widget.ingredients.elementAt(index);
                           return _IngredientRow(
                             ingredient: data,
-                            onTap: () => widget.listener?.onIngredientTapped(data),
-                            onTapDelete: () => widget.listener?.onIngredientDeleted(index),
+                            onTap: () =>
+                                widget.listener?.onIngredientTapped(data),
+                            onTapDelete: () =>
+                                widget.listener?.onIngredientDeleted(index),
                           );
                         },
                       ),

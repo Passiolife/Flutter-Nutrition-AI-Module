@@ -10,7 +10,6 @@ part 'micros_event.dart';
 part 'micros_state.dart';
 
 class MicrosBloc extends Bloc<MicrosEvent, MicrosState> {
-
   /// [_connector] use to perform operations.
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
@@ -19,7 +18,8 @@ class MicrosBloc extends Bloc<MicrosEvent, MicrosState> {
     on<DoFetchRecordsEvent>(_handleDoFetchRecordsEvent);
   }
 
-  FutureOr<void> _handleDoFetchRecordsEvent(DoFetchRecordsEvent event, Emitter<MicrosState> emit) async {
+  FutureOr<void> _handleDoFetchRecordsEvent(
+      DoFetchRecordsEvent event, Emitter<MicrosState> emit) async {
     final dateTime = event.selectedDateTime;
     final result = await _connector.fetchDayRecords(dateTime: dateTime);
     final dayLog = DayLog(date: dateTime, records: result);

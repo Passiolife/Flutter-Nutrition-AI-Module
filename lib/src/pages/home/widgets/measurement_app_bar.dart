@@ -41,8 +41,8 @@ class MeasurementAppBar extends StatelessWidget {
               child: IconButton(
                 icon: SvgPicture.asset(
                   AppImages.icPlusSolid,
-                  colorFilter:
-                      const ColorFilter.mode(AppColors.gray400, BlendMode.srcIn),
+                  colorFilter: const ColorFilter.mode(
+                      AppColors.gray400, BlendMode.srcIn),
                   width: 24.r,
                   height: 24.r,
                 ),

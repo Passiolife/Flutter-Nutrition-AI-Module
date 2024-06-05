@@ -44,7 +44,9 @@ class _AddWeightPageState extends State<AddWeightPage>
 
   @override
   void initState() {
-    _consumedWater = widget.record?.getWeight(unit: _profileModel?.weightUnit).format() ?? '';
+    _consumedWater =
+        widget.record?.getWeight(unit: _profileModel?.weightUnit).format() ??
+            '';
     _createdAt = widget.record != null
         ? DateTime.fromMillisecondsSinceEpoch(widget.record!.createdAt)
         : DateTime.now();
@@ -75,8 +77,7 @@ class _AddWeightPageState extends State<AddWeightPage>
               AddUnitFormWidget(
                 value: _consumedWater,
                 createdAt: _createdAt,
-                unitTitle:
-                    context.localization?.weight ?? '',
+                unitTitle: context.localization?.weight ?? '',
                 hintText: '150.0',
                 unit: _profileModel?.weightUnit == MeasurementSystem.imperial
                     ? context.localization?.lbs

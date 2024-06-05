@@ -7,7 +7,12 @@ import '../../../common/widgets/passio_image_widget.dart';
 import 'interfaces.dart';
 
 class RowWidget extends StatelessWidget {
-  const RowWidget({required this.index, required this.data, this.listener, super.key});
+  const RowWidget({
+    required this.index,
+    required this.data,
+    this.listener,
+    super.key,
+  });
 
   final int index;
   final PassioFoodDataInfo data;
@@ -30,7 +35,6 @@ class RowWidget extends StatelessWidget {
                 PassioImageWidget(
                   iconId: data.iconID,
                   radius: AppDimens.r20,
-                  heroTag: '${data.iconID}$index',
                 ),
                 SizedBox(width: AppDimens.w8),
                 Expanded(

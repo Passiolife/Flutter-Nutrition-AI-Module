@@ -10,5 +10,4 @@ final class DoFetchRecordsEvent extends MicrosEvent {
 
   @override
   List<Object?> get props => [selectedDateTime];
-
 }

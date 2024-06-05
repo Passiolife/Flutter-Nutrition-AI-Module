@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/food_record/meal_label.dart';
@@ -50,18 +49,20 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
     await Future.forEach(
       event.data ?? <PassioFoodDataInfo>[],
       (element) async {
-
         PassioFoodItem? foodItem =
             await NutritionAI.instance.fetchFoodItemForDataInfo(element);
         if (foodItem != null) {
           final foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
-          bool hasUnit = foodRecord.setSelectedUnit(element.nutritionPreview.servingUnit);
-          if(!hasUnit) {
+          bool hasUnit =
+              foodRecord.setSelectedUnit(element.nutritionPreview.servingUnit);
+          if (!hasUnit) {
             foodRecord.setSelectedUnit('gram');
           }
-          foodRecord.setSelectedQuantity(
-              hasUnit ? element.nutritionPreview.servingQuantity : element.nutritionPreview.weightQuantity);
-          foodRecord.mealLabel = MealLabel.stringToMealLabel(event.mealTime?.name.toUpperCaseWord ?? '');
+          foodRecord.setSelectedQuantity(hasUnit
+              ? element.nutritionPreview.servingQuantity
+              : element.nutritionPreview.weightQuantity);
+          foodRecord.mealLabel = MealLabel.stringToMealLabel(
+              event.mealTime?.name.toUpperCaseWord ?? '');
           await _connector.updateRecord(foodRecord: foodRecord, isNew: true);
         }
       },
@@ -76,14 +77,17 @@ class MealPlanBloc extends Bloc<MealPlanEvent, MealPlanState> {
         await NutritionAI.instance.fetchFoodItemForDataInfo(event.data!);
     if (foodItem != null) {
       final foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
-      bool hasUnit = foodRecord.setSelectedUnit(event.data?.nutritionPreview.servingUnit ?? '');
-      if(!hasUnit) {
+      bool hasUnit = foodRecord
+          .setSelectedUnit(event.data?.nutritionPreview.servingUnit ?? '');
+      if (!hasUnit) {
         foodRecord.setSelectedUnit('gram');
       }
-      foodRecord.setSelectedQuantity(
-          hasUnit ? event.data?.nutritionPreview.servingQuantity ?? 1 : event.data?.nutritionPreview.weightQuantity ?? 1);
+      foodRecord.setSelectedQuantity(hasUnit
+          ? event.data?.nutritionPreview.servingQuantity ?? 1
+          : event.data?.nutritionPreview.weightQuantity ?? 1);
 
-      foodRecord.mealLabel = MealLabel.stringToMealLabel(event.mealTime?.name.toUpperCaseWord ?? '');
+      foodRecord.mealLabel = MealLabel.stringToMealLabel(
+          event.mealTime?.name.toUpperCaseWord ?? '');
 
       await _connector.updateRecord(foodRecord: foodRecord, isNew: true);
     }

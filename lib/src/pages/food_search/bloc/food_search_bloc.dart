@@ -46,20 +46,19 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
                 iconID: '',
                 labelId: '',
                 nutritionPreview: PassioSearchNutritionPreview(
-                  calories: 0,
-                  carbs: 0,
-                  fat: 0,
-                  protein: 0,
-                  servingUnit: '',
-                  servingQuantity: 0,
-                  weightUnit: '',
-                  weightQuantity: 0
-                ),
+                    calories: 0,
+                    carbs: 0,
+                    fat: 0,
+                    protein: 0,
+                    servingUnit: '',
+                    servingQuantity: 0,
+                    weightUnit: '',
+                    weightQuantity: 0),
                 resultId: '-1',
                 scoredName: '',
                 score: 0,
                 type: '',
-                useShortName: false,
+                isShortName: false,
               ));
       _alternatives = List.generate(10, (index) => '-1');
 

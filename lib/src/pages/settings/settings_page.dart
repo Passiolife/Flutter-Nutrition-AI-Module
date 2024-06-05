@@ -176,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
           if (((await permission?.isGranted) ?? false) ||
               (await permission?.isLimited ?? false)) {
             if (Platform.isAndroid) {
-              if (context.mounted) {
+              if (mounted) {
                 await _permissionManager.request(
                   context,
                   Permission.scheduleExactAlarm,

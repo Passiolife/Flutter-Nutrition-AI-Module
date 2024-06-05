@@ -42,7 +42,8 @@ class AppColors {
   static const Color yellow400Normal = Color(0xFFFBBF24);
   static const Color yellow500 = Color(0xFFF59E0B);
   static const Color yellow900Dark = Color(0xFF78350F);
-  static const Color yellow100 = Color(0xFFFFE082); // Generated based on yellow400Normal and yellow500
+  static const Color yellow100 =
+      Color(0xFFFFE082); // Generated based on yellow400Normal and yellow500
 
   static const Color blue50 = Color(0xFFEFF6FF);
   static const Color lBlue500Normal = Color(0xFF0EA5E9);

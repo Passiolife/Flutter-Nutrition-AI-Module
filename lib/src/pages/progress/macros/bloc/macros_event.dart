@@ -14,11 +14,11 @@ final class DoTabChangeEvent extends MacrosEvent {
 }
 
 final class DoFetchRecordsEvent extends MacrosEvent {
-  const DoFetchRecordsEvent({required this.selectedDateTime, required this.isMonth});
+  const DoFetchRecordsEvent(
+      {required this.selectedDateTime, required this.isMonth});
   final DateTime selectedDateTime;
   final bool isMonth;
 
   @override
   List<Object?> get props => [selectedDateTime, isMonth];
-
 }

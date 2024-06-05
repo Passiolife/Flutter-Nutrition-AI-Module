@@ -24,8 +24,7 @@ class DoConversionEvent extends EditFoodEvent {
   final bool shouldUpdateServingUnit;
 
   @override
-  List<Object?> get props =>
-      [
+  List<Object?> get props => [
         foodItem,
         foodRecord,
         foodRecordIngredient,

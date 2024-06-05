@@ -10,7 +10,11 @@ class FoodRecord {
   /// Unique identifier for the food record.
   String id = '';
 
+  /// Passio identifier for the food record.
   String passioID;
+
+  /// A reference code serving as a unique identifier for the food item.
+  String refCode;
 
   /// Name of the food item.
   String name;
@@ -36,6 +40,7 @@ class FoodRecord {
   /// List of serving units available for the food item.
   late List<PassioServingUnit> servingUnits;
 
+  /// Type of Passio ID entity.
   PassioIDEntityType? entityType;
 
   /// Label for the meal type.
@@ -50,6 +55,7 @@ class FoodRecord {
   // Constant for zero quantity.
   static const zeroQuantity = 0.00001;
 
+  /// Indicates whether the food record is marked as a favorite.
   bool isFavorite = false;
 
   /// Sets the selected unit for the food item while keeping the weight consistent.
@@ -72,6 +78,7 @@ class FoodRecord {
   FoodRecord._(
     this.id,
     this.passioID,
+    this.refCode,
     this.name,
     this.additionalData,
     this.iconId,
@@ -92,6 +99,7 @@ class FoodRecord {
     return FoodRecord._(
       ingredient.id,
       ingredient.passioID,
+      ingredient.refCode,
       ingredient.name,
       '',
       ingredient.iconId,
@@ -112,6 +120,7 @@ class FoodRecord {
     final foodRecord = FoodRecord._(
       '',
       foodItem.id,
+      foodItem.refCode,
       foodItem.name,
       foodItem.details,
       foodItem.iconId,
@@ -131,9 +140,11 @@ class FoodRecord {
     return foodRecord;
   }
 
+  /// Creates a [FoodRecord] instance from a JSON object.
   factory FoodRecord.fromJson(Map<String, dynamic> json) => FoodRecord._(
         json['id'] as String,
         json['passioID'] as String,
+        json['refCode'] as String,
         json['name'] as String,
         json['additionalData'] as String,
         json['iconId'] as String,
@@ -167,9 +178,11 @@ class FoodRecord {
         openFoodLicense: json['openFoodLicense'] as String?,
       );
 
+  /// Converts the [FoodRecord] instance to a JSON object.
   Map<String, dynamic> toJson() => {
         'id': id,
         'passioID': passioID,
+        'refCode': refCode,
         'name': name,
         'additionalData': additionalData,
         'iconId': iconId,
@@ -187,6 +200,7 @@ class FoodRecord {
         'openFoodLicense': openFoodLicense,
       };
 
+  /// Overrides the equality operator.
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -194,6 +208,7 @@ class FoodRecord {
     return other is FoodRecord &&
         other.id == id &&
         other.passioID == passioID &&
+        other.refCode == refCode &&
         other.name == name &&
         other.additionalData == additionalData &&
         other.iconId == iconId &&
@@ -208,10 +223,12 @@ class FoodRecord {
         other.openFoodLicense == openFoodLicense;
   }
 
+  /// Overrides the hashCode method.
   @override
   int get hashCode => Object.hash(
         id,
         passioID,
+        refCode,
         name,
         additionalData,
         iconId,
@@ -458,147 +475,184 @@ extension FoodRecordListExtension on List<FoodRecord> {
   }
 }
 
+/// Extension to calculate and retrieve nutritional values for a single [FoodRecord] object.
 extension FoodRecordExtension on FoodRecord {
+  /// Retrieves the total alcohol content in the food record based on the selected serving size.
   double get totalAlcohol {
     return nutrientsSelectedSize().alcohol?.value ?? 0;
   }
 
+  /// Retrieves the total calcium content in the food record based on the selected serving size.
   double get totalCalcium {
     return nutrientsSelectedSize().calcium?.value ?? 0;
   }
 
+  /// Retrieves the total calories in the food record based on the selected serving size.
   double get totalCalories {
     return nutrientsSelectedSize().calories?.value ?? 0;
   }
 
+  /// Retrieves the total carbohydrates in the food record based on the selected serving size.
   double get totalCarbs {
     return nutrientsSelectedSize().carbs?.value ?? 0;
   }
 
+  /// Retrieves the total cholesterol in the food record based on the selected serving size.
   double get totalCholesterol {
     return nutrientsSelectedSize().cholesterol?.value ?? 0;
   }
 
+  /// Retrieves the total fibers in the food record based on the selected serving size.
   double get totalFibers {
     return nutrientsSelectedSize().fibers?.value ?? 0;
   }
 
+  /// Retrieves the total fat content in the food record based on the selected serving size.
   double get totalFat {
     return nutrientsSelectedSize().fat?.value ?? 0;
   }
 
+  /// Retrieves the total iodine content in the food record based on the selected serving size.
   double get totalIodine {
     return nutrientsSelectedSize().iodine?.value ?? 0;
   }
 
+  /// Retrieves the total iron content in the food record based on the selected serving size.
   double get totalIron {
     return nutrientsSelectedSize().iron?.value ?? 0;
   }
 
+  /// Retrieves the total magnesium content in the food record based on the selected serving size.
   double get totalMagnesium {
     return nutrientsSelectedSize().magnesium?.value ?? 0;
   }
 
+  /// Retrieves the total monounsaturated fat content in the food record based on the selected serving size.
   double get totalMonounsaturatedFat {
     return nutrientsSelectedSize().monounsaturatedFat?.value ?? 0;
   }
 
+  /// Retrieves the total phosphorus content in the food record based on the selected serving size.
   double get totalPhosphorus {
     return nutrientsSelectedSize().phosphorus?.value ?? 0;
   }
 
+  /// Retrieves the total polyunsaturated fat content in the food record based on the selected serving size.
   double get totalPolyunsaturatedFat {
     return nutrientsSelectedSize().polyunsaturatedFat?.value ?? 0;
   }
 
+  /// Retrieves the total potassium content in the food record based on the selected serving size.
   double get totalPotassium {
     return nutrientsSelectedSize().potassium?.value ?? 0;
   }
 
+  /// Retrieves the total protein content in the food record based on the selected serving size.
   double get totalProteins {
     return nutrientsSelectedSize().proteins?.value ?? 0;
   }
 
+  /// Retrieves the total saturated fat content in the food record based on the selected serving size.
   double get totalSatFat {
     return nutrientsSelectedSize().satFat?.value ?? 0;
   }
 
+  /// Retrieves the total sodium content in the food record based on the selected serving size.
   double get totalSodium {
     return nutrientsSelectedSize().sodium?.value ?? 0;
   }
 
+  /// Retrieves the total sugars content in the food record based on the selected serving size.
   double get totalSugars {
     return nutrientsSelectedSize().sugars?.value ?? 0;
   }
 
+  /// Retrieves the total added sugars content in the food record based on the selected serving size.
   double get totalSugarsAdded {
     return nutrientsSelectedSize().sugarsAdded?.value ?? 0;
   }
 
+  /// Retrieves the total sugar alcohol content in the food record based on the selected serving size.
   double get totalSugarsAlcohol {
     return nutrientsSelectedSize().sugarAlcohol?.value ?? 0;
   }
 
+  /// Retrieves the total trans fat content in the food record based on the selected serving size.
   double get totalTransFat {
     return nutrientsSelectedSize().transFat?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin A content in the food record based on the selected serving size.
   double get totalVitaminA {
     return nutrientsSelectedSize().vitaminA?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin B6 content in the food record based on the selected serving size.
   double get totalVitaminB6 {
     return nutrientsSelectedSize().vitaminB6?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin B12 content in the food record based on the selected serving size.
   double get totalVitaminB12 {
     return nutrientsSelectedSize().vitaminB12?.value ?? 0;
   }
 
+  /// Retrieves the total added vitamin B12 content in the food record based on the selected serving size.
   double get totalVitaminB12Added {
     return nutrientsSelectedSize().vitaminB12Added?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin C content in the food record based on the selected serving size.
   double get totalVitaminC {
     return nutrientsSelectedSize().vitaminC?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin D content in the food record based on the selected serving size.
   double get totalVitaminD {
     return nutrientsSelectedSize().vitaminD?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin E content in the food record based on the selected serving size.
   double get totalVitaminE {
     return nutrientsSelectedSize().vitaminE?.value ?? 0;
   }
 
+  /// Retrieves the total added vitamin E content in the food record based on the selected serving size.
   double get totalVitaminEAdded {
     return nutrientsSelectedSize().vitaminEAdded?.value ?? 0;
   }
 
+  /// Retrieves the total zinc content in the food record based on the selected serving size.
   double get totalZinc {
     return nutrientsSelectedSize().zinc?.value ?? 0;
   }
 
+  /// Retrieves the total selenium content in the food record based on the selected serving size.
   double get totalSelenium {
     return nutrientsSelectedSize().selenium?.value ?? 0;
   }
 
+  /// Retrieves the total folic acid content in the food record based on the selected serving size.
   double get totalFolicAcid {
     return nutrientsSelectedSize().folicAcid?.value ?? 0;
   }
 
+  /// Retrieves the total chromium content in the food record based on the selected serving size.
   double get totalChromium {
     return nutrientsSelectedSize().chromium?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin K (phylloquinone) content in the food record based on the selected serving size.
   double get totalVitaminKPhylloquinone {
     return nutrientsSelectedSize().vitaminKPhylloquinone?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin K (menaquinone-4) content in the food record based on the selected serving size.
   double get totalVitaminKMenaquinone4 {
     return nutrientsSelectedSize().vitaminKMenaquinone4?.value ?? 0;
   }
 
+  /// Retrieves the total vitamin K (dihydrophylloquinone) content in the food record based on the selected serving size.
   double get totalVitaminKDihydrophylloquinone {
     return nutrientsSelectedSize().vitaminKDihydrophylloquinone?.value ?? 0;
   }

@@ -196,10 +196,13 @@ class _WaterPageState extends State<WaterPage>
                                             targetValue: targetWater,
                                             chartData: _chartData,
                                           ),
-                                          consumed: _dayLogs?.getConsumedWater(
-                                                  _profileModel?.weightUnit ??
-                                                      MeasurementSystem
-                                                          .imperial).parseFormatted() ??
+                                          consumed: _dayLogs
+                                                  ?.getConsumedWater(
+                                                      _profileModel
+                                                              ?.weightUnit ??
+                                                          MeasurementSystem
+                                                              .imperial)
+                                                  .parseFormatted() ??
                                               0,
                                           remaining: _remainingWater,
                                           unit: _profileModel?.weightUnit ==

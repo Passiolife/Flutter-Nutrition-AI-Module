@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constant/app_constants.dart';
 import '../util/context_extension.dart';
@@ -14,6 +16,7 @@ class TrendWidget extends StatelessWidget {
     this.consumed = 0,
     this.remainingTitle,
     this.remaining = 0,
+    this.isConsumedRemainingVisible = false,
     this.unit,
     super.key,
   });
@@ -27,6 +30,7 @@ class TrendWidget extends StatelessWidget {
   final String? remainingTitle;
   final double remaining;
   final String? unit;
+  final bool isConsumedRemainingVisible;
 
   @override
   Widget build(BuildContext context) {
@@ -42,29 +46,34 @@ class TrendWidget extends StatelessWidget {
             style: AppTextStyle.textLg
                 .addAll([AppTextStyle.textLg.leading6, AppTextStyle.semiBold]),
           ),
-          SizedBox(height: AppDimens.h24),
+          24.verticalSpace,
           SizedBox(
             height: AppDimens.h136,
             child: centerWidget,
           ),
-          SizedBox(height: AppDimens.h24),
-          Row(
-            children: [
-              Expanded(
-                child: _WeightTrack(
-                  title: consumedTitle ?? context.localization?.consumed,
-                  value: consumed,
-                  unit: unit,
-                ),
+          Visibility(
+            visible: isConsumedRemainingVisible,
+            child: Padding(
+              padding: EdgeInsets.only(top: 24.h),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: _WeightTrack(
+                      title: consumedTitle ?? context.localization?.consumed,
+                      value: consumed,
+                      unit: unit,
+                    ),
+                  ),
+                  Expanded(
+                    child: _WeightTrack(
+                      title: remainingTitle ?? context.localization?.remaining,
+                      value: remaining,
+                      unit: unit,
+                    ),
+                  ),
+                ],
               ),
-              Expanded(
-                child: _WeightTrack(
-                  title: remainingTitle ?? context.localization?.remaining,
-                  value: remaining,
-                  unit: unit,
-                ),
-              ),
-            ],
+            ),
           ),
         ],
       ),

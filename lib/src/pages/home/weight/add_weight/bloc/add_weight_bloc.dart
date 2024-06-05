@@ -23,7 +23,7 @@ class AddWeightBloc extends Bloc<AddWeightEvent, AddWeightState> {
       createdAt: event.createdAt.toUtc().millisecondsSinceEpoch,
     );
     record.setWeight(double.parse(event.weightMeasurement), unit: event.unit);
-    await _connector.updateWeight(weightRecord: record, isNew: event.isNew);
+    await _connector.updateWeight(record: record, isNew: event.isNew);
     emit(SaveSuccessState(record: record));
   }
 }

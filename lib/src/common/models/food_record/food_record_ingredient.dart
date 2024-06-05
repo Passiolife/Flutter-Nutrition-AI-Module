@@ -10,6 +10,8 @@ class FoodRecordIngredient {
 
   String passioID;
 
+  String refCode;
+
   /// Name of the ingredient.
   String name = '';
 
@@ -40,6 +42,7 @@ class FoodRecordIngredient {
   FoodRecordIngredient._({
     required this.id,
     required this.passioID,
+    required this.refCode,
     required this.name,
     required this.iconId,
     required this.servingSizes,
@@ -57,6 +60,7 @@ class FoodRecordIngredient {
     return FoodRecordIngredient._(
       id: foodRecord.id,
       passioID: foodRecord.passioID,
+      refCode: foodRecord.refCode,
       name: foodRecord.name,
       iconId: foodRecord.iconId,
       servingSizes: foodRecord.servingSizes,
@@ -75,6 +79,7 @@ class FoodRecordIngredient {
     return FoodRecordIngredient._(
       id: '',
       passioID: ingredient.id,
+      refCode: ingredient.refCode,
       name: ingredient.name,
       iconId: ingredient.iconId,
       servingSizes: ingredient.amount.servingSizes,
@@ -91,6 +96,7 @@ class FoodRecordIngredient {
       FoodRecordIngredient._(
         id: json['id'] as String,
         passioID: json['passioID'] as String,
+        refCode: json['refCode'] as String,
         name: json['name'] as String,
         iconId: json['iconId'] as String,
         selectedUnit: json['selectedUnit'] as String,
@@ -116,6 +122,7 @@ class FoodRecordIngredient {
   Map<String, dynamic> toJson() => {
         'id': id,
         'passioID': passioID,
+        'refCode': refCode,
         'name': name,
         'iconId': iconId,
         'selectedUnit': selectedUnit,
@@ -136,6 +143,7 @@ class FoodRecordIngredient {
     return other is FoodRecordIngredient &&
         id == other.id &&
         passioID == other.passioID &&
+        refCode == other.refCode &&
         name == other.name &&
         iconId == other.iconId &&
         selectedUnit == other.selectedUnit &&
@@ -152,6 +160,7 @@ class FoodRecordIngredient {
     return Object.hash(
       id,
       passioID,
+      refCode,
       name,
       iconId,
       selectedUnit,

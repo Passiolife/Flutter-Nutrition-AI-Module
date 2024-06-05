@@ -74,6 +74,9 @@ unlinked_spec.ds
 **/android/**/GeneratedPluginRegistrant.java
 **/android/key.properties
 *.jks
+/android/app/debug
+/android/app/profile
+/android/app/release
 
 # iOS/XCode related
 **/ios/**/*.mode1v3
@@ -138,4 +141,5 @@ app.*.symbols
 !.vscode/settings.json
 
 *.env
-/lib/app_secret.g.dart
+devtools_options.yaml
+/lib/src/models/app_secret/app_secret.g.dart

@@ -66,14 +66,13 @@ class _WeightPageState extends State<WeightPage>
 
   String get _trendTitle => context.localization?.weightTrend ?? '';
 
+  double get _targetWeight =>
+      UserSession.instance.userProfile?.getTargetWeight() ?? 0;
 
-  double get _targetWeight => UserSession.instance.userProfile?.getTargetWeight() ?? 0;
-
-  String get _unitSymbol => _profileModel?.weightUnit ==
-      MeasurementSystem.imperial
-      ? WeightUnits.lbs.name
-      : WeightUnits.kg.name;
-
+  String get _unitSymbol =>
+      _profileModel?.weightUnit == MeasurementSystem.imperial
+          ? WeightUnits.lbs.name
+          : WeightUnits.kg.name;
 
   @override
   void onTapAdd() {
@@ -178,8 +177,9 @@ class _WeightPageState extends State<WeightPage>
                                           ),
                                           consumedTitle: context
                                               .localization?.currentWeight,
-                                          consumed:
-                                              _dayLogs?.getMeasuredWeight(_profileModel?.weightUnit) ?? 0,
+                                          consumed: _dayLogs?.getMeasuredWeight(
+                                                  _profileModel?.weightUnit) ??
+                                              0,
                                           remaining: _remainingWeight(),
                                           unit: _unitSymbol,
                                         ),
@@ -194,8 +194,11 @@ class _WeightPageState extends State<WeightPage>
                                                     .map(
                                                       (e) => EntryTileChildData(
                                                         id: e.id ?? -1,
-                                                        value:
-                                                            e.getWeight(unit: _profileModel?.weightUnit).format(),
+                                                        value: e
+                                                            .getWeight(
+                                                                unit: _profileModel
+                                                                    ?.weightUnit)
+                                                            .format(),
                                                         unit: _unitSymbol,
                                                         dateTime: DateTime
                                                             .fromMillisecondsSinceEpoch(
@@ -301,34 +304,38 @@ class _WeightPageState extends State<WeightPage>
   double _getMaximumValue() => max(max(_chartMaximumValue(), _targetWeight), 5);
 
   double _remainingWeight() {
-    return (_targetWeight - (_dayLogs?.getMeasuredWeight(_profileModel?.weightUnit) ?? 0)) > 0
-        ? (_targetWeight - (_dayLogs?.getMeasuredWeight(_profileModel?.weightUnit) ?? 0)).parseFormatted()
+    return (_targetWeight -
+                (_dayLogs?.getMeasuredWeight(_profileModel?.weightUnit) ?? 0)) >
+            0
+        ? (_targetWeight -
+                (_dayLogs?.getMeasuredWeight(_profileModel?.weightUnit) ?? 0))
+            .parseFormatted()
         : 0;
   }
 
   List<ChartData> _getChartData() {
     return _dayLogs?.dayLog
-        .map((e) => ChartData(
-      (_selectedTab == _tabs.firstOrNull)
-          ? e.date.formatToString(format10).substring(0, 2)
-          : e.date.formatToString(format16),
-      e.getMeasuredWeight(_profileModel?.weightUnit),
-    ))
-        .toList() ??
+            .map((e) => ChartData(
+                  (_selectedTab == _tabs.firstOrNull)
+                      ? e.date.formatToString(format10).substring(0, 2)
+                      : e.date.formatToString(format16),
+                  e.getMeasuredWeight(_profileModel?.weightUnit),
+                ))
+            .toList() ??
         [];
   }
 
-
   double _chartMaximumValue() {
     return _dayLogs?.dayLog
-        .fold<WeightDayLog?>(
-        null,
-            (previousValue, element) =>
-        (previousValue?.getMeasuredWeight(_profileModel?.weightUnit) ?? 0) >
-            element.getMeasuredWeight(_profileModel?.weightUnit)
-            ? previousValue
-            : element)
-        ?.getMeasuredWeight(_profileModel?.weightUnit) ??
+            .fold<WeightDayLog?>(
+                null,
+                (previousValue, element) => (previousValue?.getMeasuredWeight(
+                                _profileModel?.weightUnit) ??
+                            0) >
+                        element.getMeasuredWeight(_profileModel?.weightUnit)
+                    ? previousValue
+                    : element)
+            ?.getMeasuredWeight(_profileModel?.weightUnit) ??
         0;
   }
 }

@@ -159,9 +159,9 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
                         ),
                         menuStyle: MenuStyle(
                           backgroundColor:
-                              MaterialStateProperty.all(AppColors.white),
+                              WidgetStateProperty.all(AppColors.white),
                           surfaceTintColor:
-                              MaterialStateProperty.all(AppColors.white),
+                              WidgetStateProperty.all(AppColors.white),
                         ),
                       ),
                     ),
@@ -216,8 +216,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
             divisions: widget.sliderData?.divisions ?? 10,
             onChanged: (value) {
               _selectedQuantity = value;
-              _quantityController.text =
-                  _selectedQuantity.format(places: 2);
+              _quantityController.text = _selectedQuantity.format(places: 2);
               widget.listener?.onServingQuantityChanged(
                 double.parse(_quantityController.text).roundTo(),
                 false,

@@ -16,8 +16,7 @@ class CreateRecipeDialog {
     String? placeHolder,
     OnCreateRecipe? onCreateRecipe,
   }) {
-    TextEditingController controller =
-        TextEditingController();
+    TextEditingController controller = TextEditingController();
     showAdaptiveDialog<String>(
       context: context,
       builder: (BuildContext context) => AlertDialog.adaptive(

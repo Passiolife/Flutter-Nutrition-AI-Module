@@ -28,7 +28,7 @@ class RecordDeletedSuccessState extends DiaryState {
 }
 
 final class FetchSuggestionsSuccessState extends DiaryState {
-  final List<PassioFoodDataInfo> data;
+  final List<QuickSuggestion> data;
 
   const FetchSuggestionsSuccessState({required this.data});
 

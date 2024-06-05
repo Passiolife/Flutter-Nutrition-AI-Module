@@ -8,7 +8,6 @@ import '../../common/dialogs/single_text_field_new_dialog.dart';
 import '../../common/models/food_record/food_record.dart';
 import '../../common/models/food_record/food_record_ingredient.dart';
 import '../../common/models/food_record/meal_label.dart';
-import '../../common/router/routes.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/double_extensions.dart';
 import '../../common/util/snackbar_extension.dart';
@@ -358,14 +357,10 @@ class _EditFoodPageState extends State<EditFoodPage>
       _sliderData = state.sliderData;
     } else if (state is LogSuccessState) {
       if (widget.redirectToDiaryOnLog) {
-        Navigator.pushAndRemoveUntil(
+        DashboardPage.navigate(
           context,
-          MaterialPageRoute(
-            builder: (_) {
-              return DashboardPage(page: context.localization?.diary);
-            },
-          ),
-          (Route<dynamic> route) => false,
+          page: 1,
+          removeUntil: true,
         );
         context.showSnackbar(text: context.localization?.itemAddedToDiary);
       } else {
@@ -498,7 +493,7 @@ class _EditFoodPageState extends State<EditFoodPage>
   }
 
   void onSwitchTapped() {
-    Navigator.pushNamed(context, Routes.foodSearchPage).then((value) {
+    FoodSearchPage.navigate(context).then((value) {
       if (value != null && value is PassioFoodDataInfo) {
         _bloc.add(DoConversionEvent(
           foodDataInfo: value,

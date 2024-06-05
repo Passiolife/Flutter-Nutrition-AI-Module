@@ -1,7 +1,7 @@
 import '../user_profile/user_profile_model.dart';
 
 class WaterRecord {
-  final int? id;
+  int? id;
   double _waterConsumption;
   final int createdAt;
 

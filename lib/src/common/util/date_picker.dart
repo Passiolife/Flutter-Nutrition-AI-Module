@@ -76,7 +76,7 @@ class DatePicker {
                 AppTextStyle.medium
               ]).copyWith(color: AppColors.gray700),
               // Overlay color for selected days in the date picker
-              dayOverlayColor: MaterialStateProperty.all(AppColors.white),
+              dayOverlayColor: WidgetStateProperty.all(AppColors.white),
               // Styles for individual days in the date picker
               dayStyle: AppTextStyle.textXs.addAll([
                 AppTextStyle.textXs.leading4,

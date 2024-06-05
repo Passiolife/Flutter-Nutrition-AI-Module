@@ -42,7 +42,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
       }
       await _connector.deleteFavorite(foodRecord: foodRecord);
       // No any error, so emit the success state.
-      emit(FavoriteDeleteSuccessState(milliseconds: DateTime.now().millisecondsSinceEpoch));
+      emit(FavoriteDeleteSuccessState(
+          milliseconds: DateTime.now().millisecondsSinceEpoch));
     } catch (e) {
       // If found any error then emit the failure state.
       emit(FavoriteDeleteFailureState(message: e.toString()));

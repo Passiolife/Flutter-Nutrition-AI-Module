@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../common/constant/app_dimens.dart';
+import '../../common/constant/app_constants.dart';
 import '../../common/external_packages/table_calendar/table_calendar.dart';
 import '../../common/models/day_log/day_log.dart';
 import '../../common/models/day_logs/day_logs.dart';
@@ -10,6 +10,7 @@ import '../../common/models/user_profile/user_profile_model.dart';
 import '../../common/util/double_extensions.dart';
 import '../../common/util/user_session.dart';
 import '../../common/widgets/bottom_nav_bar_space_widget.dart';
+import '../dashboard/bloc/dashboard_bloc.dart';
 import 'bloc/home_bloc.dart';
 import 'water/water_page.dart';
 import 'weight/weight_page.dart';
@@ -22,7 +23,8 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => HomePageState();
 }
 
-class HomePageState extends State<HomePage> implements HomeListener {
+class HomePageState extends State<HomePage>
+    implements DailyNutritionListener, HomeListener {
   DateTime _selectedDate = DateTime.now();
   DateTime _focusedDate = DateTime.now();
   DayLogs? _dayLogs;
@@ -46,8 +48,7 @@ class HomePageState extends State<HomePage> implements HomeListener {
       ((_profileModel?.getTargetWeight()?.parseFormatted() ?? 0) -
                   _measuredWeight) >
               0
-          ? ((_profileModel?.getTargetWeight()?.parseFormatted() ??
-                      0) -
+          ? ((_profileModel?.getTargetWeight()?.parseFormatted() ?? 0) -
                   _measuredWeight)
               .parseFormatted()
           : 0;
@@ -89,14 +90,14 @@ class HomePageState extends State<HomePage> implements HomeListener {
                             _profileModel?.caloriesTarget.toDouble() ?? 0,
                         consumedCarbs:
                             _selectedDayLog?.consumedCarbs.round() ?? 0,
-                        totalCarbs:
-                            _profileModel?.carbsGram.toDouble() ?? 0,
+                        totalCarbs: _profileModel?.carbsGram.toDouble() ?? 0,
                         consumedProteins:
                             _selectedDayLog?.consumedProteins.round() ?? 0,
                         totalProteins:
                             _profileModel?.proteinGram.toDouble() ?? 0,
                         consumedFat: _selectedDayLog?.consumedFat.round() ?? 0,
                         totalFat: _profileModel?.fatGram.toDouble() ?? 0,
+                        listener: this,
                       ),
                       SizedBox(height: AppDimens.h16),
                       WeeklyAdherenceWidget(
@@ -125,6 +126,29 @@ class HomePageState extends State<HomePage> implements HomeListener {
                             ? WeightUnits.lbs.name
                             : WeightUnits.kg.name,
                       ),
+                      /*Align(
+                        alignment: Alignment.centerRight,
+                        child: IconButton(
+                          icon: CircleAvatar(
+                            radius: 36.r,
+                            backgroundColor: AppColors.gray900,
+                            child: Image.asset(
+                              AppImages.imgRobot,
+                            ),
+                          ),
+                          onPressed: () {
+                            AdvisorPage.navigate(context);
+                          },
+                        ),
+                      ),*/
+                      /*FloatingActionButton(
+                        onPressed: () {},
+                        child: SvgPicture.asset(
+                          AppImages.icRobot,
+                          width: 86.r,
+                          height: 86.r,
+                        ),
+                      ),*/
                       const BottomNavBarSpaceWidget(),
                     ],
                   ),
@@ -155,7 +179,7 @@ class HomePageState extends State<HomePage> implements HomeListener {
   }) {
     if (state is FetchRecordsSuccessState) {
       _dayLogs = state.dayLogs;
-      if(state.needToUpdateSelectedDayLog) {
+      if (state.needToUpdateSelectedDayLog) {
         _selectedDayLog = state.dayLog;
       }
       _rangeDates = state.rangeDates;
@@ -167,7 +191,8 @@ class HomePageState extends State<HomePage> implements HomeListener {
 
   @override
   void onTapCalendarFormat() {
-    _bloc.add(UpdateCalendarFormatEvent(dateTime: _selectedDate, weightUnit: _profileModel?.weightUnit));
+    _bloc.add(UpdateCalendarFormatEvent(
+        dateTime: _selectedDate, weightUnit: _profileModel?.weightUnit));
     if (_calendarFormat == CalendarFormat.month) {
       _focusedDate = _selectedDate;
     }
@@ -181,7 +206,8 @@ class HomePageState extends State<HomePage> implements HomeListener {
       _selectedDate = dateTime;
     }
     _focusedDate = dateTime;
-    _doFetchRecords(_focusedDate, needToUpdateSelectedDayLog: needToUpdateSelectedDayLog);
+    _doFetchRecords(_focusedDate,
+        needToUpdateSelectedDayLog: needToUpdateSelectedDayLog);
   }
 
   @override
@@ -198,7 +224,17 @@ class HomePageState extends State<HomePage> implements HomeListener {
     });
   }
 
-  void _doFetchRecords(DateTime dateTime, {bool needToUpdateSelectedDayLog = true}) {
-    _bloc.add(FetchRecordsEvent(dateTime: dateTime, weightUnit: _profileModel?.weightUnit, needToUpdateSelectedDayLog: needToUpdateSelectedDayLog));
+  void _doFetchRecords(DateTime dateTime,
+      {bool needToUpdateSelectedDayLog = true}) {
+    _bloc.add(FetchRecordsEvent(
+        dateTime: dateTime,
+        weightUnit: _profileModel?.weightUnit,
+        needToUpdateSelectedDayLog: needToUpdateSelectedDayLog));
+  }
+
+  @override
+  void onTapDailyNutrition() {
+    final bloc = BlocProvider.of<DashboardBloc>(context);
+    bloc.add(const PageUpdateEvent(index: 4));
   }
 }

@@ -6,6 +6,7 @@ class AppImages {
 
   // Images
   static const imgRecipe = '${imageDir}img_recipe.png';
+  static const imgRobot = '${imageDir}img_robot.png';
 
   // Icons
   static const icBadgeCheck = '${imageDir}ic_badge_check.svg';
@@ -34,6 +35,7 @@ class AppImages {
   static const icFoods = '${imageDir}ic_foods.svg';
   static const icHome = '${imageDir}ic_home.svg';
   static const icInformationCircle = '${imageDir}ic_information_circle.svg';
+  static const icLogout = '${imageDir}ic_logout.svg';
   static const icMealPlan = '${imageDir}ic_meal_plan.svg';
   static const icMenu = '${imageDir}ic_menu.svg';
   static const icNutritionFacts = '${imageDir}ic_nutrition_facts.svg';
@@ -61,7 +63,4 @@ class AppImages {
   static const icWaterSmallBottle = '${imageDir}ic_water_small_bottle.svg';
   static const icWaterLargeBottle = '${imageDir}ic_water_large_bottle.svg';
   static const icWeight = '${imageDir}ic_weight.svg';
-
-  // Temporary
-  static const demo1 = '${imageDir}demo_1.png';
 }

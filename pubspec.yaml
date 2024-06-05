@@ -1,6 +1,6 @@
 name: nutrition_ai_module
 description: Passio Nutrition AI Module for Flutter. Supports Android and iOS.
-version: 2.3.15
+version: 3.1.0
 homepage: https://www.passio.ai
 repository: https://github.com/Passiolife/Flutter-Nutrition-AI-Module
 issue_tracker: https://github.com/Passiolife/Flutter-Nutrition-AI-Module/issues

@@ -71,7 +71,6 @@ class RowWidget extends StatelessWidget {
                   PassioImageWidget(
                     iconId: iconId ?? '',
                     radius: AppDimens.r20,
-                    heroTag: '$iconId$index',
                   ),
                   SizedBox(width: AppDimens.w8),
                   Expanded(

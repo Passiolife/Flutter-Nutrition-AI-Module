@@ -9,7 +9,7 @@ extension SnackbarExtension on BuildContext {
     String? actionLabel,
     VoidCallback? onPressAction,
   }) {
-    if(!mounted) return;
+    if (!mounted) return;
     ScaffoldMessenger.of(this).hideCurrentSnackBar();
     ScaffoldMessenger.of(this).showSnackBar(getSnackBar(
         text: text, actionLabel: actionLabel, onPressAction: onPressAction));
@@ -43,7 +43,8 @@ SnackBar getSnackBar({
       content: Text(
         text ?? '',
         style: AppTextStyle.textSm
-            .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(color: AppColors.white),
+            .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(
+                color: AppColors.white),
         textAlign: TextAlign.center,
       ),
       action: SnackBarAction(
@@ -57,7 +58,8 @@ SnackBar getSnackBar({
       content: Text(
         text ?? '',
         style: AppTextStyle.textSm
-            .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(color: AppColors.white),
+            .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(
+                color: AppColors.white),
         textAlign: TextAlign.center,
       ),
       margin: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),

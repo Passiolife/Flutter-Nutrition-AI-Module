@@ -94,17 +94,9 @@ class WeeklyAdherenceWidget extends StatelessWidget {
               formatButtonVisible: false,
               titleCentered: true,
               titleTextFormatter: (DateTime date, dynamic locale) {
-                // Format the start and end dates
-                // String formattedStartDate = rangeDates?.startDate != null
-                //     ? DateFormat('M/d/yy', locale).format(rangeDates!.startDate)
-                //     : '';
-                // String formattedEndDate = rangeDates?.endDate != null
-                //     ? DateFormat('M/d/yy', locale).format(rangeDates!.endDate)
-                //     : '';
-
-                // Return the formatted date range
-                // return '$formattedStartDate - $formattedEndDate';
-                return (startDateTime ?? DateTime.now()).rangeString(isMonthRange: isMonthRange, endDateTime: endDateTime ?? DateTime.now());
+                return (startDateTime ?? DateTime.now()).rangeString(
+                    isMonthRange: isMonthRange,
+                    endDateTime: endDateTime ?? DateTime.now());
               },
               headerPadding: EdgeInsets.symmetric(vertical: AppDimens.h16),
               leftChevronPadding: EdgeInsets.only(right: AppDimens.w32),
@@ -143,36 +135,36 @@ class WeeklyAdherenceWidget extends StatelessWidget {
               disabledBuilder: (context, day, focusedDay) {
                 bool isSameDate = isSameDay(selectedDate, day);
                 bool containsRecords = dayLogs?.dayLog.any((element) =>
-                isSameDay(element.date, day) &&
-                    element.records.isNotEmpty) ??
+                        isSameDay(element.date, day) &&
+                        element.records.isNotEmpty) ??
                     false;
 
                 return _CustomCircleAvatar(
                   backgroundColor: isSameDate
                       ? AppColors.indigo600Main
                       : containsRecords
-                      ? AppColors.green100
-                      : AppColors.indigo50,
+                          ? AppColors.green100
+                          : AppColors.indigo50,
                   day: day.day,
                   textColor: isSameDate
                       ? AppColors.white
                       : containsRecords
-                      ? AppColors.green800
-                      : AppColors.gray400,
+                          ? AppColors.green800
+                          : AppColors.gray400,
                 );
               },
               todayBuilder: (context, day, focusedDay) {
                 bool containsRecords = dayLogs?.dayLog.any((element) =>
-                isSameDay(element.date, day) &&
-                    element.records.isNotEmpty) ??
+                        isSameDay(element.date, day) &&
+                        element.records.isNotEmpty) ??
                     false;
 
                 return _CustomBorderedCircleAvatar(
                   backgroundColor:
-                  containsRecords ? AppColors.green100 : AppColors.red100,
+                      containsRecords ? AppColors.green100 : AppColors.red100,
                   day: day.day,
                   textColor:
-                  containsRecords ? AppColors.green800 : AppColors.red800,
+                      containsRecords ? AppColors.green800 : AppColors.red800,
                   borderColor: AppColors.indigo600Main,
                 );
               },
@@ -185,38 +177,38 @@ class WeeklyAdherenceWidget extends StatelessWidget {
               },
               defaultBuilder: (context, day, focusedDay) {
                 bool containsRecords = dayLogs?.dayLog
-                    .cast<DayLog?>()
-                    .firstWhere(
-                        (element) => element?.date.isSameDate(day) ?? false,
-                    orElse: () => null)
-                    ?.records
-                    .isNotEmpty ??
+                        .cast<DayLog?>()
+                        .firstWhere(
+                            (element) => element?.date.isSameDate(day) ?? false,
+                            orElse: () => null)
+                        ?.records
+                        .isNotEmpty ??
                     false;
 
                 return _CustomCircleAvatar(
                   backgroundColor:
-                  containsRecords ? AppColors.green100 : AppColors.red100,
+                      containsRecords ? AppColors.green100 : AppColors.red100,
                   day: day.day,
                   textColor:
-                  containsRecords ? AppColors.green800 : AppColors.red800,
+                      containsRecords ? AppColors.green800 : AppColors.red800,
                 );
               },
               outsideBuilder: (context, day, focusedDay) {
                 bool containsRecords = dayLogs?.dayLog
-                    .cast<DayLog?>()
-                    .firstWhere(
-                        (element) => element?.date.isSameDate(day) ?? false,
-                    orElse: () => null)
-                    ?.records
-                    .isNotEmpty ??
+                        .cast<DayLog?>()
+                        .firstWhere(
+                            (element) => element?.date.isSameDate(day) ?? false,
+                            orElse: () => null)
+                        ?.records
+                        .isNotEmpty ??
                     false;
 
                 return _CustomCircleAvatar(
                   backgroundColor:
-                  containsRecords ? AppColors.green100 : AppColors.red100,
+                      containsRecords ? AppColors.green100 : AppColors.red100,
                   day: day.day,
                   textColor:
-                  containsRecords ? AppColors.green800 : AppColors.red800,
+                      containsRecords ? AppColors.green800 : AppColors.red800,
                 );
               },
             ),

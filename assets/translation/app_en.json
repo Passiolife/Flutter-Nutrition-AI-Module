@@ -1,5 +1,4 @@
 {
-  "app_name": "Nutrition Demo",
   "ok": "OK",
   "signIn": "Sign In",
   "signUp": "Sign Up",
@@ -238,7 +237,10 @@
   "logEntireMeal": "Log Entire Meal",
   "loggedEntireMealMessage": "Meal logged successfully",
   "quickSuggestions": "Quick Suggestions",
+  "quickSuggestionsDescription": "Drag tray up to view suggestions to log",
   "macros": "Macros",
   "micros": "Micros",
-  "generateReport": "Generate Report"
+  "generateReport": "Generate Report",
+  "send": "Send",
+  "aiAdvisor": "AI Advisor"
 }

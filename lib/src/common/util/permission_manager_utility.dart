@@ -64,7 +64,9 @@ class PermissionManagerUtility {
               actions: <Widget>[
                 adaptiveAction(
                   context: context,
-                  onPressed: () => onTapCancelForSettings?.call(context) ?? Navigator.pop(context),
+                  onPressed: () =>
+                      onTapCancelForSettings?.call(context) ??
+                      Navigator.pop(context),
                   child: const Text('Cancel'),
                 ),
                 adaptiveAction(

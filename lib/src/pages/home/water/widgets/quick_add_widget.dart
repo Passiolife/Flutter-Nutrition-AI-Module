@@ -126,8 +126,10 @@ class _QuickAddItem extends StatelessWidget {
                   child: RichText(
                     text: TextSpan(
                       text: type,
-                      style: AppTextStyle.textSm.addAll(
-                          [AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
+                      style: AppTextStyle.textSm.addAll([
+                        AppTextStyle.textSm.leading5,
+                        AppTextStyle.semiBold
+                      ]),
                       children: [
                         TextSpan(
                           text: ' (${value.format()} $unit)',

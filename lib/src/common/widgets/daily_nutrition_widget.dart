@@ -9,6 +9,10 @@ import '../../common/constant/app_text_styles.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/widgets/macros_graph_widget.dart';
 
+abstract interface class DailyNutritionListener {
+  void onTapDailyNutrition();
+}
+
 class DailyNutritionWidget extends StatelessWidget {
   const DailyNutritionWidget({
     this.consumedCalories,
@@ -19,6 +23,7 @@ class DailyNutritionWidget extends StatelessWidget {
     this.totalProteins,
     this.consumedFat,
     this.totalFat,
+    this.listener,
     super.key,
   });
 
@@ -38,51 +43,56 @@ class DailyNutritionWidget extends StatelessWidget {
   final int? consumedFat;
   final double? totalFat;
 
+  final DailyNutritionListener? listener;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      decoration: AppShadows.base,
-      padding: EdgeInsets.all(AppDimens.r16),
-      child: Column(
-        children: [
-          Row(
-            children: [
-              SvgPicture.asset(
-                AppImages.icFluentFoodAppleFilled,
-                fit: BoxFit.cover,
-                width: AppDimens.r24,
-                height: AppDimens.r24,
-              ),
-              SizedBox(width: AppDimens.w8),
-              Expanded(
-                child: Text(
-                  context.localization?.dailyNutrition ?? '',
-                  style: AppTextStyle.textLg.addAll([
-                    AppTextStyle.textLg.leading6,
-                    AppTextStyle.semiBold
-                  ]).copyWith(color: AppColors.gray900),
+    return GestureDetector(
+      onTap: listener?.onTapDailyNutrition,
+      child: Container(
+        width: double.infinity,
+        decoration: AppShadows.base,
+        padding: EdgeInsets.all(AppDimens.r16),
+        child: Column(
+          children: [
+            Row(
+              children: [
+                SvgPicture.asset(
+                  AppImages.icFluentFoodAppleFilled,
+                  fit: BoxFit.cover,
+                  width: AppDimens.r24,
+                  height: AppDimens.r24,
                 ),
-              ),
-              /*SvgPicture.asset(
-                AppImages.icExternalLink,
-                width: AppDimens.r24,
-                height: AppDimens.r24,
-              ),*/
-            ],
-          ),
-          SizedBox(height: AppDimens.h24),
-          MacrosGraphWidget(
-            consumedCalories: consumedCalories ?? 0,
-            totalCalories: totalCalories ?? 1200,
-            consumedCarbs: consumedCarbs ?? 0,
-            totalCarbs: totalCarbs ?? 150,
-            consumedProteins: consumedProteins ?? 0,
-            totalProteins: totalProteins ?? 90,
-            consumedFat: consumedFat ?? 0,
-            totalFat: totalFat ?? 27,
-          ),
-        ],
+                SizedBox(width: AppDimens.w8),
+                Expanded(
+                  child: Text(
+                    context.localization?.dailyNutrition ?? '',
+                    style: AppTextStyle.textLg.addAll([
+                      AppTextStyle.textLg.leading6,
+                      AppTextStyle.semiBold
+                    ]).copyWith(color: AppColors.gray900),
+                  ),
+                ),
+                SvgPicture.asset(
+                  AppImages.icChartPie,
+                  width: AppDimens.r24,
+                  height: AppDimens.r24,
+                ),
+              ],
+            ),
+            SizedBox(height: AppDimens.h24),
+            MacrosGraphWidget(
+              consumedCalories: consumedCalories ?? 0,
+              totalCalories: totalCalories ?? 1200,
+              consumedCarbs: consumedCarbs ?? 0,
+              totalCarbs: totalCarbs ?? 150,
+              consumedProteins: consumedProteins ?? 0,
+              totalProteins: totalProteins ?? 90,
+              consumedFat: consumedFat ?? 0,
+              totalFat: totalFat ?? 27,
+            ),
+          ],
+        ),
       ),
     );
   }

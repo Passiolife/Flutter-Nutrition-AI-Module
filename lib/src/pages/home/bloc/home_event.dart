@@ -11,7 +11,10 @@ class FetchRecordsEvent extends HomeEvent {
   final MeasurementSystem? weightUnit;
   final bool needToUpdateSelectedDayLog;
 
-  const FetchRecordsEvent({required this.dateTime, this.weightUnit, this.needToUpdateSelectedDayLog = true});
+  const FetchRecordsEvent(
+      {required this.dateTime,
+      this.weightUnit,
+      this.needToUpdateSelectedDayLog = true});
 
   @override
   List<Object?> get props => [dateTime, weightUnit];

@@ -16,7 +16,7 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
 
   FutureOr<void> _handlePageUpdateEvent(
       PageUpdateEvent event, Emitter<DashboardState> emit) {
-    emit(PageUpdateState(index: event.index, item: event.item));
+    emit(PageUpdateState(index: event.index));
   }
 
   Future<void> _handleRefreshEvent(

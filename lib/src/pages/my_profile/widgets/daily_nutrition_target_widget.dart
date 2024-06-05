@@ -63,10 +63,7 @@ class DailyNutritionWidgetWidget extends StatelessWidget {
       splashColor: AppColors.blue50,
       highlightColor: AppColors.blue50,
       onTap: () => DailyNutritionTargetDialog.show(
-        context: context,
-        profileModel: profileModel,
-        onSave: onSave
-      ),
+          context: context, profileModel: profileModel, onSave: onSave),
       child: Container(
         decoration: AppShadows.base,
         child: Column(

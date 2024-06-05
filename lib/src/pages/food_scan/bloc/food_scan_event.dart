@@ -110,16 +110,16 @@ class PackagedFoodNotRecognizedEvent extends FoodScanEvent {
 }
 
 class DoFoodLogEvent extends FoodScanEvent {
-  const DoFoodLogEvent({required this.dateTime, this.foodItem, this.detectedCandidate});
+  const DoFoodLogEvent(
+      {required this.dateTime, this.foodItem, this.detectedCandidate});
 
   final DateTime dateTime;
   final PassioFoodItem? foodItem;
   final DetectedCandidate? detectedCandidate;
-  
+
   @override
   List<Object?> get props => [dateTime, foodItem, detectedCandidate];
 }
-
 
 class ScanNutritionFactsEvent extends FoodScanEvent {
   const ScanNutritionFactsEvent();

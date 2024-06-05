@@ -14,6 +14,15 @@ class FoodSearchPage extends StatefulWidget {
 
   final bool needsReturn;
 
+  // Static method to navigate to the FoodSearchPage.
+  static Future navigate(BuildContext context, {bool needsReturn = true}) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+          builder: (_) => FoodSearchPage(needsReturn: needsReturn)),
+    );
+  }
+
   @override
   State<FoodSearchPage> createState() => _FoodSearchPageState();
 }
@@ -111,8 +120,12 @@ class _FoodSearchPageState extends State<FoodSearchPage>
     if (widget.needsReturn) {
       Navigator.pop(context, result);
     } else {
-      EditFoodPage.navigate(context: context, passioFoodDataInfo: result, visibleSwitch: true, redirectToDiaryOnLog: true);
-     /* Navigator.push(
+      EditFoodPage.navigate(
+          context: context,
+          passioFoodDataInfo: result,
+          visibleSwitch: true,
+          redirectToDiaryOnLog: true);
+      /* Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => EditFoodPage(
@@ -124,8 +137,6 @@ class _FoodSearchPageState extends State<FoodSearchPage>
       );*/
     }
   }
-
-
 
   void _handleStates(
       {required BuildContext context, required FoodSearchState state}) {

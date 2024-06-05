@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/settings/settings.dart';
@@ -95,7 +94,6 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
       detectVisual: true,
       detectBarcodes: true,
       detectPackagedFood: true,
-      detectNutritionFacts: true,
     );
     NutritionAI.instance.startFoodDetection(detectionConfig, this);
   }
@@ -128,7 +126,8 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
           return;
         }
       } else if (packagedFoodCandidates?.firstOrNull != null) {
-        foodItem = await NutritionAI.instance.fetchFoodItemForProductCode(packagedFoodCandidates!.first.packagedFoodCode);
+        foodItem = await NutritionAI.instance.fetchFoodItemForProductCode(
+            packagedFoodCandidates!.first.packagedFoodCode);
         if (foodItem == null) {
           add(const PackagedFoodNotRecognizedEvent(shouldVisible: true));
           return;
@@ -166,7 +165,6 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     }
     emit(PackagedFoodNotRecognizedState(shouldVisible: event.shouldVisible));
   }
-
 
   FutureOr<void> _handleDoFoodLogEvent(
       DoFoodLogEvent event, Emitter<FoodScanState> emit) async {
@@ -208,7 +206,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
       add(event.isCollapsed
           ? const StartFoodDetectionEvent()
           : const StopFoodDetectionEvent());
-      if(event.isCollapsed) {
+      if (event.isCollapsed) {
         add(const ScanningAnimationEvent(shouldAnimate: true));
       }
     }
@@ -226,8 +224,6 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
   Future<FutureOr<void>> _handleDoConversionEvent(
       DoConversionEvent event, Emitter<FoodScanState> emit) async {
-    if (event.detectedCandidate != null) {
-
-    }
+    if (event.detectedCandidate != null) {}
   }
 }

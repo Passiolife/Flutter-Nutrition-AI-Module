@@ -16,7 +16,7 @@ class OkButtonWithKeyboard {
   }) {
     OkButtonWithKeyboard? okButtonWithKeyboard;
     focusNode?.addListener(() {
-      if(focusNode.hasFocus) {
+      if (focusNode.hasFocus) {
         okButtonWithKeyboard = OkButtonWithKeyboard.show(
           context: context,
           onTap: () {
@@ -33,7 +33,6 @@ class OkButtonWithKeyboard {
         onTap?.call();
       }
     });
-
   }
 
   OkButtonWithKeyboard.show({

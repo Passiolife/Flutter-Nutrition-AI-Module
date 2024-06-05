@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/food_record/meal_label.dart';

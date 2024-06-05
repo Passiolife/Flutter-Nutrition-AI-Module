@@ -18,7 +18,6 @@ class DailyNutritionTargetDialog {
     UserProfileModel? profileModel,
     OnSaveNutritionTarget? onSave,
   }) {
-
     TextEditingController caloriesController =
         TextEditingController(text: '${profileModel?.caloriesTarget ?? 0}');
     TextEditingController carbsController = TextEditingController();

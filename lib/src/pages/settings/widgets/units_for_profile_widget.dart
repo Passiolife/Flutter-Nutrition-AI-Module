@@ -24,7 +24,9 @@ class UnitsForProfileWidget extends StatelessWidget {
   final MeasurementSystem? initialWeightMeasurement;
   final ValueChanged<MeasurementSystem?>? onWeightMeasurementChanged;
 
-  List<DropdownMenuEntry<MeasurementSystem>> _getHeightUnits(BuildContext context) => [
+  List<DropdownMenuEntry<MeasurementSystem>> _getHeightUnits(
+          BuildContext context) =>
+      [
         DropdownMenuEntry(
             value: MeasurementSystem.imperial,
             label:
@@ -35,7 +37,9 @@ class UnitsForProfileWidget extends StatelessWidget {
                 '${context.localization?.meter ?? ''}, ${context.localization?.centimeter ?? ''}'),
       ];
 
-  List<DropdownMenuEntry<MeasurementSystem>> _getWeightUnits(BuildContext context) => [
+  List<DropdownMenuEntry<MeasurementSystem>> _getWeightUnits(
+          BuildContext context) =>
+      [
         DropdownMenuEntry(
             value: MeasurementSystem.imperial,
             label: context.localization?.lbs?.toUpperCaseWord ?? ''),
@@ -98,8 +102,10 @@ class _RowWidget<T> extends StatelessWidget {
         Expanded(
           child: Text(
             title ?? '',
-            style: AppTextStyle.textSm
-                .addAll([AppTextStyle.textSm.leading5, AppTextStyle.medium]).copyWith(color: AppColors.gray500),
+            style: AppTextStyle.textSm.addAll([
+              AppTextStyle.textSm.leading5,
+              AppTextStyle.medium
+            ]).copyWith(color: AppColors.gray500),
           ),
         ),
         Expanded(

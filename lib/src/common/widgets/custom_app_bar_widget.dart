@@ -8,9 +8,8 @@ import '../../pages/dashboard/bloc/dashboard_bloc.dart';
 import '../../pages/my_profile/my_profile_page.dart';
 import '../../pages/settings/settings_page.dart';
 import '../constant/app_constants.dart';
+import '../util/string_extensions.dart';
 import 'app_pop_up_widget.dart';
-
-typedef MenuCallback = Function(OverlayPortalController menuController);
 
 // Define a custom callback type for menu item tap
 typedef OnMenuItemTap = Function(String? item);
@@ -49,10 +48,6 @@ class CustomAppBarWidget extends StatefulWidget {
 class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
   List<MenuModel> get _menus => [
         MenuModel(
-          icon: AppImages.icChartPie,
-          title: context.localization?.progress,
-        ),
-        MenuModel(
           icon: AppImages.icProfile,
           title: context.localization?.myProfile,
         ),
@@ -63,6 +58,10 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
         MenuModel(
           icon: AppImages.icSettings,
           title: context.localization?.settings,
+        ),
+        MenuModel(
+          icon: AppImages.icLogout,
+          title: context.localization?.logout.toUpperCaseWord,
         ),
       ];
 

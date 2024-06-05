@@ -19,7 +19,10 @@ final class GetUserProfileSuccessState extends SettingsState {
 }
 
 final class RemindersSuccessState extends SettingsState {
-  const RemindersSuccessState({required this.breakfastEnabled, required this.lunchEnabled, required this.dinnerEnabled});
+  const RemindersSuccessState(
+      {required this.breakfastEnabled,
+      required this.lunchEnabled,
+      required this.dinnerEnabled});
 
   final bool breakfastEnabled;
   final bool lunchEnabled;

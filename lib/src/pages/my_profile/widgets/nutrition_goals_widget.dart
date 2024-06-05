@@ -146,7 +146,8 @@ class _NutritionGoalsWidgetState extends State<NutritionGoalsWidget> {
               label: e.mealPlanTitle,
             ),
           )
-          .toList() ?? [];
+          .toList() ??
+      [];
 
   // END
 
@@ -163,8 +164,7 @@ class _NutritionGoalsWidgetState extends State<NutritionGoalsWidget> {
         focusNode: _targetWeightFocusNode,
         onTap: () {
           _targetWeightController.text =
-              double.tryParse(_targetWeightController.text.trim())
-                  .format();
+              double.tryParse(_targetWeightController.text.trim()).format();
         },
       );
       OkButtonWithKeyboard.setup(
@@ -172,8 +172,7 @@ class _NutritionGoalsWidgetState extends State<NutritionGoalsWidget> {
         focusNode: _targetWaterFocusNode,
         onTap: () {
           _targetWaterController.text =
-              double.tryParse(_targetWaterController.text.trim())
-                  .format();
+              double.tryParse(_targetWaterController.text.trim()).format();
         },
       );
     });

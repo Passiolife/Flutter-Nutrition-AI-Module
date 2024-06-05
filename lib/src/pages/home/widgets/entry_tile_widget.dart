@@ -76,7 +76,7 @@ class EntryTileChildWidget extends StatelessWidget {
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
 
- @override
+  @override
   Widget build(BuildContext context) {
     return Slidable(
       key: UniqueKey(),

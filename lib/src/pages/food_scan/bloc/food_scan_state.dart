@@ -60,7 +60,6 @@ class ScanResultState extends FoodScanState {
 class AddedToDiaryVisibilityState extends FoodScanState {
   const AddedToDiaryVisibilityState();
 
-
   @override
   List<Object?> get props => [];
 }

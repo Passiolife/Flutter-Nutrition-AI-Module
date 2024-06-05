@@ -1,6 +1,6 @@
 part of 'weight_bloc.dart';
 
-sealed class WeightState extends Equatable{
+sealed class WeightState extends Equatable {
   const WeightState();
 }
 

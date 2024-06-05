@@ -35,9 +35,7 @@ class WaterBloc extends Bloc<WaterEvent, WaterState> {
     dayLogs.fromDates(
         _rangeDates?.startDate.getDatesBetween(endDate: _rangeDates!.endDate) ??
             []);
-    emit(FetchRecordsSuccessState(
-        rangeDates: _rangeDates,
-        dayLogs: dayLogs));
+    emit(FetchRecordsSuccessState(rangeDates: _rangeDates, dayLogs: dayLogs));
   }
 
   Future<void> _handleQuickAddEvent(

@@ -48,7 +48,7 @@ class MacrosBloc extends Bloc<MacrosEvent, MacrosState> {
 
   void addEmptyDates(RangeDates rangeDates, DayLogs dayLogs) {
     final dates =
-        rangeDates.startDate.getDatesBetween(endDate: rangeDates.endDate) ?? [];
+        rangeDates.startDate.getDatesBetween(endDate: rangeDates.endDate);
     for (var date in dates) {
       if (!dayLogs.dayLog.any((log) => log.date == date)) {
         dayLogs.dayLog.add(DayLog(date: date));

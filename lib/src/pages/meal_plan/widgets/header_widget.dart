@@ -113,7 +113,7 @@ class _DayListWidget extends StatelessWidget {
         itemBuilder: (context, index) {
           final data = _getDays(context).elementAt(index);
           return RawChip(
-            color: MaterialStateProperty.all(data == selectedDay
+            color: WidgetStateProperty.all(data == selectedDay
                 ? AppColors.indigo600Main
                 : AppColors.gray100),
             visualDensity: VisualDensity.compact,

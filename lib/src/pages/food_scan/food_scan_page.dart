@@ -1,21 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../common/constant/app_constants.dart';
 import '../../common/models/settings/settings.dart';
-import '../../common/router/routes.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/permission_manager_utility.dart';
+import '../dashboard/dashboard_page.dart';
 import '../edit_food/edit_food_page.dart';
+import '../food_search/food_search_page.dart';
 import 'bloc/food_scan_bloc.dart';
-import 'dialog/added_to_diary_dialog.dart';
-import 'dialog/barcode_not_recognized_dialog.dart';
-import 'dialog/intro_dialog.dart';
-import 'dialog/packaged_food_not_recognized_dialog.dart';
-import 'dialog/scanned_nutrition_facts_dialog.dart';
-import 'widgets/bottom_background_widget.dart';
 import 'widgets/widgets.dart';
 
 class FoodScanPage extends StatefulWidget {
@@ -80,10 +76,20 @@ class _FoodScanPageState extends State<FoodScanPage>
         builder: (context, state) {
           return Column(
             children: [
-              FoodScanAppBarWidget(
-                onTapHelp: () {
-                  _bloc.add(const IntroScreenEvent(shouldVisible: true));
-                },
+              CustomAppBarWidget(
+                title: context.localization?.foodScanner,
+                isMenuVisible: false,
+                suffix: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTap: () {
+                    _bloc.add(const IntroScreenEvent(shouldVisible: true));
+                  },
+                  child: SvgPicture.asset(
+                    AppImages.icQuestionMarkCircle,
+                    width: AppDimens.r24,
+                    height: AppDimens.r24,
+                  ),
+                ),
               ),
               Expanded(
                 child: Stack(
@@ -221,8 +227,7 @@ class _FoodScanPageState extends State<FoodScanPage>
         Navigator.pop(contextPermission);
         Navigator.pop(context);
       },
-      onUpdateStatus:
-          (Permission? permission) async {
+      onUpdateStatus: (Permission? permission) async {
         if ((await permission?.isGranted) ?? false) {
           _bloc.add(const StartScanningEvent());
         }
@@ -253,13 +258,10 @@ class _FoodScanPageState extends State<FoodScanPage>
       context: context,
       onTapViewDiary: (dialogContext) {
         Navigator.pop(dialogContext);
-        Navigator.pushNamedAndRemoveUntil(
+        DashboardPage.navigate(
           context,
-          Routes.dashboardPage,
-          (route) => false,
-          arguments: {
-            AppCommonConstants.page: dialogContext.localization?.diary
-          },
+          page: 1,
+          removeUntil: true,
         );
       },
       onTapContinue: (dialogContext) {
@@ -324,7 +326,11 @@ class _FoodScanPageState extends State<FoodScanPage>
     } else {
       candidate = _detectedCandidate;
     }
-    EditFoodPage.navigate(context: context, foodItem: _foodItem, detectedCandidate: candidate, redirectToDiaryOnLog: true);
+    EditFoodPage.navigate(
+        context: context,
+        foodItem: _foodItem,
+        detectedCandidate: candidate,
+        redirectToDiaryOnLog: true);
   }
 
   @override
@@ -336,21 +342,15 @@ class _FoodScanPageState extends State<FoodScanPage>
   }
 
   void _redirectToEdit(PassioFoodItem? foodItem) {
-    Navigator.pushNamed(
-      context,
-      Routes.editFoodPage,
-      arguments: {
-        AppCommonConstants.data: foodItem,
-        AppCommonConstants.iconHeroTag: '${foodItem?.iconId}',
-        AppCommonConstants.titleHeroTag: '${foodItem?.name}',
-        AppCommonConstants.subtitleHeroTag: '${foodItem?.details}',
-        AppCommonConstants.visibleSwitch: true,
-      },
+    EditFoodPage.navigate(
+      context: context,
+      foodItem: foodItem,
+      visibleSwitch: true,
     );
   }
 
   @override
   void onTapSearch() {
-    Navigator.pushNamed(context, Routes.foodSearchPage, arguments: false);
+    FoodSearchPage.navigate(context, needsReturn: false);
   }
 }

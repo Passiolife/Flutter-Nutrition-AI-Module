@@ -498,4 +498,8 @@ class AppLocalizations {
   String? get micros => getLabel('micros');
 
   String? get generateReport => getLabel('generateReport');
+
+  String? get send => getLabel('send');
+
+  String? get aiAdvisor => getLabel('aiAdvisor');
 }

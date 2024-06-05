@@ -103,15 +103,13 @@ class _DonutGraph extends StatelessWidget {
 
   double get _totalNutrient => _extractNumberFromString(totalNutrient);
 
-  double get _remainsNutrient =>
-      (_consumedNutrient > _totalNutrient)
-          ? 0
-          : _totalNutrient - _consumedNutrient;
+  double get _remainsNutrient => (_consumedNutrient > _totalNutrient)
+      ? 0
+      : _totalNutrient - _consumedNutrient;
 
-  double get _overNutrient =>
-      (_consumedNutrient > _totalNutrient)
-          ? _totalNutrient - _consumedNutrient
-          : 0;
+  double get _overNutrient => (_consumedNutrient > _totalNutrient)
+      ? _totalNutrient - _consumedNutrient
+      : 0;
 
   List<ChartDataModel> get chartData {
     return [

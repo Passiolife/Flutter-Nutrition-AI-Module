@@ -33,7 +33,7 @@ final class FetchSuggestionsEvent extends DiaryEvent {
 class DoLogEvent extends DiaryEvent {
   const DoLogEvent({this.data});
 
-  final PassioFoodDataInfo? data;
+  final QuickSuggestion? data;
 
   @override
   List<Object?> get props => [data];

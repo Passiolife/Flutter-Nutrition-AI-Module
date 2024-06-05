@@ -63,13 +63,14 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     if (event.measurementSystem != null && _userProfileModel != null) {
       _userProfileModel?.weightUnit = event.measurementSystem!;
       await _connector.updateUserProfile(
-          userProfile: _userProfileModel!, isNew: false);
+        userProfile: _userProfileModel!,
+        isNew: false,
+      );
     }
   }
 
   Future<void> _handleDoUpdateMealReminderEvent(
       DoUpdateMealReminderEvent event, Emitter<SettingsState> emit) async {
-
     final isEnabled = event.enabled;
     final notificationTitle = event.title;
     final notificationDescription = event.description;

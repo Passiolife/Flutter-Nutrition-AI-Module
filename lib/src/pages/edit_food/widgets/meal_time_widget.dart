@@ -92,24 +92,24 @@ class _SegmentedButtonThemeDataWidget extends StatelessWidget {
         segmentedButtonTheme: SegmentedButtonThemeData(
           style: ButtonStyle(
             visualDensity: VisualDensity.standard,
-            padding: MaterialStateProperty.all(EdgeInsets.zero),
-            side: MaterialStateProperty.all(
+            padding: WidgetStateProperty.all(EdgeInsets.zero),
+            side: WidgetStateProperty.all(
               const BorderSide(color: AppColors.gray200),
             ),
-            shape: MaterialStateProperty.all(
+            shape: WidgetStateProperty.all(
               const RoundedRectangleBorder(
                 borderRadius: BorderRadius.all(Radius.circular(12)),
               ),
             ),
-            backgroundColor: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
+            backgroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
                 return AppColors.indigo600Main;
               } else {
                 return AppColors.white;
               }
             }),
-            foregroundColor: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
+            foregroundColor: WidgetStateProperty.resolveWith((states) {
+              if (states.contains(WidgetState.selected)) {
                 return AppColors.white;
               } else {
                 return AppColors.gray500;

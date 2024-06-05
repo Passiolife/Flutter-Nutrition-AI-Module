@@ -22,16 +22,16 @@ class NavigationItem {
 }
 
 // Callback function type for when a navigation item changes
-typedef OnNavigationItemChange = Function(NavigationItem? item, int index);
+typedef OnNavigationItemChange = Function(int index);
 
 class BottomNavigationWidget extends StatelessWidget {
   const BottomNavigationWidget({
-    this.selectedPage,
+    required this.selectedPage,
     this.onNavigationItemChange,
     super.key,
   });
 
-  final String? selectedPage;
+  final int? selectedPage;
   final OnNavigationItemChange? onNavigationItemChange;
 
   // Create a list of NavigationItem objects
@@ -40,17 +40,13 @@ class BottomNavigationWidget extends StatelessWidget {
         NavigationItem(
           imagePath: AppImages.icHome,
           name: context.localization?.home ?? '',
-          isSelected: (selectedPage != null)
-              ? (selectedPage == context.localization?.home)
-              : true,
+          isSelected: selectedPage == 0,
         ),
         // Diary NavigationItem
         NavigationItem(
           imagePath: AppImages.icDiary,
           name: context.localization?.diary ?? '',
-          isSelected: (selectedPage != null)
-              ? (selectedPage == context.localization?.diary)
-              : false,
+          isSelected: selectedPage == 1,
         ),
         // To show empty space in center for notch button.
         const NavigationItem(
@@ -62,17 +58,13 @@ class BottomNavigationWidget extends StatelessWidget {
         NavigationItem(
           imagePath: AppImages.icMealPlan,
           name: context.localization?.mealPlan ?? '',
-          isSelected: (selectedPage != null)
-              ? (selectedPage == context.localization?.mealPlan)
-              : false,
+          isSelected: selectedPage == 3,
         ),
         // Progress NavigationItem
         NavigationItem(
           imagePath: AppImages.icProgress,
           name: context.localization?.progress ?? '',
-          isSelected: (selectedPage != null)
-              ? (selectedPage == context.localization?.progress)
-              : false,
+          isSelected: selectedPage == 4,
         ),
       ];
 
@@ -127,7 +119,7 @@ class _BottomNavigationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () => onNavigationItemChange?.call(navigationItem, index),
+      onTap: () => onNavigationItemChange?.call(index),
       child: SizedBox(
         width: AppDimens.w79,
         child: Column(

@@ -10,6 +10,7 @@ import '../../../common/util/context_extension.dart';
 import '../../../common/widgets/app_button.dart';
 import '../../../common/widgets/custom_calendar_app_bar_widget.dart';
 import '../../../common/widgets/nutrition_information_widget.dart';
+import '../../../common/widgets/nutrition_information_message_widget.dart';
 import 'bloc/micros_bloc.dart';
 
 class MicrosPage extends StatefulWidget {
@@ -52,6 +53,8 @@ class _MicrosPageState extends State<MicrosPage> {
                 onDateTimeChanged: _handleOnDateTimeChanged,
               ),
               24.verticalSpace,
+              const NutritionInformationMessageWidget(),
+              24.verticalSpace,
               Expanded(
                 child: Stack(
                   children: [
@@ -64,7 +67,7 @@ class _MicrosPageState extends State<MicrosPage> {
                       left: 0,
                       right: 0,
                       child: Container(
-                        color:  AppColors.gray50,
+                        color: AppColors.gray50,
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           child: AppButton(

@@ -65,6 +65,8 @@ class LocalDBConnector implements PassioConnector {
         where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);
   }
 
+  // Favorites
+
   @override
   Future<void> updateFavorite(
       {required FoodRecord foodRecord, required bool isNew}) async {
@@ -103,6 +105,28 @@ class LocalDBConnector implements PassioConnector {
   }
 
   @override
+  Future<bool> favoriteExists({required FoodRecord foodRecord}) async {
+    final favorites = (await fetchFavorites())?.cast<FoodRecord?>();
+    return favorites?.firstWhere(
+            (element) => element?.refCode == foodRecord.refCode,
+            orElse: () => null) !=
+        null;
+  }
+
+  @override
+  Future<void> deleteFavorite({required FoodRecord foodRecord}) async {
+    final favorites = (await fetchFavorites())?.cast<FoodRecord?>();
+    final id = favorites
+        ?.firstWhere((element) => element?.refCode == foodRecord.refCode,
+            orElse: () => null)
+        ?.id;
+    if (id != null) {
+      await _databaseHelper.database.delete(_databaseHelper.tblFavorite,
+          where: '${_databaseHelper.colId} = ?', whereArgs: [id]);
+    }
+  }
+
+  @override
   Future<void> updateUserProfile({
     required UserProfileModel userProfile,
     required bool isNew,
@@ -129,7 +153,8 @@ class LocalDBConnector implements PassioConnector {
     if (data?.containsKey(_databaseHelper.colData) ?? false) {
       final userProfile =
           UserProfileModel.fromJson(jsonDecode(data?[_databaseHelper.colData]));
-      userProfile.id = (data?.containsKey('id') ?? false) ? data!['id'].toString() : null;
+      userProfile.id =
+          (data?.containsKey('id') ?? false) ? data!['id'].toString() : null;
       return userProfile;
     }
     return null;
@@ -156,49 +181,23 @@ class LocalDBConnector implements PassioConnector {
     }).toList();
   }
 
-  @override
-  Future<bool> favoriteExists({required FoodRecord foodRecord}) async {
-    final favorites = (await fetchFavorites())?.cast<FoodRecord?>();
-    return favorites?.firstWhere(
-            (element) => element?.passioID == foodRecord.passioID,
-            orElse: () => null) !=
-        null;
-  }
-
-  @override
-  Future<void> deleteFavorite({required FoodRecord foodRecord}) async {
-    final favorites = (await fetchFavorites())?.cast<FoodRecord?>();
-    final id = favorites
-        ?.firstWhere((element) => element?.passioID == foodRecord.passioID,
-            orElse: () => null)
-        ?.id;
-    if (id != null) {
-      await _databaseHelper.database.delete(_databaseHelper.tblFavorite,
-          where: '${_databaseHelper.colId} = ?', whereArgs: [id]);
-    }
-  }
-
   // Water Related Methods
 
   @override
-  Future<int> updateWater(
-      {required WaterRecord waterRecord, required bool isNew}) async {
+  Future<void> updateWater({
+    required WaterRecord waterRecord,
+    required bool isNew,
+  }) async {
     final values = {
       _databaseHelper.colData: waterRecord.getWater(),
       _databaseHelper.colCreatedAt: waterRecord.createdAt
     };
     if (isNew) {
-      final insertId = await _databaseHelper.database
-          .insert(_databaseHelper.tblWater, values);
-      if (insertId > 0) {
-        return insertId;
-      }
+      await _databaseHelper.database.insert(_databaseHelper.tblWater, values);
     } else {
       await _databaseHelper.database.update(_databaseHelper.tblWater, values,
           where: '${_databaseHelper.colId} = ?', whereArgs: [waterRecord.id]);
-      return waterRecord.id ?? 0;
     }
-    return 0;
   }
 
   @override
@@ -245,9 +244,7 @@ class LocalDBConnector implements PassioConnector {
         .map((e) => WaterRecord.fromJson(e.cast<String, dynamic>()))
         .toList()
         .fold<double>(
-            0,
-            (previousValue, element) =>
-                previousValue + element.getWater());
+            0, (previousValue, element) => previousValue + element.getWater());
   }
 
   // Weight Related Methods
@@ -301,24 +298,21 @@ class LocalDBConnector implements PassioConnector {
   }
 
   @override
-  Future<int> updateWeight(
-      {required WeightRecord weightRecord, required bool isNew}) async {
+  Future<void> updateWeight({
+    required WeightRecord record,
+    required bool isNew,
+  }) async {
     final values = {
-      _databaseHelper.colData: weightRecord.getWeight(),
-      _databaseHelper.colCreatedAt: weightRecord.createdAt
+      _databaseHelper.colData: record.getWeight(),
+      _databaseHelper.colCreatedAt: record.createdAt
     };
     if (isNew) {
-      final insertId = await _databaseHelper.database
-          .insert(_databaseHelper.tblWeight, values);
-      if (insertId > 0) {
-        return insertId;
-      }
+      await _databaseHelper.database.insert(_databaseHelper.tblWeight, values);
     } else {
       await _databaseHelper.database.update(_databaseHelper.tblWeight, values,
-          where: '${_databaseHelper.colId} = ?', whereArgs: [weightRecord.id]);
-      return weightRecord.id ?? 0;
+          where: '${_databaseHelper.colId} = ?', whereArgs: [record.id]);
     }
-    return 0;
   }
 
+  Future updateAnalytics() async {}
 }

@@ -93,7 +93,8 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         context: context,
         focusNode: _weightFocusNode,
         onTap: () {
-          _weightController.text = double.tryParse(_weightController.text)?.format() ?? '';
+          _weightController.text =
+              double.tryParse(_weightController.text)?.format() ?? '';
         },
       );
     });

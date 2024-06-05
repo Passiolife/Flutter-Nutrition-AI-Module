@@ -1,7 +1,7 @@
 import '../user_profile/user_profile_model.dart';
 
 class WeightRecord {
-  final int? id;
+  int? id;
   double _weight;
   final int createdAt;
 
@@ -24,23 +24,22 @@ class WeightRecord {
 
   double getWeight({MeasurementSystem? unit}) {
     return switch (unit) {
-      MeasurementSystem.imperial =>
-      (_weight * Conversion.kgToLbs.value),
+      MeasurementSystem.imperial => (_weight * Conversion.kgToLbs.value),
       _ => _weight,
     };
   }
 
   factory WeightRecord.fromJson(Map<String, dynamic> json) => WeightRecord._(
-    json['id'],
-    (json['data'] as num).toDouble(),
-    json['created_at'],
-  );
+        json['id'],
+        (json['data'] as num).toDouble(),
+        json['created_at'],
+      );
 
   Map<String, dynamic> toJson() => {
-    'id': id,
-    'data': _weight,
-    'created_at': createdAt,
-  };
+        'id': id,
+        'data': _weight,
+        'created_at': createdAt,
+      };
 
   @override
   bool operator ==(Object other) {
@@ -66,5 +65,4 @@ class WeightRecord {
       createdAt ?? this.createdAt,
     );
   }
-
 }

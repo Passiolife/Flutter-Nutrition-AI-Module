@@ -20,7 +20,7 @@ class PassioImageWidget extends StatefulWidget {
   final PassioIDEntityType type;
   final IconSize iconSize;
   final double radius;
-  final String? heroTag;
+  final Object? heroTag;
 
   @override
   State<PassioImageWidget> createState() => _PassioImageWidgetState();

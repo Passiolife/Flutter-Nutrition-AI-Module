@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'typedefs.dart';
 
 import '../constant/app_constants.dart';
 import '../util/date_time_utility.dart';
@@ -54,7 +53,8 @@ class RangeDateNavigatorWidget extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(horizontal: AppDimens.w16),
           child: Text(
-            startDateTime.rangeString(isMonthRange: isMonthRange, endDateTime: endDateTime),
+            startDateTime.rangeString(
+                isMonthRange: isMonthRange, endDateTime: endDateTime),
             style: AppTextStyle.textSm.addAll(
               [AppTextStyle.textSm.leading5, AppTextStyle.semiBold],
             ),
