@@ -46,7 +46,7 @@ dependencies:
 
   # https://pub.dev/packages/get_it
   # This is a simple Service Locator for Dart and Flutter projects.
-  get_it: ^7.6.6
+  get_it: ^7.7.0
 
   # https://pub.dev/packages/intl
   # Provides internationalization and localization facilities
@@ -54,11 +54,11 @@ dependencies:
 
   # https://pub.dev/packages/json_annotation
   # Defines the annotations used by json_serializable to create code for JSON serialization and deserialization.
-  json_annotation: ^4.8.1
+  json_annotation: ^4.9.0
 
   # https://pub.dev/packages/json_serializable
   # Provides Dart Build System builders for handling JSON.
-  json_serializable: ^6.7.1
+  json_serializable: ^6.8.0
 
   # https://pub.dev/packages/loading_indicator
   # A collection of out of the box loading animations written in pure dart, no extra dependency
@@ -70,7 +70,7 @@ dependencies:
 
   # https://pub.dev/packages/path
   # A comprehensive, cross-platform path manipulation library for Dart.
-  path: ^1.8.3
+  path: ^1.9.0
 
   # https://pub.dev/packages/permission_handler
   # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
@@ -95,7 +95,7 @@ dependencies:
 
   # https://pub.dev/packages/syncfusion_flutter_charts
   # The Flutter Charts package
-  syncfusion_flutter_charts: ^24.2.4+3
+  syncfusion_flutter_charts: ^25.2.7
 
   # https://pub.dev/packages/timezone
   # This package provides the IANA time zone database and time zone aware DateTime class, TZDateTime.
@@ -103,7 +103,7 @@ dependencies:
 
   # https://pub.dev/packages/url_launcher
   # A Flutter plugin for launching a URL.
-  url_launcher: ^6.2.5
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
@@ -112,7 +112,7 @@ dev_dependencies:
 
   # https://pub.dev/packages/build_runner
   # The build_runner package provides a concrete way of generating files using Dart code.
-  build_runner: ^2.4.10
+  build_runner: ^2.4.11
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
