@@ -8,7 +8,7 @@ import 'package:flutter_timezone/flutter_timezone.dart';
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/food_record/meal_label.dart';
 import '../../../common/models/settings/settings.dart';
-import '../../../common/util/local_notification.dart';
+import '../../../common/util/local_notification_manager.dart';
 import '../../../common/util/user_session.dart';
 
 part 'settings_event.dart';

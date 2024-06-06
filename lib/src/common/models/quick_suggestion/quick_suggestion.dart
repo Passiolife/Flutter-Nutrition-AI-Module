@@ -5,11 +5,19 @@ import '../../util/map_extension.dart';
 import '../food_record/food_record.dart';
 import '../food_record/meal_label.dart';
 
+/// Represents a quick suggestion, which can be either based on a FoodRecord or a PassioFoodDataInfo.
 class QuickSuggestion {
-  FoodRecord? foodRecord;
-  PassioFoodDataInfo? passioFoodDataInfo;
+  /// The FoodRecord associated with the quick suggestion.
+  final FoodRecord? foodRecord;
 
-  QuickSuggestion({this.foodRecord, this.passioFoodDataInfo});
+  /// The PassioFoodDataInfo associated with the quick suggestion.
+  final PassioFoodDataInfo? passioFoodDataInfo;
+
+  /// Constructs a QuickSuggestion instance with the provided FoodRecord and PassioFoodDataInfo.
+  const QuickSuggestion({
+    this.foodRecord,
+    this.passioFoodDataInfo,
+  });
 
   /// Converts a list of [FoodRecord]s into a list of unique [QuickSuggestion]s.
   ///

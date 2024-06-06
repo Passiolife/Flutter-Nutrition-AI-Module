@@ -59,7 +59,7 @@ class LocalNotificationManager {
   Future<void> show() async {
     String title = 'Title';
     String body = 'Body';
-    String data = 'Data';
+    // String data = 'Data';
 
     final details = _getNotificationDetails();
 

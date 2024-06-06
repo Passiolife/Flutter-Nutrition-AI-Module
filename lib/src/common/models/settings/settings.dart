@@ -34,34 +34,42 @@ class Settings {
     _preferenceStore.setValue(_scanIntroSeenKey, value);
   }
 
+  // Method to get the value of the drag intro seen setting
   bool getDragIntroSeen() {
     return _preferenceStore.getValue<bool>(_dragIntroSeenKey, false);
   }
 
+  // Method to set the value of the drag intro seen setting
   void setDragIntroSeen(bool value) {
     _preferenceStore.setValue(_dragIntroSeenKey, value);
   }
 
+  // Method to set the value of the breakfast reminder setting
   void setBreakfastReminder(bool value) {
     return _preferenceStore.setValue(_breakfastReminder, value);
   }
 
+  // Method to get the value of the breakfast reminder setting
   bool getBreakfastReminder() {
     return _preferenceStore.getValue<bool>(_breakfastReminder, false);
   }
 
+  // Method to set the value of the lunch reminder setting
   void setLunchReminder(bool value) {
     return _preferenceStore.setValue(_lunchReminder, value);
   }
 
+  // Method to get the value of the lunch reminder setting
   bool getLunchReminder() {
     return _preferenceStore.getValue<bool>(_lunchReminder, false);
   }
 
+  // Method to set the value of the dinner reminder setting
   void setDinnerReminder(bool value) {
     return _preferenceStore.setValue(_dinnerReminder, value);
   }
 
+  // Method to get the value of the dinner reminder setting
   bool getDinnerReminder() {
     return _preferenceStore.getValue<bool>(_dinnerReminder, false);
   }

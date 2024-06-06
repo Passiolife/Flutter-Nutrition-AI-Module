@@ -2,23 +2,47 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../food_record/food_record.dart';
 
+/// Represents a micro-nutrient with its name, value, recommended value, and unit symbol.
 class MicroNutrient {
+  /// The name of the micro-nutrient.
   final String name;
+
+  /// The value of the micro-nutrient.
   final double value;
+
+  /// The recommended value of the micro-nutrient.
   final double recommendedValue;
+
+  /// The unit symbol of the micro-nutrient.
   final String unitSymbol;
 
-  MicroNutrient({
+  /// Constructs a MicroNutrient instance with the provided details.
+  ///
+  /// [name]: The name of the micro-nutrient.
+  /// [value]: The value of the micro-nutrient.
+  /// [recommendedValue]: The recommended value of the micro-nutrient.
+  /// [unitSymbol]: The unit symbol of the micro-nutrient.
+  const MicroNutrient({
     required this.name,
     required this.value,
     required this.recommendedValue,
     required this.unitSymbol,
   });
 
+  /// Generates a list of MicroNutrient objects from a list of FoodRecord objects.
+  ///
+  /// [foodRecord]: The FoodRecord object to extract micro-nutrients from.
+  ///
+  /// Returns a list of MicroNutrient objects.
   static List<MicroNutrient> nutrientsFromFoodRecord(FoodRecord? foodRecord) {
     return nutrientsFromFoodRecords([foodRecord]);
   }
 
+  /// Generates a list of MicroNutrient objects from a list of FoodRecord objects.
+  ///
+  /// [foodRecords]: The list of FoodRecord objects to extract micro-nutrients from.
+  ///
+  /// Returns a list of MicroNutrient objects.
   static List<MicroNutrient> nutrientsFromFoodRecords(
       List<FoodRecord?>? foodRecords) {
     if (foodRecords == null) return [];

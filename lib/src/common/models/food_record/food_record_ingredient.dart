@@ -8,8 +8,10 @@ class FoodRecordIngredient {
   /// Unique identifier for the ingredient.
   String id = '';
 
+  /// Passio identifier for the food record.
   String passioID;
 
+  /// A reference code serving as a unique identifier for the food item.
   String refCode;
 
   /// Name of the ingredient.
@@ -36,6 +38,7 @@ class FoodRecordIngredient {
   /// License information for open food data.
   String? openFoodLicense;
 
+  /// Type of Passio ID entity.
   PassioIDEntityType entityType;
 
   /// Private constructor for creating a FoodRecordIngredient instance with specified properties.
@@ -92,6 +95,7 @@ class FoodRecordIngredient {
     );
   }
 
+  /// Creates a [FoodRecordIngredient] instance from a JSON object.
   factory FoodRecordIngredient.fromJson(Map<String, dynamic> json) =>
       FoodRecordIngredient._(
         id: json['id'] as String,
@@ -119,6 +123,7 @@ class FoodRecordIngredient {
         openFoodLicense: json['openFoodLicense'] as String?,
       );
 
+  /// Converts the [FoodRecordIngredient] instance to a JSON object.
   Map<String, dynamic> toJson() => {
         'id': id,
         'passioID': passioID,
@@ -136,6 +141,7 @@ class FoodRecordIngredient {
         'openFoodLicense': openFoodLicense,
       };
 
+  /// Overrides the equality operator.
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -155,6 +161,7 @@ class FoodRecordIngredient {
         openFoodLicense == other.openFoodLicense;
   }
 
+  /// Overrides the hashCode method.
   @override
   int get hashCode {
     return Object.hash(
@@ -179,6 +186,9 @@ class FoodRecordIngredient {
           .weight) *
       selectedQuantity as UnitMass);
 
+  /// Calculates the nutritional information for the selected serving size based on the reference nutrients.
+  ///
+  /// Returns a [PassioNutrients] object representing the calculated nutritional information.
   PassioNutrients nutrientsSelectedSize() =>
       PassioNutrients.fromReferenceNutrients(referenceNutrients,
           weight: servingWeight());
