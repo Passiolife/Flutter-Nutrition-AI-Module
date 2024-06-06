@@ -1,6 +1,15 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PreferenceStore {
+  /// Here, implementing the code for singleton class.
+  ///
+  static final PreferenceStore _instance =
+      PreferenceStore._privateConstructor();
+
+  PreferenceStore._privateConstructor();
+
+  static PreferenceStore get instance => _instance;
+
   /// We creates a [SharedPreferences] class instance.
   /// It will use to set and get the data.
   late SharedPreferences _sharedPreferences;
@@ -30,7 +39,8 @@ class PreferenceStore {
     } else if (value is List<String>) {
       _sharedPreferences.setStringList(key, value);
     } else {
-      throw Exception('${value.runtimeType} type is not supported by SharedPreferences');
+      throw Exception(
+          '${value.runtimeType} type is not supported by SharedPreferences');
     }
   }
 

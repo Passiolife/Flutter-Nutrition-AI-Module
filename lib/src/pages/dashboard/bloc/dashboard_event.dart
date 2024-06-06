@@ -1,46 +1,21 @@
 part of 'dashboard_bloc.dart';
 
-abstract class DashboardEvent {}
-
-class GetFoodRecordsEvent extends DashboardEvent {
-  final DateTime dateTime;
-
-  GetFoodRecordsEvent({required this.dateTime});
+sealed class DashboardEvent extends Equatable {
+  const DashboardEvent();
 }
 
-class RefreshFoodRecordEvent extends DashboardEvent {}
+class PageUpdateEvent extends DashboardEvent {
+  final int index;
 
-class DeleteFoodRecordEvent extends DashboardEvent {
-  final FoodRecord? data;
+  const PageUpdateEvent({required this.index});
 
-  DeleteFoodRecordEvent({required this.data});
+  @override
+  List<Object?> get props => [index];
 }
 
-class DoFoodInsertEvent extends DashboardEvent {
-  final PassioIDAndName? data;
-  final DateTime dateTime;
+final class RefreshEvent extends DashboardEvent {
+  const RefreshEvent();
 
-  DoFoodInsertEvent({required this.data, required this.dateTime});
-}
-
-// Event will update the food record in DB.
-class DoFoodUpdateEvent extends DashboardEvent {
-  final FoodRecord? data;
-
-  DoFoodUpdateEvent({required this.data});
-}
-
-// Event will insert the food record into the favorites of the database.
-class DoFavouriteEvent extends DashboardEvent {
-  final FoodRecord? data;
-  final DateTime dateTime;
-
-  DoFavouriteEvent({required this.data, required this.dateTime});
-}
-
-/// Event will update the list based on the current tab selected.
-class DoTabChangeEvent extends DashboardEvent {
-  final String tab;
-
-  DoTabChangeEvent({required this.tab});
+  @override
+  List<Object?> get props => [];
 }

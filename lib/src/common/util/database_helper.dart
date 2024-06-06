@@ -21,6 +21,8 @@ class DatabaseHelper {
   final String tblFoodRecord = 'food_record';
   final String tblUserProfile = 'user_profile';
   final String tblFavorite = 'favorite';
+  final String tblWater = 'water';
+  final String tblWeight = 'weight';
 
   /// Table Columns:
   final String colId = 'id';
@@ -62,6 +64,24 @@ class DatabaseHelper {
             $colId INTEGER PRIMARY KEY,
             $colData TEXT NOT NULL,
             $colCreatedAt TEXT NOT NULL
+          )
+          ''');
+
+    // Query for [tblWater].
+    await db.execute('''
+          CREATE TABLE $tblWater (
+            $colId INTEGER PRIMARY KEY,
+            $colData INTEGER NOT NULL,
+            $colCreatedAt INTEGER NOT NULL
+          )
+          ''');
+
+    // Query for [tblWeight].
+    await db.execute('''
+          CREATE TABLE $tblWeight (
+            $colId INTEGER PRIMARY KEY,
+            $colData INTEGER NOT NULL,
+            $colCreatedAt INTEGER NOT NULL
           )
           ''');
   }

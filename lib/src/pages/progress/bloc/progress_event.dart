@@ -1,11 +1,5 @@
 part of 'progress_bloc.dart';
 
-abstract class ProgressEvent {}
-
-class DoCalendarChangeEvent extends ProgressEvent {
-  final String? time;
-
-  DoCalendarChangeEvent({required this.time});
+sealed class ProgressEvent extends Equatable {
+  const ProgressEvent();
 }
-
-class GetAllFoodDataEvent extends ProgressEvent {}

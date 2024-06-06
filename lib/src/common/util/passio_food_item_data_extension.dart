@@ -1,10 +1,13 @@
+/*
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import 'double_extensions.dart';
 
-UnitEnergy? actualUnitEnergy(PassioFoodItemData foodItemData, UnitEnergy? unitEnergy) {
+UnitEnergy? actualUnitEnergy(
+    PassioFoodItemData foodItemData, UnitEnergy? unitEnergy) {
   if (unitEnergy != null) {
-    double actualUnitEnergy = (unitEnergy.value) / (foodItemData.computedWeight().gramsValue() / 100).roundNumber(2);
+    double actualUnitEnergy = (unitEnergy.value) /
+        (foodItemData.computedWeight().gramsValue() / 100).roundNumber(2);
     return UnitEnergy(actualUnitEnergy, unitEnergy.unit);
   }
   return unitEnergy;
@@ -12,7 +15,8 @@ UnitEnergy? actualUnitEnergy(PassioFoodItemData foodItemData, UnitEnergy? unitEn
 
 UnitMass? actualUnitMass(PassioFoodItemData foodItemData, UnitMass? unitMass) {
   if (unitMass != null) {
-    double actualUnitMass = (unitMass.value) / (foodItemData.computedWeight().gramsValue() / 100).roundNumber(2);
+    double actualUnitMass = (unitMass.value) /
+        (foodItemData.computedWeight().gramsValue() / 100).roundNumber(2);
     return UnitMass(actualUnitMass, unitMass.unit);
   }
   return null;
@@ -20,7 +24,8 @@ UnitMass? actualUnitMass(PassioFoodItemData foodItemData, UnitMass? unitMass) {
 
 UnitIU? actualUnitIU(PassioFoodItemData foodItemData, UnitIU? unitIU) {
   if (unitIU != null) {
-    double actualUnitMass = (unitIU.value) / (foodItemData.computedWeight().gramsValue() / 100).roundNumber(2);
+    double actualUnitMass = (unitIU.value) /
+        (foodItemData.computedWeight().gramsValue() / 100).roundNumber(2);
     return UnitIU(actualUnitMass);
   }
   return null;
@@ -120,3 +125,4 @@ extension PassioFoodItemDataExtension on PassioFoodItemData {
     );
   }
 }
+*/
