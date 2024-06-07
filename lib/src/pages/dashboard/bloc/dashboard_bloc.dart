@@ -11,7 +11,8 @@ part 'dashboard_state.dart';
 
 class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
   /// [_connector] use to perform operations.
-  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector =>
+      NutritionAIModule.instance.configuration.connector;
 
   DashboardBloc() : super(DashboardInitial()) {
     on<GetFoodRecordsEvent>(_handleGetFoodLogsEvent);
@@ -21,24 +22,29 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     on<DoTabChangeEvent>(_handleDoTabChangeEvent);
   }
 
-  Future _handleGetFoodLogsEvent(GetFoodRecordsEvent event, Emitter<DashboardState> emit) async {
+  Future _handleGetFoodLogsEvent(
+      GetFoodRecordsEvent event, Emitter<DashboardState> emit) async {
     try {
-      final result = await _connector.fetchDayRecords(dateTime: event.dateTime) ?? [];
+      final result =
+          await _connector.fetchDayRecords(dateTime: event.dateTime) ?? [];
       emit(GetFoodRecordSuccessState(data: result));
     } catch (e) {
       emit(GetFoodRecordFailureState(message: e.toString()));
     }
   }
 
-  Future<void> _handleRefreshFoodLogEvent(RefreshFoodRecordEvent event, Emitter<DashboardState> emit) async {
+  Future<void> _handleRefreshFoodLogEvent(
+      RefreshFoodRecordEvent event, Emitter<DashboardState> emit) async {
     emit(RefreshFoodLogState());
   }
 
-  Future<void> _handleDeleteFoodRecordEvent(DeleteFoodRecordEvent event, Emitter<DashboardState> emit) async {
+  Future<void> _handleDeleteFoodRecordEvent(
+      DeleteFoodRecordEvent event, Emitter<DashboardState> emit) async {
     try {
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FoodInsertFailureState(message: 'Something went wrong while parsing data.'));
+        emit(FoodInsertFailureState(
+            message: 'Something went wrong while parsing data.'));
         return;
       }
       await _connector.deleteRecord(foodRecord: foodRecord);
@@ -47,19 +53,23 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  FutureOr<void> _handleDoFoodInsertEvent(DoFoodInsertEvent event, Emitter<DashboardState> emit) async {
+  FutureOr<void> _handleDoFoodInsertEvent(
+      DoFoodInsertEvent event, Emitter<DashboardState> emit) async {
     try {
       if (event.data?.passioID.isNotEmpty ?? false) {
         // Get attribute data from SDK.
-        final attributes = await NutritionAI.instance.lookupPassioAttributesFor(event.data?.passioID ?? '');
+        final attributes = await NutritionAI.instance
+            .lookupPassioAttributesFor(event.data?.passioID ?? '');
 
         if (attributes == null) {
-          emit(FoodInsertFailureState(message: 'Something went wrong while parsing data.'));
+          emit(FoodInsertFailureState(
+              message: 'Something went wrong while parsing data.'));
           return;
         }
 
         // Convert passio attribute to food record.
-        final foodRecord = FoodRecord.from(passioIDAttributes: attributes, dateTime: event.dateTime);
+        final foodRecord = FoodRecord.from(
+            passioIDAttributes: attributes, dateTime: event.dateTime);
 
         await _connector.updateRecord(foodRecord: foodRecord, isNew: true);
         emit(FoodInsertSuccessState());
@@ -69,7 +79,8 @@ class DashboardBloc extends Bloc<DashboardEvent, DashboardState> {
     }
   }
 
-  FutureOr<void> _handleDoTabChangeEvent(DoTabChangeEvent event, Emitter<DashboardState> emit) {
+  FutureOr<void> _handleDoTabChangeEvent(
+      DoTabChangeEvent event, Emitter<DashboardState> emit) {
     emit(TabChangedState(tab: event.tab));
   }
 }

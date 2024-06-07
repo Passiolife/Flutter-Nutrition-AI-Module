@@ -80,7 +80,8 @@ class _FoodDetailHeaderState extends State<FoodDetailHeader> {
       margin: EdgeInsets.symmetric(horizontal: Dimens.w4),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: Dimens.h16, horizontal: Dimens.w16),
+        padding:
+            EdgeInsets.symmetric(vertical: Dimens.h16, horizontal: Dimens.w16),
         child: Column(
           children: [
             Row(
@@ -133,18 +134,25 @@ class _FoodDetailHeaderState extends State<FoodDetailHeader> {
                             ),
                           ),
                           AnimatedSwitcher(
-                            duration: const Duration(milliseconds: Dimens.duration300),
+                            duration: const Duration(
+                                milliseconds: Dimens.duration300),
                             child: widget.isEditAmountVisible
                                 ? GestureDetector(
                                     behavior: HitTestBehavior.translucent,
                                     onTap: widget.onTapEditAmount,
                                     child: Container(
                                       key: ValueKey(widget.isEditAmountVisible),
-                                      decoration: BoxDecoration(color: AppColors.customBase, borderRadius: BorderRadius.circular(Dimens.r16)),
-                                      padding: EdgeInsets.symmetric(vertical: Dimens.h8, horizontal: Dimens.w8),
+                                      decoration: BoxDecoration(
+                                          color: AppColors.customBase,
+                                          borderRadius: BorderRadius.circular(
+                                              Dimens.r16)),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: Dimens.h8,
+                                          horizontal: Dimens.w8),
                                       child: Text(
                                         context.localization?.editAmount ?? '',
-                                        style: AppStyles.style14.copyWith(color: AppColors.passioInset),
+                                        style: AppStyles.style14.copyWith(
+                                            color: AppColors.passioInset),
                                       ),
                                     ),
                                   )
@@ -196,7 +204,8 @@ class _FoodDetailHeaderState extends State<FoodDetailHeader> {
       return;
     }
 
-    PassioFoodIcons passioFoodIcons = await NutritionAI.instance.lookupIconsFor(widget.passioID ?? '', type: widget.entityType);
+    PassioFoodIcons passioFoodIcons = await NutritionAI.instance
+        .lookupIconsFor(widget.passioID ?? '', type: widget.entityType);
 
     if (passioFoodIcons.cachedIcon != null) {
       _image.value = passioFoodIcons.cachedIcon;
@@ -204,7 +213,8 @@ class _FoodDetailHeaderState extends State<FoodDetailHeader> {
     }
     _image.value = passioFoodIcons.defaultIcon;
 
-    var remoteIcon = await NutritionAI.instance.fetchIconFor(widget.passioID ?? '');
+    var remoteIcon =
+        await NutritionAI.instance.fetchIconFor(widget.passioID ?? '');
     if (remoteIcon != null) {
       _image.value = remoteIcon;
     }
@@ -217,7 +227,12 @@ class TitleDescriptionColumn extends StatelessWidget {
   final String? tagTitle;
   final String? tagDescription;
 
-  const TitleDescriptionColumn({super.key, required this.title, required this.description, this.tagTitle, this.tagDescription});
+  const TitleDescriptionColumn(
+      {super.key,
+      required this.title,
+      required this.description,
+      this.tagTitle,
+      this.tagDescription});
 
   Widget get titleWidget => Text(
         title ?? "",
@@ -238,7 +253,9 @@ class TitleDescriptionColumn extends StatelessWidget {
     return Expanded(
       child: Column(
         children: [
-          tagTitle.isNotNullOrEmpty ? Material(type: MaterialType.transparency, child: titleWidget) : titleWidget,
+          tagTitle.isNotNullOrEmpty
+              ? Material(type: MaterialType.transparency, child: titleWidget)
+              : titleWidget,
           tagDescription.isNotNullOrEmpty
               ? Material(
                   type: MaterialType.transparency,

@@ -1,19 +1,28 @@
-This package provides a collection of pre-built pages, allowing users to effortlessly integrate these pages into your Flutter app. With just a few simple steps, your app can benefit from these ready-made features. Built to work with [nutrition_ai](https://pub.dev/packages/nutrition_ai).
+This package provides a collection of pre-built pages, allowing users to effortlessly integrate
+these pages into your Flutter app. With just a few simple steps, your app can benefit from these
+ready-made features. Built to work with [nutrition_ai](https://pub.dev/packages/nutrition_ai).
 
 ## Features
-| Quick Scan | Multi Food Scan | Food Search |
-|-------------|---------|-------|
-| <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/2518512a-0404-4f04-a07d-b4b37241d098"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/afd44d6f-7183-46b6-a4ab-c74d32acd291"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/assets/84432215/eedc43f0-389c-4c0b-b72b-c993fa060c45"> |
-| This page enables you to scan real-time food items using your camera. | Capability to Scan multiple food items in real-time using your camera. | Input the name of a food item, and it will display matched results from the SDK. |
 
+| Quick Scan                                                                                             | Multi Food Scan                                                                                        | Food Search                                                                                             |
+|--------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------|---------------------------------------------------------------------------------------------------------|
+| <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/blob/master/doc/quick_scan.mp4"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/blob/master/doc/multi_scan.mp4"> | <video src="https://github.com/Passiolife/Flutter-Nutrition-AI-Module/blob/master/doc/food_search.mp4"> |
+| This page enables you to scan real-time food items using your camera.                                  | Capability to Scan multiple food items in real-time using your camera.                                 | Input the name of a food item, and it will display matched results from the SDK.                        |
 
 ## BEFORE YOU CONTINUE:
 
-1. Passio Nutrition-AI SDK added data from Open Food Facts (https://en.openfoodfacts.org/). Each food that contains data from Open Food Facts will be marked by public var isOpenFood: Bool.. In case you choose to set ```isOpenFood = true``` you agree to abide by the terms of the Open Food Facts license agreement (https://opendatacommons.org/licenses/odbl/1-0) and their terms of use (https://world.openfoodfacts.org/terms-of-use) and you will have to add to the UI the following license copy:
+1. Passio Nutrition-AI SDK added data from Open Food Facts (https://en.openfoodfacts.org/). Each
+   food that contains data from Open Food Facts will be marked by public var isOpenFood: Bool.. In
+   case you choose to set ```isOpenFood = true``` you agree to abide by the terms of the Open Food
+   Facts license agreement (https://opendatacommons.org/licenses/odbl/1-0) and their terms of
+   use (https://world.openfoodfacts.org/terms-of-use) and you will have to add to the UI the
+   following license copy:
 
-"This record contains information from Open Food Facts (https://en.openfoodfacts.org), which is made available here under the Open Database License (https://opendatacommons.org/licenses/odbl/1-0)"
+"This record contains information from Open Food Facts (https://en.openfoodfacts.org), which is made
+available here under the Open Database License (https://opendatacommons.org/licenses/odbl/1-0)"
 
-2. To use the SDK sign up at https://www.passio.ai/nutrition-ai. The SDK WILL NOT WORK without a valid SDK key.
+2. To use the SDK sign up at https://www.passio.ai/nutrition-ai. The SDK WILL NOT WORK without a
+   valid SDK key.
 
 ## Minimum Requirements
 
@@ -41,11 +50,11 @@ allprojects {
 ## Getting started
 
 1. Add the dependency in `pubspec.yaml`:
+
 ```yaml
 dependencies:
   nutrition_ai_module: ^0.0.1
 ```
-
 
 ## Usage
 
@@ -56,9 +65,13 @@ import 'package:nutrition_ai_module/nutrition_ai_module.dart';
 ```
 
 3. Insert the following line at the location of your choice to initiate the Nutrition AI Module.
+
 ```dart
-await NutritionAIModule.instance
-    .setPassioKey(PUT_YOUR_PASSIO_KEY_HERE)
+await
+NutritionAIModule.instance
+    .setPassioKey
+(
+PUT_YOUR_PASSIO_KEY_HERE)
     .setPassioConnector(this)
     .launch(context);
 ```
@@ -66,26 +79,40 @@ await NutritionAIModule.instance
 #### Required Methods:
 
 ##### setPassioKey(String key):
-This method requires a string value as a parameter, so please provide the Key you acquired upon signing up at https://www.passio.ai/nutrition-ai.
+
+This method requires a string value as a parameter, so please provide the Key you acquired upon
+signing up at https://www.passio.ai/nutrition-ai.
 
 ##### launch(BuildContext context):
-In order to launch our module, this method requires a `BuildContext` as a parameter. You can call this method at your desired launch location, and it returns a `Future`.
+
+In order to launch our module, this method requires a `BuildContext` as a parameter. You can call
+this method at your desired launch location, and it returns a `Future`.
 
 #### Optional Methods:
 
 ##### setPassioConnector(PassioConnector passioConnector):
-To use this method, you must provide a `PassioConnector` as a parameter and ensure the implementation of all methods specified within the `PassioConnector`. By default, the data will be stored in the LocalDatabase.
 
+To use this method, you must provide a `PassioConnector` as a parameter and ensure the
+implementation of all methods specified within the `PassioConnector`. By default, the data will be
+stored in the LocalDatabase.
 
 #### Note:
-The default PassioConnector operates with the Local Database, which means the data can be lost when the app is uninstalled. Therefore, it's your responsibility to store it in a more permanent location if required.
+
+The default PassioConnector operates with the Local Database, which means the data can be lost when
+the app is uninstalled. Therefore, it's your responsibility to store it in a more permanent location
+if required.
 
 ## Customization
 
-While our package offers a set of pre-built features, we understand that every app is unique. You can easily customize it to match your specific requirements by referring to the [nutrition_ai](https://pub.dev/packages/nutrition_ai) package for additional options.
+While our package offers a set of pre-built features, we understand that every app is unique. You
+can easily customize it to match your specific requirements by referring to
+the [nutrition_ai](https://pub.dev/packages/nutrition_ai) package for additional options.
 
 ## Guideline to report an issue/feature request
-It would be great for us if the reporter could share the below things to understand the root cause of the issue.
+
+It would be great for us if the reporter could share the below things to understand the root cause
+of the issue.
+
 - Library version
 - Code snippet
 - Logs if applicable

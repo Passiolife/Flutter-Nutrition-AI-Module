@@ -11,7 +11,8 @@ part 'favourite_state.dart';
 
 class FavouriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
   /// [_connector] use to perform operations.
-  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector =>
+      NutritionAIModule.instance.configuration.connector;
 
   FavouriteBloc() : super(FavouriteInitial()) {
     on<GetAllFavoritesEvent>(_handleGetAllFavouritesEvent);
@@ -20,7 +21,8 @@ class FavouriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     on<DoLogEvent>(_handleDoLogEvent);
   }
 
-  FutureOr<void> _handleGetAllFavouritesEvent(GetAllFavoritesEvent event, Emitter<FavoriteState> emit) async {
+  FutureOr<void> _handleGetAllFavouritesEvent(
+      GetAllFavoritesEvent event, Emitter<FavoriteState> emit) async {
     try {
       final result = await _connector.fetchFavorites();
       // No any error, so emit the success state.
@@ -31,11 +33,13 @@ class FavouriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     }
   }
 
-  FutureOr<void> _handleDoFavoriteUpdateEvent(DoFavoriteUpdateEvent event, Emitter<FavoriteState> emit) async {
+  FutureOr<void> _handleDoFavoriteUpdateEvent(
+      DoFavoriteUpdateEvent event, Emitter<FavoriteState> emit) async {
     try {
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FavoriteUpdateFailureState(message: 'Something went wrong while parsing data.'));
+        emit(FavoriteUpdateFailureState(
+            message: 'Something went wrong while parsing data.'));
         return;
       }
       await _connector.updateFavorite(foodRecord: foodRecord, isNew: false);
@@ -47,11 +51,13 @@ class FavouriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     }
   }
 
-  FutureOr<void> _handleDoFavoriteDeleteEvent(DoFavoriteDeleteEvent event, Emitter<FavoriteState> emit) async {
+  FutureOr<void> _handleDoFavoriteDeleteEvent(
+      DoFavoriteDeleteEvent event, Emitter<FavoriteState> emit) async {
     try {
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FavoriteDeleteFailureState(message: 'Something went wrong while parsing data.'));
+        emit(FavoriteDeleteFailureState(
+            message: 'Something went wrong while parsing data.'));
         return;
       }
       await _connector.deleteFavorite(foodRecord: foodRecord);
@@ -63,12 +69,14 @@ class FavouriteBloc extends Bloc<FavoriteEvent, FavoriteState> {
     }
   }
 
-  FutureOr<void> _handleDoLogEvent(DoLogEvent event, Emitter<FavoriteState> emit) async {
+  FutureOr<void> _handleDoLogEvent(
+      DoLogEvent event, Emitter<FavoriteState> emit) async {
     try {
       emit(FoodRecordLogLoadingState(index: event.index));
       final foodRecord = event.data;
       if (foodRecord == null) {
-        emit(FoodRecordLogFailureState(message: 'Something went wrong while parsing data.'));
+        emit(FoodRecordLogFailureState(
+            message: 'Something went wrong while parsing data.'));
         return;
       }
       final selectedDateTime = DateTime.now();
