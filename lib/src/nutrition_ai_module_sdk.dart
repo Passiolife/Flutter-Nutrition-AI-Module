@@ -7,6 +7,7 @@ import 'common/connectors/passio_connector.dart';
 import 'common/constant/app_constants.dart';
 import 'common/locale/app_localizations.dart';
 import 'common/models/user_profile/user_profile_model.dart';
+import 'common/util/database_helper.dart';
 import 'common/util/preference_store.dart';
 import 'common/util/user_session.dart';
 import 'nutrition_ai_module_configuration.dart';
@@ -52,7 +53,7 @@ class NutritionAIModule {
   Future<void> launch(BuildContext context) async {
     // Check the type of connector and initialize the local database if needed.
     if (configuration.connector is LocalDBConnector) {
-      // await DatabaseHelper.instance.init();
+      await DatabaseHelper.instance.init();
     }
 
     // Set preferred device orientation to portrait mode

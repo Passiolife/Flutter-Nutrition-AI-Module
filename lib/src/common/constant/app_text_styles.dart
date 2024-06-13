@@ -48,6 +48,10 @@ class AppTextStyle {
 
   static TextStyle get extraBold =>
       const TextStyle(fontWeight: FontWeight.w800);
+
+  static TextStyle get italic => const TextStyle(fontStyle: FontStyle.italic);
+
+  static TextDecoration get underline => TextDecoration.underline;
 }
 
 extension AppStyleExtension on TextStyle {

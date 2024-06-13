@@ -18,6 +18,8 @@ class FoodItemRowWidget extends StatelessWidget {
     this.onTapAdd,
     this.isLoading = false,
     this.isAddVisible = true,
+    this.suffix,
+    this.padding,
   });
 
   final int? index;
@@ -28,6 +30,8 @@ class FoodItemRowWidget extends StatelessWidget {
   final VoidCallback? onTapAdd;
   final bool isLoading;
   final bool isAddVisible;
+  final Widget? suffix;
+  final EdgeInsetsGeometry? padding;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +45,7 @@ class FoodItemRowWidget extends StatelessWidget {
           highlightColor: AppColors.blue50,
           onTap: onTap,
           child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            padding: padding ?? EdgeInsets.symmetric(horizontal: 8.w),
             child: Row(
               children: [
                 PassioImageWidget(
@@ -85,7 +89,8 @@ class FoodItemRowWidget extends StatelessWidget {
                     ),
                     onPressed: onTapAdd,
                   ),
-                )
+                ),
+                suffix ?? const SizedBox.shrink()
               ],
             ),
           ),

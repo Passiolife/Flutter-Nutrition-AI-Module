@@ -1,18 +1,32 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <!-- Indicates that the app can use the camera, but it's not a required feature -->
     <uses-feature
         android:name="android.hardware.camera"
         android:required="false" />
 
+    <!--Permission for Internet access-->
     <uses-permission android:name="android.permission.INTERNET"/>
-
+    <!--Permission for Camera access-->
     <uses-permission android:name="android.permission.CAMERA" />
+    <!--Permissions for Notification-->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <!--Permissions for Microphone access-->
+    <uses-permission android:name="android.permission.RECORD_AUDIO"/> <!--This permission is required for microphone access.-->
+    <uses-permission android:name="android.permission.BLUETOOTH"/> <!--This permission is required because speech recognition may use remote services.-->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> <!--This permission is required because speech recognition can use bluetooth headsets when connected.-->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/> <!--This permission is required because speech recognition can use bluetooth headsets when connected.-->
+
+    <!-- Queries section to specify that the app can interact with the speech recognition service -->
+    <queries>
+        <intent>
+            <action android:name="android.speech.RecognitionService" />
+        </intent>
+    </queries>
 
     <application
         android:name="${applicationName}"
-        android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher"
         android:label="Flutter SDK demo">
 

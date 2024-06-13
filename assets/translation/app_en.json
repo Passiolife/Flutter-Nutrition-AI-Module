@@ -242,5 +242,21 @@
   "micros": "Micros",
   "generateReport": "Generate Report",
   "send": "Send",
-  "aiAdvisor": "AI Advisor"
+  "aiAdvisor": "AI Advisor",
+  "voiceLogging": "Voice Logging",
+  "tap": "Tap",
+  "startListening": "Start Listening",
+  "stopListening": "Stop Listening",
+  "thenSaySomethingLike": "then say something like:",
+  "voiceLoggingExample": "“I had one blueberry muffin and a cup of green tea for my breakfast”",
+  "microphonePermissionMessage": "App requires microphone access to capture your voice for food recognition.",
+  "speechRecognitionPermissionMessage": "App requires speech recognition access to retrieve a list of recognized foods from your speech queries.",
+  "generatingResults": "Generating results...",
+  "result": "Results",
+  "resultDescription": "Select the foods you would like to log",
+  "tryAgain": "Try Again",
+  "logSelected": "Log Selected",
+  "recognitionErrorMessage": "Failed to generate voice log recognition results.",
+  "foodLogErrorMessage": "Unable to log your food entry at this time. Please try again later.",
+  "useImage": "Use Image"
 }

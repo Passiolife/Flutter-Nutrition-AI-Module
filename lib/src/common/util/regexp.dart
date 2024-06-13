@@ -6,4 +6,7 @@ abstract class RegExps {
   // [password] should be a-z or A-Z and 0-9.
   static final RegExp password =
       RegExp(r'^(?=.*[a-z])(?=.*\d)[a-zA-Z\d\w\W]{8,}$');
+
+  static final RegExp number = RegExp(r'\d+');
+  static final RegExp string = RegExp(r'[a-zA-Z]+');
 }

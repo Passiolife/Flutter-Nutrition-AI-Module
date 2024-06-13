@@ -12,6 +12,7 @@ class FloatingButtonExpandedWidget extends StatelessWidget {
   const FloatingButtonExpandedWidget({
     required this.imagePath,
     this.text,
+    this.colorFilter,
     super.key,
   });
 
@@ -19,6 +20,8 @@ class FloatingButtonExpandedWidget extends StatelessWidget {
   final String imagePath;
   // Text to display next to the button icon.
   final String? text;
+
+  final ColorFilter? colorFilter;
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +43,7 @@ class FloatingButtonExpandedWidget extends StatelessWidget {
           // Widget to display the icon.
           SvgPicture.asset(
             imagePath,
+            colorFilter: colorFilter,
             width: AppDimens.r24,
             height: AppDimens.r24,
           ),

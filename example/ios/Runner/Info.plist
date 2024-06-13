@@ -49,5 +49,9 @@
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>
+    <key>NSSpeechRecognitionUsageDescription</key>
+    <string>App requires speech recognition access to retrieve a list of recognized foods from your speech queries.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>App requires microphone access to capture your voice for food recognition.</string>
 </dict>
 </plist>

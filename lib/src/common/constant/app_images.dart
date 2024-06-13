@@ -4,6 +4,9 @@ class AppImages {
   static const imageDir =
       'packages/${AppCommonConstants.packageName}/assets/images/';
 
+  // Gifs
+  static const wave = '${imageDir}wave.gif';
+
   // Images
   static const imgRecipe = '${imageDir}img_recipe.png';
   static const imgRobot = '${imageDir}img_robot.png';
@@ -33,11 +36,13 @@ class AppImages {
   static const icFluentFoodAppleFilled =
       '${imageDir}ic_fluent_food_apple_filled.svg';
   static const icFoods = '${imageDir}ic_foods.svg';
+  static const icGallery = '${imageDir}ic_gallery.svg';
   static const icHome = '${imageDir}ic_home.svg';
   static const icInformationCircle = '${imageDir}ic_information_circle.svg';
   static const icLogout = '${imageDir}ic_logout.svg';
   static const icMealPlan = '${imageDir}ic_meal_plan.svg';
   static const icMenu = '${imageDir}ic_menu.svg';
+  static const icMic = '${imageDir}ic_mic.svg';
   static const icNutritionFacts = '${imageDir}ic_nutrition_facts.svg';
   static const icPackaging = '${imageDir}ic_packaging.svg';
   static const icPencil = '${imageDir}ic_pencil.svg';
@@ -55,6 +60,7 @@ class AppImages {
   static const icSearch = '${imageDir}ic_search.svg';
   static const icSearchFilled = '${imageDir}ic_search_filled.svg';
   static const icSettings = '${imageDir}ic_settings.svg';
+  static const icStop = '${imageDir}ic_stop.svg';
   static const icSwitchHorizontal = '${imageDir}ic_switch_horizontal.svg';
   static const icTrash = '${imageDir}ic_trash.svg';
   static const icTutorials = '${imageDir}ic_tutorials.svg';

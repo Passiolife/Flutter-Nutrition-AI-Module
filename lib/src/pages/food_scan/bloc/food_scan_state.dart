@@ -37,17 +37,11 @@ class ScanLoadingState extends FoodScanState {
 }
 
 class ScanResultState extends FoodScanState {
-  /*final PassioID passioID;
-  final String foodName;
-  final String iconId;*/
   final PassioFoodItem? foodItem;
   final DetectedCandidate? detectedCandidate;
   final List<DetectedCandidate> alternatives;
 
   const ScanResultState({
-    /*required this.passioID,
-    required this.foodName,
-    required this.iconId,*/
     this.foodItem,
     this.detectedCandidate,
     this.alternatives = const [],

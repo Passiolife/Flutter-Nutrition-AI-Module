@@ -502,4 +502,38 @@ class AppLocalizations {
   String? get send => getLabel('send');
 
   String? get aiAdvisor => getLabel('aiAdvisor');
+
+  String? get voiceLogging => getLabel('voiceLogging');
+
+  String? get tap => getLabel('tap');
+
+  String? get startListening => getLabel('startListening');
+
+  String? get thenSaySomethingLike => getLabel('thenSaySomethingLike');
+
+  String? get voiceLoggingExample => getLabel('voiceLoggingExample');
+
+  String? get stopListening => getLabel('stopListening');
+
+  String? get microphonePermissionMessage =>
+      getLabel('microphonePermissionMessage');
+
+  String? get speechRecognitionPermissionMessage =>
+      getLabel('speechRecognitionPermissionMessage');
+
+  String? get generatingResults => getLabel('generatingResults');
+
+  String? get result => getLabel('result');
+
+  String? get resultDescription => getLabel('resultDescription');
+
+  String? get tryAgain => getLabel('tryAgain');
+
+  String? get logSelected => getLabel('logSelected');
+
+  String? get recognitionErrorMessage => getLabel('recognitionErrorMessage');
+
+  String? get foodLogErrorMessage => getLabel('foodLogErrorMessage');
+
+  String? get useImage => getLabel('useImage');
 }

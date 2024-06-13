@@ -76,7 +76,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
         type: widget.type,
       );
 
-      setImageValue(result.cachedIcon ?? result.defaultIcon);
+      setImage(result.cachedIcon ?? result.defaultIcon);
       if (result.cachedIcon != null) {
         return;
       }
@@ -87,7 +87,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
           iconSize: widget.iconSize,
         );
         if (fetchedImage != null) {
-          setImageValue(fetchedImage);
+          setImage(fetchedImage);
         }
       }
     } catch (error) {
@@ -96,7 +96,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
     }
   }
 
-  void setImageValue(PlatformImage? image) {
+  void setImage(PlatformImage? image) {
     if (mounted) {
       _image.value = image;
     }

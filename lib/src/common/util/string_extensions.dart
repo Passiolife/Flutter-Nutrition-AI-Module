@@ -117,4 +117,30 @@ extension Util on String? {
       return null;
     }
   }
+
+  // Function to extract a number and string from an input string
+  ({double? number, String? string}) extractNumberAndString() {
+    // Check if input is null or empty
+    if (this == null || (this?.isEmpty ?? true)) {
+      return (number: null, string: this);
+    }
+
+    // Regular expressions to match number and string parts
+    final numberRegExp = RegExps.number;
+    final stringRegExp = RegExps.string;
+
+    // Find the first match for number in the input
+    final numberMatch = numberRegExp.firstMatch(this!);
+    // Find the first match for string in the input
+    final stringMatch = stringRegExp.firstMatch(this!);
+
+    // Extract the number from numberMatch and convert it to int, or null if no match
+    double? number =
+        numberMatch != null ? double.tryParse(numberMatch.group(0)!) : null;
+    // Extract the string from stringMatch, or null if no match
+    final string = stringMatch?.group(0);
+
+    // Return the extracted number and string as a tuple
+    return (number: number, string: string);
+  }
 }

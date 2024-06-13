@@ -10,6 +10,7 @@ import '../food_search/food_search_page.dart';
 import '../home/home_page.dart';
 import '../meal_plan/meal_plan_page.dart';
 import '../progress/progress_page.dart';
+import '../voice_logging/voice_logging_page.dart';
 import 'bloc/dashboard_bloc.dart';
 import 'widgets/widgets.dart';
 
@@ -24,13 +25,23 @@ class DashboardPage extends StatefulWidget {
     if (removeUntil) {
       await Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (_) => DashboardPage(page: page)),
-        (route) => false,
+        MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => DashboardBloc(),
+            child: DashboardPage(page: page),
+          ),
+        ),
+        (route) => route.isFirst,
       );
     } else {
       await Navigator.push(
         context,
-        MaterialPageRoute(builder: (_) => DashboardPage(page: page)),
+        MaterialPageRoute(
+          builder: (_) => BlocProvider(
+            create: (context) => DashboardBloc(),
+            child: DashboardPage(page: page),
+          ),
+        ),
       );
     }
   }
@@ -52,7 +63,7 @@ class _DashboardPageState extends State<DashboardPage> {
         context.localization?.progress: const ProgressPage(),
       };
 
-  final _bloc = DashboardBloc();
+  DashboardBloc get _bloc => BlocProvider.of<DashboardBloc>(context);
 
   @override
   void initState() {
@@ -117,6 +128,8 @@ class _DashboardPageState extends State<DashboardPage> {
     // Action for when the text matches the 'search' localization.
     else if (action == context.localization?.textSearch) {
       FoodSearchPage.navigate(context, needsReturn: false);
+    } else if (action == context.localization?.voiceLogging) {
+      VoiceLoggingPage.navigate(context);
     }
     // Action for when the text matches the 'favourite' localization.
     else if (action == context.localization?.favourites) {

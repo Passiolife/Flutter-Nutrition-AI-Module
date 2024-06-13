@@ -18,16 +18,25 @@ class NotchFABWidget extends StatelessWidget {
   List<FloatingButtonExpandedWidget> _fabExpandedWidget(BuildContext context) =>
       [
         FloatingButtonExpandedWidget(
-          imagePath: AppImages.icFavoriteFilled,
-          text: context.localization?.favourites,
+          imagePath: AppImages.icScan,
+          text: context.localization?.foodScanner,
         ),
         FloatingButtonExpandedWidget(
           imagePath: AppImages.icSearch,
           text: context.localization?.textSearch,
         ),
         FloatingButtonExpandedWidget(
-          imagePath: AppImages.icScan,
-          text: context.localization?.foodScanner,
+          imagePath: AppImages.icMic,
+          colorFilter: const ColorFilter.mode(AppColors.indigo600Main, BlendMode.srcIn),
+          text: context.localization?.voiceLogging,
+        ),
+        /*FloatingButtonExpandedWidget(
+          imagePath: AppImages.icFavoriteFilled,
+          text: context.localization?.useImage,
+        ),*/
+        FloatingButtonExpandedWidget(
+          imagePath: AppImages.icFavoriteFilled,
+          text: context.localization?.favourites,
         ),
       ];
 

@@ -49,7 +49,7 @@ class QuickSuggestionsWidget extends StatelessWidget {
     return initialPixelValue / screenHeight;
   }
 
-  double get maxSize => 0.6;
+  double get _maxSize => 0.6;
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +58,7 @@ class QuickSuggestionsWidget extends StatelessWidget {
       child: DraggableBottomSheetWidget(
         initialSize: _getInitialSize(context),
         minSize: _getInitialSize(context),
-        maxSize: maxSize,
+        maxSize: _maxSize,
         builder: (context, dragController, scrollController) {
           return Container(
             decoration: AppShadows.base,

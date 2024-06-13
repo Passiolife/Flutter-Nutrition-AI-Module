@@ -18,7 +18,7 @@ dependencies:
 
   # https://pub.dev/packages/flutter_bloc
   # It is a design pattern which helps separate the presentation layer from the business logic.
-  flutter_bloc: ^8.1.5
+  flutter_bloc: ^8.1.6
 
   # https://pub.dev/packages/flutter_local_notifications
   # A cross platform plugin for displaying local notifications.
@@ -88,6 +88,10 @@ dependencies:
   # Required for table_calendar functionality.
   # Easy to use, reliable and lightweight gesture detector for Flutter apps. Exposes simple API to react to basic gestures.
   simple_gesture_detector: ^0.2.1
+
+  # https://pub.dev/packages/speech_to_text
+  # A library that exposes device specific speech recognition capability.
+  speech_to_text: ^6.6.2
 
   # https://pub.dev/packages/sqflite
   # SQLite plugin for Flutter.
