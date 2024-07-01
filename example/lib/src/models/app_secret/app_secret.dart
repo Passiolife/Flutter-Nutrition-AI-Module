@@ -6,4 +6,6 @@ part 'app_secret.g.dart';
 abstract class AppSecret {
   @EnviedField(varName: 'PASSIO_KEY')
   static const String passioKey = _AppSecret.passioKey;
+  @EnviedField(varName: 'ADVISOR_KEY')
+  static const String advisorKey = _AppSecret.advisorKey;
 }

@@ -18,6 +18,15 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/> <!--This permission is required because speech recognition can use bluetooth headsets when connected.-->
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/> <!--This permission is required because speech recognition can use bluetooth headsets when connected.-->
 
+    <!--Permissions for Gallery/Library access-->
+    <!-- Devices running Android 12L (API level 32) or lower  -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
+    <!-- Devices running Android 13 (API level 33) or higher -->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <!-- To handle the reselection within the app on devices running Android 14
+         or higher if your app targets Android 14 (API level 34) or higher.  -->
+    <uses-permission android:name="android.permission.READ_MEDIA_VISUAL_USER_SELECTED" />
+
     <!-- Queries section to specify that the app can interact with the speech recognition service -->
     <queries>
         <intent>
@@ -47,6 +56,7 @@
             android:hardwareAccelerated="true"
             android:launchMode="singleTop"
             android:theme="@style/LaunchTheme"
+            android:requestLegacyExternalStorage="true"
             android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user

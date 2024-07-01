@@ -61,6 +61,9 @@ post_install do |installer|
 
             ## dart: PermissionGroup.speech
             'PERMISSION_SPEECH_RECOGNIZER=1',
+
+            ## dart: PermissionGroup.photos
+            'PERMISSION_PHOTOS=1',
           ]
 
         end

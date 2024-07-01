@@ -126,6 +126,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                   ),
                 ),
               ),
+              16.verticalSpace,
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: AppButton(
@@ -136,7 +137,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                   },
                 ),
               ),
-              40.verticalSpace,
+              (context.bottomPadding + 16.h).verticalSpace,
             ],
           ),
         );

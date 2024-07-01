@@ -50,7 +50,7 @@ final class UpdateSelectionEvent extends VoiceLoggingEvent {
   const UpdateSelectionEvent({required this.index, this.voiceLog});
 
   @override
-  List<Object?> get props => [voiceLog];
+  List<Object?> get props => [index, voiceLog];
 }
 
 final class ClearSelectionEvent extends VoiceLoggingEvent {

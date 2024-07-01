@@ -53,5 +53,7 @@
     <string>App requires speech recognition access to retrieve a list of recognized foods from your speech queries.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>App requires microphone access to capture your voice for food recognition.</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>App requires access to your photo library to recognize images and identify food items from your photos.</string>
 </dict>
 </plist>

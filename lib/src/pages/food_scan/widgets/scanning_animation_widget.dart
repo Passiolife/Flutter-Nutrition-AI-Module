@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
@@ -43,36 +44,9 @@ class ScanningAnimationWidgetState extends State<ScanningAnimationWidget>
           top: AppDimens.h110,
           left: AppDimens.w24,
           child: SvgPicture.asset(
-            AppImages.icScannerLeftTop,
-            width: AppDimens.r100,
-            height: AppDimens.r100,
-          ),
-        ),
-        Positioned(
-          top: AppDimens.h110,
-          right: AppDimens.w24,
-          child: SvgPicture.asset(
-            AppImages.icScannerRightTop,
-            width: AppDimens.r100,
-            height: AppDimens.r100,
-          ),
-        ),
-        Positioned(
-          top: AppDimens.h180 + AppDimens.h100 + AppDimens.h110,
-          left: AppDimens.w24,
-          child: SvgPicture.asset(
-            AppImages.icScannerLeftBottom,
-            width: AppDimens.r100,
-            height: AppDimens.r100,
-          ),
-        ),
-        Positioned(
-          top: AppDimens.h180 + AppDimens.h100 + AppDimens.h110,
-          right: AppDimens.w24,
-          child: SvgPicture.asset(
-            AppImages.icScannerRightBottom,
-            width: AppDimens.r100,
-            height: AppDimens.r100,
+            AppImages.icScanFrame,
+            width: double.infinity,
+            height: 380.h,
           ),
         ),
         ScannerWidget(

@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../constant/app_constants.dart';
 import '../util/string_extensions.dart';
 import 'passio_image_widget.dart';
+import 'selection_indicator_widget.dart';
 import 'shimmer_widget.dart';
 
 class FoodItemRowWidget extends StatelessWidget {
@@ -20,7 +21,27 @@ class FoodItemRowWidget extends StatelessWidget {
     this.isAddVisible = true,
     this.suffix,
     this.padding,
-  });
+    this.backgroundColor,
+  })  : _withSelection = false,
+        isSelected = false,
+        onSelect = null;
+
+  const FoodItemRowWidget.withSelection({
+    super.key,
+    this.index,
+    this.iconId,
+    this.title,
+    this.subtitle,
+    this.onTap,
+    this.onTapAdd,
+    this.isLoading = false,
+    this.isAddVisible = true,
+    this.suffix,
+    this.padding,
+    this.backgroundColor,
+    this.isSelected = false,
+    this.onSelect,
+  }) : _withSelection = true;
 
   final int? index;
   final String? iconId;
@@ -32,6 +53,12 @@ class FoodItemRowWidget extends StatelessWidget {
   final bool isAddVisible;
   final Widget? suffix;
   final EdgeInsetsGeometry? padding;
+  final Color? backgroundColor;
+
+  // Below is used to show selection view.
+  final bool _withSelection;
+  final bool isSelected;
+  final VoidCallback? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +66,7 @@ class FoodItemRowWidget extends StatelessWidget {
       return const SkeletonWidget();
     } else {
       return Material(
-        color: Colors.transparent,
+        color: backgroundColor ?? Colors.transparent,
         child: InkWell(
           splashColor: AppColors.blue50,
           highlightColor: AppColors.blue50,
@@ -90,7 +117,12 @@ class FoodItemRowWidget extends StatelessWidget {
                     onPressed: onTapAdd,
                   ),
                 ),
-                suffix ?? const SizedBox.shrink()
+                suffix ?? (_withSelection
+                    ? IconButton(
+                        onPressed: onSelect,
+                        icon: SelectionIndicator(isSelected: isSelected),
+                      )
+                    : const SizedBox.shrink())
               ],
             ),
           ),

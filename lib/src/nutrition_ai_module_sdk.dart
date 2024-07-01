@@ -41,6 +41,11 @@ class NutritionAIModule {
     return this;
   }
 
+  NutritionAIModule setAdvisorKey(String? key) {
+    configuration = configuration.copyWith(advisorKey: key);
+    return this;
+  }
+
   /// Launches the Nutrition AI module.
   ///
   /// This method requires a [BuildContext] parameter to initiate the Nutrition AI module.

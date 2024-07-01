@@ -11,17 +11,24 @@ class NutritionConfiguration {
   /// This field is required and is used to interact with the storage backend.
   final PassioConnector connector;
 
+  final String? advisorKey;
+
   /// Constructor for creating a `NutritionConfiguration` instance.
   ///
   /// Takes a [PassioConnector] as a required named parameter to initialize the configuration.
-  const NutritionConfiguration({required this.connector});
+  const NutritionConfiguration(
+      {required this.connector, this.advisorKey});
 
   /// Creates a copy of the current `NutritionConfiguration` instance with optional modifications.
   ///
   /// The [connector] parameter can be provided to override the existing connector.
   ///
   /// Returns a new `NutritionConfiguration` instance with the updated values.
-  NutritionConfiguration copyWith({PassioConnector? connector}) {
-    return NutritionConfiguration(connector: connector ?? this.connector);
+  NutritionConfiguration copyWith(
+      {PassioConnector? connector, String? advisorKey}) {
+    return NutritionConfiguration(
+      connector: connector ?? this.connector,
+      advisorKey: advisorKey ?? this.advisorKey,
+    );
   }
 }

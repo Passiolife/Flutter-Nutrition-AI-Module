@@ -10,6 +10,7 @@ class AppImages {
   // Images
   static const imgRecipe = '${imageDir}img_recipe.png';
   static const imgRobot = '${imageDir}img_robot.png';
+  static const imgTakePictureIntro = '${imageDir}img_take_picture_intro.png';
 
   // Icons
   static const icBadgeCheck = '${imageDir}ic_badge_check.svg';
@@ -20,7 +21,10 @@ class AppImages {
   static const icBeverages = '${imageDir}ic_beverages.svg';
   static const icBmi = '${imageDir}ic_bmi.svg';
   static const icCalendar = '${imageDir}ic_calendar.svg';
+  static const icCamera = '${imageDir}ic_camera.svg';
+  static const icCapture = '${imageDir}ic_capture.svg';
   static const icChartPie = '${imageDir}ic_chart_pie.svg';
+  static const icCheck = '${imageDir}ic_check.svg';
   static const icCheckMark = '${imageDir}ic_check_mark.svg';
   static const icChevronUp = '${imageDir}ic_chevron_up.svg';
   static const icChevronDown = '${imageDir}ic_chevron_down.svg';
@@ -43,6 +47,7 @@ class AppImages {
   static const icMealPlan = '${imageDir}ic_meal_plan.svg';
   static const icMenu = '${imageDir}ic_menu.svg';
   static const icMic = '${imageDir}ic_mic.svg';
+  static const icMyFoodsThumbnail = '${imageDir}ic_my_foods_thumbnail.svg';
   static const icNutritionFacts = '${imageDir}ic_nutrition_facts.svg';
   static const icPackaging = '${imageDir}ic_packaging.svg';
   static const icPencil = '${imageDir}ic_pencil.svg';
@@ -53,10 +58,7 @@ class AppImages {
   static const icQuestionMarkCircle = '${imageDir}ic_question_mark_circle.svg';
   static const icRecipe = '${imageDir}ic_recipe.svg';
   static const icScan = '${imageDir}ic_scan.svg';
-  static const icScannerLeftTop = '${imageDir}ic_scanner_left_top.svg';
-  static const icScannerLeftBottom = '${imageDir}ic_scanner_left_bottom.svg';
-  static const icScannerRightTop = '${imageDir}ic_scanner_right_top.svg';
-  static const icScannerRightBottom = '${imageDir}ic_scanner_right_bottom.svg';
+  static const icScanFrame = '${imageDir}ic_scan_frame.svg';
   static const icSearch = '${imageDir}ic_search.svg';
   static const icSearchFilled = '${imageDir}ic_search_filled.svg';
   static const icSettings = '${imageDir}ic_settings.svg';
@@ -64,6 +66,8 @@ class AppImages {
   static const icSwitchHorizontal = '${imageDir}ic_switch_horizontal.svg';
   static const icTrash = '${imageDir}ic_trash.svg';
   static const icTutorials = '${imageDir}ic_tutorials.svg';
+  static const icUncheck = '${imageDir}ic_uncheck.svg';
+  static const icViewGrid = '${imageDir}ic_view_grid.svg';
   static const icWater = '${imageDir}ic_water.svg';
   static const icWaterGlass = '${imageDir}ic_water_glass.svg';
   static const icWaterSmallBottle = '${imageDir}ic_water_small_bottle.svg';

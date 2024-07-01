@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/constant/app_colors.dart';
 import '../../common/util/context_extension.dart';
+import '../advisor/advisor_page.dart';
 import '../diary/diary_page.dart';
 import '../favorites/favorites_page.dart';
 import '../food_scan/food_scan_page.dart';
@@ -10,6 +11,8 @@ import '../food_search/food_search_page.dart';
 import '../home/home_page.dart';
 import '../meal_plan/meal_plan_page.dart';
 import '../progress/progress_page.dart';
+import '../use_image/select_photo/select_photo_page.dart';
+import '../use_image/take_photo/take_photo_page.dart';
 import '../voice_logging/voice_logging_page.dart';
 import 'bloc/dashboard_bloc.dart';
 import 'widgets/widgets.dart';
@@ -130,11 +133,17 @@ class _DashboardPageState extends State<DashboardPage> {
       FoodSearchPage.navigate(context, needsReturn: false);
     } else if (action == context.localization?.voiceLogging) {
       VoiceLoggingPage.navigate(context);
+    } else if (action == context.localization?.takePhotos) {
+      TakePhotoPage.navigate(context);
+    } else if (action == context.localization?.selectPhotos) {
+      SelectPhotoPage.navigate(context);
     }
     // Action for when the text matches the 'favourite' localization.
     else if (action == context.localization?.favourites) {
       await FavoritesPage.navigate(context: context);
       _bloc.add(const RefreshEvent());
+    } else if (action == context.localization?.aiAdvisor) {
+      AdvisorPage.navigate(context);
     }
     // Default action if none of the above conditions are met.
     else {}

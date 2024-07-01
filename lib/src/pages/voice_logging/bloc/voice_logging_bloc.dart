@@ -19,7 +19,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
   bool? _isInitialized;
   String? _errorMessage;
 
-  List<VoiceLog>? _voiceLogs;
+  List<VoiceLog>? _recognitionLogs;
 
   /// [_connector] use to perform operations.
   PassioConnector get _connector =>
@@ -44,7 +44,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
       errorListener: _errorListener,
     );
     if (_isInitialized ?? false) {
-      _voiceLogs = null;
+      _recognitionLogs = null;
       SpeechToTextUtil.instance.startListening(
         recognizedWords: _recognizeWords,
         finalResult: false,
@@ -97,7 +97,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
     try {
       final result =
           await NutritionAI.instance.recognizeSpeechRemote(event.text);
-      _voiceLogs = result.toVoiceLogList();
+      _recognitionLogs = result.toVoiceLogList();
       _updateVoiceLogsAndEmit(emit);
     } on Exception catch (e) {
       log('Exception: $e');
@@ -106,13 +106,13 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
 
   FutureOr<void> _handleUpdateSelectionEvent(
       UpdateSelectionEvent event, Emitter<VoiceLoggingState> emit) async {
-    _voiceLogs = _voiceLogs?.toggleSelectionFor(event.index);
+    _recognitionLogs = _recognitionLogs?.toggleSelectionFor(event.index);
     _updateVoiceLogsAndEmit(emit);
   }
 
   FutureOr<void> _handleClearSelectionEvent(
       ClearSelectionEvent event, Emitter<VoiceLoggingState> emit) {
-    _voiceLogs = _voiceLogs?.clearSelection();
+    _recognitionLogs = _recognitionLogs?.clearSelection();
     _updateVoiceLogsAndEmit(emit);
   }
 
@@ -121,7 +121,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
     emit(const FoodLogLoadingListenerState());
     emit(const FoodLogLoadingBuilderState());
 
-    final selectedLogs = _voiceLogs?.where((e) => e.isSelected).toList();
+    final selectedLogs = _recognitionLogs?.where((e) => e.isSelected).toList();
 
     if (selectedLogs == null || selectedLogs.isEmpty) {
       emit(const FoodLogSuccessListenerState());
@@ -191,11 +191,11 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
   }
 
   void _updateVoiceLogsAndEmit(Emitter<VoiceLoggingState> emit) {
-    if (_voiceLogs?.isEmpty ?? true) {
+    if (_recognitionLogs?.isEmpty ?? true) {
       emit(const VoiceLogsRecognitionErrorListenerState());
       return;
     }
-    emit(VoiceLogsRecognitionSuccessListenerState(data: _voiceLogs));
+    emit(VoiceLogsRecognitionSuccessListenerState(data: _recognitionLogs));
     emit(const RecognizeVoiceLogsBuilderState());
   }
 }

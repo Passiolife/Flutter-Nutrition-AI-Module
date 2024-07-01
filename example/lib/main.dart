@@ -92,8 +92,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     ? ElevatedButton(
                         onPressed: () async {
                           await NutritionAIModule.instance
-                              .setPassioConnector(
-                                  MyPassioConnector()) // This is optional
+                              .setPassioConnector(MyPassioConnector())
+                              .setAdvisorKey(
+                                  AppSecret.advisorKey) // This is optional
                               .launch(context);
                         },
                         child: const Text('Launch'),

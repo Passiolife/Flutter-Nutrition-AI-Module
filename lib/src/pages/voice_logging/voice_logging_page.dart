@@ -16,9 +16,7 @@ import 'bloc/voice_logging_bloc.dart';
 import 'widgets/widgets.dart';
 
 class VoiceLoggingPage extends StatefulWidget {
-  const VoiceLoggingPage({required this.context, super.key});
-
-  final BuildContext context;
+  const VoiceLoggingPage({super.key});
 
   static Future navigate(BuildContext context) async {
     return await Navigator.push(
@@ -26,7 +24,7 @@ class VoiceLoggingPage extends StatefulWidget {
       MaterialPageRoute(
         builder: (_) => BlocProvider.value(
           value: BlocProvider.of<DashboardBloc>(context),
-          child: VoiceLoggingPage(context: context),
+          child: const VoiceLoggingPage(),
         ),
       ),
     );
@@ -83,9 +81,7 @@ class _VoiceLoggingPageState extends State<VoiceLoggingPage> {
           resizeToAvoidBottomInset: false,
           body: Column(
             children: [
-              CustomAppBarWidget(
-                title: context.localization?.voiceLogging,
-              ),
+              CustomAppBarWidget(title: context.localization?.voiceLogging),
               Expanded(
                 child: Column(
                   children: [
@@ -263,6 +259,9 @@ class _VoiceLoggingPageState extends State<VoiceLoggingPage> {
           break;
         case VoiceLogsRecognitionErrorListenerState():
           _recognizedWords = '';
+          _isListening = false;
+          _isGeneratingResults = false;
+          _visibleResult = false;
           context.showSnackbar(
               text: context.localization?.recognitionErrorMessage);
           break;

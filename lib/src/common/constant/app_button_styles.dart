@@ -72,6 +72,20 @@ class AppButtonStyles {
       horizontal: 16.w,
     ),
   );
+
+  static AppButtonModel white = AppButtonModel(
+    textStyle: AppTextStyle.textBase
+        .addAll([AppTextStyle.textBase.leading6, AppTextStyle.medium]).copyWith(
+            color: AppColors.indigo700),
+    decoration: BoxDecoration(
+      color: AppColors.white,
+      borderRadius: BorderRadius.circular(4.r),
+    ),
+    padding: EdgeInsets.symmetric(
+      vertical: 8.r,
+      horizontal: 8.r,
+    ),
+  );
 }
 
 class AppButtonModel {

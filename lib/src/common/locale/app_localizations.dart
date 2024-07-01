@@ -536,4 +536,37 @@ class AppLocalizations {
   String? get foodLogErrorMessage => getLabel('foodLogErrorMessage');
 
   String? get useImage => getLabel('useImage');
+
+  String? get takePhotos => getLabel('takePhotos');
+
+  String? get selectPhotos => getLabel('selectPhotos');
+
+  String? get photosPermissionMessage => getLabel('photosPermissionMessage');
+
+  String? get noResultsFound => getLabel('noResultsFound');
+
+  String? get reselect => getLabel('reselect');
+
+  String? get galleryImageLimitMessage => getLabel('galleryImageLimitMessage');
+
+  String? get retake => getLabel('retake');
+
+  String? get typeMessageHint => getLabel('typeMessageHint');
+
+  String? get configuringAdvisor => getLabel('configuringAdvisor');
+
+  String? get advisorIsAnalysing => getLabel('advisorIsAnalysing');
+
+  String? get advisorResultDescription => getLabel('advisorResultDescription');
+
+  String? get advisorIngredientsResultDescription =>
+      getLabel('advisorIngredientsResultDescription');
+
+  String? get findFoods => getLabel('findFoods');
+
+  String? get advisorCreateRecipe => getLabel('advisorCreateRecipe');
+
+  String? get takePictureIntroTitle => getLabel('takePictureIntroTitle');
+
+  String? get takePictureIntroSubtitle => getLabel('takePictureIntroSubtitle');
 }

@@ -17,6 +17,7 @@ class Settings {
   // Key for the intro seen setting
   static const String _scanIntroSeenKey = 'intro_seen';
   static const String _dragIntroSeenKey = 'intro_seen';
+  static const String _takePictureIntroSeenKey = 'take_picture_intro_seen';
 
   // Key for the reminder notifications setting
   static const String _breakfastReminder = 'reminder_breakfast';
@@ -72,5 +73,13 @@ class Settings {
   // Method to get the value of the dinner reminder setting
   bool getDinnerReminder() {
     return _preferenceStore.getValue<bool>(_dinnerReminder, false);
+  }
+
+  bool getTakePictureIntroSeen() {
+    return _preferenceStore.getValue<bool>(_takePictureIntroSeenKey, false);
+  }
+
+  void setTakePictureIntroSeen(bool value) {
+    _preferenceStore.setValue(_takePictureIntroSeenKey, value);
   }
 }

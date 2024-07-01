@@ -48,7 +48,7 @@ class PermissionManagerUtility {
     _permission = permission;
     PermissionStatus result = await permission.request();
 
-    if (result.isGranted) {
+    if (result.isGranted || result.isLimited) {
       _permissionCallback?.call(_permission);
     } else if ((result.isDenied || result.isPermanentlyDenied) &&
         askForSettings) {
