@@ -21,7 +21,8 @@ class FoodItemRowWidget extends StatelessWidget {
     this.isAddVisible = true,
     this.suffix,
     this.padding,
-    this.backgroundColor,
+    this.rippleColor,
+    this.decoration,
   })  : _withSelection = false,
         isSelected = false,
         onSelect = null;
@@ -38,7 +39,8 @@ class FoodItemRowWidget extends StatelessWidget {
     this.isAddVisible = true,
     this.suffix,
     this.padding,
-    this.backgroundColor,
+    this.rippleColor,
+    this.decoration,
     this.isSelected = false,
     this.onSelect,
   }) : _withSelection = true;
@@ -53,7 +55,8 @@ class FoodItemRowWidget extends StatelessWidget {
   final bool isAddVisible;
   final Widget? suffix;
   final EdgeInsetsGeometry? padding;
-  final Color? backgroundColor;
+  final Color? rippleColor;
+  final Decoration? decoration;
 
   // Below is used to show selection view.
   final bool _withSelection;
@@ -66,64 +69,68 @@ class FoodItemRowWidget extends StatelessWidget {
       return const SkeletonWidget();
     } else {
       return Material(
-        color: backgroundColor ?? Colors.transparent,
-        child: InkWell(
-          splashColor: AppColors.blue50,
-          highlightColor: AppColors.blue50,
-          onTap: onTap,
-          child: Padding(
-            padding: padding ?? EdgeInsets.symmetric(horizontal: 8.w),
-            child: Row(
-              children: [
-                PassioImageWidget(
-                  key: ValueKey(iconId),
-                  iconId: iconId ?? '',
-                  radius: 20.r,
-                ),
-                SizedBox(width: 8.w),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title?.toTitleCase ?? '',
-                        style: AppTextStyle.textSm.addAll([
-                          AppTextStyle.textSm.leading5,
-                          AppTextStyle.semiBold
-                        ]).copyWith(color: AppColors.gray900),
-                      ),
-                      subtitle?.isNotEmpty ?? false
-                          ? Text(
-                              subtitle ?? '',
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                              style: AppTextStyle.textSm
-                                  .copyWith(color: AppColors.gray500),
-                            )
-                          : const SizedBox.shrink(),
-                    ],
+        color: rippleColor ?? Colors.transparent,
+        child: Container(
+          decoration: decoration ?? AppShadows.base,
+          child: InkWell(
+            splashColor: AppColors.blue50,
+            highlightColor: AppColors.blue50,
+            onTap: onTap,
+            child: Padding(
+              padding: padding ?? EdgeInsets.symmetric(horizontal: 8.w),
+              child: Row(
+                children: [
+                  PassioImageWidget(
+                    key: ValueKey(iconId),
+                    iconId: iconId ?? '',
+                    radius: 20.r,
                   ),
-                ),
-                Visibility(
-                  visible: isAddVisible,
-                  child: IconButton(
-                    icon: SvgPicture.asset(
-                      AppImages.icPlusSolid,
-                      width: 24.r,
-                      height: 24.r,
-                      colorFilter: const ColorFilter.mode(
-                          AppColors.gray400, BlendMode.srcIn),
+                  SizedBox(width: 8.w),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title?.toTitleCase ?? '',
+                          style: AppTextStyle.textSm.addAll([
+                            AppTextStyle.textSm.leading5,
+                            AppTextStyle.semiBold
+                          ]).copyWith(color: AppColors.gray900),
+                        ),
+                        subtitle?.isNotEmpty ?? false
+                            ? Text(
+                                subtitle ?? '',
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                                style: AppTextStyle.textSm
+                                    .copyWith(color: AppColors.gray500),
+                              )
+                            : const SizedBox.shrink(),
+                      ],
                     ),
-                    onPressed: onTapAdd,
                   ),
-                ),
-                suffix ?? (_withSelection
-                    ? IconButton(
-                        onPressed: onSelect,
-                        icon: SelectionIndicator(isSelected: isSelected),
-                      )
-                    : const SizedBox.shrink())
-              ],
+                  Visibility(
+                    visible: isAddVisible,
+                    child: IconButton(
+                      icon: SvgPicture.asset(
+                        AppImages.icPlusSolid,
+                        width: 24.r,
+                        height: 24.r,
+                        colorFilter: const ColorFilter.mode(
+                            AppColors.gray400, BlendMode.srcIn),
+                      ),
+                      onPressed: onTapAdd,
+                    ),
+                  ),
+                  suffix ??
+                      (_withSelection
+                          ? IconButton(
+                              onPressed: onSelect,
+                              icon: SelectionIndicator(isSelected: isSelected),
+                            )
+                          : const SizedBox.shrink())
+                ],
+              ),
             ),
           ),
         ),

@@ -9,12 +9,18 @@ class AppDropDownMenu<T> extends StatelessWidget {
     required this.dropdownMenuEntries,
     this.initialSelection,
     this.onSelected,
+    this.hintText,
+    this.shape,
+    this.menuHeight,
     super.key,
   });
 
   final T? initialSelection;
   final List<DropdownMenuEntry<T>> dropdownMenuEntries;
   final ValueChanged<T?>? onSelected;
+  final String? hintText;
+  final WidgetStateProperty<OutlinedBorder?>? shape;
+  final double? menuHeight;
 
   @override
   Widget build(BuildContext context) {
@@ -35,19 +41,21 @@ class AppDropDownMenu<T> extends StatelessWidget {
             menuStyle: MenuStyle(
               backgroundColor: WidgetStateProperty.all(AppColors.white),
               surfaceTintColor: WidgetStateProperty.all(AppColors.white),
+              shape: shape,
             ),
           ),
         ),
         child: SizedBox(
           height: 64.r,
           child: DropdownMenu<T>(
-            // menuHeight: 500.h,
+            menuHeight: menuHeight,
             expandedInsets: EdgeInsets.zero,
             initialSelection: initialSelection,
+            hintText: hintText,
             trailingIcon: SvgPicture.asset(
               AppImages.icChevronDown,
-              width: 20.r,
-              height: 20.r,
+              width: 24.r,
+              height: 24.r,
               colorFilter: const ColorFilter.mode(
                 AppColors.gray900,
                 BlendMode.srcIn,
@@ -55,8 +63,8 @@ class AppDropDownMenu<T> extends StatelessWidget {
             ),
             selectedTrailingIcon: SvgPicture.asset(
               AppImages.icChevronUp,
-              width: 20.r,
-              height: 20.r,
+              width: 24.r,
+              height: 24.r,
               colorFilter: const ColorFilter.mode(
                 AppColors.gray900,
                 BlendMode.srcIn,

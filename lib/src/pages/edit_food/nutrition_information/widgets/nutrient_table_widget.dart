@@ -34,7 +34,10 @@ class NutrientTableWidget extends StatelessWidget {
 }
 
 class NutrientTableRow extends StatelessWidget {
-  const NutrientTableRow({this.nutrient, super.key});
+  const NutrientTableRow({
+    this.nutrient,
+    super.key,
+  });
 
   final MicroNutrient? nutrient;
 

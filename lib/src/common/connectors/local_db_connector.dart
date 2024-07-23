@@ -1,6 +1,9 @@
 import 'dart:convert';
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:intl/intl.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../models/food_record/food_record.dart';
 import '../models/user_profile/user_profile_model.dart';
@@ -8,6 +11,7 @@ import '../models/water_record/water_record.dart';
 import '../models/weight_record/weight_record.dart';
 import '../util/database_helper.dart';
 import '../util/date_time_utility.dart';
+import '../util/file_utility.dart';
 import 'passio_connector.dart';
 
 class LocalDBConnector implements PassioConnector {
@@ -314,5 +318,108 @@ class LocalDBConnector implements PassioConnector {
     }
   }
 
-  Future updateAnalytics() async {}
+  @override
+  Future<List<FoodRecord>> fetchUserFoods() async {
+    final formattedFromDate = DateFormat('yyyyMMdd').format(DateTime.now());
+    final formattedEndDate = DateFormat('yyyyMMdd').format(DateTime.now());
+    List<Map>? data = await _databaseHelper.database.query(
+      _databaseHelper.tblUserFoods,
+      where: '${_databaseHelper.colCreatedAt} BETWEEN ? AND ?',
+      whereArgs: [formattedFromDate, formattedEndDate],
+      orderBy: '${_databaseHelper.colId} DESC',
+    );
+    return data.map((e) {
+      final foodRecordResponse =
+          FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
+      foodRecordResponse.id = e[_databaseHelper.colId].toString();
+      return foodRecordResponse;
+    }).toList();
+  }
+
+  @override
+  Future<void> deleteUserFood({required FoodRecord foodRecord}) async {
+    await _databaseHelper.database.delete(_databaseHelper.tblUserFoods,
+        where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);
+  }
+
+  @override
+  Future<void> updateUserFood(
+      {required FoodRecord foodRecord, required bool isNew}) async {
+    DateTime? createdAt = foodRecord.getCreatedAt();
+    if (createdAt == null) return;
+
+    final date = createdAt.formatToString(format9);
+    final values = {
+      _databaseHelper.colCreatedAt: date,
+      _databaseHelper.colData: jsonEncode(foodRecord)
+    };
+
+    // If [isNew] is [true] then perform the insert operation.
+    if (isNew) {
+      final insertId = await _databaseHelper.database
+          .insert(_databaseHelper.tblUserFoods, values);
+      if (insertId > 0) {
+        foodRecord.id = insertId.toString();
+      }
+    } else {
+      await _databaseHelper.database.update(
+        _databaseHelper.tblUserFoods,
+        values,
+        where: '${_databaseHelper.colId} = ?',
+        whereArgs: [foodRecord.id],
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteUserFoodImage({required String id}) async {
+    await _databaseHelper.database.delete(_databaseHelper.tblUserFoodImages,
+        where: '${_databaseHelper.colId} = ?', whereArgs: [id]);
+  }
+
+  @override
+  Future<Uint8List?> fetchUserFoodImage({required String id}) async {
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    final fullPath = '${appDocumentsDir.path}/$id.bin';
+    return await FileUtility.readFile(fullPath);
+  }
+
+  @override
+  Future<void> updateUserFoodImage({
+    required String id,
+    required Uint8List image,
+    required bool isNew,
+  }) async {
+    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
+    final fullPath = '${appDocumentsDir.path}/$id.bin';
+
+    final values = {
+      _databaseHelper.colId: id,
+      _databaseHelper.colData: fullPath,
+    };
+
+    if (isNew) {
+      await FileUtility.writeFile(fullPath, image);
+      await _databaseHelper.database
+          .insert(_databaseHelper.tblUserFoodImages, values);
+    } else {
+      await FileUtility.updateFile(fullPath, image);
+      await _databaseHelper.database.update(
+        _databaseHelper.tblUserFoodImages,
+        values,
+        where: '${_databaseHelper.colId} = ?',
+        whereArgs: [id],
+      );
+    }
+
+    return;
+  }
+
+  @override
+  Future<FoodRecord?> fetchUserFoodByBarcode({required String barcode}) async {
+    final foodRecords = await fetchUserFoods();
+    return foodRecords
+        .cast<FoodRecord?>()
+        .firstWhere((e) => e?.barcode == barcode, orElse: () => null);
+  }
 }

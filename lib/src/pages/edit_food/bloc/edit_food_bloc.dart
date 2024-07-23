@@ -102,6 +102,7 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
         quantity: _foodRecord!.getSelectedQuantity(),
         foodRecord: _foodRecord,
         sliderData: _sliderData,
+        unit: _foodRecord!.getSelectedUnit(),
       ));
     }
   }

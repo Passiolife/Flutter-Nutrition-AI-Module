@@ -17,16 +17,27 @@ import 'dialogs/intro_dialog.dart';
 import 'widgets/widgets.dart';
 
 class TakePhotoPage extends StatefulWidget {
-  const TakePhotoPage({required this.returnResult, super.key});
+  const TakePhotoPage({
+    required this.returnResult,
+    required this.maxLimit,
+    super.key,
+  });
 
   final bool returnResult;
 
+  // Maximum number of images allowed to be stored
+  final int maxLimit;
+
   static Future navigate(BuildContext context,
-      {bool returnResult = false}) async {
+      {bool returnResult = false, int maxLimit = 7}) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => TakePhotoPage(returnResult: returnResult)),
+        builder: (context) => TakePhotoPage(
+          returnResult: returnResult,
+          maxLimit: maxLimit,
+        ),
+      ),
     );
   }
 
@@ -43,9 +54,6 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
   // Lists to store the original images and their thumbnails
   final List<Uint8List> _originalImages = [];
   final List<Uint8List> _thumbImages = [];
-
-  // Maximum number of images allowed to be stored
-  final _maxAllowedImages = 7;
 
   bool _isNextLoading = false;
 
@@ -84,8 +92,7 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
                       onNegativeTap: () {
                         Navigator.pop(context);
                       },
-                      captureEnabled:
-                          _originalImages.length < _maxAllowedImages,
+                      captureEnabled: _originalImages.length < widget.maxLimit,
                       onCapture: () {
                         _takePicture();
                       },

@@ -43,6 +43,7 @@ class ScanningAnimationWidgetState extends State<ScanningAnimationWidget>
         Positioned(
           top: AppDimens.h110,
           left: AppDimens.w24,
+          right: AppDimens.w24,
           child: SvgPicture.asset(
             AppImages.icScanFrame,
             width: double.infinity,

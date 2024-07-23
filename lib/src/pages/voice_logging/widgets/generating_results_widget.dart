@@ -13,12 +13,16 @@ class GeneratingResultsWidget extends StatelessWidget {
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        const AdaptiveLoader(color: AppColors.indigo600Main,),
+        const AdaptiveLoader(
+          color: AppColors.indigo600Main,
+        ),
         8.verticalSpace,
         Text(
           context.localization?.generatingResults ?? '',
-          style: AppTextStyle.textSm
-              .addAll([AppTextStyle.textSm.leading5, AppTextStyle.semiBold]).copyWith(color: AppColors.gray900),
+          style: AppTextStyle.textSm.addAll([
+            AppTextStyle.textSm.leading5,
+            AppTextStyle.semiBold
+          ]).copyWith(color: AppColors.gray900),
         ),
       ],
     );

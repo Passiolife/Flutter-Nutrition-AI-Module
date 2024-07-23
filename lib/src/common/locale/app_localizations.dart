@@ -537,7 +537,11 @@ class AppLocalizations {
 
   String? get useImage => getLabel('useImage');
 
+  String? get takePhoto => getLabel('takePhoto');
+
   String? get takePhotos => getLabel('takePhotos');
+
+  String? get selectPhoto => getLabel('selectPhoto');
 
   String? get selectPhotos => getLabel('selectPhotos');
 
@@ -569,4 +573,112 @@ class AppLocalizations {
   String? get takePictureIntroTitle => getLabel('takePictureIntroTitle');
 
   String? get takePictureIntroSubtitle => getLabel('takePictureIntroSubtitle');
+
+  String? get myFoods => getLabel('myFoods');
+
+  String? get customFoods => getLabel('customFoods');
+
+  String? get createNewFood => getLabel('createNewFood');
+
+  String? get foodDetails => getLabel('foodDetails');
+
+  String? get editImage => getLabel('editImage');
+
+  String? get enterName => getLabel('enterName');
+
+  String? get brand => getLabel('brand');
+
+  String? get enterBrand => getLabel('enterBrand');
+
+  String? get barcode => getLabel('barcode');
+
+  String? get scanABarcode => getLabel('scanABarcode');
+
+  String? get requiredNutritionFacts => getLabel('requiredNutritionFacts');
+
+  String? get otherNutritionFacts => getLabel('otherNutritionFacts');
+
+  String? get serving => getLabel('serving');
+
+  String? get piece => getLabel('piece');
+
+  String? get cup => getLabel('cup');
+
+  String? get gram => getLabel('gram');
+
+  String? get handful => getLabel('handful');
+
+  String? get scoop => getLabel('scoop');
+
+  String? get tbsp => getLabel('tbsp');
+
+  String? get tsp => getLabel('tsp');
+
+  String? get slice => getLabel('slice');
+
+  String? get can => getLabel('can');
+
+  String? get bottle => getLabel('bottle');
+
+  String? get bar => getLabel('bar');
+
+  String? get packet => getLabel('packet');
+
+  String? get small => getLabel('small');
+
+  String? get medium => getLabel('medium');
+
+  String? get large => getLabel('large');
+
+  String? get value => getLabel('value');
+
+  String? get saturatedFat => getLabel('saturatedFat');
+
+  String? get transFat => getLabel('transFat');
+
+  String? get cholesterol => getLabel('cholesterol');
+
+  String? get sodium => getLabel('sodium');
+
+  String? get dietaryFiber => getLabel('dietaryFiber');
+
+  String? get totalSugars => getLabel('totalSugars');
+
+  String? get addedSugar => getLabel('addedSugar');
+
+  String? get vitaminD => getLabel('vitaminD');
+
+  String? get calcium => getLabel('calcium');
+
+  String? get potassium => getLabel('potassium');
+
+  String? get selectNutrient => getLabel('selectNutrient');
+
+  String? get servingQuantity => getLabel('servingQuantity');
+
+  String? get servingUnit => getLabel('servingUnit');
+
+  String? get kcal => getLabel('kcal');
+
+  String? get barcodeScanner => getLabel('barcodeScanner');
+
+  String? get barcodeScannerDescription =>
+      getLabel('barcodeScannerDescription');
+
+  String? get viewExistingItem => getLabel('viewExistingItem');
+
+  String? get barcodeInSystem => getLabel('barcodeInSystem');
+
+  String? get barcodeInSystemDescription =>
+      getLabel('barcodeInSystemDescription');
+
+  String? get customFoodAlreadyExists => getLabel('customFoodAlreadyExists');
+
+  String? get customFoodAlreadyExistsDescription =>
+      getLabel('customFoodAlreadyExistsDescription');
+
+  String? get createCustomFoodAnyway => getLabel('createCustomFoodAnyway');
+
+  String? get createCustomFoodWithoutBarcode =>
+      getLabel('createCustomFoodWithoutBarcode');
 }

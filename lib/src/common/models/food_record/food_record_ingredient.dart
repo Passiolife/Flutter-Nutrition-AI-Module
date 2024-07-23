@@ -17,6 +17,9 @@ class FoodRecordIngredient {
   /// Name of the ingredient.
   String name = '';
 
+  /// Additional data for the food item.
+  String additionalData = '';
+
   /// Identifier for the icon of the ingredient.
   String iconId = '';
 
@@ -27,10 +30,10 @@ class FoodRecordIngredient {
   double selectedQuantity = 0;
 
   /// Available serving sizes for the ingredient.
-  late List<PassioServingSize> servingSizes;
+  List<PassioServingSize> servingSizes;
 
   /// Available serving units for the ingredient.
-  late List<PassioServingUnit> servingUnits;
+  List<PassioServingUnit> servingUnits;
 
   /// Nutritional information of the ingredient.
   PassioNutrients referenceNutrients;
@@ -41,12 +44,15 @@ class FoodRecordIngredient {
   /// Type of Passio ID entity.
   PassioIDEntityType entityType;
 
+  String? barcode;
+
   /// Private constructor for creating a FoodRecordIngredient instance with specified properties.
   FoodRecordIngredient._({
     required this.id,
     required this.passioID,
     required this.refCode,
     required this.name,
+    required this.additionalData,
     required this.iconId,
     required this.servingSizes,
     required this.servingUnits,
@@ -55,6 +61,7 @@ class FoodRecordIngredient {
     required this.entityType,
     required this.referenceNutrients,
     this.openFoodLicense,
+    this.barcode,
   });
 
   /// Factory constructor to create a FoodRecordIngredient from a FoodRecord instance.
@@ -65,6 +72,7 @@ class FoodRecordIngredient {
       passioID: foodRecord.passioID,
       refCode: foodRecord.refCode,
       name: foodRecord.name,
+      additionalData: foodRecord.additionalData,
       iconId: foodRecord.iconId,
       servingSizes: foodRecord.servingSizes,
       servingUnits: foodRecord.servingUnits,
@@ -73,6 +81,7 @@ class FoodRecordIngredient {
       entityType: entityType,
       referenceNutrients: foodRecord.nutrients(),
       openFoodLicense: foodRecord.openFoodLicense,
+      barcode: foodRecord.barcode,
     );
   }
 
@@ -84,6 +93,7 @@ class FoodRecordIngredient {
       passioID: ingredient.id,
       refCode: ingredient.refCode,
       name: ingredient.name,
+      additionalData: '',
       iconId: ingredient.iconId,
       servingSizes: ingredient.amount.servingSizes,
       servingUnits: ingredient.amount.servingUnits,
@@ -92,6 +102,7 @@ class FoodRecordIngredient {
       entityType: entityType,
       referenceNutrients: ingredient.referenceNutrients,
       openFoodLicense: ingredient.metadata.openFoodLicense(),
+      barcode: ingredient.metadata.barcode,
     );
   }
 
@@ -102,6 +113,7 @@ class FoodRecordIngredient {
         passioID: json['passioID'] as String,
         refCode: json['refCode'] as String,
         name: json['name'] as String,
+        additionalData: json['additionalData'] as String,
         iconId: json['iconId'] as String,
         selectedUnit: json['selectedUnit'] as String,
         selectedQuantity: (json['selectedQuantity'] as num).toDouble(),
@@ -121,6 +133,7 @@ class FoodRecordIngredient {
         referenceNutrients: PassioNutrients.fromJson(
             json['referenceNutrients'] as Map<String, dynamic>),
         openFoodLicense: json['openFoodLicense'] as String?,
+        barcode: json['barcode'] as String?,
       );
 
   /// Converts the [FoodRecordIngredient] instance to a JSON object.
@@ -129,6 +142,7 @@ class FoodRecordIngredient {
         'passioID': passioID,
         'refCode': refCode,
         'name': name,
+        'additionalData': additionalData,
         'iconId': iconId,
         'selectedUnit': selectedUnit,
         'selectedQuantity': selectedQuantity,
@@ -139,6 +153,7 @@ class FoodRecordIngredient {
         'entityType': entityType.name,
         'referenceNutrients': referenceNutrients.toJson(),
         'openFoodLicense': openFoodLicense,
+        'barcode': barcode,
       };
 
   /// Overrides the equality operator.
@@ -151,6 +166,7 @@ class FoodRecordIngredient {
         passioID == other.passioID &&
         refCode == other.refCode &&
         name == other.name &&
+        additionalData == other.additionalData &&
         iconId == other.iconId &&
         selectedUnit == other.selectedUnit &&
         selectedQuantity == other.selectedQuantity &&
@@ -158,7 +174,8 @@ class FoodRecordIngredient {
         listEquals(servingUnits, other.servingUnits) &&
         entityType == other.entityType &&
         referenceNutrients == other.referenceNutrients &&
-        openFoodLicense == other.openFoodLicense;
+        openFoodLicense == other.openFoodLicense &&
+        barcode == other.barcode;
   }
 
   /// Overrides the hashCode method.
@@ -169,6 +186,7 @@ class FoodRecordIngredient {
       passioID,
       refCode,
       name,
+      additionalData,
       iconId,
       selectedUnit,
       selectedQuantity,
@@ -177,6 +195,7 @@ class FoodRecordIngredient {
       entityType,
       referenceNutrients,
       openFoodLicense,
+      barcode,
     );
   }
 

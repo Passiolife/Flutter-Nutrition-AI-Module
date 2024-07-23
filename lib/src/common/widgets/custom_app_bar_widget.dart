@@ -119,7 +119,7 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
                 child: AppPopupWidget<MenuModel>(
                   items: _menus,
                   itemBuilder: (item) {
-                    return _MenuItemRow(
+                    return MenuItemRow(
                       imagePath: item.icon,
                       text: item.title,
                     );
@@ -155,8 +155,9 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
   }
 }
 
-class _MenuItemRow extends StatelessWidget {
-  const _MenuItemRow({
+class MenuItemRow extends StatelessWidget {
+  const MenuItemRow({
+    super.key,
     this.imagePath,
     this.text,
   });

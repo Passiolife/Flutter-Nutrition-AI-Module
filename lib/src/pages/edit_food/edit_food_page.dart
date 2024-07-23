@@ -14,6 +14,7 @@ import '../../common/util/snackbar_extension.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
 import '../dashboard/dashboard_page.dart';
 import '../food_search/food_search_page.dart';
+import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/edit_food_bloc.dart';
 import 'dialogs/create_recipe_dialog.dart';
 import 'dialogs/open_food_facts_dialog.dart';
@@ -41,6 +42,7 @@ class EditFoodPage extends StatefulWidget {
     this.visibleFavorite = true,
     this.visibleSwitch = false,
     this.visibleDelete = false,
+    this.visibleFoodCreator = false,
     this.redirectToDiaryOnLog = false,
     this.iconHeroTag,
     this.mealLabel,
@@ -69,6 +71,7 @@ class EditFoodPage extends StatefulWidget {
   final bool visibleSwitch;
   final bool visibleDelete;
   final bool visibleFavorite;
+  final bool visibleFoodCreator;
 
   final String? iconHeroTag;
   final MealLabel? mealLabel;
@@ -95,6 +98,7 @@ class EditFoodPage extends StatefulWidget {
     bool visibleFavorite = true,
     bool visibleSwitch = false,
     bool visibleDelete = false,
+    bool visibleFoodCreator = false,
     bool redirectToDiaryOnLog = false,
     String? iconHeroTag,
     MealLabel? mealLabel,
@@ -128,6 +132,7 @@ class EditFoodPage extends StatefulWidget {
             mealLabel: mealLabel,
             message: message,
             shouldUpdateServingUnit: shouldUpdateServingUnit,
+            visibleFoodCreator: visibleFoodCreator,
           );
         },
       ),
@@ -189,20 +194,37 @@ class _EditFoodPageState extends State<EditFoodPage>
               CustomAppBarWidget(
                 title: context.localization?.edit,
                 isMenuVisible: false,
-                suffix: (widget.visibleSwitch || widget.visibleDelete)
-                    ? IconButton(
-                        onPressed: () => widget.visibleDelete
-                            ? onDeleteTapped()
-                            : onSwitchTapped(),
+                suffix: Row(
+                  children: [
+                    if (widget.visibleSwitch)
+                      IconButton(
+                        onPressed: _onSwitchTapped,
                         icon: SvgPicture.asset(
-                          (widget.visibleDelete)
-                              ? AppImages.icTrash
-                              : AppImages.icSwitchHorizontal,
+                          AppImages.icSwitchHorizontal,
+                          width: AppDimens.r24,
+                          height: AppDimens.r24,
+                        ),
+                      ),
+                    if (widget.visibleFoodCreator)
+                      IconButton(
+                        onPressed: _onFoodCreatorTapped,
+                        icon: SvgPicture.asset(
+                          AppImages.icPencilAlt,
+                          width: AppDimens.r24,
+                          height: AppDimens.r24,
+                        ),
+                      ),
+                    if (widget.visibleDelete)
+                      IconButton(
+                        onPressed: _onDeleteTapped,
+                        icon: SvgPicture.asset(
+                          AppImages.icTrash,
                           width: AppDimens.r24,
                           height: AppDimens.r24,
                         ),
                       )
-                    : null,
+                  ],
+                ),
               ),
               Expanded(
                 child: IndexedStack(
@@ -488,16 +510,26 @@ class _EditFoodPageState extends State<EditFoodPage>
     Navigator.pop(context);
   }
 
-  void onDeleteTapped() {
+  void _onDeleteTapped() {
     _bloc.add(const DoDeleteLogEvent());
   }
 
-  void onSwitchTapped() {
+  void _onSwitchTapped() {
     FoodSearchPage.navigate(context).then((value) {
       if (value != null && value is PassioFoodDataInfo) {
-        _bloc.add(DoConversionEvent(
-          foodDataInfo: value,
-        ));
+        _bloc.add(DoConversionEvent(foodDataInfo: value));
+      }
+    });
+  }
+
+  void _onFoodCreatorTapped() {
+    FoodCreatorPage.navigate(
+            context: context,
+            foodRecord: _foodRecord,
+            forceNavigateToCustomFoods: true)
+        .then((value) {
+      if (value != null && value is PassioFoodDataInfo) {
+        _bloc.add(DoConversionEvent(foodDataInfo: value));
       }
     });
   }
@@ -505,7 +537,9 @@ class _EditFoodPageState extends State<EditFoodPage>
   @override
   void onMoreDetailsTapped() {
     NutritionInformationPage.navigate(
-        context: context, foodRecord: _foodRecord);
+      context: context,
+      foodRecord: widget.foodRecord,
+    );
   }
 
   @override

@@ -118,7 +118,6 @@ final class UpdateSelectionBuilderState extends BuilderState {
   List<Object?> get props => [];
 }
 
-
 final class FoodLogLoadingBuilderState extends BuilderState {
   const FoodLogLoadingBuilderState();
 

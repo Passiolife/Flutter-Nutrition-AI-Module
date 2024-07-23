@@ -131,7 +131,7 @@ class FoodHeaderWidget extends StatelessWidget {
                               ? Hero(
                                   tag: subTitleHeroTag ?? UniqueKey(),
                                   child: Text(
-                                    subtitle ?? '',
+                                    subtitle.toUpperCaseWord ?? '',
                                     style: AppTextStyle.textSm.addAll([
                                       AppTextStyle.textSm.leading5,
                                     ]).copyWith(color: AppColors.gray500),

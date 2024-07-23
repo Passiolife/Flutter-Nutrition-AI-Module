@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -418,6 +419,50 @@ class MyPassioConnector implements PassioConnector {
     if (key != null) {
       await _weightRecordBox.deleteAt(key);
     }
+  }
+
+  @override
+  Future<List<FoodRecord>> fetchUserFoods() {
+    // TODO: implement fetchUserFoods
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteUserFood({required FoodRecord foodRecord}) {
+    // TODO: implement deleteUserFood
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateUserFood(
+      {required FoodRecord foodRecord, required bool isNew}) {
+    // TODO: implement updateUserFood
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteUserFoodImage({required String id}) {
+    // TODO: implement deleteUserFoodImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<Uint8List?> fetchUserFoodImage({required String id}) {
+    // TODO: implement fetchUserFoodImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> updateUserFoodImage(
+      {required String id, required Uint8List image, required bool isNew}) {
+    // TODO: implement updateUserFoodImage
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FoodRecord?> fetchUserFoodByBarcode({required String barcode}) {
+    // TODO: implement fetchUserFoodByBarcode
+    throw UnimplementedError();
   }
 }
 

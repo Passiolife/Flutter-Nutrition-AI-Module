@@ -98,6 +98,7 @@ class _FoodScanPageState extends State<FoodScanPage>
                     _showPassioPreview
                         ? const PassioPreview()
                         : Container(color: AppColors.black),
+                    ScannerModeWidget(),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: state is ScanResultState
@@ -327,10 +328,12 @@ class _FoodScanPageState extends State<FoodScanPage>
       candidate = _detectedCandidate;
     }
     EditFoodPage.navigate(
-        context: context,
-        foodItem: _foodItem,
-        detectedCandidate: candidate,
-        redirectToDiaryOnLog: true);
+      context: context,
+      foodItem: _foodItem,
+      detectedCandidate: candidate,
+      redirectToDiaryOnLog: true,
+      visibleFoodCreator: true,
+    );
   }
 
   @override

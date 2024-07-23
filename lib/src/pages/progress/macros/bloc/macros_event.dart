@@ -10,7 +10,7 @@ final class DoTabChangeEvent extends MacrosEvent {
   final String tab;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [tab];
 }
 
 final class DoFetchRecordsEvent extends MacrosEvent {

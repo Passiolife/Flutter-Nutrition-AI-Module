@@ -201,10 +201,10 @@ class DailyNutritionTargetDialog {
                         ),
                         32.verticalSpace,
                         ActionButtonsWidget(
-                          cancelButtonText: context.localization?.cancel,
-                          saveButtonText: context.localization?.ok,
-                          onTapCancel: () => Navigator.pop(context),
-                          onTapSave: () {
+                          negativeButtonText: context.localization?.cancel,
+                          positiveButtonText: context.localization?.ok,
+                          onNegativeButtonTap: () => Navigator.pop(context),
+                          onPositiveButtonTap: () {
                             Navigator.pop(context);
                             onSave?.call(profileModel);
                           },

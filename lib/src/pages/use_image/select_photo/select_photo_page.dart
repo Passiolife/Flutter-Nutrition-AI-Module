@@ -14,22 +14,31 @@ import '../../../common/util/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/permission_manager_utility.dart';
 import '../../../common/util/snackbar_extension.dart';
+import '../../../common/util/string_extensions.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 import '../../dashboard/dashboard_page.dart';
 import 'bloc/select_photo_bloc.dart';
 import 'widgets/widgets.dart';
 
 class SelectPhotoPage extends StatefulWidget {
-  const SelectPhotoPage({required this.returnResult, super.key});
+  const SelectPhotoPage({
+    required this.returnResult,
+    required this.maxLimit,
+    super.key,
+  });
 
   final bool returnResult;
+  final int maxLimit;
 
   static Future navigate(BuildContext context,
-      {bool returnResult = false}) async {
+      {bool returnResult = false, int maxLimit = 7}) async {
     return await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => SelectPhotoPage(returnResult: returnResult),
+        builder: (_) => SelectPhotoPage(
+          returnResult: returnResult,
+          maxLimit: maxLimit,
+        ),
       ),
     );
   }
@@ -185,9 +194,7 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
                           emptyBuilder: () {
                             return Center(
                               child: Text(
-                                context.localization
-                                        ?.noResultsFound ??
-                                    '',
+                                context.localization?.noResultsFound ?? '',
                                 style: AppTextStyle.textSm,
                               ),
                             );
@@ -260,7 +267,10 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
         if (((await permission?.isGranted) ?? false) ||
             ((await permission?.isLimited) ?? false)) {
           _bloc.add(DoPhotoPickerEvent(
-              from: from, returnResult: widget.returnResult));
+            from: from,
+            returnResult: widget.returnResult,
+            maxLimit: widget.maxLimit,
+          ));
         }
       },
     );
@@ -286,7 +296,9 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
           break;
         case RecognizeImageFailureListenerState():
           context.showSnackbar(
-              text: context.localization?.galleryImageLimitMessage);
+            text: context.localization?.galleryImageLimitMessage
+                ?.format([widget.maxLimit.toString()]),
+          );
           break;
         case FoodLogLoadingListenerState():
           _visibleLoadingForLog = true;

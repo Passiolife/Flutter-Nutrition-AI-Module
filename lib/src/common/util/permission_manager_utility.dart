@@ -16,7 +16,10 @@ class PermissionManagerUtility {
 
   Future didChangeAppLifecycleState(AppLifecycleState state) async {
     /// This block executes if state is resumed.
-    if (state == AppLifecycleState.resumed && _openedSetting) {
+    if (((await _permission?.isDenied ?? false) ||
+            (await _permission?.isPermanentlyDenied ?? false)) &&
+        state == AppLifecycleState.resumed &&
+        _openedSetting) {
       _openedSetting = false;
       if ((await _permission?.isGranted ?? false) ||
           (await _permission?.isLimited ?? false)) {

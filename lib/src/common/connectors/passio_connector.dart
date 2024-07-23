@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import '../models/food_record/food_record.dart';
 import '../models/user_profile/user_profile_model.dart';
 import '../models/water_record/water_record.dart';
@@ -138,4 +140,27 @@ abstract interface class PassioConnector {
 
   /// Deletes a specific weight record [record].
   Future<void> deleteWeightRecord({required WeightRecord record});
+
+  // User Foods Methods
+  Future<List<FoodRecord>> fetchUserFoods();
+
+  Future<FoodRecord?> fetchUserFoodByBarcode({required String barcode});
+
+  Future<void> updateUserFood({
+    required FoodRecord foodRecord,
+    required bool isNew,
+  });
+
+  Future<void> deleteUserFood({required FoodRecord foodRecord});
+
+  // User Food Images Methods
+  Future<Uint8List?> fetchUserFoodImage({required String id});
+
+  Future<void> updateUserFoodImage({
+    required String id,
+    required Uint8List image,
+    required bool isNew,
+  });
+
+  Future<void> deleteUserFoodImage({required String id});
 }

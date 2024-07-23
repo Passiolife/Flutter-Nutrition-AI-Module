@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/util/context_extension.dart';
@@ -71,30 +70,6 @@ class IntroWidget extends StatelessWidget {
           ),
         ),
       ),
-    );
-  }
-}
-
-class _FoodsVarietyWidget extends StatelessWidget {
-  const _FoodsVarietyWidget({required this.imagePath, this.text});
-
-  final String imagePath;
-  final String? text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SvgPicture.asset(
-          imagePath,
-          width: AppDimens.r40,
-          height: AppDimens.r40,
-        ),
-        Text(
-          text ?? '',
-          style: AppTextStyle.textXs.copyWith(color: AppColors.black),
-        ),
-      ],
     );
   }
 }

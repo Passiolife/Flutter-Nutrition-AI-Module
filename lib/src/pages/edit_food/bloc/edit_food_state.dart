@@ -45,14 +45,16 @@ class UpdateServingQuantitySuccessState extends EditFoodState {
     required this.quantity,
     required this.foodRecord,
     required this.sliderData,
+    required this.unit,
   });
 
   final FoodRecord? foodRecord;
   final SliderData sliderData;
   final double quantity;
+  final String unit;
 
   @override
-  List<Object?> get props => [quantity];
+  List<Object?> get props => [foodRecord, sliderData, quantity, unit];
 }
 
 class UpdateServingUnitSuccessState extends EditFoodState {

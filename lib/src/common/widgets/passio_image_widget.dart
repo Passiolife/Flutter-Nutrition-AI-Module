@@ -1,14 +1,17 @@
 import 'dart:developer';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../../nutrition_ai_module_sdk.dart';
 import '../constant/app_common_constants.dart';
 import '../constant/app_images.dart';
 
 class PassioImageWidget extends StatefulWidget {
   const PassioImageWidget({
     required this.iconId,
+    this.image,
     this.type = PassioIDEntityType.item,
     this.iconSize = IconSize.px90,
     this.radius = 30,
@@ -17,6 +20,7 @@ class PassioImageWidget extends StatefulWidget {
   });
 
   final String iconId;
+  final Uint8List? image;
   final PassioIDEntityType type;
   final IconSize iconSize;
   final double radius;
@@ -27,10 +31,13 @@ class PassioImageWidget extends StatefulWidget {
 }
 
 class _PassioImageWidgetState extends State<PassioImageWidget> {
-  final ValueNotifier<PlatformImage?> _image = ValueNotifier(null);
+  final ValueNotifier<Uint8List?> _image = ValueNotifier(null);
 
   bool get _isRecipeIcon =>
       widget.iconId.startsWith(AppCommonConstants.recipePrefix);
+
+  bool get _isUserFoodIcon =>
+      widget.iconId.startsWith(AppCommonConstants.userFoods);
 
   @override
   void initState() {
@@ -51,14 +58,14 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
             radius: widget.radius,
             backgroundImage: const AssetImage(AppImages.imgRecipe),
           )
-        : ValueListenableBuilder<PlatformImage?>(
+        : ValueListenableBuilder<Uint8List?>(
             valueListenable: _image,
             builder: (context, value, child) => value != null
                 ? Hero(
                     tag: widget.heroTag ?? UniqueKey(),
                     child: CircleAvatar(
                       radius: widget.radius,
-                      backgroundImage: MemoryImage(value.pixels),
+                      backgroundImage: MemoryImage(value),
                     ),
                   )
                 : const CircularProgressIndicator(),
@@ -66,7 +73,16 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
   }
 
   Future<void> _fetchImage() async {
+    if (widget.image != null) {
+      _image.value = widget.image;
+      return;
+    }
     if (_isRecipeIcon) {
+      return;
+    } else if (_isUserFoodIcon) {
+      final result = await NutritionAIModule.instance.configuration.connector
+          .fetchUserFoodImage(id:  widget.iconId);
+      _image.value = result;
       return;
     }
     try {
@@ -98,7 +114,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
 
   void setImage(PlatformImage? image) {
     if (mounted) {
-      _image.value = image;
+      _image.value = image?.pixels;
     }
   }
 }

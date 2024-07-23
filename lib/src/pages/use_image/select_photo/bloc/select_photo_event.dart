@@ -5,13 +5,18 @@ sealed class SelectPhotoEvent extends Equatable {
 }
 
 final class DoPhotoPickerEvent extends SelectPhotoEvent {
-  const DoPhotoPickerEvent({required this.returnResult, this.from});
+  const DoPhotoPickerEvent({
+    required this.returnResult,
+    required this.maxLimit,
+    this.from,
+  });
 
   final String? from;
   final bool returnResult;
+  final int maxLimit;
 
   @override
-  List<Object?> get props => [from, returnResult];
+  List<Object?> get props => [from, returnResult, maxLimit];
 }
 
 final class DoRecognizeImageEvent extends SelectPhotoEvent {

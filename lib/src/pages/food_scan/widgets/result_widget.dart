@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
@@ -48,7 +49,7 @@ class ResultWidgetState extends State<ResultWidget> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: AppDimens.w16),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
         children: [
           SingleChildScrollView(
@@ -57,20 +58,20 @@ class ResultWidgetState extends State<ResultWidget> {
             physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
-                SizedBox(height: AppDimens.h8),
+                8.verticalSpace,
                 widget.shouldDraggable
                     ? Container(
-                        width: AppDimens.w48,
-                        height: AppDimens.h4,
+                        width: 48.w,
+                        height: 4.h,
                         decoration: BoxDecoration(
                           color: AppColors.gray200,
-                          borderRadius: BorderRadius.circular(AppDimens.r24),
+                          borderRadius: BorderRadius.circular(24.r),
                         ),
                       )
                     : const SizedBox.shrink(),
                 widget.shouldDraggable && widget.visibleDragIntro
                     ? Padding(
-                        padding: EdgeInsets.only(top: AppDimens.h16),
+                        padding: EdgeInsets.only(top: 16.h),
                         child: Text(
                           context.localization?.scanResultsIntro ?? '',
                           textAlign: TextAlign.center,
@@ -80,14 +81,14 @@ class ResultWidgetState extends State<ResultWidget> {
                       )
                     : const SizedBox.shrink(),
                 Padding(
-                  padding: EdgeInsets.only(top: AppDimens.h24),
+                  padding: EdgeInsets.only(top: 24.h),
                   child: Row(
                     children: [
                       PassioImageWidget(
                         iconId: widget.iconId,
-                        radius: AppDimens.r20,
+                        radius: 20.r,
                       ),
-                      SizedBox(width: AppDimens.w16),
+                      16.horizontalSpace,
                       Expanded(
                         child: Text(
                           widget.foodName?.toUpperCaseWord ?? '',
@@ -121,9 +122,9 @@ class ResultWidgetState extends State<ResultWidget> {
               controller: widget
                   .bottomBackgroundWidgetKey.currentState!.scrollController!,
               padding: EdgeInsets.only(
-                top: AppDimens.h24,
-                left: AppDimens.w4,
-                right: AppDimens.w4,
+                top: 24.h,
+                left: 4.w,
+                right: 4.w,
               ),
               physics: const ClampingScrollPhysics(),
               shrinkWrap: true,
@@ -139,11 +140,11 @@ class ResultWidgetState extends State<ResultWidget> {
                 );
               },
               separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: AppDimens.h8);
+                return SizedBox(height: 8.h);
               },
             ),
           ),
-          SizedBox(height: AppDimens.h24),
+          24.verticalSpace,
           GestureDetector(
             behavior: HitTestBehavior.opaque,
             onTap: () {
@@ -166,7 +167,7 @@ class ResultWidgetState extends State<ResultWidget> {
               ),
             ),
           ),
-          SizedBox(height: AppDimens.h24),
+          24.verticalSpace,
           Row(
             children: [
               Expanded(
@@ -176,7 +177,7 @@ class ResultWidgetState extends State<ResultWidget> {
                   onTap: () => widget.listener?.onEdit(null),
                 ),
               ),
-              SizedBox(width: AppDimens.w16),
+              16.horizontalSpace,
               Expanded(
                 child: AppButton(
                   buttonText: context.localization?.log,
@@ -186,7 +187,7 @@ class ResultWidgetState extends State<ResultWidget> {
               ),
             ],
           ),
-          SizedBox(height: AppDimens.h16),
+          context.bottomPadding.verticalSpace,
         ],
       ),
     );
@@ -203,10 +204,10 @@ class _AlternativeRow extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: AppColors.indigo50,
-        borderRadius: BorderRadius.circular(AppDimens.r4),
+        borderRadius: BorderRadius.circular(4.r),
       ),
-      padding: EdgeInsets.all(AppDimens.r8),
-      height: AppDimens.h56,
+      padding: EdgeInsets.all(8.r),
+      height: 56.h,
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         dense: true,

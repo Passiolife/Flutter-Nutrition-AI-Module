@@ -35,6 +35,7 @@ class ChatActionWidgetState extends State<ChatActionWidget> {
   @override
   void initState() {
     _messageController.addListener(() {
+      _visibleAddActions.value = false;
       _sendEnabled.value = _messageController.text.isNotEmpty;
     });
     super.initState();
@@ -64,11 +65,17 @@ class ChatActionWidgetState extends State<ChatActionWidget> {
                       crossFadeState: value
                           ? CrossFadeState.showSecond
                           : CrossFadeState.showFirst,
-                      firstChild: IconWidget(
-                        icon: AppImages.icPlusSolid,
-                        onTap: () {
-                          setVisibleAddActions(true);
-                        },
+                      firstChild: AnimatedOpacity(
+                        duration: const Duration(milliseconds: 250),
+                        opacity: widget.visibleLoadingForSendButton ? 0.4 : 1.0,
+                        child: IconWidget(
+                          icon: AppImages.icPlusSolid,
+                          onTap: widget.visibleLoadingForSendButton
+                              ? null
+                              : () {
+                                  setVisibleAddActions(true);
+                                },
+                        ),
                       ),
                       secondChild: Row(
                         children: [

@@ -57,6 +57,38 @@ class AppShadows {
   );
 
   // Large Shadow
+  static BoxDecoration md = BoxDecoration(
+    // Background color for the box
+    color: AppColors.white,
+    // Border radius for rounded corners
+    borderRadius: BorderRadius.circular(8.r),
+    border: Border.all(color: AppColors.gray300),
+    // Box shadow settings
+    boxShadow: [
+      BoxShadow(
+        // Shadow color with opacity
+        color: AppColors.black.withOpacity(0.06),
+        // Shadow offset (x, y)
+        offset: const Offset(0, 2),
+        // Blur radius of the shadow
+        blurRadius: 4,
+        // Spread radius of the shadow
+        spreadRadius: -1,
+      ),
+      BoxShadow(
+        // Shadow color with opacity
+        color: AppColors.black.withOpacity(0.1),
+        // Shadow offset (x, y)
+        offset: const Offset(0, 4),
+        // Blur radius of the shadow
+        blurRadius: 6,
+        // Spread radius of the shadow
+        spreadRadius: -1,
+      ),
+    ],
+  );
+
+  // Large Shadow
   static BoxDecoration lg = BoxDecoration(
     // Background color for the box
     color: AppColors.white,

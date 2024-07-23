@@ -23,6 +23,8 @@ class DatabaseHelper {
   final String tblFavorite = 'favorite';
   final String tblWater = 'water';
   final String tblWeight = 'weight';
+  final String tblUserFoods = 'user_foods';
+  final String tblUserFoodImages = 'user_food_images';
 
   /// Table Columns:
   final String colId = 'id';
@@ -82,6 +84,24 @@ class DatabaseHelper {
             $colId INTEGER PRIMARY KEY,
             $colData INTEGER NOT NULL,
             $colCreatedAt INTEGER NOT NULL
+          )
+          ''');
+
+    // Query for [tblUserFoods].
+    await db.execute('''
+          CREATE TABLE $tblUserFoods (
+            $colId INTEGER PRIMARY KEY,
+            $colData INTEGER NOT NULL,
+            $colCreatedAt INTEGER NOT NULL
+          )
+          ''');
+
+    // Query for [tblUserFoodImages].
+    await db.execute('''
+          CREATE TABLE $tblUserFoodImages (
+            $colId TEXT PRIMARY KEY,
+            $colData INTEGER NOT NULL,
+            $colCreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
           )
           ''');
   }

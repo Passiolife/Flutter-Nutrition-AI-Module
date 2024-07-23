@@ -92,6 +92,7 @@ class MealWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = isLoading ? null : listOfFoodData?.elementAt(index);
               return FoodItemRowWidget(
+                decoration: const BoxDecoration(),
                 isLoading: isLoading,
                 index: index,
                 iconId: data?.iconID,

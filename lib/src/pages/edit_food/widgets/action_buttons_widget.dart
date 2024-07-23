@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
@@ -21,8 +22,8 @@ class ActionButtonsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: AppDimens.w16,
-        vertical: AppDimens.h16,
+        horizontal: 16.w,
+        vertical: 16.h,
       ),
       child: Row(
         children: [
@@ -33,7 +34,7 @@ class ActionButtonsWidget extends StatelessWidget {
               onTap: () => listener?.onCancelTapped(),
             ),
           ),
-          SizedBox(width: AppDimens.w16),
+          16.horizontalSpace,
           Expanded(
             child: AppButton(
               buttonText: logButtonText ?? context.localization?.save,

@@ -91,4 +91,6 @@ class AppColors {
 
   // Speech Recognition Text Color
   static const speechRecognizedTextColor = Color(0xFF484848);
+
+  static const tutorialBackgroundColor = Color.fromRGBO(107, 114, 128, 0.75);
 }

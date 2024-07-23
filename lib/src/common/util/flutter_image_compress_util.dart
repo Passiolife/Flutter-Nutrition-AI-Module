@@ -27,4 +27,15 @@ class FlutterImageCompressUtil {
       format: CompressFormat.jpeg,
     );
   }
+
+  static Future<Uint8List?> compressWithList(Uint8List imagePath,
+      {int minWidth = 1920, int minHeight = 1080}) async {
+    return await FlutterImageCompress.compressWithList(
+      imagePath,
+      minWidth: minWidth,
+      minHeight: minHeight,
+      quality: 100,
+      format: CompressFormat.jpeg,
+    );
+  }
 }

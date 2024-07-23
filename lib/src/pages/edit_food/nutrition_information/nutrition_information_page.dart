@@ -40,9 +40,9 @@ class NutritionInformationPage extends StatelessWidget {
           16.verticalSpace,
           Container(
             margin: EdgeInsets.symmetric(horizontal: 16.w),
-            padding: EdgeInsets.all(8.r),
             decoration: AppShadows.base,
             child: FoodItemRowWidget(
+              padding: EdgeInsets.all(8.r),
               iconId: foodRecord?.iconId,
               title: foodRecord?.name,
               subtitle: foodRecord?.additionalData,

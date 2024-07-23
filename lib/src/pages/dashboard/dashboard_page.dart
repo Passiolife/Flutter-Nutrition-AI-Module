@@ -10,6 +10,7 @@ import '../food_scan/food_scan_page.dart';
 import '../food_search/food_search_page.dart';
 import '../home/home_page.dart';
 import '../meal_plan/meal_plan_page.dart';
+import '../my_foods/my_foods_page.dart';
 import '../progress/progress_page.dart';
 import '../use_image/select_photo/select_photo_page.dart';
 import '../use_image/take_photo/take_photo_page.dart';
@@ -143,7 +144,11 @@ class _DashboardPageState extends State<DashboardPage> {
       await FavoritesPage.navigate(context: context);
       _bloc.add(const RefreshEvent());
     } else if (action == context.localization?.aiAdvisor) {
-      AdvisorPage.navigate(context);
+      await AdvisorPage.navigate(context);
+      _bloc.add(const RefreshEvent());
+    } else if (action == context.localization?.myFoods) {
+      await MyFoodsPage.navigate(context: context);
+      _bloc.add(const RefreshEvent());
     }
     // Default action if none of the above conditions are met.
     else {}

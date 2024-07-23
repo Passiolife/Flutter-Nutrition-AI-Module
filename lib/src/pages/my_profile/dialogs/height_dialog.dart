@@ -132,10 +132,10 @@ class HeightDialog {
                             ),
                           ),
                           ActionButtonsWidget(
-                            cancelButtonText: context.localization?.cancel,
-                            saveButtonText: context.localization?.save,
-                            onTapCancel: () => Navigator.pop(context),
-                            onTapSave: () {
+                            negativeButtonText: context.localization?.cancel,
+                            positiveButtonText: context.localization?.save,
+                            onNegativeButtonTap: () => Navigator.pop(context),
+                            onPositiveButtonTap: () {
                               onSaveHeight?.call(unitController.selectedItem,
                                   subunitController.selectedItem);
                               Navigator.pop(context);

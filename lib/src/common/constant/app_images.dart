@@ -11,10 +11,13 @@ class AppImages {
   static const imgRecipe = '${imageDir}img_recipe.png';
   static const imgRobot = '${imageDir}img_robot.png';
   static const imgTakePictureIntro = '${imageDir}img_take_picture_intro.png';
+  static const imgMyFoodsThumbnail = '${imageDir}img_my_foods_thumbnail.png';
 
   // Icons
+  static const icAIChat = '${imageDir}ic_ai_chat.svg';
   static const icBadgeCheck = '${imageDir}ic_badge_check.svg';
   static const icBalancedDiet = '${imageDir}ic_balanced_diet.svg';
+  static const icBarcode = '${imageDir}ic_barcode.svg';
   static const icBarcodes = '${imageDir}ic_barcodes.svg';
   static const icBarcodeNotRecognized =
       '${imageDir}ic_barcode_not_recognized.svg';
@@ -47,11 +50,12 @@ class AppImages {
   static const icMealPlan = '${imageDir}ic_meal_plan.svg';
   static const icMenu = '${imageDir}ic_menu.svg';
   static const icMic = '${imageDir}ic_mic.svg';
-  static const icMyFoodsThumbnail = '${imageDir}ic_my_foods_thumbnail.svg';
+  static const icMyFoods = '${imageDir}ic_my_foods.svg';
   static const icNutritionFacts = '${imageDir}ic_nutrition_facts.svg';
   static const icPackaging = '${imageDir}ic_packaging.svg';
-  static const icPencil = '${imageDir}ic_pencil.svg';
+  static const icPencilAlt = '${imageDir}ic_pencil_alt.svg';
   static const icPencilSolid = '${imageDir}ic_pencil_solid.svg';
+  static const icPhotograph = '${imageDir}ic_photograph.svg';
   static const icPlusSolid = '${imageDir}ic_plus_solid.svg';
   static const icProfile = '${imageDir}ic_profile.svg';
   static const icProgress = '${imageDir}ic_progress.svg';

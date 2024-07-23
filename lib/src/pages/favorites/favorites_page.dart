@@ -91,6 +91,7 @@ class _FavoritesPageState extends State<FavoritesPage> implements RowListener {
     final data = await EditFoodPage.navigate(
       context: context,
       foodRecord: _list.elementAt(index),
+      visibleFoodCreator: true,
     );
     if (data != null && data is bool && data && mounted) {
       context.showSnackbar(text: context.localization?.addedToLog);

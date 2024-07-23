@@ -153,8 +153,8 @@ class _AddWaterFormWidgetState extends State<AddUnitFormWidget> {
               ),
               const Spacer(),
               ActionButtonsWidget(
-                onTapCancel: widget.listener?.onCancelTapped,
-                onTapSave: widget.listener?.onSaveTapped,
+                onNegativeButtonTap: widget.listener?.onCancelTapped,
+                onPositiveButtonTap: widget.listener?.onSaveTapped,
               ),
               40.verticalSpace,
             ],

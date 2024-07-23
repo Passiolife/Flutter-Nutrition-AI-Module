@@ -6,6 +6,7 @@ class AppPopupWidget<T> extends StatelessWidget {
   const AppPopupWidget({
     required this.items,
     required this.itemBuilder,
+    this.child,
     this.icon,
     this.initialValue,
     this.position = PopupMenuPosition.under,
@@ -23,6 +24,7 @@ class AppPopupWidget<T> extends StatelessWidget {
   final PopupMenuItemSelected<T>? onSelected;
   final BoxConstraints? constraints;
   final Widget? Function(T item) itemBuilder;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class AppPopupWidget<T> extends StatelessWidget {
                 .toList()),
           ];
         },
+        child: child,
       ),
     );
   }

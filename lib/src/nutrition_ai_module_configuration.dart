@@ -16,8 +16,7 @@ class NutritionConfiguration {
   /// Constructor for creating a `NutritionConfiguration` instance.
   ///
   /// Takes a [PassioConnector] as a required named parameter to initialize the configuration.
-  const NutritionConfiguration(
-      {required this.connector, this.advisorKey});
+  const NutritionConfiguration({required this.connector, this.advisorKey});
 
   /// Creates a copy of the current `NutritionConfiguration` instance with optional modifications.
   ///

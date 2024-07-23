@@ -13,7 +13,6 @@ part 'select_photo_state.dart';
 
 class SelectPhotoBloc extends Bloc<SelectPhotoEvent, SelectPhotoState> {
   final ImagePicker picker = ImagePicker();
-  final numberOfImageAllow = 7;
 
   /// [_connector] use to perform operations.
   PassioConnector get _connector =>
@@ -29,10 +28,13 @@ class SelectPhotoBloc extends Bloc<SelectPhotoEvent, SelectPhotoState> {
 
   FutureOr<void> _handleDoPhotoPickerEvent(
       DoPhotoPickerEvent event, Emitter<SelectPhotoState> emit) async {
-    final List<XFile> images =
-        await picker.pickMultiImage(limit: numberOfImageAllow);
+    List<XFile> images = event.maxLimit > 2
+        ? (await picker.pickMultiImage(limit: event.maxLimit))
+        : [(await picker.pickImage(source: ImageSource.gallery))]
+            .whereType<XFile>()
+            .toList();
     if (images.isNotEmpty) {
-      if (images.length > 7) {
+      if (images.length > event.maxLimit) {
         emit(const RecognizeImageFailureListenerState());
         emit(const PhotoPickerFailureListenerState());
         return;

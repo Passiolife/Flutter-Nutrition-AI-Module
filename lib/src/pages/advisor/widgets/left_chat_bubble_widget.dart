@@ -207,7 +207,7 @@ class ResultWidget extends StatelessWidget {
                 final isLogged = data.isLogged;
 
                 return FoodItemRowWidget.withSelection(
-                  backgroundColor: AppColors.indigo50,
+                  rippleColor: AppColors.indigo50,
                   iconId: iconId,
                   title: title,
                   subtitle: subtitle,

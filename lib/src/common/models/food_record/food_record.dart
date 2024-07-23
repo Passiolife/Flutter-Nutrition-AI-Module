@@ -58,6 +58,8 @@ class FoodRecord {
   /// Indicates whether the food record is marked as a favorite.
   bool isFavorite = false;
 
+  String? barcode;
+
   /// Sets the selected unit for the food item while keeping the weight consistent.
   bool setSelectedUnitKeepWeight(String unit) {
     if (_selectedUnit == unit) return true;
@@ -91,17 +93,18 @@ class FoodRecord {
     this._createdAt, {
     this.mealLabel,
     this.openFoodLicense,
+    this.barcode,
   });
 
   /// Factory constructor to create a FoodRecord from a FoodRecordIngredient instance.
   factory FoodRecord.fromFoodRecordIngredient(FoodRecordIngredient ingredient,
       {PassioIDEntityType entityType = PassioIDEntityType.item}) {
-    return FoodRecord._(
+    final foodRecord = FoodRecord._(
       ingredient.id,
       ingredient.passioID,
       ingredient.refCode,
       ingredient.name,
-      '',
+      ingredient.additionalData,
       ingredient.iconId,
       ingredient.servingSizes,
       ingredient.servingUnits,
@@ -111,7 +114,11 @@ class FoodRecord {
       [ingredient],
       null,
       openFoodLicense: ingredient.openFoodLicense,
+      barcode: ingredient.barcode,
     );
+    foodRecord._calculateQuantityForIngredients();
+    foodRecord.logMeal();
+    return foodRecord;
   }
 
   /// Factory constructor to create a FoodRecord from a PassioFoodItem instance.
@@ -134,6 +141,11 @@ class FoodRecord {
           .toList(),
       null,
       openFoodLicense: foodItem.isOpenFood(),
+      barcode: foodItem.ingredients
+          .cast<PassioIngredient?>()
+          .firstWhere((e) => e?.metadata.barcode != null, orElse: () => null)
+          ?.metadata
+          .barcode,
     );
     foodRecord._calculateQuantityForIngredients();
     foodRecord.logMeal();
@@ -176,6 +188,7 @@ class FoodRecord {
                 orElse: () => null)
             : null,
         openFoodLicense: json['openFoodLicense'] as String?,
+        barcode: json['barcode'] as String?,
       );
 
   /// Converts the [FoodRecord] instance to a JSON object.
@@ -198,6 +211,7 @@ class FoodRecord {
         'createdAt': _createdAt,
         'mealLabel': mealLabel?.value,
         'openFoodLicense': openFoodLicense,
+        'barcode': barcode,
       };
 
   /// Overrides the equality operator.
@@ -220,7 +234,8 @@ class FoodRecord {
         other.entityType == entityType &&
         other.mealLabel == mealLabel &&
         other._createdAt == _createdAt &&
-        other.openFoodLicense == openFoodLicense;
+        other.openFoodLicense == openFoodLicense &&
+        other.barcode == barcode;
   }
 
   /// Overrides the hashCode method.
@@ -241,6 +256,7 @@ class FoodRecord {
         mealLabel,
         _createdAt,
         openFoodLicense,
+        barcode,
       );
 
   /// Calculates the quantity of ingredients based on the ratio of serving weight to ingredient weight.
@@ -419,18 +435,17 @@ class FoodRecord {
         ingredientNutrients, UnitMass(100, UnitMassType.grams));
   }
 
-  /// OLD STRUCTURE
-
   /// [computedWeight] is [UnitMass] class and contains weight.
   UnitMass get computedWeight {
-    final weight2UnitRatio = servingUnits
+    final weight = servingUnits
         .cast<PassioServingUnit?>()
         .firstWhere((element) => element?.unitName == _selectedUnit,
             orElse: () => null)
-        ?.weight
-        .value;
+        ?.weight;
+    final weight2UnitRatio = weight?.value;
     if (weight2UnitRatio != null) {
-      return UnitMass(weight2UnitRatio * _selectedQuantity, UnitMassType.grams);
+      return UnitMass(weight2UnitRatio * _selectedQuantity,
+          weight?.unit ?? UnitMassType.grams);
     }
     return UnitMass(0, UnitMassType.grams);
   }

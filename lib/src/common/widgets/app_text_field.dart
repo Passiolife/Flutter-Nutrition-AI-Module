@@ -39,6 +39,7 @@ class AppTextField extends StatelessWidget {
     this.scrollPadding = const EdgeInsets.all(20.0),
     this.borderColor = AppColors.gray300,
     this.cursorColor = AppColors.indigo600Main,
+    this.textCapitalization = TextCapitalization.none,
     super.key,
   });
 
@@ -75,6 +76,7 @@ class AppTextField extends StatelessWidget {
   final FormFieldValidator? validator;
   final int? maxLength;
   final ValueChanged<String>? onChanged;
+  final TextCapitalization textCapitalization;
 
   @override
   Widget build(BuildContext context) {
@@ -83,6 +85,7 @@ class AppTextField extends StatelessWidget {
       height: height,
       decoration: AppShadows.sm,
       child: TextFormField(
+        textCapitalization: textCapitalization,
         onChanged: onChanged,
         autofocus: autofocus,
         inputFormatters: inputFormatters,

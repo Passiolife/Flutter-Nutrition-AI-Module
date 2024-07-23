@@ -121,20 +121,11 @@ class _FoodSearchPageState extends State<FoodSearchPage>
       Navigator.pop(context, result);
     } else {
       EditFoodPage.navigate(
-          context: context,
-          passioFoodDataInfo: result,
-          visibleSwitch: true,
-          redirectToDiaryOnLog: true);
-      /* Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EditFoodPage(
-            searchResult: result,
-            visibleSwitch: true,
-            redirectToDiaryOnLog: true,
-          ),
-        ),
-      );*/
+        context: context,
+        passioFoodDataInfo: result,
+        visibleFoodCreator: true,
+        redirectToDiaryOnLog: true,
+      );
     }
   }
 

@@ -42,6 +42,7 @@ class _DiaryPageState extends State<DiaryPage>
       foodRecord: foodRecord,
       context: context,
       isUpdate: true,
+      visibleFoodCreator: true,
       visibleDelete: true,
     );
     if (isUpdated != null && isUpdated) {
@@ -181,7 +182,7 @@ class _DiaryPageState extends State<DiaryPage>
       context: context,
       passioFoodDataInfo: data.passioFoodDataInfo,
       foodRecord: data.foodRecord,
-      visibleSwitch: true,
+      visibleFoodCreator: true,
       message: context.localization?.itemAddedToDiary,
     );
     if (isLogged != null && isLogged) {

@@ -214,6 +214,7 @@ class _MealPlanPageState extends State<MealPlanPage>
       redirectToDiaryOnLog: true,
       mealLabel:
           MealLabel.stringToMealLabel(mealTime?.name.toUpperCaseWord ?? ''),
+      visibleFoodCreator: true,
       shouldUpdateServingUnit: true,
     );
   }

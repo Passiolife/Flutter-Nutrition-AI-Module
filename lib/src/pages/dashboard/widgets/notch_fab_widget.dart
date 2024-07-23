@@ -39,16 +39,20 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
           text: context.localization?.voiceLogging,
         ),
         FloatingButtonExpandedWidget(
-          imagePath: AppImages.icFavoriteFilled,
+          imagePath: AppImages.icPhotograph,
           text: context.localization?.useImage,
         ),
         FloatingButtonExpandedWidget(
-          imagePath: AppImages.icFavoriteFilled,
+          imagePath: AppImages.icAIChat,
           text: context.localization?.aiAdvisor,
         ),
         FloatingButtonExpandedWidget(
           imagePath: AppImages.icFavoriteFilled,
           text: context.localization?.favourites,
+        ),
+        FloatingButtonExpandedWidget(
+          imagePath: AppImages.icMyFoods,
+          text: context.localization?.myFoods,
         ),
       ];
 
@@ -77,7 +81,7 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
       openCloseDial: _showImageMenu ? _isUseImageDialOpen : _isDialOpen,
       closeManually: true,
       onClose: () {
-        if(_isUseImageDialOpen.value) {
+        if (_isUseImageDialOpen.value) {
           _isUseImageDialOpen.value = false;
         }
       },

@@ -15,4 +15,5 @@ class AppCommonConstants {
 
   // Recipe
   static const recipePrefix = 'MyRec';
+  static const userFoods = 'user_foods';
 }
