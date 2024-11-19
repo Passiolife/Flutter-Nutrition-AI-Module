@@ -106,8 +106,9 @@ class _ResultWidgetState extends State<ResultWidget> {
       initialSize: _size,
       minSize: _size,
       maxSize: _size,
+      // shouldDraggable: false,
       dragController: _dragController,
-      builder: (context, dragController, scrollController) {
+      builder: (context, dragController, scrollController, widgetState) {
         return Container(
           decoration: AppShadows.base,
           height: context.height,

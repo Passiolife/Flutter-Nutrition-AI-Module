@@ -30,6 +30,7 @@ class DatabaseHelper {
   final String colId = 'id';
   final String colData = 'data';
   final String colCreatedAt = 'created_at';
+  final String colSourceId = 'source_id';
 
   Future<void> init() async {
     // Open the database and store the reference.
@@ -50,7 +51,8 @@ class DatabaseHelper {
           CREATE TABLE $tblFoodRecord (
             $colId INTEGER PRIMARY KEY,
             $colData TEXT NOT NULL,
-            $colCreatedAt TEXT NOT NULL
+            $colCreatedAt TEXT NOT NULL,
+            $colSourceId TEXT NULL
           )
           ''');
     // Query for [tblUserProfile].

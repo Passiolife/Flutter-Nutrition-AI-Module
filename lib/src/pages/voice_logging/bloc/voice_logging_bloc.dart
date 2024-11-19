@@ -135,27 +135,15 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
       if (foodDataInfo == null) continue;
 
       try {
-        final foodItem =
-            await NutritionAI.instance.fetchFoodItemForDataInfo(foodDataInfo);
+        final nutritionPreview = foodDataInfo.nutritionPreview;
+        final foodItem = await NutritionAI.instance.fetchFoodItemForDataInfo(
+          foodDataInfo,
+          servingQuantity: nutritionPreview.servingQuantity,
+          servingUnit: nutritionPreview.servingUnit,
+        );
         if (foodItem == null) continue;
 
         final foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
-
-        ({double? number, String? string})? unitAndQuantity = element
-            .recognitionModel?.advisorInfo.portionSize
-            .extractNumberAndString();
-        bool hasUnit = false;
-        if (unitAndQuantity != null && unitAndQuantity.string != null) {
-          hasUnit = foodRecord.setSelectedUnit(unitAndQuantity.string!);
-        }
-        if (!hasUnit) {
-          foodRecord.setSelectedUnit('gram');
-        }
-
-        double quantity = hasUnit
-            ? unitAndQuantity?.number ?? 1
-            : element.recognitionModel?.advisorInfo.weightGrams ?? 1;
-        foodRecord.setSelectedQuantity(quantity);
 
         if (element.recognitionModel?.date.isNotEmpty ?? false) {
           final dateTime =

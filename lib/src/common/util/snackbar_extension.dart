@@ -32,42 +32,28 @@ SnackBar getSnackBar({
   String? actionLabel,
   VoidCallback? onPressAction,
 }) {
-  SnackBar? snackBar;
-  if (actionLabel != null) {
-    snackBar = SnackBar(
-      backgroundColor: AppColors.snackBarBackground,
-      behavior: SnackBarBehavior.floating,
-      duration: const Duration(milliseconds: 2000),
-      margin: EdgeInsets.only(bottom: 40.h),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-      content: Text(
-        text ?? '',
-        style: AppTextStyle.textSm
-            .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(
-                color: AppColors.white),
-        textAlign: TextAlign.center,
-      ),
-      action: SnackBarAction(
-        label: actionLabel,
-        onPressed: () => onPressAction?.call(),
-      ),
-    );
-  } else {
-    snackBar = SnackBar(
-      backgroundColor: AppColors.snackBarBackground,
-      content: Text(
-        text ?? '',
-        style: AppTextStyle.textSm
-            .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(
-                color: AppColors.white),
-        textAlign: TextAlign.center,
-      ),
-      margin: EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
-      behavior: SnackBarBehavior.floating,
-      duration: const Duration(milliseconds: 2000),
-    );
-  }
+  SnackBar? snackBar = SnackBar(
+    backgroundColor: AppColors.snackBarBackground,
+    behavior: SnackBarBehavior.floating,
+    content: Text(
+      text ?? '',
+      style: AppTextStyle.textSm
+          .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]).copyWith(
+              color: AppColors.white),
+      textAlign: TextAlign.center,
+    ),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6.r)),
+    duration: const Duration(milliseconds: 2000),
+    action: actionLabel != null
+        ? SnackBarAction(
+            label: actionLabel,
+            onPressed: () => onPressAction?.call(),
+          )
+        : null,
+    margin: actionLabel != null
+        ? EdgeInsets.only(bottom: 40.h)
+        : EdgeInsets.symmetric(vertical: 40.h, horizontal: 16.w),
+  );
   // Find the ScaffoldMessenger in the widget tree
   // and use it to show a SnackBar.
   return snackBar;

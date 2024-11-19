@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrition_ai_module/src/common/constant/app_constants.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/food_record/meal_label.dart';
@@ -39,6 +40,8 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
     on<DoFavoriteChangeEvent>(_handleDoFavoriteChangeEvent);
     on<DoLogEvent>(_handleDoLogEvent);
     on<DoDeleteLogEvent>(_handleDoDeleteLogEvent);
+    on<DoFetchUserCreatedFoodEvent>(_handleDoFetchUserCreatedFoodEvent);
+    on<DoUserFoodFlowEvent>(_handleDoUserFoodFlowEvent);
   }
 
   FutureOr<void> _handleDoConversionEvent(
@@ -174,9 +177,7 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
         await _connector.deleteFavorite(foodRecord: _foodRecord!);
         _foodRecord?.isFavorite = false;
       } else {
-        final updatedRecord = FoodRecord.fromJson(_foodRecord!.toJson())
-          ..name = event.name ?? '';
-        await _connector.updateFavorite(foodRecord: updatedRecord, isNew: true);
+        await _connector.updateFavorite(foodRecord: _foodRecord!, isNew: true);
         _foodRecord?.isFavorite = true;
       }
       emit(FavoriteChangeSuccessState(
@@ -229,5 +230,40 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
         },
       );
     }
+  }
+
+  FutureOr<void> _handleDoFetchUserCreatedFoodEvent(
+      DoFetchUserCreatedFoodEvent event, Emitter<EditFoodState> emit) async {
+    // Check if the provided foodRecord is null; if so, emit a failure state.
+    final foodRecord = event.foodRecord;
+    final logUpdateOnCreate = event.logUpdateOnCreate;
+
+    if (foodRecord == null) {
+      emit(UserFoodFetchFailureState(logUpdateOnCreate: logUpdateOnCreate));
+      return;
+    }
+
+    // Extract the ID from foodRecord, using a fallback empty string if sourceId is null.
+    final id = foodRecord.sourceId?.replaceFirst(AppCommonConstants.userFoods, '') ?? '';
+
+    // Fetch the user food record based on the extracted ID.
+    try {
+      final userFoodRecord = await _connector.fetchUserFood(id: id);
+
+      // If user food record retrieval fails, emit a failure state.
+      if (userFoodRecord == null) {
+        emit(UserFoodFetchFailureState(logUpdateOnCreate: logUpdateOnCreate));
+      } else {
+        // If successful, emit a success state.
+        emit(UserFoodFetchSuccessState(logUpdateOnCreate: event.logUpdateOnCreate, userFoodRecord: userFoodRecord));
+      }
+    } catch (error) {
+      // Catch any unexpected errors and emit a failure state.
+      emit(UserFoodFetchFailureState(logUpdateOnCreate: logUpdateOnCreate));
+    }
+  }
+
+  FutureOr<void> _handleDoUserFoodFlowEvent(DoUserFoodFlowEvent event, Emitter<EditFoodState> emit) async {
+    emit(UserFoodFlowState(timeStamp: DateTime.now().millisecondsSinceEpoch));
   }
 }

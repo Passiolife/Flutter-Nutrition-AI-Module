@@ -29,6 +29,8 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
     on<DoUpdateHeightUnitEvent>(_handleDoUpdateHeightUnitEvent);
     on<DoUpdateWeightUnitEvent>(_handleDoUpdateWeightUnitEvent);
     on<DoUpdateMealReminderEvent>(_handleDoUpdateMealReminderEvent);
+    on<GetTokenTrackingEvent>(_handleGetTokenTrackingEvent);
+    on<DoUpdateTokenTrackingEvent>(_handleDoUpdateTokenTrackingEvent);
   }
 
   Future<void> _handleGetUserProfileEvent(
@@ -145,5 +147,17 @@ class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
       default:
         break;
     }
+  }
+
+  Future<void> _handleGetTokenTrackingEvent(
+      GetTokenTrackingEvent event, Emitter<SettingsState> emit) async {
+    bool tokenTrackingEnabled = _settings.getTokenTracking();
+    emit(TokenTrackingSuccessState(enabled: tokenTrackingEnabled));
+  }
+
+  FutureOr<void> _handleDoUpdateTokenTrackingEvent(
+      DoUpdateTokenTrackingEvent event, Emitter<SettingsState> emit) {
+    _settings.setTokenTracking(event.enabled);
+    emit(TokenTrackingSuccessState(enabled: event.enabled));
   }
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../../extension/map_extension.dart';
 import 'food_record.dart';
 
 /// Represents an ingredient of a food record.
@@ -13,6 +14,9 @@ class FoodRecordIngredient {
 
   /// A reference code serving as a unique identifier for the food item.
   String refCode;
+
+  /// The reference ID of the place from which this entry is logged.
+  String? sourceId;
 
   /// Name of the ingredient.
   String name = '';
@@ -51,6 +55,7 @@ class FoodRecordIngredient {
     required this.id,
     required this.passioID,
     required this.refCode,
+    required this.sourceId,
     required this.name,
     required this.additionalData,
     required this.iconId,
@@ -71,6 +76,7 @@ class FoodRecordIngredient {
       id: foodRecord.id,
       passioID: foodRecord.passioID,
       refCode: foodRecord.refCode,
+      sourceId: foodRecord.sourceId,
       name: foodRecord.name,
       additionalData: foodRecord.additionalData,
       iconId: foodRecord.iconId,
@@ -92,6 +98,7 @@ class FoodRecordIngredient {
       id: '',
       passioID: ingredient.id,
       refCode: ingredient.refCode,
+      sourceId: null,
       name: ingredient.name,
       additionalData: '',
       iconId: ingredient.iconId,
@@ -112,6 +119,7 @@ class FoodRecordIngredient {
         id: json['id'] as String,
         passioID: json['passioID'] as String,
         refCode: json['refCode'] as String,
+        sourceId: json.ifValueNotNull<String>('sourceId'),
         name: json['name'] as String,
         additionalData: json['additionalData'] as String,
         iconId: json['iconId'] as String,
@@ -141,6 +149,7 @@ class FoodRecordIngredient {
         'id': id,
         'passioID': passioID,
         'refCode': refCode,
+        'sourceId': sourceId,
         'name': name,
         'additionalData': additionalData,
         'iconId': iconId,
@@ -165,6 +174,7 @@ class FoodRecordIngredient {
         id == other.id &&
         passioID == other.passioID &&
         refCode == other.refCode &&
+        sourceId == other.sourceId &&
         name == other.name &&
         additionalData == other.additionalData &&
         iconId == other.iconId &&
@@ -185,6 +195,7 @@ class FoodRecordIngredient {
       id,
       passioID,
       refCode,
+      sourceId,
       name,
       additionalData,
       iconId,

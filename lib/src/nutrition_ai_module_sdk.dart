@@ -68,7 +68,11 @@ class NutritionAIModule {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: AppColors.transparent,
       statusBarIconBrightness: Brightness.dark,
+      systemNavigationBarColor: AppColors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light
     ));
+
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     // Load language file for localization
     await AppLocalizations.instance.loadLanguageFile(

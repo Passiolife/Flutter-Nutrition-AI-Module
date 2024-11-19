@@ -9,7 +9,6 @@ import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
 import '../../../../common/models/settings/settings.dart';
 import '../../../../common/util/flutter_image_compress_util.dart';
-import '../../../../common/util/string_extensions.dart';
 
 part 'take_photo_event.dart';
 part 'take_photo_state.dart';
@@ -136,26 +135,16 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
         if (foodDataInfo == null) return null;
 
         try {
-          final foodItem =
-              await NutritionAI.instance.fetchFoodItemForDataInfo(foodDataInfo);
+          final nutritionPreview = foodDataInfo.nutritionPreview;
+          final foodItem = await NutritionAI.instance.fetchFoodItemForDataInfo(
+            foodDataInfo,
+            servingQuantity: nutritionPreview.servingQuantity,
+            servingUnit: nutritionPreview.servingUnit,
+          );
           if (foodItem == null) return null;
 
           final foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
 
-          final unitAndQuantity =
-              advisorFoodInfo?.portionSize.extractNumberAndString();
-          bool hasUnit = false;
-          if (unitAndQuantity != null && unitAndQuantity.string != null) {
-            hasUnit = foodRecord.setSelectedUnit(unitAndQuantity.string!);
-          }
-          if (!hasUnit) {
-            foodRecord.setSelectedUnit('gram');
-          }
-
-          double quantity = hasUnit
-              ? unitAndQuantity?.number ?? 1
-              : advisorFoodInfo?.weightGrams ?? 1;
-          foodRecord.setSelectedQuantity(quantity);
           return foodRecord;
         } catch (e) {
           return null;

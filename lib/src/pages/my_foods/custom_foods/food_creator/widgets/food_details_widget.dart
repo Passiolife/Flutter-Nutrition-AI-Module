@@ -2,6 +2,8 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -13,6 +15,7 @@ import '../../../../../common/widgets/custom_app_bar_widget.dart';
 import '../../../../../common/widgets/passio_image_widget.dart';
 import '../../../../use_image/select_photo/select_photo_page.dart';
 import '../../../../use_image/take_photo/take_photo_page.dart';
+import '../bloc/food_creator_bloc.dart';
 
 typedef OnChangeFoodDetails = Function(
   Uint8List? image,
@@ -24,6 +27,7 @@ typedef OnTapBarcode = VoidCallback;
 
 class FoodDetailsWidget extends StatefulWidget {
   const FoodDetailsWidget({
+    this.initialImage,
     this.initialIconId,
     this.initialName,
     this.initialBrand,
@@ -33,6 +37,7 @@ class FoodDetailsWidget extends StatefulWidget {
     super.key,
   });
 
+  final Uint8List? initialImage;
   final String? initialIconId;
   final String? initialName;
   final String? initialBrand;
@@ -54,6 +59,7 @@ class _FoodDetailsWidgetState extends State<FoodDetailsWidget> {
   @override
   void initState() {
     super.initState();
+    _image = widget.initialImage;
     _iconId = widget.initialIconId;
     _name = widget.initialName;
     _brand = widget.initialBrand;
@@ -100,9 +106,9 @@ class _FoodDetailsWidgetState extends State<FoodDetailsWidget> {
                       initialBarcode: _barcode,
                       onTapBarcode: widget.onTapBarcode,
                       onChange: (profile, name, brand) {
-                        _name = name;
-                        _brand = brand;
-                        _handleDetailsChange();
+                          _name = name;
+                          _brand = brand;
+                          _handleDetailsChange();
                       },
                     ),
                   ),
@@ -188,7 +194,7 @@ class _EditImageWidgetState extends State<EditImageWidget> {
               builder: (context, value, child) {
                 return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
-                  child: widget.iconId != null || value != null
+                  child: (widget.iconId?.isNotEmpty ?? false) || (value?.isNotEmpty ?? false)
                       ? PassioImageWidget(
                           key: ObjectKey([widget.iconId, value]),
                           iconId: widget.iconId ?? '',
@@ -265,12 +271,13 @@ class _FormWidgetState extends State<_FormWidget> {
 
   @override
   void initState() {
-    _setupListener(nameController);
-    _setupListener(brandController);
-
     nameController.text = widget.initialName ?? '';
     brandController.text = widget.initialBrand ?? '';
     barcodeController.text = widget.initialBarcode ?? '';
+
+    _setupListener(nameController);
+    _setupListener(brandController);
+
     super.initState();
   }
 

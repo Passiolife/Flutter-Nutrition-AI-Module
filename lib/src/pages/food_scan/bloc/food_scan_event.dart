@@ -65,11 +65,13 @@ class DetectedEvent extends FoodScanEvent {
   final List<BarcodeCandidate>? barcodeCandidates;
   final List<DetectedCandidate>? detectedCandidates;
   final List<PackagedFoodCandidate>? packagedFoodCandidates;
+  final PassioNutritionFacts? nutritionFacts;
 
   const DetectedEvent({
-    required this.detectedCandidates,
+    this.detectedCandidates,
     this.barcodeCandidates,
     this.packagedFoodCandidates,
+    this.nutritionFacts,
   });
 
   @override
@@ -78,6 +80,15 @@ class DetectedEvent extends FoodScanEvent {
         packagedFoodCandidates,
         barcodeCandidates,
       ];
+}
+
+class NutritionFactsDetectedEvent extends FoodScanEvent {
+  final PassioNutritionFacts? nutritionFacts;
+
+  const NutritionFactsDetectedEvent({this.nutritionFacts});
+
+  @override
+  List<Object?> get props => [nutritionFacts];
 }
 
 class ScanResultDragEvent extends FoodScanEvent {
@@ -138,12 +149,27 @@ class AddedToDiaryVisibilityEvent extends FoodScanEvent {
   List<Object?> get props => [shouldVisible];
 }
 
-class DoConversionEvent extends FoodScanEvent {
-  // Indicates whether it should be visible or not
-  final DetectedCandidate? detectedCandidate;
+class DoModeChangeEvent extends FoodScanEvent {
+  const DoModeChangeEvent({required this.mode});
 
-  const DoConversionEvent({this.detectedCandidate});
+  final int mode;
 
   @override
-  List<Object?> get props => [detectedCandidate];
+  List<Object?> get props => [mode];
+}
+
+class GetCameraZoomLevelEvent extends FoodScanEvent {
+  const GetCameraZoomLevelEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class DoUpdateCameraZoomLevelEvent extends FoodScanEvent {
+  const DoUpdateCameraZoomLevelEvent({required this.zoomLevel});
+
+  final double zoomLevel;
+
+  @override
+  List<Object?> get props => [zoomLevel];
 }

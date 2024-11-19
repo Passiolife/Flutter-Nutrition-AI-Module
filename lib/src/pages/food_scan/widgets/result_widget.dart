@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
@@ -6,8 +7,8 @@ import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/util/string_extensions.dart';
 import '../../../common/widgets/app_button.dart';
-import '../../../common/widgets/passio_image_widget.dart';
-import 'bottom_background_widget.dart';
+import '../../../common/widgets/draggable_bottom_sheet_widget.dart';
+import '../../../common/widgets/food_item_row_widget.dart';
 import 'interfaces.dart';
 import 'typedefs.dart';
 
@@ -17,7 +18,8 @@ class ResultWidget extends StatefulWidget {
   const ResultWidget({
     super.key,
     required this.iconId,
-    required this.bottomBackgroundWidgetKey,
+    this.scrollController,
+    this.dragController,
     this.foodName,
     this.foodSize,
     this.foodCalories,
@@ -26,6 +28,7 @@ class ResultWidget extends StatefulWidget {
     this.listener,
     this.shouldDraggable = true,
     this.visibleDragIntro = true,
+    this.widgetState,
   });
 
   final String iconId;
@@ -39,22 +42,45 @@ class ResultWidget extends StatefulWidget {
   final bool visibleDragIntro;
   final FoodScanListener? listener;
 
-  final GlobalKey<BottomBackgroundWidgetState> bottomBackgroundWidgetKey;
+  final ScrollController? scrollController;
+  final DraggableScrollableController? dragController;
+  final DraggableBottomSheetWidgetState? widgetState;
 
   @override
   State<ResultWidget> createState() => ResultWidgetState();
 }
 
 class ResultWidgetState extends State<ResultWidget> {
+  final ValueNotifier<double> _heightNotifier = ValueNotifier(0);
+
+  double get _alternativeSize =>
+      32.h + 16.h + 16.h + 8.h + (widget.alternatives.length * 56.h);
+
+  @override
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      widget.dragController?.addListener(() {
+        _heightNotifier.value = (widget.widgetState?.getDraggedPixels() ?? 0) -
+            (widget.widgetState?.getInitialSizePixels() ?? 0);
+        widget.listener
+            ?.onDragResult(_heightNotifier.value==0);
+      });
+      widget.widgetState?.setMaxSizeInPixels(
+          (widget.widgetState?.getInitialSizePixels() ?? 0) + _alternativeSize);
+    });
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16.w),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           SingleChildScrollView(
-            controller:
-                widget.bottomBackgroundWidgetKey.currentState?.scrollController,
+            controller: widget.scrollController,
+            // widget.bottomBackgroundWidgetKey.currentState?.scrollController,
             physics: const ClampingScrollPhysics(),
             child: Column(
               children: [
@@ -80,68 +106,69 @@ class ResultWidgetState extends State<ResultWidget> {
                         ),
                       )
                     : const SizedBox.shrink(),
-                Padding(
-                  padding: EdgeInsets.only(top: 24.h),
-                  child: Row(
-                    children: [
-                      PassioImageWidget(
-                        iconId: widget.iconId,
-                        radius: 20.r,
-                      ),
-                      16.horizontalSpace,
-                      Expanded(
-                        child: Text(
-                          widget.foodName?.toUpperCaseWord ?? '',
-                          style: AppTextStyle.textSm.addAll([
-                            AppTextStyle.textSm.leading6,
-                            AppTextStyle.bold
-                          ]),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                    ],
-                  ),
+                16.verticalSpace,
+                FoodItemRowWidget(
+                  key: ValueKey(widget.iconId),
+                  iconId: widget.iconId,
+                  title: widget.foodName?.toUpperCaseWord ?? '',
+                  padding: EdgeInsets.all(8.r),
                 ),
               ],
             ),
           ),
           ValueListenableBuilder<double>(
-            valueListenable: widget
-                .bottomBackgroundWidgetKey.currentState!.currentHeightInPixels,
+            valueListenable: _heightNotifier,
             builder: (context, value, child) {
-              return value > 0
-                  ? SizedBox(
-                      height: widget.bottomBackgroundWidgetKey.currentState!
-                          .currentHeightInPixels.value,
-                      child: child ?? const SizedBox.shrink(),
-                    )
-                  : const SizedBox.shrink();
-            },
-            child: ListView.separated(
-              controller: widget
-                  .bottomBackgroundWidgetKey.currentState!.scrollController!,
-              padding: EdgeInsets.only(
-                top: 24.h,
-                left: 4.w,
-                right: 4.w,
-              ),
-              physics: const ClampingScrollPhysics(),
-              shrinkWrap: true,
-              itemCount: widget.alternatives.length,
-              itemBuilder: (BuildContext context, int index) {
-                return GestureDetector(
-                  onTap: () {
-                    widget.listener?.onEdit(index);
-                  },
-                  child: _AlternativeRow(
-                    candidate: widget.alternatives.elementAt(index),
-                  ),
+              if (value > 0) {
+                return SizedBox(
+                  height: value,
+                  child: child ?? const SizedBox.shrink(),
                 );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return SizedBox(height: 8.h);
-              },
+              } else {
+                return const SizedBox.shrink();
+              }
+            },
+            child: SingleChildScrollView(
+              controller: widget.scrollController,
+              physics: const ClampingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  16.verticalSpace,
+                  Text(
+                    context.localization?.alternatives ?? '',
+                    style: AppTextStyle.textBase.addAll([
+                      AppTextStyle.textBase.leading6,
+                      AppTextStyle.semiBold,
+                    ]).copyWith(color: AppColors.gray900),
+                  ),
+                  8.verticalSpace,
+                  ListView.separated(
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: widget.alternatives.length,
+                    padding: EdgeInsets.only(top: 24.h),
+                    itemBuilder: (BuildContext context, int index) {
+                      final data = widget.alternatives.elementAt(index);
+                      return GestureDetector(
+                        onTap: () {
+                          widget.listener?.onEdit(index);
+                        },
+                        child: FoodItemRowWidget(
+                          decoration: const BoxDecoration(color: AppColors.indigo50),
+                          iconId: data.passioID,
+                          title: data.foodName.toUpperCaseWord,
+                          padding: EdgeInsets.all(8.r),
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(height: 8.h);
+                    },
+                  ),
+                ],
+              ),
             ),
           ),
           24.verticalSpace,
@@ -189,37 +216,6 @@ class ResultWidgetState extends State<ResultWidget> {
           ),
           context.bottomPadding.verticalSpace,
         ],
-      ),
-    );
-  }
-}
-
-class _AlternativeRow extends StatelessWidget {
-  const _AlternativeRow({required this.candidate});
-
-  final DetectedCandidate candidate;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        color: AppColors.indigo50,
-        borderRadius: BorderRadius.circular(4.r),
-      ),
-      padding: EdgeInsets.all(8.r),
-      height: 56.h,
-      child: ListTile(
-        contentPadding: EdgeInsets.zero,
-        dense: true,
-        visualDensity: VisualDensity.compact,
-        leading: PassioImageWidget(iconId: candidate.passioID),
-        title: Text(
-          candidate.foodName.toUpperCaseWord,
-          style: AppTextStyle.textSm.addAll([
-            AppTextStyle.textSm.leading5,
-            AppTextStyle.semiBold
-          ]).copyWith(color: AppColors.gray900),
-        ),
       ),
     );
   }

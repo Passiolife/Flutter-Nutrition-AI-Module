@@ -208,8 +208,10 @@ class _MacrosPageState extends State<MacrosPage>
     );
   }
 
-  void _handleStateChanges(
-      {required BuildContext context, required MacrosState state}) {
+  void _handleStateChanges({
+    required BuildContext context,
+    required MacrosState state,
+  }) {
     if (state is MacrosListenerState) {
       switch (state) {
         case TabChangeListenState():

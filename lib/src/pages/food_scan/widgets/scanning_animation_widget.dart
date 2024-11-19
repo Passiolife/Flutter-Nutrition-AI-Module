@@ -20,7 +20,7 @@ class ScanningAnimationWidgetState extends State<ScanningAnimationWidget>
   @override
   void initState() {
     _scanningAnimationController = AnimationController(
-      duration: const Duration(milliseconds: AppDimens.duration1000),
+      duration: const Duration(milliseconds: 1000),
       vsync: this,
     );
 
@@ -41,12 +41,13 @@ class ScanningAnimationWidgetState extends State<ScanningAnimationWidget>
       fit: StackFit.expand,
       children: [
         Positioned(
-          top: AppDimens.h110,
-          left: AppDimens.w24,
-          right: AppDimens.w24,
+          top: 110.h,
+          left: 24.w,
+          right: 24.w,
           child: SvgPicture.asset(
             AppImages.icScanFrame,
             width: double.infinity,
+            fit: BoxFit.fill,
             height: 380.h,
           ),
         ),

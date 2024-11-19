@@ -243,8 +243,9 @@ class _WaterPageState extends State<WaterPage>
                                                                     .localization
                                                                     ?.ml ??
                                                                 '',
-                                                        dateTime:
-                                                            DateTime.now(),
+                                                        dateTime: DateTime
+                                                            .fromMillisecondsSinceEpoch(
+                                                                e.createdAt),
                                                       ),
                                                     )
                                                     .toList(),
@@ -276,7 +277,9 @@ class _WaterPageState extends State<WaterPage>
   void onTapAdd() {
     AddWaterPage.navigate(context: context).then((value) {
       if (value is bool? && (value ?? false)) {
-        context.showSnackbar(text: context.localization?.waterRecorded);
+        if (mounted) {
+          context.showSnackbar(text: context.localization?.waterRecorded);
+        }
         _fetchRecords();
       }
     });
@@ -331,9 +334,11 @@ class _WaterPageState extends State<WaterPage>
         .firstWhere((element) => element?.id == id, orElse: () => null);
     AddWaterPage.navigate(context: context, record: record).then((value) {
       if (value is bool? && (value ?? false)) {
-        context.showSnackbar(
-            text: context.localization?.waterRecordUpdateMessage);
-        _fetchRecords();
+        if (mounted) {
+          context.showSnackbar(
+              text: context.localization?.waterRecordUpdateMessage);
+          _fetchRecords();
+        }
       }
     });
   }

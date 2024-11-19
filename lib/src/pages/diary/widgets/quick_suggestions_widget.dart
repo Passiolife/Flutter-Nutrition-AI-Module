@@ -59,7 +59,7 @@ class QuickSuggestionsWidget extends StatelessWidget {
         initialSize: _getInitialSize(context),
         minSize: _getInitialSize(context),
         maxSize: _maxSize,
-        builder: (context, dragController, scrollController) {
+        builder: (context, dragController, scrollController, widgetState) {
           return Container(
             decoration: AppShadows.base,
             height: context.height,

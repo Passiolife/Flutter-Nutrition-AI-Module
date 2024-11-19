@@ -177,7 +177,7 @@ class ResultWidget extends StatelessWidget {
               height: AppTextStyle.calculateLineHeight(
                   20.h, AppTextStyle.textSm.fontSize ?? 14.h)),
         ),
-        24.verticalSpace,
+        20.verticalSpace,
         Column(
           children: advisorChat.advisorFoodInfoLogs
                   ?.asMap()
@@ -197,88 +197,40 @@ class ResultWidget extends StatelessWidget {
                 final caloriesPerGram = calories / weightQuantity;
                 final weightGrams = advisorInfo?.weightGrams ?? 0;
                 final caloriesForPortionSize = caloriesPerGram * weightGrams;
-                final portionSize = advisorInfo?.portionSize ??
-                    '${weightGrams.format()} ${context.localization?.g}';
+                final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
                 final subtitle =
-                    '$portionSize | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                    '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
 
                 final isSelected = data.isSelected;
 
                 final isLogged = data.isLogged;
 
-                return FoodItemRowWidget.withSelection(
-                  rippleColor: AppColors.indigo50,
-                  iconId: iconId,
-                  title: title,
-                  subtitle: subtitle,
-                  isAddVisible: false,
-                  padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-                  isSelected: isSelected,
-                  suffix: isLogged != null
-                      ? SvgPicture.asset(
-                          isLogged ? AppImages.icCheck : AppImages.icUncheck,
-                          width: 24.r,
-                          height: 24.r,
-                        )
-                      : null,
-                  onSelect: () => onChangeSelection?.call(index, data),
-                  onTap: () => onChangeSelection?.call(index, data),
+                return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 4.h),
+                  child: FoodItemRowWidget.withSelection(
+                    rippleColor: AppColors.indigo50,
+                    iconId: iconId,
+                    title: title,
+                    subtitle: subtitle,
+                    isAddVisible: false,
+                    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+                    decoration: BoxDecoration(color: isSelected ? AppColors.indigo50: null),
+                    isSelected: isSelected,
+                    suffix: isLogged != null
+                        ? SvgPicture.asset(
+                            isLogged ? AppImages.icCheck : AppImages.icUncheck,
+                            width: 24.r,
+                            height: 24.r,
+                          )
+                        : null,
+                    onSelect: () => onChangeSelection?.call(index, data),
+                    onTap: () => onChangeSelection?.call(index, data),
+                  ),
                 );
               }).toList() ??
               [],
         ),
-        // ListView.separated(
-        //   shrinkWrap: true,
-        //   padding: EdgeInsets.zero,
-        //   itemCount: advisorChat.advisorFoodInfoLogs?.length ?? 0,
-        //   physics: const NeverScrollableScrollPhysics(),
-        //   itemBuilder: (context, index) {
-        //     var data = advisorChat.advisorFoodInfoLogs!.elementAt(index);
-        //
-        //     final advisorInfo = data.advisorFoodInfoModel;
-        //
-        //     final foodDataInfo = advisorInfo?.foodDataInfo;
-        //     final iconId = foodDataInfo?.iconID ?? '';
-        //     final title = foodDataInfo?.foodName ?? '';
-        //     final calories = foodDataInfo?.nutritionPreview.calories ?? 0;
-        //     final weightQuantity =
-        //         foodDataInfo?.nutritionPreview.weightQuantity ?? 0;
-        //     final caloriesPerGram = calories / weightQuantity;
-        //     final weightGrams = advisorInfo?.weightGrams ?? 0;
-        //     final caloriesForPortionSize = caloriesPerGram * weightGrams;
-        //     final portionSize = advisorInfo?.portionSize ??
-        //         '${weightGrams.format()} ${context.localization?.g}';
-        //     final subtitle =
-        //         '$portionSize | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
-        //
-        //     final isSelected = data.isSelected;
-        //
-        //     final isLogged = data.isLogged;
-        //
-        //     return FoodItemRowWidget.withSelection(
-        //       backgroundColor: AppColors.indigo50,
-        //       iconId: iconId,
-        //       title: title,
-        //       subtitle: subtitle,
-        //       isAddVisible: false,
-        //       padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-        //       isSelected: isSelected,
-        //       suffix: isLogged != null
-        //           ? SvgPicture.asset(
-        //               isLogged ? AppImages.icCheck : AppImages.icUncheck,
-        //               width: 24.r,
-        //               height: 24.r,
-        //             )
-        //           : null,
-        //       onSelect: () => onChangeSelection?.call(index, data),
-        //       onTap: () => onChangeSelection?.call(index, data),
-        //     );
-        //   },
-        //   separatorBuilder: (context, index) {
-        //     return 8.verticalSpace;
-        //   },
-        // ),
-        24.verticalSpace,
+        20.verticalSpace,
         advisorChat.isLogged
             ? AppButton(
                 buttonText: context.localization?.viewDiary,

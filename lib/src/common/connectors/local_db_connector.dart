@@ -18,6 +18,27 @@ class LocalDBConnector implements PassioConnector {
   final DatabaseHelper _databaseHelper = DatabaseHelper.instance;
 
   @override
+  Future<List<FoodRecord>> fetchRecords({
+    required DateTime fromDate,
+    required DateTime endDate,
+  }) async {
+    final formattedFromDate = DateFormat('yyyyMMdd').format(fromDate);
+    final formattedEndDate = DateFormat('yyyyMMdd').format(endDate);
+    List<Map>? data = await _databaseHelper.database.query(
+      _databaseHelper.tblFoodRecord,
+      where: '${_databaseHelper.colCreatedAt} BETWEEN ? AND ?',
+      whereArgs: [formattedFromDate, formattedEndDate],
+      orderBy: '${_databaseHelper.colId} DESC',
+    );
+    return data.map((e) {
+      final foodRecordResponse =
+          FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
+      foodRecordResponse.id = e[_databaseHelper.colId].toString();
+      return foodRecordResponse;
+    }).toList();
+  }
+
+  @override
   Future<void> updateRecord(
       {required FoodRecord foodRecord, required bool isNew}) async {
     DateTime? createdAt = foodRecord.getCreatedAt();
@@ -26,7 +47,8 @@ class LocalDBConnector implements PassioConnector {
     final date = createdAt.formatToString(format9);
     final values = {
       _databaseHelper.colCreatedAt: date,
-      _databaseHelper.colData: jsonEncode(foodRecord)
+      _databaseHelper.colData: jsonEncode(foodRecord),
+      _databaseHelper.colSourceId: foodRecord.sourceId,
     };
 
     // If [isNew] is [true] then perform the insert operation.
@@ -162,27 +184,6 @@ class LocalDBConnector implements PassioConnector {
       return userProfile;
     }
     return null;
-  }
-
-  @override
-  Future<List<FoodRecord>> fetchRecords({
-    required DateTime fromDate,
-    required DateTime endDate,
-  }) async {
-    final formattedFromDate = DateFormat('yyyyMMdd').format(fromDate);
-    final formattedEndDate = DateFormat('yyyyMMdd').format(endDate);
-    List<Map>? data = await _databaseHelper.database.query(
-      _databaseHelper.tblFoodRecord,
-      where: '${_databaseHelper.colCreatedAt} BETWEEN ? AND ?',
-      whereArgs: [formattedFromDate, formattedEndDate],
-      orderBy: '${_databaseHelper.colId} DESC',
-    );
-    return data.map((e) {
-      final foodRecordResponse =
-          FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
-      foodRecordResponse.id = e[_databaseHelper.colId].toString();
-      return foodRecordResponse;
-    }).toList();
   }
 
   // Water Related Methods
@@ -343,10 +344,12 @@ class LocalDBConnector implements PassioConnector {
   }
 
   @override
-  Future<void> updateUserFood(
+  Future<String> updateUserFood(
       {required FoodRecord foodRecord, required bool isNew}) async {
     DateTime? createdAt = foodRecord.getCreatedAt();
-    if (createdAt == null) return;
+    if (createdAt == null) {
+      return '';
+    }
 
     final date = createdAt.formatToString(format9);
     final values = {
@@ -369,6 +372,7 @@ class LocalDBConnector implements PassioConnector {
         whereArgs: [foodRecord.id],
       );
     }
+    return foodRecord.id;
   }
 
   @override
@@ -421,5 +425,22 @@ class LocalDBConnector implements PassioConnector {
     return foodRecords
         .cast<FoodRecord?>()
         .firstWhere((e) => e?.barcode == barcode, orElse: () => null);
+  }
+
+  @override
+  Future<FoodRecord?> fetchUserFood({required String id}) async {
+    List<Map>? data = await _databaseHelper.database.query(
+      _databaseHelper.tblUserFoods,
+      where: '${_databaseHelper.colId} = ?',
+      whereArgs: [id],
+    );
+    final record = data.firstOrNull;
+    if (record != null) {
+      final foodRecord =
+          FoodRecord.fromJson(jsonDecode(record[_databaseHelper.colData]));
+      foodRecord.id = record[_databaseHelper.colId].toString();
+      return foodRecord;
+    }
+    return null;
   }
 }

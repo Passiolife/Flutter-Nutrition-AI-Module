@@ -4,9 +4,10 @@ import '../../../common/constant/app_constants.dart';
 import '../widgets/intro_widget.dart';
 
 class IntroDialog {
-  IntroDialog.show(
-      {required BuildContext context,
-      Function(BuildContext context)? onTapOk}) {
+  IntroDialog.show({
+    required BuildContext context,
+    Function(BuildContext context)? onTapOk,
+  }) {
     showGeneralDialog(
       context: context,
       barrierColor: AppColors.gray500.withOpacity(AppDimens.opacity75),

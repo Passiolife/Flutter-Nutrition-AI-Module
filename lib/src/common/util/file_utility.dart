@@ -8,8 +8,19 @@ class FileUtility {
   }
 
   static Future<File> updateFile(String path, List<int> bytes) async {
-    await File(path).delete();
+    await deleteFile(path);
     return writeFile(path, bytes);
+  }
+
+  static Future deleteFile(String path) async {
+    if(await existsFile(path)) {
+      return;
+    }
+    return await File(path).delete();
+  }
+
+  static Future<bool> existsFile(String path) async {
+    return await File(path).exists();
   }
 
   static Future<Uint8List> readFile(String path) async {

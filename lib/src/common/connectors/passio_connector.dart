@@ -142,11 +142,21 @@ abstract interface class PassioConnector {
   Future<void> deleteWeightRecord({required WeightRecord record});
 
   // User Foods Methods
+  Future<FoodRecord?> fetchUserFood({required String id});
+
   Future<List<FoodRecord>> fetchUserFoods();
 
   Future<FoodRecord?> fetchUserFoodByBarcode({required String barcode});
 
-  Future<void> updateUserFood({
+  /// Updates or inserts a food record for the user.
+  ///
+  /// If `isNew` is `true`, this method will insert a new food record.
+  /// If `isNew` is `false`, it will update the existing food record.
+  ///
+  /// Returns:
+  /// - On insert: the ID of the newly inserted food record as a `String`.
+  /// - On update: the ID of the updated food record as a `String`.
+  Future<String> updateUserFood({
     required FoodRecord foodRecord,
     required bool isNew,
   });

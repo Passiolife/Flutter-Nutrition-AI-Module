@@ -123,15 +123,15 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
   }
 
   Future<void> _doCreateNewFood() async {
-    final result = await FoodCreatorPage.navigate(context: context);
-    if (result != null && result) {
-      _fetchUserFoods();
-    }
+    await FoodCreatorPage.navigate(context: context);
+    _fetchUserFoods();
   }
 
   Future<void> _doEditRecord(FoodRecord foodRecord) async {
     final result = await FoodCreatorPage.navigate(
-        context: context, foodRecord: foodRecord, isUpdate: true);
+      context: context,
+      userFoodRecord: foodRecord,
+    );
     if (result != null && result) {
       _fetchUserFoods();
     }

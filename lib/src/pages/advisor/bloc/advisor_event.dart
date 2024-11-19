@@ -4,13 +4,6 @@ sealed class AdvisorEvent extends Equatable {
   const AdvisorEvent();
 }
 
-final class DoConfigureEvent extends AdvisorEvent {
-  const DoConfigureEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
 final class DoInitializationEvent extends AdvisorEvent {
   const DoInitializationEvent();
 

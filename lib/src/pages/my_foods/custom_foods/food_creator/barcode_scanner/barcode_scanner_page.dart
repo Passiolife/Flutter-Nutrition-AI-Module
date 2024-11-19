@@ -227,7 +227,8 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           context: context,
           foodRecord: foodRecord,
           redirectToDiaryOnLog: true,
-          visibleFoodCreator: true,
+          visibleFoodCreator: !fromCustomFood,
+          visibleLogUponCreate: false,
         );
       },
       customFoodButtonText: customFoodButtonText,
@@ -241,9 +242,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
         }
         FoodCreatorPage.navigate(
           context: context,
-          foodRecord: foodRecord,
-          isUpdate: fromCustomFood,
-          navigateToCustomFoods: true,
+          userFoodRecord: foodRecord,
         );
       },
     );

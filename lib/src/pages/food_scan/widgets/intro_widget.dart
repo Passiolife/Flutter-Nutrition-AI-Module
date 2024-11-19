@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
@@ -23,11 +24,11 @@ class IntroWidget extends StatelessWidget {
             width: context.width,
             decoration: BoxDecoration(
               color: AppColors.white,
-              borderRadius: BorderRadius.circular(AppDimens.r20),
+              borderRadius: BorderRadius.circular(16.r),
             ),
             padding: EdgeInsets.symmetric(
-              horizontal: AppDimens.w20,
-              vertical: AppDimens.h16,
+              horizontal: 16.w,
+              vertical: 16.h,
             ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -39,40 +40,32 @@ class IntroWidget extends StatelessWidget {
                     AppTextStyle.bold
                   ]).copyWith(color: AppColors.black),
                 ),
-                SizedBox(height: AppDimens.h4),
+                SizedBox(height: 4.h),
                 Text(
                   context.localization?.foodScanIntroDescription ?? '',
                   textAlign: TextAlign.center,
                   style: AppTextStyle.textSm
                       .addAll([]).copyWith(color: AppColors.black),
                 ),
-                SizedBox(height: AppDimens.h16),
+                SizedBox(height: 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _FoodsVarietyWidget(
                       imagePath: AppImages.icFoods,
-                      text: context.localization?.foods,
-                    ),
-                    _FoodsVarietyWidget(
-                      imagePath: AppImages.icBeverages,
-                      text: context.localization?.beverages,
-                    ),
-                    _FoodsVarietyWidget(
-                      imagePath: AppImages.icPackaging,
-                      text: context.localization?.packaging,
-                    ),
-                    _FoodsVarietyWidget(
-                      imagePath: AppImages.icNutritionFacts,
-                      text: context.localization?.nutritionFacts,
+                      text: context.localization?.wholeFoodsMode,
                     ),
                     _FoodsVarietyWidget(
                       imagePath: AppImages.icBarcodes,
-                      text: context.localization?.barcodes,
+                      text: context.localization?.barcodeMode,
+                    ),
+                    _FoodsVarietyWidget(
+                      imagePath: AppImages.icNutritionFacts,
+                      text: context.localization?.nutritionFactsMode,
                     ),
                   ],
                 ),
-                SizedBox(height: AppDimens.h32),
+                SizedBox(height: 16.h),
                 AppButton(
                   onTap: onTap,
                   buttonText: context.localization?.ok,
@@ -95,18 +88,30 @@ class _FoodsVarietyWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        SvgPicture.asset(
-          imagePath,
-          width: AppDimens.r40,
-          height: AppDimens.r40,
-        ),
-        Text(
-          text ?? '',
-          style: AppTextStyle.textXs.copyWith(color: AppColors.black),
-        ),
-      ],
+    return Expanded(
+      child: Column(
+        children: [
+          CircleAvatar(
+            radius: 20.r,
+            backgroundColor: AppColors.indigo600Main,
+            child: Padding(
+              padding: EdgeInsets.all(8.r),
+              child: SvgPicture.asset(
+                imagePath,
+                colorFilter: const ColorFilter.mode(
+                  AppColors.white,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+          ),
+          Text(
+            text ?? '',
+            style: AppTextStyle.textXs.copyWith(color: AppColors.black),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
     );
   }
 }

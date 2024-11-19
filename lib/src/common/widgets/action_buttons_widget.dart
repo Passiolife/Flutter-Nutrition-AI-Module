@@ -26,6 +26,7 @@ class ActionButtonsWidget extends StatelessWidget {
     this.isNeutralButtonLoading = false,
     this.neutralButtonStyle,
     this.isNeutralButtonEnabled = true,
+    this.betweenSpace,
     super.key,
   });
 
@@ -50,6 +51,8 @@ class ActionButtonsWidget extends StatelessWidget {
   final AppButtonModel? neutralButtonStyle;
   final bool isNeutralButtonEnabled;
 
+  final double? betweenSpace;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -73,7 +76,7 @@ class ActionButtonsWidget extends StatelessWidget {
                 ),
               ),
             if (negativeButtonText != null || onNegativeButtonTap != null)
-              4.horizontalSpace,
+              betweenSpace?.horizontalSpace ?? 4.horizontalSpace,
             if (positiveButtonText != null || onPositiveButtonTap != null)
               Flexible(
                 child: ActionButtonWidget(

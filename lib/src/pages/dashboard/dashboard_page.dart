@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/constant/app_colors.dart';
 import '../../common/util/context_extension.dart';
+import '../../common/util/overlay_widget.dart';
 import '../advisor/advisor_page.dart';
 import '../diary/diary_page.dart';
 import '../favorites/favorites_page.dart';
@@ -16,6 +17,8 @@ import '../use_image/select_photo/select_photo_page.dart';
 import '../use_image/take_photo/take_photo_page.dart';
 import '../voice_logging/voice_logging_page.dart';
 import 'bloc/dashboard_bloc.dart';
+import 'token_usage/bloc/token_usage_bloc.dart';
+import 'token_usage/token_usage_widget.dart';
 import 'widgets/widgets.dart';
 
 class DashboardPage extends StatefulWidget {
@@ -58,22 +61,33 @@ class _DashboardPageState extends State<DashboardPage> {
   // Selected navigation item index and item
   int _selectedNavigationItem = 0;
 
-  // Widgets mapped with their corresponding titles
-  Map<String?, Widget> get _widgets => {
-        context.localization?.home: const HomePage(),
-        context.localization?.diary: const DiaryPage(),
-        '': const SizedBox.shrink(),
-        context.localization?.mealPlan: const MealPlanPage(),
-        context.localization?.progress: const ProgressPage(),
-      };
+  Widget? _getPage(int index) {
+    switch (index) {
+      case 1:
+        return DiaryPage(key: UniqueKey(),);
+      case 2:
+        return const SizedBox.shrink();
+      case 3:
+        return MealPlanPage(key: UniqueKey(),);
+      case 4:
+        return ProgressPage(key: UniqueKey(),);
+      default:
+        return HomePage(key: UniqueKey(),);
+    }
+  }
 
   DashboardBloc get _bloc => BlocProvider.of<DashboardBloc>(context);
+
+  final OverlayUtil _overlayUtil = OverlayUtil();
 
   @override
   void initState() {
     if (widget.page != null) {
       _selectedNavigationItem = widget.page!;
     }
+    _bloc.add(const RequestTokenTrackingEvent());
+    TokenUsageBloc.instance.add(const StartListeningEvent());
+
     super.initState();
   }
 
@@ -86,6 +100,8 @@ class _DashboardPageState extends State<DashboardPage> {
         listener: (context, state) {
           if (state is PageUpdateState) {
             _selectedNavigationItem = state.index;
+          } else if (state is TokenTrackingUpdateState) {
+            _handleTokenTrackingSuccessState(context: context, state: state);
           }
         },
         builder: (context, state) {
@@ -105,11 +121,11 @@ class _DashboardPageState extends State<DashboardPage> {
                 }
               },
             ),
-            body: IndexedStack(
-              key: UniqueKey(),
+            body: _getPage(_selectedNavigationItem),
+            /*IndexedStack(
               index: _selectedNavigationItem,
               children: _widgets.values.toList(),
-            ),
+            ),*/
           );
         },
       ),
@@ -121,13 +137,7 @@ class _DashboardPageState extends State<DashboardPage> {
     //
     // Action for when the text matches the 'scan' localization.
     if (action == context.localization?.foodScanner) {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) => FoodScanPage(selectedDateTime: DateTime.now()),
-          maintainState: false,
-        ),
-      );
+      FoodScanPage.navigate(context);
     }
     // Action for when the text matches the 'search' localization.
     else if (action == context.localization?.textSearch) {
@@ -152,5 +162,19 @@ class _DashboardPageState extends State<DashboardPage> {
     }
     // Default action if none of the above conditions are met.
     else {}
+  }
+
+  void _handleTokenTrackingSuccessState({
+    required TokenTrackingUpdateState state,
+    required BuildContext context,
+  }) {
+    if (state.enabled) {
+      _overlayUtil.show(
+        context: context,
+        child: TokenUsageWidget(_overlayUtil),
+      );
+    } else {
+      _overlayUtil.remove();
+    }
   }
 }

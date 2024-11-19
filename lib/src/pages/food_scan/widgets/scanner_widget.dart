@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../common/constant/app_constants.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class ScannerWidget extends AnimatedWidget {
   const ScannerWidget({
@@ -34,20 +33,20 @@ class ScannerWidget extends AnimatedWidget {
   // AppDimens.r100: Represents the height for the top line.
   // AppDimens.h180: Represents the vertical space between the top and bottom.
   // AppDimens.h24: Represents the height for the bottom line.
-  double? get scorePosition => (AppDimens.h110 +
-      AppDimens.r8 +
-      animationData.value * (AppDimens.r100 + AppDimens.h180 + AppDimens.h24));
+  double? get scorePosition => (110.h +
+      8.r +
+      animationData.value * (100.r + 180.h + 24.h));
 
   @override
   Widget build(BuildContext context) {
     return Positioned(
       top: scorePosition,
-      left: AppDimens.w32,
-      right: AppDimens.w32,
+      left: 24.w,
+      right: 24.w,
       child: Opacity(
         opacity: isStopped ? 0.0 : 1.0,
         child: Container(
-          height: 60.0,
+          height: 60.h,
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,

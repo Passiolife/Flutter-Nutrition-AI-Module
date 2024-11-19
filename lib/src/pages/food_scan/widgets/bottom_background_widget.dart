@@ -30,12 +30,12 @@ class BottomBackgroundWidget extends StatefulWidget {
 
 class BottomBackgroundWidgetState extends State<BottomBackgroundWidget> {
   // Maximum size of the draggable area
-  double get maxSize => 0.6;
+  double get maxSize => 0.7;
   late double _maxSize;
 
   // Initial size of the draggable area
   double get _initialSize =>
-      widget.shouldDraggable && widget.visibleDragIntro ? 0.35 : 0.3;
+      widget.shouldDraggable && widget.visibleDragIntro ? 0.35 : 0.31;
 
   final DraggableScrollableController _scrollableController =
       DraggableScrollableController();

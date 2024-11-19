@@ -12,22 +12,22 @@ class ChartsLegendWidget extends StatelessWidget {
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _LengendItemWidget(
+        _LegendItemWidget(
           color: AppColors.yellow500,
           text: context.localization?.calories,
         ),
         32.horizontalSpace,
-        _LengendItemWidget(
+        _LegendItemWidget(
           color: AppColors.green500Normal,
           text: context.localization?.protein,
         ),
         32.horizontalSpace,
-        _LengendItemWidget(
+        _LegendItemWidget(
           color: AppColors.purple500,
           text: context.localization?.fat,
         ),
         32.horizontalSpace,
-        _LengendItemWidget(
+        _LegendItemWidget(
           color: AppColors.lBlue500Normal,
           text: context.localization?.carbs,
         ),
@@ -36,11 +36,11 @@ class ChartsLegendWidget extends StatelessWidget {
   }
 }
 
-class _LengendItemWidget extends StatelessWidget {
+class _LegendItemWidget extends StatelessWidget {
   final Color color;
   final String? text;
 
-  const _LengendItemWidget({required this.color, this.text});
+  const _LegendItemWidget({required this.color, this.text});
 
   @override
   Widget build(BuildContext context) {

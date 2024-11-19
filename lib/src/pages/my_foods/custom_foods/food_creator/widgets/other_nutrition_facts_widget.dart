@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:nutrition_ai_module/src/pages/my_foods/custom_foods/food_creator/view_models/food_creator_view_model.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_constants.dart';
@@ -12,36 +13,39 @@ import '../../../../../common/util/string_extensions.dart';
 import '../../../../../common/util/text_input_formatter_util.dart';
 import '../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../common/widgets/app_text_field.dart';
-import '../models/nutrient.dart';
+import '../view_models/nutrient_view_model.dart';
 
 class OtherNutritionFactsWidget extends StatefulWidget {
   const OtherNutritionFactsWidget({
-    this.satFatValue = '',
-    this.transFatValue = '',
-    this.cholesterolValue = '',
-    this.sodiumValue = '',
-    this.dietaryFiberValue = '',
-    this.totalSugarsValue = '',
-    this.addedSugarValue = '',
-    this.vitaminDValue = '',
-    this.calciumValue = '',
-    this.potassiumValue = '',
+    this.viewModel,
+    // this.satFat,
+    // this.transFat,
+    // this.cholesterol,
+    // this.sodium,
+    // this.dietaryFiber,
+    // this.totalSugars,
+    // this.addedSugar,
+    // this.vitaminD,
+    // this.calcium,
+    // this.potassium,
     this.onChanged,
     super.key,
   });
 
-  final String satFatValue;
-  final String transFatValue;
-  final String cholesterolValue;
-  final String sodiumValue;
-  final String dietaryFiberValue;
-  final String totalSugarsValue;
-  final String addedSugarValue;
-  final String vitaminDValue;
-  final String calciumValue;
-  final String potassiumValue;
+  // final Unit? satFat;
+  // final Unit? transFat;
+  // final Unit? cholesterol;
+  // final Unit? sodium;
+  // final Unit? dietaryFiber;
+  // final Unit? totalSugars;
+  // final Unit? addedSugar;
+  // final Unit? vitaminD;
+  // final Unit? calcium;
+  // final Unit? potassium;
 
-  final Function(List<Nutrient>)? onChanged;
+  final FoodCreatorViewModel? viewModel;
+
+  final Function(List<NutrientViewModel>)? onChanged;
 
   @override
   State<OtherNutritionFactsWidget> createState() =>
@@ -49,61 +53,62 @@ class OtherNutritionFactsWidget extends StatefulWidget {
 }
 
 class _OtherNutritionFactsWidgetState extends State<OtherNutritionFactsWidget> {
-  List<Nutrient> _getNutrients() => [
-        Nutrient(
+  List<NutrientViewModel> _getNutrients() => [
+        NutrientViewModel(
           label: context.localization?.saturatedFat ?? '',
           type: UnitMassType.grams,
-          value: widget.satFatValue,
+          value: '${widget.viewModel?.satFat?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.transFat ?? '',
           type: UnitMassType.grams,
-          value: widget.transFatValue,
+          value: '${widget.viewModel?.transFat?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.cholesterol ?? '',
           type: UnitMassType.milligrams,
-          value: widget.cholesterolValue,
+          value: '${widget.viewModel?.cholesterol?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.sodium ?? '',
           type: UnitMassType.milligrams,
-          value: widget.sodiumValue,
+          value: '${widget.viewModel?.sodium?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.dietaryFiber ?? '',
           type: UnitMassType.grams,
-          value: widget.dietaryFiberValue,
+          value: '${widget.viewModel?.dietaryFiber?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.totalSugars ?? '',
           type: UnitMassType.grams,
-          value: widget.totalSugarsValue,
+          value: '${widget.viewModel?.totalSugars?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.addedSugar ?? '',
           type: UnitMassType.grams,
-          value: widget.addedSugarValue,
+          value: '${widget.viewModel?.addedSugars?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.vitaminD ?? '',
           type: UnitMassType.micrograms,
-          value: widget.vitaminDValue,
+          value: '${widget.viewModel?.vitaminD?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.calcium ?? '',
           type: UnitMassType.milligrams,
-          value: widget.calciumValue,
+          value: '${widget.viewModel?.calcium?.value ?? ''}',
         ),
-        Nutrient(
+        NutrientViewModel(
           label: context.localization?.potassium ?? '',
           type: UnitMassType.milligrams,
-          value: widget.potassiumValue,
+          value: '${widget.viewModel?.potassium?.value ?? ''}',
         ),
       ]..removeWhere(
           (e) => _addedEntries.value.any((added) => added.label == e.label));
 
-  final ValueNotifier<List<Nutrient>> _addedEntries = ValueNotifier([]);
+  final ValueNotifier<List<NutrientViewModel>> _addedEntries =
+      ValueNotifier([]);
 
   void _onEntriesChanged() {
     if (widget.onChanged != null) {
@@ -115,48 +120,48 @@ class _OtherNutritionFactsWidgetState extends State<OtherNutritionFactsWidget> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if (widget.satFatValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.saturatedFat));
-      }
-      if (widget.transFatValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.transFat));
-      }
-      if (widget.cholesterolValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.cholesterol));
-      }
-      if (widget.sodiumValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.sodium));
-      }
-      if (widget.dietaryFiberValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.dietaryFiber));
-      }
-      if (widget.totalSugarsValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.totalSugars));
-      }
-      if (widget.addedSugarValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.addedSugar));
-      }
-      if (widget.vitaminDValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.vitaminD));
-      }
-      if (widget.calciumValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.calcium));
-      }
-      if (widget.potassiumValue.isNotEmpty) {
-        _addedEntries.value.add(_getNutrients()
-            .firstWhere((e) => e.label == context.localization?.potassium));
-      }
+      _addedEntries.value.addAll(_getNutrients().where((e) => e.value.isNotEmpty).map((e) => e).toList());
+      // if (widget.satFat != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.saturatedFat));
+      // }
+      // if (widget.transFat != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.transFat));
+      // }
+      // if (widget.cholesterol != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.cholesterol));
+      // }
+      // if (widget.sodium != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.sodium));
+      // }
+      // if (widget.dietaryFiber != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.dietaryFiber));
+      // }
+      // if (widget.totalSugars != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.totalSugars));
+      // }
+      // if (widget.addedSugar != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.addedSugar));
+      // }
+      // if (widget.vitaminD != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.vitaminD));
+      // }
+      // if (widget.calcium != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.calcium));
+      // }
+      // if (widget.potassium != null) {
+      //   _addedEntries.value.add(_getNutrients()
+      //       .firstWhere((e) => e.label == context.localization?.potassium));
+      // }
       _addedEntries.value = List.from(_addedEntries.value);
-      _onEntriesChanged();
     });
   }
 

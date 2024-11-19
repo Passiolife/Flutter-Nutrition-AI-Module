@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../constant/app_common_constants.dart';
+import '../../extension/map_extension.dart';
 import 'food_record_ingredient.dart';
 import 'meal_label.dart';
 
@@ -15,6 +16,9 @@ class FoodRecord {
 
   /// A reference code serving as a unique identifier for the food item.
   String refCode;
+
+  /// The reference ID of the place from which this entry is logged.
+  String? sourceId;
 
   /// Name of the food item.
   String name;
@@ -81,6 +85,7 @@ class FoodRecord {
     this.id,
     this.passioID,
     this.refCode,
+    this.sourceId,
     this.name,
     this.additionalData,
     this.iconId,
@@ -103,6 +108,7 @@ class FoodRecord {
       ingredient.id,
       ingredient.passioID,
       ingredient.refCode,
+      ingredient.sourceId,
       ingredient.name,
       ingredient.additionalData,
       ingredient.iconId,
@@ -128,6 +134,7 @@ class FoodRecord {
       '',
       foodItem.id,
       foodItem.refCode,
+      null,
       foodItem.name,
       foodItem.details,
       foodItem.iconId,
@@ -157,6 +164,7 @@ class FoodRecord {
         json['id'] as String,
         json['passioID'] as String,
         json['refCode'] as String,
+        json.ifValueNotNull<String?>('sourceId'),
         json['name'] as String,
         json['additionalData'] as String,
         json['iconId'] as String,
@@ -196,6 +204,7 @@ class FoodRecord {
         'id': id,
         'passioID': passioID,
         'refCode': refCode,
+        'sourceId': sourceId,
         'name': name,
         'additionalData': additionalData,
         'iconId': iconId,

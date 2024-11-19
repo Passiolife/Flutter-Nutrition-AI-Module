@@ -19,3 +19,10 @@ final class RefreshEvent extends DashboardEvent {
   @override
   List<Object?> get props => [];
 }
+
+final class RequestTokenTrackingEvent extends DashboardEvent {
+  const RequestTokenTrackingEvent();
+
+  @override
+  List<Object?> get props => [];
+}

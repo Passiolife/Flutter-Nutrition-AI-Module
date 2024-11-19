@@ -90,7 +90,7 @@ class _ResultWidgetState extends State<ResultWidget> {
       minSize: _size,
       maxSize: _size,
       dragController: _dragController,
-      builder: (context, dragController, scrollController) {
+      builder: (context, dragController, scrollController, widgetState) {
         return Container(
           decoration: AppShadows.base,
           height: context.height,
@@ -161,10 +161,9 @@ class _ResultWidgetState extends State<ResultWidget> {
                     final weightGrams = advisorInfo?.weightGrams ?? 0;
                     final caloriesForPortionSize =
                         caloriesPerGram * weightGrams;
-                    final portionSize = advisorInfo?.portionSize ??
-                        '${weightGrams.format()} ${context.localization?.g}';
+                    final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
                     final subtitle =
-                        '$portionSize | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                        '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
 
                     final isSelected = data?.isSelected ?? false;
 
@@ -174,6 +173,7 @@ class _ResultWidgetState extends State<ResultWidget> {
                       subtitle: subtitle,
                       isAddVisible: false,
                       padding: EdgeInsets.zero,
+                      decoration: BoxDecoration(color: isSelected ? AppColors.indigo50 : null),
                       suffix: IconButton(
                         onPressed: () {
                           if (data != null) {

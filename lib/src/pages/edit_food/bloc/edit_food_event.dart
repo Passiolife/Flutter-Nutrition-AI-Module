@@ -132,3 +132,23 @@ class DoFavoriteChangeEvent extends EditFoodEvent {
   @override
   List<Object?> get props => [name];
 }
+
+class DoUserFoodFlowEvent extends EditFoodEvent {
+  const DoUserFoodFlowEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+class DoFetchUserCreatedFoodEvent extends EditFoodEvent {
+  const DoFetchUserCreatedFoodEvent({
+    this.foodRecord,
+    required this.logUpdateOnCreate,
+  });
+
+  final FoodRecord? foodRecord;
+  final bool logUpdateOnCreate;
+
+  @override
+  List<Object?> get props => [foodRecord, logUpdateOnCreate];
+}

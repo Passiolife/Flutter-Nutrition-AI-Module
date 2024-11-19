@@ -12,6 +12,14 @@ class AppLoadingButtonWidget extends StatelessWidget {
     super.key,
   });
 
+  factory AppLoadingButtonWidget.primary() {
+    return AppLoadingButtonWidget(color: AppColors.indigo700);
+  }
+
+  factory AppLoadingButtonWidget.secondary() {
+    return AppLoadingButtonWidget(color: AppColors.white);
+  }
+
   final Color? color;
   final Color? backgroundColor;
   final double width;

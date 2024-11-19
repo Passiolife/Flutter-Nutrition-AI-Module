@@ -66,6 +66,8 @@ class AppImages {
   static const icSearch = '${imageDir}ic_search.svg';
   static const icSearchFilled = '${imageDir}ic_search_filled.svg';
   static const icSettings = '${imageDir}ic_settings.svg';
+  static const icSolidFocusOn = '${imageDir}ic_solid_focus_on.svg';
+  static const icSolidFocusOff = '${imageDir}ic_solid_focus_off.svg';
   static const icStop = '${imageDir}ic_stop.svg';
   static const icSwitchHorizontal = '${imageDir}ic_switch_horizontal.svg';
   static const icTrash = '${imageDir}ic_trash.svg';

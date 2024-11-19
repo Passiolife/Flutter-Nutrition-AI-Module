@@ -4,6 +4,21 @@ sealed class FoodCreatorEvent extends Equatable {
   const FoodCreatorEvent();
 }
 
+final class DoConversionEvent extends FoodCreatorEvent {
+  final FoodRecord? loggedFoodRecord;
+  final FoodRecord? userFoodRecord;
+  final bool logUponCreate;
+
+  const DoConversionEvent({
+    this.loggedFoodRecord,
+    this.userFoodRecord,
+    required this.logUponCreate,
+  });
+
+  @override
+  List<Object?> get props => [loggedFoodRecord, userFoodRecord, logUponCreate];
+}
+
 final class DoUpdateFoodDetailsEvent extends FoodCreatorEvent {
   const DoUpdateFoodDetailsEvent({
     this.image,
@@ -76,16 +91,16 @@ final class DoUpdateOtherNutritionFactsEvent extends FoodCreatorEvent {
     this.potassium,
   });
 
-  final Nutrient? satFat;
-  final Nutrient? transFat;
-  final Nutrient? cholesterol;
-  final Nutrient? sodium;
-  final Nutrient? dietaryFiber;
-  final Nutrient? totalSugars;
-  final Nutrient? addedSugars;
-  final Nutrient? vitaminD;
-  final Nutrient? calcium;
-  final Nutrient? potassium;
+  final NutrientViewModel? satFat;
+  final NutrientViewModel? transFat;
+  final NutrientViewModel? cholesterol;
+  final NutrientViewModel? sodium;
+  final NutrientViewModel? dietaryFiber;
+  final NutrientViewModel? totalSugars;
+  final NutrientViewModel? addedSugars;
+  final NutrientViewModel? vitaminD;
+  final NutrientViewModel? calcium;
+  final NutrientViewModel? potassium;
 
   @override
   List<Object?> get props => [
@@ -103,11 +118,8 @@ final class DoUpdateOtherNutritionFactsEvent extends FoodCreatorEvent {
 }
 
 final class DoSaveEvent extends FoodCreatorEvent {
-  const DoSaveEvent({this.oldFoodRecord, required this.isUpdate});
-
-  final FoodRecord? oldFoodRecord;
-  final bool isUpdate;
+  const DoSaveEvent();
 
   @override
-  List<Object?> get props => [oldFoodRecord, isUpdate];
+  List<Object?> get props => [];
 }

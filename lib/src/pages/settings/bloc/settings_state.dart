@@ -31,3 +31,12 @@ final class RemindersSuccessState extends SettingsState {
   @override
   List<Object?> get props => [breakfastEnabled, lunchEnabled, dinnerEnabled];
 }
+
+final class TokenTrackingSuccessState extends SettingsState {
+  const TokenTrackingSuccessState({required this.enabled});
+
+  final bool enabled;
+
+  @override
+  List<Object?> get props => [enabled];
+}

@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -9,47 +7,45 @@ import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_colors.dart';
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/util/context_extension.dart';
-import '../../../../common/util/double_extensions.dart';
 import '../../../../common/util/snackbar_extension.dart';
 import '../../../../common/util/string_extensions.dart';
+import '../../../dashboard/dashboard_page.dart';
 import '../../my_foods_page.dart';
 import 'barcode_scanner/barcode_scanner_page.dart';
 import 'bloc/food_creator_bloc.dart';
-import 'models/nutrient.dart';
+import 'view_models/food_creator_view_model.dart';
+import 'view_models/nutrient_view_model.dart';
 import 'widgets/widgets.dart';
 
 class FoodCreatorPage extends StatefulWidget {
   const FoodCreatorPage({
-    this.foodRecord,
-    this.isUpdate = false,
-    this.navigateToCustomFoods = false,
-    this.forceNavigateToCustomFoods = false,
+    this.loggedFoodRecord,
+    this.userFoodRecord,
+    required this.logUponCreate,
     super.key,
   });
 
-  final FoodRecord? foodRecord;
-  final bool isUpdate;
-  final bool navigateToCustomFoods;
-  final bool forceNavigateToCustomFoods;
+  final FoodRecord? loggedFoodRecord;
+  final FoodRecord? userFoodRecord;
+  final bool logUponCreate;
 
-  static Future navigate({
+  static Future<bool?> navigate({
     required BuildContext context,
-    FoodRecord? foodRecord,
-    bool isUpdate = false,
-    bool navigateToCustomFoods = false,
-    bool forceNavigateToCustomFoods = false,
+    FoodRecord? loggedFoodRecord,
+    FoodRecord? userFoodRecord,
+    bool logUponCreate = false,
   }) async {
     return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => FoodCreatorPage(
-          foodRecord: foodRecord,
-          isUpdate: isUpdate,
-          navigateToCustomFoods: navigateToCustomFoods,
-          forceNavigateToCustomFoods: forceNavigateToCustomFoods,
-        ),
-      ),
-    );
+          context,
+          MaterialPageRoute(
+            builder: (_) => FoodCreatorPage(
+              loggedFoodRecord: loggedFoodRecord,
+              userFoodRecord: userFoodRecord,
+              logUponCreate: logUponCreate,
+            ),
+          ),
+        ) ??
+        false;
   }
 
   @override
@@ -61,38 +57,18 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
 
   final _bloc = FoodCreatorBloc();
 
-  String? _barcode;
-  String _satFat = '';
-  String _transFat = '';
-  String _cholesterol = '';
-  String _sodium = '';
-  String _dietaryFiber = '';
-  String _totalSugars = '';
-  String _addedSugar = '';
-  String _vitaminD = '';
-  String _calcium = '';
-  String _potassium = '';
+  FoodCreatorViewModel? _foodCreatorViewModel;
 
-  Uint8List? image;
+  ValueKey _refreshKey = ValueKey(null);
 
   @override
   void initState() {
-    _satFat = widget.foodRecord?.nutrients().satFat?.value.format() ?? '';
-    _transFat = widget.foodRecord?.nutrients().transFat?.value.format() ?? '';
-    _cholesterol =
-        widget.foodRecord?.nutrients().cholesterol?.value.format() ?? '';
-    _sodium = widget.foodRecord?.nutrients().sodium?.value.format() ?? '';
-    _dietaryFiber = widget.foodRecord?.nutrients().fibers?.value.format() ?? '';
-    _totalSugars = widget.foodRecord?.nutrients().sugars?.value.format() ?? '';
-    _addedSugar =
-        widget.foodRecord?.nutrients().sugarsAdded?.value.format() ?? '';
-    _vitaminD = widget.foodRecord?.nutrients().vitaminD?.value.format() ?? '';
-    _calcium = widget.foodRecord?.nutrients().calcium?.value.format() ?? '';
-    _potassium = widget.foodRecord?.nutrients().potassium?.value.format() ?? '';
-
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _barcode = widget.foodRecord?.barcode;
-      _bloc.add(DoUpdateBarcodeEvent(barcode: _barcode));
+      _bloc.add(DoConversionEvent(
+        loggedFoodRecord: widget.loggedFoodRecord,
+        userFoodRecord: widget.userFoodRecord,
+        logUponCreate: widget.logUponCreate,
+      ));
     });
     super.initState();
   }
@@ -108,7 +84,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
     return BlocConsumer<FoodCreatorBloc, FoodCreatorState>(
       bloc: _bloc,
       listener: _handleStateChanges,
-      builder: (context, state) {
+      builder: (bContext, state) {
         return Scaffold(
           backgroundColor: AppColors.gray50,
           body: Column(
@@ -123,18 +99,17 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                   child: SingleChildScrollView(
                     padding: EdgeInsets.only(bottom: context.keyboardHeight),
                     child: Column(
+                      key: _refreshKey,
                       children: [
                         FoodDetailsWidget(
-                          key: ValueKey(_barcode),
-                          initialIconId: widget.foodRecord?.iconId,
-                          initialName: widget.foodRecord?.name.toUpperCaseWord,
-                          initialBrand: widget.foodRecord?.additionalData.toUpperCaseWord,
-                          initialBarcode: _barcode,
-                          onTapBarcode: () async {
-                            _barcode = await BarcodeScannerPage.navigate(
-                                context: context);
-                            _bloc.add(DoUpdateBarcodeEvent(barcode: _barcode));
-                          },
+                          initialImage: _foodCreatorViewModel?.image,
+                          initialIconId: _foodCreatorViewModel?.iconId,
+                          initialName:
+                              _foodCreatorViewModel?.name.toUpperCaseWord,
+                          initialBrand: _foodCreatorViewModel
+                              ?.additionalData.toUpperCaseWord,
+                          initialBarcode: _foodCreatorViewModel?.barcode,
+                          onTapBarcode: _onTapBarcode,
                           onChangeFoodDetails: (profile, name, brand) {
                             _bloc.add(DoUpdateFoodDetailsEvent(
                               image: profile,
@@ -146,22 +121,16 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                         16.verticalSpace,
                         RequiredNutritionFactsWidget(
                           initialServingSize:
-                              widget.foodRecord?.getSelectedQuantity(),
-                          initialUnit: widget.foodRecord?.getSelectedUnit(),
-                          initialWeightValue: widget.foodRecord?.servingUnits
-                              .firstOrNull?.weight.value,
-                          initialWeightSymbol: widget.foodRecord?.servingUnits
-                              .firstOrNull?.weight.symbol,
-                          initialCalories: widget.foodRecord
-                              ?.nutrientsSelectedSize()
-                              .calories,
-                          initialFat:
-                              widget.foodRecord?.nutrientsSelectedSize().fat,
-                          initialCarbs:
-                              widget.foodRecord?.nutrientsSelectedSize().carbs,
-                          initialProtein: widget.foodRecord
-                              ?.nutrientsSelectedSize()
-                              .proteins,
+                              _foodCreatorViewModel?.servingQuantity,
+                          initialUnit: _foodCreatorViewModel?.servingUnit,
+                          initialWeightValue:
+                              _foodCreatorViewModel?.weightValue,
+                          initialWeightSymbol:
+                              _foodCreatorViewModel?.weightSymbol,
+                          initialCalories: _foodCreatorViewModel?.calories,
+                          initialFat: _foodCreatorViewModel?.fat,
+                          initialCarbs: _foodCreatorViewModel?.carbs,
+                          initialProtein: _foodCreatorViewModel?.protein,
                           onChange: (servingSize, unit, weightValue,
                               weightSymbol, calories, fat, carbs, protein) {
                             _bloc.add(DoUpdateRequiredNutritionFactsEvent(
@@ -178,70 +147,8 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                         ),
                         16.verticalSpace,
                         OtherNutritionFactsWidget(
-                          satFatValue: _satFat,
-                          transFatValue: _transFat,
-                          cholesterolValue: _cholesterol,
-                          sodiumValue: _sodium,
-                          dietaryFiberValue: _dietaryFiber,
-                          totalSugarsValue: _totalSugars,
-                          addedSugarValue: _addedSugar,
-                          vitaminDValue: _vitaminD,
-                          calciumValue: _calcium,
-                          potassiumValue: _potassium,
-                          onChanged: (value) {
-                            final satFatNutrient = _getNutrient(
-                                value, context.localization?.saturatedFat);
-                            _satFat = satFatNutrient?.value ?? '';
-
-                            final transFatNutrient = _getNutrient(
-                                value, context.localization?.transFat);
-                            _transFat = transFatNutrient?.value ?? '';
-
-                            final cholesterolNutrient = _getNutrient(
-                                value, context.localization?.cholesterol);
-                            _cholesterol = cholesterolNutrient?.value ?? '';
-
-                            final sodiumNutrient = _getNutrient(
-                                value, context.localization?.sodium);
-                            _sodium = sodiumNutrient?.value ?? '';
-
-                            final dietaryFiberNutrient = _getNutrient(
-                                value, context.localization?.dietaryFiber);
-                            _dietaryFiber = dietaryFiberNutrient?.value ?? '';
-
-                            final totalSugarsNutrient = _getNutrient(
-                                value, context.localization?.totalSugars);
-                            _totalSugars = totalSugarsNutrient?.value ?? '';
-
-                            final addedSugarNutrient = _getNutrient(
-                                value, context.localization?.addedSugar);
-                            _addedSugar = addedSugarNutrient?.value ?? '';
-
-                            final vitaminDNutrient = _getNutrient(
-                                value, context.localization?.vitaminD);
-                            _vitaminD = vitaminDNutrient?.value ?? '';
-
-                            final calciumNutrient = _getNutrient(
-                                value, context.localization?.calcium);
-                            _calcium = calciumNutrient?.value ?? '';
-
-                            final potassiumNutrient = _getNutrient(
-                                value, context.localization?.potassium);
-                            _potassium = potassiumNutrient?.value ?? '';
-
-                            _bloc.add(DoUpdateOtherNutritionFactsEvent(
-                              satFat: satFatNutrient,
-                              transFat: transFatNutrient,
-                              cholesterol: cholesterolNutrient,
-                              sodium: sodiumNutrient,
-                              dietaryFiber: dietaryFiberNutrient,
-                              totalSugars: totalSugarsNutrient,
-                              addedSugars: addedSugarNutrient,
-                              vitaminD: vitaminDNutrient,
-                              calcium: calciumNutrient,
-                              potassium: potassiumNutrient,
-                            ));
-                          },
+                          viewModel: _foodCreatorViewModel,
+                          onChanged: _handleChangedOtherNutrients,
                         ),
                       ],
                     ),
@@ -257,10 +164,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                       Navigator.pop(context);
                     },
                     onPositiveButtonTap: () {
-                      _bloc.add(DoSaveEvent(
-                        oldFoodRecord: widget.foodRecord,
-                        isUpdate: widget.isUpdate,
-                      ));
+                      _bloc.add(DoSaveEvent());
                     },
                     isPositiveButtonEnabled: _saveEnabled,
                   ),
@@ -274,37 +178,105 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
     );
   }
 
-  Nutrient? _getNutrient(List<Nutrient> value, String? label) {
+  void _handleChangedOtherNutrients(List<NutrientViewModel> nutrients) {
+    final satFatNutrient =
+        _getNutrient(nutrients, context.localization?.saturatedFat);
+
+    final transFatNutrient =
+        _getNutrient(nutrients, context.localization?.transFat);
+
+    final cholesterolNutrient =
+        _getNutrient(nutrients, context.localization?.cholesterol);
+
+    final sodiumNutrient =
+        _getNutrient(nutrients, context.localization?.sodium);
+
+    final dietaryFiberNutrient =
+        _getNutrient(nutrients, context.localization?.dietaryFiber);
+
+    final totalSugarsNutrient =
+        _getNutrient(nutrients, context.localization?.totalSugars);
+
+    final addedSugarNutrient =
+        _getNutrient(nutrients, context.localization?.addedSugar);
+
+    final vitaminDNutrient =
+        _getNutrient(nutrients, context.localization?.vitaminD);
+
+    final calciumNutrient =
+        _getNutrient(nutrients, context.localization?.calcium);
+
+    final potassiumNutrient =
+        _getNutrient(nutrients, context.localization?.potassium);
+
+    _bloc.add(DoUpdateOtherNutritionFactsEvent(
+      satFat: satFatNutrient,
+      transFat: transFatNutrient,
+      cholesterol: cholesterolNutrient,
+      sodium: sodiumNutrient,
+      dietaryFiber: dietaryFiberNutrient,
+      totalSugars: totalSugarsNutrient,
+      addedSugars: addedSugarNutrient,
+      vitaminD: vitaminDNutrient,
+      calcium: calciumNutrient,
+      potassium: potassiumNutrient,
+    ));
+  }
+
+  NutrientViewModel? _getNutrient(
+      List<NutrientViewModel> value, String? label) {
     return value
-        .cast<Nutrient?>()
+        .cast<NutrientViewModel?>()
         .firstWhere((e) => e?.label == label, orElse: () => null);
+  }
+
+  Future<void> _onTapBarcode() async {
+    final barcode = await BarcodeScannerPage.navigate(context: context);
+    _bloc.add(DoUpdateBarcodeEvent(barcode: barcode));
   }
 
   void _handleStateChanges(BuildContext context, FoodCreatorState state) {
     if (state is ListenerState) {
       switch (state) {
-        case UpdateSaveListenerState():
-          _saveEnabled = state.saveEnabled;
-          break;
         case SaveSuccessState():
-          if (widget.navigateToCustomFoods) {
-            // Pop until CustomFoodsPage and then pop with data
-            Navigator.popUntil(context, (route) {
-              if (route.settings.name == '/customFoodsPage') {
-                Navigator.pop(context, 'yourData'); // Pass your data here
-                return true;
-              }
-              return false;
-            });
-            return;
-          } else if (widget.forceNavigateToCustomFoods) {
+          if (widget.logUponCreate) {
+            context.showSnackbar(
+                text:widget.userFoodRecord == null ?  context.localization?.customFoodCreatedWithUpdateSuccess : context.localization?.customFoodUpdatedWithUpdateSuccess);
+            DashboardPage.navigate(
+              context,
+              page: 1,
+              removeUntil: true,
+            );
+          } else {
+            context.showSnackbar(
+                text: widget.userFoodRecord == null ?  context.localization?.customFoodCreatedWithSuccess : context.localization?.customFoodUpdatedWithSuccess);
             MyFoodsPage.navigate(context: context, isReplace: true);
-            return;
           }
-          Navigator.pop(context, true);
           break;
         case SaveFailureState():
           context.showSnackbar(text: state.message);
+          break;
+        case ConversionSuccessListenerState():
+          _foodCreatorViewModel = state.viewModel;
+          _saveEnabled = state.saveEnabled;
+          _refreshKey = ValueKey(_foodCreatorViewModel);
+          break;
+        case UpdateFoodDetailsSuccessListenerState():
+          _foodCreatorViewModel = state.viewModel;
+          _saveEnabled = state.saveEnabled;
+          break;
+        case UpdateBarcodeSuccessListenerState():
+          _foodCreatorViewModel = state.viewModel;
+          _saveEnabled = state.saveEnabled;
+          _refreshKey = ValueKey(_foodCreatorViewModel);
+          break;
+        case UpdateRequiredNutritionFactsSuccessListenerState():
+          _foodCreatorViewModel = state.viewModel;
+          _saveEnabled = state.saveEnabled;
+          break;
+        case UpdateOtherNutritionFactsSuccessListenerState():
+          _foodCreatorViewModel = state.viewModel;
+          _saveEnabled = state.saveEnabled;
           break;
       }
     }

@@ -18,7 +18,7 @@ dependencies:
 
   # https://pub.dev/packages/device_info_plus
   # Get current device information from within the Flutter application.
-  device_info_plus: ^10.1.0
+  device_info_plus: ^11.1.0
 
   # https://pub.dev/packages/equatable
   # Being able to compare objects in Dart often involves having to override the == operator as well as hashCode.
@@ -34,7 +34,7 @@ dependencies:
 
   # https://pub.dev/packages/flutter_local_notifications
   # A cross platform plugin for displaying local notifications.
-  flutter_local_notifications: ^17.1.2
+  flutter_local_notifications: ^17.2.3
 
   # https://pub.dev/packages/flutter_markdown
   # A markdown renderer for Flutter. It supports the original format, but no inline HTML.
@@ -58,11 +58,11 @@ dependencies:
 
   # https://pub.dev/packages/flutter_timezone
   # A flutter plugin for getting the local timezone of the OS.
-  flutter_timezone: ^1.0.8
+  flutter_timezone: ^3.0.1
 
   # https://pub.dev/packages/get_it
   # This is a simple Service Locator for Dart and Flutter projects.
-  get_it: ^7.7.0
+  get_it: ^8.0.1
 
   # https://pub.dev/packages/image_picker
   # A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.
@@ -86,9 +86,9 @@ dependencies:
 
   # https://pub.dev/packages/nutrition_ai
   # When integrated into your app the SDK provides you with food recognition and nutrition assistant technology.
-#  nutrition_ai: ^3.1.0
-  nutrition_ai:
-    path: ../Flutter-Nutrition-AI-SDK/nutrition_ai
+  nutrition_ai: ^3.2.1+1
+#  nutrition_ai:
+#     path: ../Flutter-Nutrition-AI-SDK/nutrition_ai
 
   # https://pub.dev/packages/path
   # A comprehensive, cross-platform path manipulation library for Dart.
@@ -117,7 +117,7 @@ dependencies:
 
   # https://pub.dev/packages/speech_to_text
   # A library that exposes device specific speech recognition capability.
-  speech_to_text: ^6.6.2
+  speech_to_text: ^7.0.0
 
   # https://pub.dev/packages/sqflite
   # SQLite plugin for Flutter.
@@ -125,7 +125,7 @@ dependencies:
 
   # https://pub.dev/packages/syncfusion_flutter_charts
   # The Flutter Charts package
-  syncfusion_flutter_charts: ^25.2.7
+  syncfusion_flutter_charts: ^27.1.50
 
   # https://pub.dev/packages/timezone
   # This package provides the IANA time zone database and time zone aware DateTime class, TZDateTime.
@@ -138,7 +138,7 @@ dependencies:
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  flutter_lints: ^4.0.0
+  flutter_lints: ^5.0.0
 
   # https://pub.dev/packages/build_runner
   # The build_runner package provides a concrete way of generating files using Dart code.

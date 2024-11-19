@@ -14,7 +14,7 @@ import '../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../common/widgets/app_text_field.dart';
 
 typedef OnChangeRequiredNutritionFacts = Function(
-  double? servingSize,
+  double? servingQuantity,
   String? unit,
   double? weightValue,
   String? weightSymbol,
@@ -191,11 +191,7 @@ class _FormWidgetState extends State<_FormWidget> {
           value: context.localization?.large ?? '',
           label: context.localization?.large?.toUpperCaseWord ?? '',
         ),
-        if (widget.initialUnit != null)
-          DropdownMenuEntry(
-            value: widget.initialUnit ?? '',
-            label: widget.initialUnit?.toUpperCaseWord ?? '',
-          ),
+
       ];
 
   final _servingSizeController = TextEditingController();
@@ -293,13 +289,6 @@ class _FormWidgetState extends State<_FormWidget> {
 
   @override
   void initState() {
-    _setupListener(_servingSizeController);
-    _setupListener(_weightController);
-    _setupListener(_caloriesController);
-    _setupListener(_fatController);
-    _setupListener(_carbsController);
-    _setupListener(_proteinController);
-
     OkButtonWithKeyboard.setup(
       context: context,
       focusNode: _servingSizeFocusNode,
@@ -330,7 +319,7 @@ class _FormWidgetState extends State<_FormWidget> {
           widget.initialServingSize?.format().toString() ?? '';
       _weightController.text =
           widget.initialWeightValue?.format().toString() ?? '';
-      _setServingUnit(widget.initialUnit);
+      _setServingUnit(widget.initialUnit, onChange: false);
       _caloriesController.text =
           widget.initialCalories?.value.format().toString() ?? '';
       _fatController.text = widget.initialFat?.value.format().toString() ?? '';
@@ -338,7 +327,16 @@ class _FormWidgetState extends State<_FormWidget> {
           widget.initialCarbs?.value.format().toString() ?? '';
       _proteinController.text =
           widget.initialProtein?.value.format().toString() ?? '';
+
+
+      _setupListener(_servingSizeController);
+      _setupListener(_weightController);
+      _setupListener(_caloriesController);
+      _setupListener(_fatController);
+      _setupListener(_carbsController);
+      _setupListener(_proteinController);
     });
+
 
     super.initState();
   }
@@ -497,7 +495,7 @@ class _FormWidgetState extends State<_FormWidget> {
     );
   }
 
-  void _setServingUnit(String? value) {
+  void _setServingUnit(String? value, {bool onChange = true}) {
     _selectedUnit = value?.toLowerCase();
 
     _visibleWeight.value =
@@ -512,7 +510,12 @@ class _FormWidgetState extends State<_FormWidget> {
     _selectedWeightSymbol.value =
         _visibleWeight.value ? _selectedWeightSymbol.value : null;
 
-    _handleOnChange();
+    if(onChange) {
+      _handleOnChange();
+    } else {
+      setState(() {
+      });
+    }
   }
 }
 

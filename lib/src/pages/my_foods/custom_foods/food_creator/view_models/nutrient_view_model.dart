@@ -1,19 +1,22 @@
 import '../../../../../../nutrition_ai_module.dart';
 
-class Nutrient {
+class NutrientViewModel {
   final String value;
   final String label;
   final UnitMassType type;
 
-  const Nutrient({
+  const NutrientViewModel({
     required this.value,
     required this.label,
     required this.type,
   });
 
-  Nutrient copyWith(
-      {String? value, String? label, UnitMassType? type, Unit? unit}) {
-    return Nutrient(
+  NutrientViewModel copyWith({
+    String? value,
+    String? label,
+    UnitMassType? type,
+  }) {
+    return NutrientViewModel(
       value: value ?? this.value,
       label: label ?? this.label,
       type: type ?? this.type,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'app_loading_button_widget.dart';
 
 import '../constant/app_button_styles.dart';
 
@@ -8,6 +9,8 @@ class AppButton extends StatelessWidget {
     required this.appButtonModel,
     this.prefix,
     this.onTap,
+    this.isLoading = false,
+    this.loadingWidget,
     super.key,
   });
 
@@ -15,6 +18,8 @@ class AppButton extends StatelessWidget {
   final String? buttonText;
   final Widget? prefix;
   final VoidCallback? onTap;
+  final bool isLoading;
+  final Widget? loadingWidget;
 
   @override
   Widget build(BuildContext context) {
@@ -25,16 +30,18 @@ class AppButton extends StatelessWidget {
         decoration: appButtonModel.decoration,
         padding: appButtonModel.padding,
         child: Center(
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              prefix ?? const SizedBox.shrink(),
-              Text(
-                buttonText ?? '',
-                style: appButtonModel.textStyle,
-              ),
-            ],
-          ),
+          child: !isLoading
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    prefix ?? const SizedBox.shrink(),
+                    Text(
+                      buttonText ?? '',
+                      style: appButtonModel.textStyle,
+                    ),
+                  ],
+                )
+              : loadingWidget ?? AppLoadingButtonWidget.primary(),
         ),
       ),
     );

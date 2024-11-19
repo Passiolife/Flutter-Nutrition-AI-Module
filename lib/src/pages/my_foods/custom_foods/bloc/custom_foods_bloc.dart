@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../nutrition_ai_module.dart';
+import '../../../../common/constant/app_constants.dart';
 
 part 'custom_foods_event.dart';
 part 'custom_foods_state.dart';
@@ -30,6 +31,8 @@ class CustomFoodsBloc extends Bloc<CustomFoodsEvent, CustomFoodsState> {
   Future<void> _handleDoFoodLogEvent(
       DoFoodLogEvent event, Emitter<CustomFoodsState> emit) async {
     final foodRecord = event.foodRecord;
+    foodRecord.logMeal();
+    foodRecord.sourceId = '${AppCommonConstants.userFoods}${foodRecord.id}';
     await _connector.updateRecord(foodRecord: foodRecord, isNew: true);
     emit(const LogSuccessState());
   }
@@ -41,7 +44,6 @@ class CustomFoodsBloc extends Bloc<CustomFoodsEvent, CustomFoodsState> {
 
   FutureOr<void> _handleDoDeleteUserFoodEvent(
       DoDeleteUserFoodEvent event, Emitter<CustomFoodsState> emit) async {
-    // await _connector.deleteUserFoodImage(id: event.foodRecord.id);
     await _connector.deleteUserFood(foodRecord: event.foodRecord);
     add(const FetchUserFoodsEvent());
   }

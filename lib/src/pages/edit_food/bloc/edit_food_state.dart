@@ -120,8 +120,39 @@ class FavoriteChangeSuccessState extends EditFoodState {
 
 class LogDeleteSuccessState extends EditFoodState {
   const LogDeleteSuccessState({required this.milliseconds});
+
   final int milliseconds;
 
   @override
   List<Object?> get props => [milliseconds];
+}
+
+class UserFoodFlowState extends EditFoodState {
+  const UserFoodFlowState({required this.timeStamp});
+  final int timeStamp;
+
+  @override
+  List<Object?> get props => [timeStamp];
+}
+
+class UserFoodFetchSuccessState extends EditFoodState {
+  const UserFoodFetchSuccessState({
+    required this.logUpdateOnCreate,
+    this.userFoodRecord,
+  });
+
+  final FoodRecord? userFoodRecord;
+  final bool logUpdateOnCreate;
+
+  @override
+  List<Object?> get props => [logUpdateOnCreate, userFoodRecord];
+}
+
+class UserFoodFetchFailureState extends EditFoodState {
+  const UserFoodFetchFailureState({required this.logUpdateOnCreate});
+
+  final bool logUpdateOnCreate;
+
+  @override
+  List<Object?> get props => [logUpdateOnCreate];
 }

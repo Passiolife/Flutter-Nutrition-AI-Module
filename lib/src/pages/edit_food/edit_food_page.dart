@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../common/constant/app_constants.dart';
-import '../../common/dialogs/single_text_field_new_dialog.dart';
 import '../../common/models/food_record/food_record.dart';
 import '../../common/models/food_record/food_record_ingredient.dart';
 import '../../common/models/food_record/meal_label.dart';
@@ -17,7 +16,9 @@ import '../food_search/food_search_page.dart';
 import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/edit_food_bloc.dart';
 import 'dialogs/create_recipe_dialog.dart';
+import 'dialogs/create_user_food_dialog.dart';
 import 'dialogs/open_food_facts_dialog.dart';
+import 'dialogs/user_food_not_found_dialog.dart';
 import 'nutrition_information/nutrition_information_page.dart';
 import 'widgets/action_buttons_widget.dart';
 import 'widgets/typedefs.dart';
@@ -43,6 +44,7 @@ class EditFoodPage extends StatefulWidget {
     this.visibleSwitch = false,
     this.visibleDelete = false,
     this.visibleFoodCreator = false,
+    this.visibleLogUponCreate,
     this.redirectToDiaryOnLog = false,
     this.iconHeroTag,
     this.mealLabel,
@@ -72,6 +74,7 @@ class EditFoodPage extends StatefulWidget {
   final bool visibleDelete;
   final bool visibleFavorite;
   final bool visibleFoodCreator;
+  final bool? visibleLogUponCreate;
 
   final String? iconHeroTag;
   final MealLabel? mealLabel;
@@ -99,6 +102,7 @@ class EditFoodPage extends StatefulWidget {
     bool visibleSwitch = false,
     bool visibleDelete = false,
     bool visibleFoodCreator = false,
+    bool? visibleLogUponCreate,
     bool redirectToDiaryOnLog = false,
     String? iconHeroTag,
     MealLabel? mealLabel,
@@ -127,6 +131,7 @@ class EditFoodPage extends StatefulWidget {
             visibleFavorite: visibleFavorite,
             visibleSwitch: visibleSwitch,
             visibleDelete: visibleDelete,
+            visibleLogUponCreate: visibleLogUponCreate,
             redirectToDiaryOnLog: redirectToDiaryOnLog,
             iconHeroTag: iconHeroTag,
             mealLabel: mealLabel,
@@ -184,6 +189,9 @@ class _EditFoodPageState extends State<EditFoodPage>
       bloc: _bloc,
       listener: (context, state) {
         _handleStates(context: context, state: state);
+      },
+      buildWhen: (_, state) {
+        return state is! UserFoodFlowState;
       },
       builder: (context, state) {
         return Scaffold(
@@ -366,10 +374,10 @@ class _EditFoodPageState extends State<EditFoodPage>
     );
   }
 
-  void _handleStates({
+  Future<void> _handleStates({
     required BuildContext context,
     required EditFoodState state,
-  }) {
+  }) async {
     if (state is ConversionSuccessState) {
       _foodRecord = state.foodRecord;
       _sliderData = state.sliderData;
@@ -404,6 +412,34 @@ class _EditFoodPageState extends State<EditFoodPage>
     } else if (state is LogDeleteSuccessState) {
       Navigator.pop(context, true);
     }
+
+    // States for User food creation.
+    else if (state is UserFoodFetchSuccessState) {
+      Navigator.pop(context);
+      await FoodCreatorPage.navigate(
+        context: context,
+        userFoodRecord: state.userFoodRecord,
+        loggedFoodRecord: _foodRecord,
+        logUponCreate: state.logUpdateOnCreate,
+      );
+    } else if (state is UserFoodFetchFailureState) {
+      Navigator.pop(context);
+      UserFoodNotFoundDialog.show(
+        context: context,
+        foodRecord: _foodRecord,
+        logUpdateOnCreate: state.logUpdateOnCreate,
+      );
+    } else if (state is UserFoodFlowState) {
+      CreateUserFoodDialog.show(
+        context: context,
+        isLogUpdateVisibleOnCreate: widget.visibleLogUponCreate ?? _foodRecord?.id.isNotEmpty ?? false,
+        foodRecord: _foodRecord,
+        onEdit: (sfContext, logUpdateOnCreate) {
+          _bloc.add(DoFetchUserCreatedFoodEvent(
+              foodRecord: _foodRecord, logUpdateOnCreate: logUpdateOnCreate));
+        },
+      );
+    }
   }
 
   @override
@@ -418,18 +454,8 @@ class _EditFoodPageState extends State<EditFoodPage>
 
   @override
   void onFavoriteChanged(bool isFavorite) {
-    if (!isFavorite) {
-      SingleTextFieldNewDialog.show(
-          context: context,
-          title: context.localization?.nameYourFavorite,
-          placeHolder:
-              '${context.localization?.my ?? ''} ${_foodRecord?.name ?? ''}',
-          onSave: (value) {
-            _bloc.add(DoFavoriteChangeEvent(name: value));
-          });
-    } else {
-      _bloc.add(const DoFavoriteChangeEvent());
-    }
+    _bloc.add(const DoFavoriteChangeEvent());
+    return;
   }
 
   @override
@@ -523,15 +549,7 @@ class _EditFoodPageState extends State<EditFoodPage>
   }
 
   void _onFoodCreatorTapped() {
-    FoodCreatorPage.navigate(
-            context: context,
-            foodRecord: _foodRecord,
-            forceNavigateToCustomFoods: true)
-        .then((value) {
-      if (value != null && value is PassioFoodDataInfo) {
-        _bloc.add(DoConversionEvent(foodDataInfo: value));
-      }
-    });
+    _bloc.add(DoUserFoodFlowEvent());
   }
 
   @override

@@ -3,9 +3,11 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 typedef ItemBuilder = Widget Function(
-    BuildContext context,
-    DraggableScrollableController? dragcontrooler,
-    ScrollController? controller);
+  BuildContext context,
+  DraggableScrollableController? dragController,
+  ScrollController? controller,
+  DraggableBottomSheetWidgetState? widgetState,
+);
 typedef DragListener = Function(double draggedSize, double draggedPixels);
 
 class DraggableBottomSheetWidget extends StatefulWidget {
@@ -44,6 +46,8 @@ class DraggableBottomSheetWidgetState
   ScrollController? _scrollController;
   DraggableScrollableController? _dragController;
 
+  double _maxSize = 1;
+
   @override
   void initState() {
     _dragController = widget.dragController ?? DraggableScrollableController();
@@ -55,7 +59,23 @@ class DraggableBottomSheetWidgetState
         widget.dragListener?.call(getDraggedSize(), getDraggedPixels());
       });
     }
+    _maxSize = widget.maxSize;
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant DraggableBottomSheetWidget oldWidget) {
+    _maxSize = widget.maxSize;
+    super.didUpdateWidget(oldWidget);
+  }
+
+  @override
+  void dispose() {
+    // _dragController?.dispose();
+    // _scrollController?.dispose();
+    // _dragController = null;
+    // _scrollController = null;
+    super.dispose();
   }
 
   @override
@@ -65,7 +85,7 @@ class DraggableBottomSheetWidgetState
       minChildSize: widget.minSize,
       initialChildSize: widget.initialSize,
       maxChildSize:
-          widget.shouldDraggable ? widget.maxSize : widget.initialSize,
+          widget.shouldDraggable ? _maxSize : widget.initialSize,
       controller: _dragController,
       builder: (context, controller) {
         _scrollController = controller;
@@ -78,8 +98,8 @@ class DraggableBottomSheetWidgetState
             ),
           ),
           // duration: const Duration(milliseconds: AppDimens.duration250),
-          child:
-              widget.builder?.call(context, _dragController, _scrollController),
+          child: widget.builder
+              ?.call(context, _dragController, _scrollController, this),
         );
       },
     );
@@ -102,12 +122,29 @@ class DraggableBottomSheetWidgetState
         : 0;
   }
 
+  double getInitialSize() {
+    return widget.initialSize;
+  }
+
+  double getInitialSizePixels() {
+    return (_dragController?.isAttached ?? false)
+        ? _dragController?.sizeToPixels(getInitialSize()) ?? 0
+        : 0;
+  }
+
   // Function to set the initial height of the sheet
   void setInitialHeight() {
+    if(!(_dragController?.isAttached ?? false)) return;
     _dragController?.animateTo(
       widget.initialSize,
       duration: const Duration(milliseconds: 400),
       curve: Curves.ease,
     );
+  }
+
+  void setMaxSizeInPixels(double pixels) {
+    setState(() {
+      _maxSize = _dragController?.pixelsToSize(pixels) ?? widget.maxSize;
+    });
   }
 }

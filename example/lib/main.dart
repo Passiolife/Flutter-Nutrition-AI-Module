@@ -109,7 +109,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _initialize() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      final passioConfig = PassioConfiguration(AppSecret.passioKey);
+      const passioConfig = PassioConfiguration(AppSecret.passioKey, debugMode: 1);
       NutritionAI.instance.configureSDK(passioConfig).then((value) async {
         _passioStatus.value = value;
       });
@@ -434,7 +434,7 @@ class MyPassioConnector implements PassioConnector {
   }
 
   @override
-  Future<void> updateUserFood(
+  Future<String> updateUserFood(
       {required FoodRecord foodRecord, required bool isNew}) {
     // TODO: implement updateUserFood
     throw UnimplementedError();
@@ -462,6 +462,12 @@ class MyPassioConnector implements PassioConnector {
   @override
   Future<FoodRecord?> fetchUserFoodByBarcode({required String barcode}) {
     // TODO: implement fetchUserFoodByBarcode
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FoodRecord?> fetchUserFood({required String id}) {
+    // TODO: implement fetchUserFood
     throw UnimplementedError();
   }
 }

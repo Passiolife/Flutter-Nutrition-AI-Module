@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 part 'food_search_event.dart';
-
 part 'food_search_state.dart';
 
 class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
@@ -39,27 +38,30 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
       return;
     } else {
       _results = List.generate(
-          20,
-          (index) => const PassioFoodDataInfo(
-                brandName: '',
-                foodName: '',
-                iconID: '',
-                labelId: '',
-                nutritionPreview: PassioSearchNutritionPreview(
-                    calories: 0,
-                    carbs: 0,
-                    fat: 0,
-                    protein: 0,
-                    servingUnit: '',
-                    servingQuantity: 0,
-                    weightUnit: '',
-                    weightQuantity: 0),
-                resultId: '-1',
-                scoredName: '',
-                score: 0,
-                type: '',
-                isShortName: false,
-              ));
+        20,
+        (index) => const PassioFoodDataInfo(
+          brandName: '',
+          foodName: '',
+          iconID: '',
+          labelId: '',
+          nutritionPreview: PassioSearchNutritionPreview(
+            calories: 0,
+            carbs: 0,
+            fat: 0,
+            protein: 0,
+            servingUnit: '',
+            servingQuantity: 0,
+            weightUnit: '',
+            weightQuantity: 0,
+            fiber: 0,
+          ),
+          resultId: '-1',
+          scoredName: '',
+          score: 0,
+          type: '',
+          isShortName: false, tags: [],
+        ),
+      );
       _alternatives = List.generate(10, (index) => '-1');
 
       emit(SearchForFoodSuccessState(

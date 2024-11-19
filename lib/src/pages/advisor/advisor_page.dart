@@ -52,7 +52,7 @@ class _AdvisorPageState extends State<AdvisorPage> {
     // SchedulerBinding.instance.addPostFrameCallback((_){
     //   IntroDialog.show(context: context);
     // });
-    _bloc.add(const DoConfigureEvent());
+    _bloc.add(const DoInitializationEvent());
     super.initState();
   }
 
@@ -87,7 +87,7 @@ class _AdvisorPageState extends State<AdvisorPage> {
                           : const SizedBox.shrink(),
                       Text(
                         _configureError ??
-                            context.localization?.configuringAdvisor ??
+                            context.localization?.initializingAdvisor ??
                             '',
                         style: AppTextStyle.textBase,
                       ),

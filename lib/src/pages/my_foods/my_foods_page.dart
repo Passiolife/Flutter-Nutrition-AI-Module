@@ -8,6 +8,7 @@ import '../../common/widgets/custom_app_bar_widget.dart';
 import '../../common/widgets/sub_tab_bar.dart';
 import 'bloc/my_foods_bloc.dart';
 import 'custom_foods/custom_foods_page.dart';
+import 'recipes/recipes_page.dart';
 
 class MyFoodsPage extends StatefulWidget {
   const MyFoodsPage({super.key});
@@ -17,12 +18,10 @@ class MyFoodsPage extends StatefulWidget {
     bool isReplace = false,
   }) async {
     if (isReplace) {
-      return await Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => const MyFoodsPage(),
-        ),
-      );
+      Navigator.pop(context);
+      return await Navigator.pushReplacement(context, MaterialPageRoute(
+        builder: (_) => const MyFoodsPage(),
+      ),);
     }
     return await Navigator.push(
       context,
@@ -50,7 +49,7 @@ class _MyFoodsPageState extends State<MyFoodsPage>
 
   List<Widget> get _tabsWidget => [
         const CustomFoodsPage(),
-        Container(),
+        const RecipesPage(),
       ];
 
   final _bloc = MyFoodsBloc();

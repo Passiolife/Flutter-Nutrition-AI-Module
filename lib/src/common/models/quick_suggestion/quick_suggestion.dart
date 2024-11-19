@@ -1,7 +1,7 @@
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../../extension/map_extension.dart';
 import '../../util/iterable_extension.dart';
-import '../../util/map_extension.dart';
 import '../food_record/food_record.dart';
 import '../food_record/meal_label.dart';
 

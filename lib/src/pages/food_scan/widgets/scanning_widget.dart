@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
@@ -9,10 +10,12 @@ class ScanningWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Align(
-      alignment: Alignment.topCenter,
-      child: Padding(
-        padding: EdgeInsets.only(
-            left: AppDimens.r16, top: AppDimens.r24, right: AppDimens.r16),
+      alignment: Alignment.center,
+      child: Container(
+        width: double.maxFinite,
+        decoration: AppShadows.base,
+        margin: EdgeInsets.symmetric(horizontal: 16.w),
+        padding: EdgeInsets.all(8.r),
         child: Row(
           children: [
             SizedBox(

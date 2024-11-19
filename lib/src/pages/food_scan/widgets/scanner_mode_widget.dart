@@ -3,14 +3,41 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
+import '../../../common/util/context_extension.dart';
+import '../../../common/util/snackbar_extension.dart';
 
-typedef OnModeChanged = Function(String mode);
+typedef OnModeChanged = Function(int mode);
 
 class ScannerModeWidget extends StatelessWidget {
-  ScannerModeWidget({this.onModeChanged, super.key});
+  ScannerModeWidget({this.initialMode, this.onModeChanged, super.key});
 
+  final int? initialMode;
   final OnModeChanged? onModeChanged;
-  final ValueNotifier<String> _selectedIcon = ValueNotifier(AppImages.icFoods);
+
+  // Initialize _selectedIcon with a static method to get the initial value
+  late final ValueNotifier<String> _selectedIcon =
+      ValueNotifier(_getInitialIcon());
+
+  // Static method to get the initial icon
+  String _getInitialIcon() {
+    if (initialMode != null && initialMode! < _images.length) {
+      return _images[initialMode!];
+    } else {
+      return _images.first;
+    }
+  }
+
+  final List<String> _images = [
+    AppImages.icFoods,
+    AppImages.icBarcode,
+    // AppImages.icNutritionFacts,
+  ];
+
+  List<String?> _getModeNames(BuildContext context) => [
+        context.localization?.wholeFoodsMode?.replaceAll('\n', ''),
+        context.localization?.barcodeMode?.replaceAll('\n', ''),
+        // context.localization?.nutritionFactsMode?.replaceAll('\n', ''),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -18,36 +45,34 @@ class ScannerModeWidget extends StatelessWidget {
       top: 16.h,
       left: 0,
       right: 0,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          _ItemWidget(
-            image: AppImages.icFoods,
-            isSelected: true,
-            onModeChanged: _handleOnChange,
-          ),
-          24.horizontalSpace,
-          _ItemWidget(
-            image: AppImages.icBarcode,
-            isSelected: false,
-            onModeChanged: _handleOnChange,
-          ),
-          24.horizontalSpace,
-          _ItemWidget(
-            image: AppImages.icNutritionFacts,
-            isSelected: false,
-            onModeChanged: _handleOnChange,
-          ),
-        ],
-      ),
+      child: ValueListenableBuilder(
+          valueListenable: _selectedIcon,
+          builder: (context, value, child) {
+            return Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: _images
+                  .map(
+                    (e) => Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 12.w),
+                      child: _ItemWidget(
+                        image: e,
+                        isSelected: value == e,
+                        onModeChanged: (image) =>
+                            _handleOnChange(context: context, image: image),
+                      ),
+                    ),
+                  )
+                  .toList(),
+            );
+          }),
     );
   }
 
-  void _handleOnChange(String image) {
+  void _handleOnChange({required BuildContext context, required String image}) {
+    final index = _images.indexOf(image);
     _selectedIcon.value = image;
-    _selectedIcon.addListener(() {
-      onModeChanged?.call(image);
-    });
+    onModeChanged?.call(index);
+    context.showSnackbar(text: _getModeNames(context).elementAt(index));
   }
 }
 
@@ -62,7 +87,7 @@ class _ItemWidget extends StatelessWidget {
   final String image;
   final bool isSelected;
   final Color selectedColor;
-  final OnModeChanged? onModeChanged;
+  final Function(String mode)? onModeChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -70,14 +95,9 @@ class _ItemWidget extends StatelessWidget {
       width: 40.r,
       height: 40.r,
       child: ElevatedButton(
-        onPressed: () => onModeChanged?.call(image),
-        child: SvgPicture.asset(
-          image,
-          colorFilter: ColorFilter.mode(
-            AppColors.white,
-            BlendMode.srcIn,
-          ),
-        ),
+        onPressed: () {
+          onModeChanged?.call(image);
+        },
         style: ElevatedButton.styleFrom(
           alignment: Alignment.center,
           shape: const CircleBorder(),
@@ -85,19 +105,14 @@ class _ItemWidget extends StatelessWidget {
           backgroundColor:
               isSelected ? selectedColor : AppColors.white.withOpacity(0.4),
         ),
-      ),
-    );
-    return CircleAvatar(
-      backgroundColor:
-          isSelected ? selectedColor : AppColors.white.withOpacity(0.4),
-      radius: 20.r,
-      child: SvgPicture.asset(
-        AppImages.icFoods,
-        width: 24.r,
-        height: 24.r,
-        colorFilter: ColorFilter.mode(
-          AppColors.white,
-          BlendMode.srcIn,
+        child: Center(
+          child: SvgPicture.asset(
+            image,
+            colorFilter: const ColorFilter.mode(
+              AppColors.white,
+              BlendMode.srcIn,
+            ),
+          ),
         ),
       ),
     );

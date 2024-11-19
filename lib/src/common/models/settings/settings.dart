@@ -24,6 +24,9 @@ class Settings {
   static const String _lunchReminder = 'reminder_lunch';
   static const String _dinnerReminder = 'reminder_dinner';
 
+  // Token Tracking
+  static const String _tokenTracking = 'token_tracking';
+
   // Method to get the value of the intro seen setting
   // If the setting is not found, return false as default value
   bool getScanIntroSeen() {
@@ -81,5 +84,13 @@ class Settings {
 
   void setTakePictureIntroSeen(bool value) {
     _preferenceStore.setValue(_takePictureIntroSeenKey, value);
+  }
+
+  void setTokenTracking(bool value) {
+    _preferenceStore.setValue(_tokenTracking, value);
+  }
+
+  bool getTokenTracking() {
+    return _preferenceStore.getValue<bool>(_tokenTracking, false);
   }
 }

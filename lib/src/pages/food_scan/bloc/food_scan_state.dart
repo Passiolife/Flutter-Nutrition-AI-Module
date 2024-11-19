@@ -51,6 +51,16 @@ class ScanResultState extends FoodScanState {
   List<Object?> get props => [foodItem, detectedCandidate, alternatives];
 }
 
+class NutritionFactsResultState extends FoodScanState {
+  final PassioNutritionFacts? nutritionFacts;
+
+  const NutritionFactsResultState({this.nutritionFacts});
+
+  @override
+  List<Object?> get props => [nutritionFacts];
+
+}
+
 class AddedToDiaryVisibilityState extends FoodScanState {
   const AddedToDiaryVisibilityState();
 
@@ -109,4 +119,22 @@ class ConversionFailureState extends FoodScanState {
 
   @override
   List<Object?> get props => [];
+}
+
+class UpdatedCameraZoomState extends FoodScanState {
+  const UpdatedCameraZoomState({required this.zoomLevel});
+
+  final double zoomLevel;
+
+  @override
+  List<Object?> get props => [zoomLevel];
+}
+
+class CameraZoomStateLoaded extends FoodScanState {
+  const CameraZoomStateLoaded({required this.cameraZoomLevel});
+
+  final PassioCameraZoomLevel cameraZoomLevel;
+
+  @override
+  List<Object?> get props => [cameraZoomLevel];
 }

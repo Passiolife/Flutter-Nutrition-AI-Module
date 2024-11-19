@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -8,6 +10,8 @@ import '../../common/constant/app_constants.dart';
 import '../../common/models/settings/settings.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/permission_manager_utility.dart';
+import '../../common/util/snackbar_extension.dart';
+import '../../common/widgets/draggable_bottom_sheet_widget.dart';
 import '../dashboard/dashboard_page.dart';
 import '../edit_food/edit_food_page.dart';
 import '../food_search/food_search_page.dart';
@@ -18,6 +22,16 @@ class FoodScanPage extends StatefulWidget {
   const FoodScanPage({required this.selectedDateTime, super.key});
 
   final DateTime selectedDateTime;
+
+  static Future navigate(BuildContext context) {
+    return Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (_) => FoodScanPage(selectedDateTime: DateTime.now()),
+        maintainState: false,
+      ),
+    );
+  }
 
   @override
   State<FoodScanPage> createState() => _FoodScanPageState();
@@ -52,6 +66,18 @@ class _FoodScanPageState extends State<FoodScanPage>
   DetectedCandidate? _detectedCandidate;
   List<DetectedCandidate> _alternatives = [];
 
+  int? _currentMode;
+
+  double _currentZoom = 1;
+  PassioCameraZoomLevel? _cameraZoomLevel;
+
+  double get _initialSheetSize =>
+      !Settings.instance.getDragIntroSeen() ? 0.37 : 0.32;
+
+  final double _maxSheetSize = 0.7;
+
+  PassioNutritionFacts? _nutritionFacts;
+
   @override
   void initState() {
     _initialize();
@@ -67,9 +93,7 @@ class _FoodScanPageState extends State<FoodScanPage>
       resizeToAvoidBottomInset: false,
       body: BlocConsumer<FoodScanBloc, FoodScanState>(
         bloc: _bloc,
-        listener: (context, state) {
-          _handleStateChanges(state, context);
-        },
+        listener: _handleStateChanges,
         buildWhen: (_, state) =>
             state is! ScanningAnimationState &&
             state is! ConversionSuccessState,
@@ -98,7 +122,6 @@ class _FoodScanPageState extends State<FoodScanPage>
                     _showPassioPreview
                         ? const PassioPreview()
                         : Container(color: AppColors.black),
-                    ScannerModeWidget(),
                     GestureDetector(
                       behavior: HitTestBehavior.opaque,
                       onTap: state is ScanResultState
@@ -108,32 +131,70 @@ class _FoodScanPageState extends State<FoodScanPage>
                       child:
                           ScanningAnimationWidget(key: _scanningAnimationKey),
                     ),
-                    (state is ScanLoadingState || state is ScanResultState)
-                        ? BottomBackgroundWidget(
-                            key: _bottomBackgroundWidgetKey,
+                    Positioned(
+                      top: 500.h,
+                      left: 24.w,
+                      right: 24.w,
+                      child: CameraZoomFocusWidget(
+                        currentZoomLevel: _currentZoom,
+                        minZoomLevel: _cameraZoomLevel?.minZoomLevel ?? 1,
+                        maxZoomLevel: _cameraZoomLevel?.maxZoomLevel ?? 10,
+                        onChanged: (value) {
+                          _bloc.add(
+                              DoUpdateCameraZoomLevelEvent(zoomLevel: value));
+                        },
+                        isFocusOn: false,
+                        onChangeFocus: () {
+                          context.showSnackbar(text: 'Work is in progress.');
+                        },
+                      ),
+                    ),
+                    (state is ScanLoadingState || state is ScanResultState || state is NutritionFactsResultState)
+                        ? DraggableBottomSheetWidget(
+                            key: ObjectKey(state is ScanResultState
+                                ? state.foodItem
+                                : true),
+                            initialSize: _initialSheetSize,
+                            minSize: _initialSheetSize,
+                            maxSize: _maxSheetSize,
                             shouldDraggable: _sheetDraggable,
-                            visibleDragIntro:
-                                !Settings.instance.getDragIntroSeen(),
-                            listener: this,
-                            child: state is ScanResultState
-                                ? ResultWidget(
-                                    bottomBackgroundWidgetKey:
-                                        _bottomBackgroundWidgetKey,
-                                    iconId: _foodItem?.iconId ??
-                                        _detectedCandidate?.passioID ??
-                                        '',
-                                    foodName: _foodItem?.name ??
-                                        _detectedCandidate?.foodName ??
-                                        '',
-                                    alternatives: _alternatives,
-                                    listener: this,
-                                    shouldDraggable: _sheetDraggable,
-                                    visibleDragIntro:
-                                        !Settings.instance.getDragIntroSeen(),
-                                  )
-                                : const ScanningWidget(),
+                            builder: (context, dragController, controller,
+                                widgetState) {
+                              return state is ScanResultState || state is NutritionFactsResultState
+                                  ? _currentMode == 2
+                                      ? const SizedBox.shrink() //NutritionFactsResultWidget(nutritionFacts: _nutritionFacts)
+                                      : ResultWidget(
+                                          dragController: dragController,
+                                          scrollController: controller,
+                                          widgetState: widgetState,
+                                          iconId: _foodItem?.iconId ??
+                                              _detectedCandidate?.passioID ??
+                                              '',
+                                          foodName: _foodItem?.name ??
+                                              _detectedCandidate?.foodName ??
+                                              '',
+                                          alternatives: _alternatives,
+                                          listener: this,
+                                          shouldDraggable: _sheetDraggable,
+                                          visibleDragIntro: !Settings.instance
+                                              .getDragIntroSeen(),
+                                        )
+                                  : const ScanningWidget();
+                            },
                           )
                         : const SizedBox.shrink(),
+                    ScannerModeWidget(
+                      initialMode: _currentMode,
+                      onModeChanged: (mode) {
+                        _bottomBackgroundWidgetKey.currentState
+                            ?.setMaxSizeWithInitialInPixels(
+                                _bottomBackgroundWidgetKey.currentState
+                                        ?.getInitialSizePixels() ??
+                                    0);
+                        _currentMode = mode;
+                        _bloc.add(DoModeChangeEvent(mode: _currentMode ?? 0));
+                      },
+                    ),
                   ],
                 ),
               ),
@@ -167,7 +228,7 @@ class _FoodScanPageState extends State<FoodScanPage>
   }
 
   // Handle different state changes
-  void _handleStateChanges(FoodScanState state, BuildContext context) {
+  void _handleStateChanges(BuildContext context, FoodScanState state) {
     if (state is ShowNutritionFactsDialogState) {
       ScannedNutritionFactsDialog.show(context: context);
     } else if (state is BarcodeNotRecognizedState) {
@@ -176,6 +237,8 @@ class _FoodScanPageState extends State<FoodScanPage>
       _handlePackagedFoodNotRecognizedState(state);
     } else if (state is IntroScreenVisibilityState) {
       _handleIntroVisibilityState(state);
+    } else if (state is ScanLoadingState) {
+      _nutritionFacts = null;
     } else if (state is ScanningState) {
       _handleScanningState(state);
     } else if (state is AddedToDiaryVisibilityState) {
@@ -187,12 +250,14 @@ class _FoodScanPageState extends State<FoodScanPage>
       _detectedCandidate = state.detectedCandidate;
       _alternatives = state.alternatives;
       _sheetDraggable = _alternatives.isNotEmpty;
-      if (_alternatives.isNotEmpty) {
-        _bottomBackgroundWidgetKey.currentState?.setMaxSizeWithInitialInPixels(
-            AppDimens.h32 + (_alternatives.length * AppDimens.h56));
-      }
+    } else if(state is NutritionFactsResultState) {
+      _nutritionFacts = state.nutritionFacts;
     } else if (state is ConversionSuccessState) {
       _redirectToEdit(state.foodItem);
+    } else if (state is UpdatedCameraZoomState) {
+      _currentZoom = state.zoomLevel;
+    } else if (state is CameraZoomStateLoaded) {
+      _cameraZoomLevel = state.cameraZoomLevel;
     }
   }
 
@@ -203,7 +268,6 @@ class _FoodScanPageState extends State<FoodScanPage>
         context: context,
         onTapOk: (context) {
           Navigator.pop(context);
-
           Future.delayed(const Duration(milliseconds: AppDimens.duration250),
               () {
             _checkPermission();
@@ -240,6 +304,9 @@ class _FoodScanPageState extends State<FoodScanPage>
   void _handleScanningState(ScanningState state) {
     if (!_showPassioPreview) {
       _showPassioPreview = true;
+      SchedulerBinding.instance.addPostFrameCallback((_) {
+        _bloc.add(const GetCameraZoomLevelEvent());
+      });
     }
     _sheetDraggable = false;
     _handleScanningAnimationState(true);

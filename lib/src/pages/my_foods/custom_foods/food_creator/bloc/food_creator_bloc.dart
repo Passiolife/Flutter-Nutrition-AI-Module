@@ -6,9 +6,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_constants.dart';
-import '../../../../../common/util/flutter_image_compress_util.dart';
-import '../../../../../common/util/unit_extension.dart';
-import '../models/nutrient.dart';
+import '../view_models/food_creator_view_model.dart';
+import '../view_models/nutrient_view_model.dart';
 
 part 'food_creator_event.dart';
 part 'food_creator_state.dart';
@@ -18,68 +17,13 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
 
-  Uint8List? _image;
-  Uint8List? _resizedImage;
-  String? _name;
-  String? _brand;
-  String? _barcode;
-
-  double? _servingQuantity;
-  String? _servingUnit;
-  double? _weightValue;
-  String? _weightSymbol;
-  Unit? _calories;
-  Unit? _fat;
-  Unit? _carbs;
-  Unit? _protein;
-
-  Nutrient? _satFat;
-  Nutrient? _transFat;
-  Nutrient? _cholesterol;
-  Nutrient? _sodium;
-  Nutrient? _dietaryFiber;
-  Nutrient? _totalSugars;
-  Nutrient? _addedSugars;
-  Nutrient? _vitaminD;
-  Nutrient? _calcium;
-  Nutrient? _potassium;
-
-  // final FoodCreatorModel _model = FoodCreatorModel();
-
-  bool get _saveEnabled {
-    // Check if name is not empty
-    final bool isNameNotEmpty = _name?.isNotEmpty ?? false;
-
-    // Check if serving quantity and unit are not null
-    final bool isServingQuantityNotNull =
-        _servingQuantity != null && _servingQuantity != 0;
-    final bool isServingUnitNotNull = _servingUnit?.isNotEmpty ?? false;
-
-    // Pending: Get the localization for gram and ml
-    const gram = 'gram';
-    const ml = 'ml';
-
-    // Check if serving unit is not gram or ml and if so, ensure weight value and unit are not null
-    final bool isWeightValid = (_servingUnit != gram && _servingUnit != ml)
-        ? _weightValue != null && _weightSymbol != null
-        : true;
-
-    final calories = _calories != null;
-    final fat = _fat != null;
-    final carbs = _carbs != null;
-    final protein = _protein != null;
-
-    return isNameNotEmpty &&
-        isServingQuantityNotNull &&
-        isServingUnitNotNull &&
-        isWeightValid &&
-        calories &&
-        fat &&
-        carbs &&
-        protein;
-  }
+  FoodRecord? _userFoodRecord;
+  FoodRecord? _loggedFoodRecord;
+  bool _logUponCreate = false;
+  FoodCreatorViewModel? _foodCreatorViewModel;
 
   FoodCreatorBloc() : super(FoodCreatorInitial()) {
+    on<DoConversionEvent>(_handleDoConversionEvent);
     on<DoUpdateFoodDetailsEvent>(_handleDoUpdateFoodDetailsEvent);
     on<DoUpdateBarcodeEvent>(_handleDoUpdateBarcodeEvent);
     on<DoUpdateRequiredNutritionFactsEvent>(
@@ -89,202 +33,175 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
     on<DoSaveEvent>(_handleDoSaveEvent);
   }
 
-  FutureOr<void> _handleDoUpdateFoodDetailsEvent(
-      DoUpdateFoodDetailsEvent event, Emitter<FoodCreatorState> emit) async {
-    if (_image != event.image) {
-      _image = event.image;
-      if (_image != null) {
-        _resizedImage = await FlutterImageCompressUtil.compressWithList(
-          _image!,
-          minWidth: 200,
-          minHeight: 200,
-        );
+  Future<void> _handleDoConversionEvent(
+      DoConversionEvent event, Emitter<FoodCreatorState> emit) async {
+    _initializeConversion(event);
+
+    // Fetch or use the existing food record based on the update state
+    final foodRecord = _userFoodRecord ?? _loggedFoodRecord;
+    final setIdToEmpty = _userFoodRecord == null;
+    if (foodRecord == null) {
+      _foodCreatorViewModel = FoodCreatorViewModel.empty();
+      return;
+    }
+
+    // Set up the ViewModel based on the food record and icon ID state
+    final setIconIdToEmpty = _shouldSetIconIdToEmpty(foodRecord);
+    _foodCreatorViewModel = FoodCreatorViewModel.fromFoodRecord(
+      foodRecord,
+      setIdToEmpty: setIdToEmpty,
+      setIconIdToEmpty: setIconIdToEmpty,
+    );
+
+    // Fetch and update image
+    await _fetchAndSetUserFoodImage(foodRecord);
+
+    // Emit the state with the final ViewModel
+    if (_foodCreatorViewModel != null) {
+      _emitConversionSuccess(emit);
+    }
+  }
+
+  void _initializeConversion(DoConversionEvent event) {
+    _userFoodRecord = event.userFoodRecord;
+    _loggedFoodRecord = event.loggedFoodRecord;
+    _logUponCreate = event.logUponCreate;
+  }
+
+  bool _shouldSetIconIdToEmpty(FoodRecord foodRecord) {
+    return !(_userFoodRecord != null) &&
+        (foodRecord.iconId.startsWith(AppCommonConstants.userFoods));
+  }
+
+  Future<void> _fetchAndSetUserFoodImage(FoodRecord foodRecord) async {
+    if (foodRecord.iconId.startsWith(AppCommonConstants.userFoods)) {
+      final image = await _connector.fetchUserFoodImage(id: foodRecord.iconId);
+      if (_foodCreatorViewModel != null) {
+        _foodCreatorViewModel =
+            _foodCreatorViewModel!.updateFoodDetails(newImage: image);
       }
     }
-    _name = event.name;
-    _brand = event.brand;
+  }
 
-    emit(UpdateSaveListenerState(saveEnabled: _saveEnabled));
-    emit(const UpdateSaveBuilderState());
+  void _emitConversionSuccess(Emitter<FoodCreatorState> emit) {
+    emit(ConversionSuccessListenerState(
+      viewModel: _foodCreatorViewModel!,
+      saveEnabled: _foodCreatorViewModel!.validate,
+    ));
+    emit(ConversionSuccessBuilderState());
+  }
+
+  FutureOr<void> _handleDoUpdateFoodDetailsEvent(
+      DoUpdateFoodDetailsEvent event, Emitter<FoodCreatorState> emit) async {
+    _foodCreatorViewModel = _foodCreatorViewModel?.updateFoodDetails(
+      newImage: event.image,
+      newName: event.name,
+      newAdditionalData: event.brand,
+    );
+    if (_foodCreatorViewModel != null) {
+      emit(UpdateFoodDetailsSuccessListenerState(
+        viewModel: _foodCreatorViewModel!,
+        saveEnabled: _foodCreatorViewModel!.validate,
+      ));
+      emit(UpdateFoodDetailsSuccessBuilderState());
+    }
   }
 
   FutureOr<void> _handleDoUpdateBarcodeEvent(
       DoUpdateBarcodeEvent event, Emitter<FoodCreatorState> emit) async {
-    _barcode = event.barcode;
-    emit(UpdateSaveListenerState(saveEnabled: _saveEnabled));
-    emit(const UpdateSaveBuilderState());
+    _foodCreatorViewModel = _foodCreatorViewModel?.updateBarcode(event.barcode);
+    if (_foodCreatorViewModel != null) {
+      emit(UpdateBarcodeSuccessListenerState(
+        viewModel: _foodCreatorViewModel!,
+        saveEnabled: _foodCreatorViewModel!.validate,
+      ));
+      emit(UpdateBarcodeSuccessBuilderState());
+    }
   }
 
   FutureOr<void> _handleDoUpdateRequiredNutritionFactsEvent(
       DoUpdateRequiredNutritionFactsEvent event,
       Emitter<FoodCreatorState> emit) async {
-    _servingQuantity = event.servingQuantity;
-    _servingUnit = event.servingUnit;
-    _weightValue = event.weightValue;
-    _weightSymbol = event.weightSymbol;
-    _calories = event.calories;
-    _fat = event.fat;
-    _carbs = event.carbs;
-    _protein = event.protein;
-
-    emit(UpdateSaveListenerState(saveEnabled: _saveEnabled));
-    emit(const UpdateSaveBuilderState());
+    _foodCreatorViewModel = _foodCreatorViewModel?.updateRequiredNutritionFacts(
+      newServingQuantity: event.servingQuantity,
+      newServingUnit: event.servingUnit,
+      newWeightValue: event.weightValue,
+      newWeightSymbol: event.weightSymbol,
+      newCalories: event.calories,
+      newFat: event.fat,
+      newCarbs: event.carbs,
+      newProtein: event.protein,
+    );
+    if (_foodCreatorViewModel != null) {
+      emit(UpdateRequiredNutritionFactsSuccessListenerState(
+        viewModel: _foodCreatorViewModel!,
+        saveEnabled: _foodCreatorViewModel!.validate,
+      ));
+      emit(UpdateRequiredNutritionFactsSuccessBuilderState());
+    }
   }
 
   FutureOr<void> _handleDoUpdateOtherNutritionFactsEvent(
       DoUpdateOtherNutritionFactsEvent event,
       Emitter<FoodCreatorState> emit) async {
-    _satFat = event.satFat;
-    _transFat = event.transFat;
-    _cholesterol = event.cholesterol;
-    _sodium = event.sodium;
-    _dietaryFiber = event.dietaryFiber;
-    _totalSugars = event.totalSugars;
-    _addedSugars = event.addedSugars;
-    _vitaminD = event.vitaminD;
-    _calcium = event.calcium;
-    _potassium = event.potassium;
-
-    emit(UpdateSaveListenerState(saveEnabled: _saveEnabled));
-    emit(const UpdateSaveBuilderState());
+    _foodCreatorViewModel = _foodCreatorViewModel?.updateOtherNutritionFacts(
+      newSatFat: event.satFat,
+      newTransFat: event.transFat,
+      newCholesterol: event.cholesterol,
+      newSodium: event.sodium,
+      newDietaryFiber: event.dietaryFiber,
+      newTotalSugars: event.totalSugars,
+      newAddedSugars: event.addedSugars,
+      newVitaminD: event.vitaminD,
+      newCalcium: event.calcium,
+      newPotassium: event.potassium,
+    );
+    if (_foodCreatorViewModel != null) {
+      emit(UpdateOtherNutritionFactsSuccessListenerState(
+        viewModel: _foodCreatorViewModel!,
+        saveEnabled: _foodCreatorViewModel!.validate,
+      ));
+      emit(UpdateOtherNutritionFactsSuccessBuilderState());
+    }
   }
 
   FutureOr<void> _handleDoSaveEvent(
       DoSaveEvent event, Emitter<FoodCreatorState> emit) async {
-    try {
-      // Create a list of serving sizes with a default serving unit if not provided
-      final servingSizes = [
-        PassioServingSize(_servingQuantity ?? 1, _servingUnit ?? '')
-      ];
+    if (_foodCreatorViewModel == null) return;
 
-      // _weightValue ??= 100 / (_servingQuantity ?? 1);
+    final foodRecord = _foodCreatorViewModel!.toFoodRecord();
 
-      double servingWeightValue;
-      // Create a serving weight with a default value of 100 grams if not provided
-      if (_servingUnit?.toLowerCase() != 'gram' &&
-          _servingUnit?.toLowerCase() != 'ml') {
-        servingWeightValue = (_weightValue ?? 1) / (_servingQuantity ?? 1);
-      } else {
-        servingWeightValue = 1;
-      }
+    final isUpdate = _userFoodRecord != null;
 
-      UnitMass servingWeight = UnitMass(
-        servingWeightValue,
-        (_weightSymbol == 'ml' || _servingUnit?.toLowerCase() == 'ml')
-            ? UnitMassType.milliliter
-            : UnitMassType.grams,
+    if (foodRecord.iconId.startsWith(AppCommonConstants.userFoods)) {
+      // Use image from viewModel if available; otherwise, load default image
+      final image = _foodCreatorViewModel?.image ??
+          (await rootBundle.load(AppImages.imgMyFoodsThumbnail))
+              .buffer
+              .asUint8List();
+
+      await _connector.updateUserFoodImage(
+        id: foodRecord.iconId,
+        image: image,
+        isNew: !isUpdate,
       );
-
-      // Create a list of serving units with the serving weight and a default serving unit if not provided
-      final servingUnits = [
-        PassioServingUnit(_servingUnit ?? '', servingWeight),
-        PassioServingUnit('gram', UnitMass(1, UnitMassType.grams)),
-      ];
-
-      // Create a food amount object with the selected quantity, unit, serving sizes, and serving units
-      final amount = PassioFoodAmount(
-        selectedQuantity: _servingQuantity ?? 1,
-        selectedUnit: _servingUnit ?? '',
-        servingSizes: servingSizes,
-        servingUnits: servingUnits,
-      );
-
-      // Create a food metadata object with the barcode
-      final metadata = PassioFoodMetadata(barcode: _barcode);
-
-      // Define a reference unit of 100 grams for nutrient conversion
-      final targetUnit = UnitMass(100, UnitMassType.grams);
-      final currentUnit =
-          UnitMass(_weightValue ?? _servingQuantity ?? 1, UnitMassType.grams);
-
-      // Convert nutrients based on the reference unit and serving weight
-      final referenceNutrients = PassioNutrients.fromNutrients(
-        calories:
-            _calories?.convertBasedOn(targetUnit, currentUnit) as UnitEnergy?,
-        fat: _fat?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        carbs: _carbs?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        proteins:
-            _protein?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        satFat: _satFat?.toUnitMass()?.convertBasedOn(targetUnit, currentUnit)
-            as UnitMass?,
-        transFat: _transFat
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        cholesterol: _cholesterol
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        sodium: _sodium?.toUnitMass()?.convertBasedOn(targetUnit, currentUnit)
-            as UnitMass?,
-        fibers: _dietaryFiber
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        sugars: _totalSugars
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        sugarsAdded: _addedSugars
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        vitaminD: _vitaminD
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-        calcium: _calcium?.toUnitMass()?.convertBasedOn(targetUnit, currentUnit)
-            as UnitMass?,
-        potassium: _potassium
-            ?.toUnitMass()
-            ?.convertBasedOn(targetUnit, currentUnit) as UnitMass?,
-      );
-
-      final isNew = !event.isUpdate;
-
-      final uniqueId = DateTime.now().millisecondsSinceEpoch.toString();
-
-      final passioId = event.oldFoodRecord?.passioID ?? uniqueId;
-
-      final String baseIconId = isNew
-          ? '${AppCommonConstants.userFoods}$uniqueId'
-          : event.oldFoodRecord?.iconId ?? '';
-      final iconId = _image == null
-          ? (event.oldFoodRecord?.iconId ?? baseIconId)
-          : baseIconId;
-
-      // Create an ingredient object with the amount, metadata, name, and reference nutrients
-      final ingredient = PassioIngredient(
-          amount: amount,
-          iconId: iconId,
-          id: passioId,
-          metadata: metadata,
-          name: _name ?? '',
-          refCode: '',
-          referenceNutrients: referenceNutrients);
-
-      // Create a food record ingredient from the Passio ingredient and add additional data
-      final foodRecordIngredient =
-          FoodRecordIngredient.fromPassioIngredient(ingredient);
-      foodRecordIngredient.id = event.oldFoodRecord?.id ?? '';
-      foodRecordIngredient.additionalData = _brand ?? '';
-
-      // Create a food record from the food record ingredient
-      final foodRecord =
-          FoodRecord.fromFoodRecordIngredient(foodRecordIngredient);
-
-      if (foodRecord.iconId.startsWith(AppCommonConstants.userFoods) &&
-          _image != null) {
-        _resizedImage ??= (await rootBundle.load(AppImages.imgMyFoodsThumbnail))
-            .buffer
-            .asUint8List();
-        await _connector.updateUserFoodImage(
-          id: foodRecord.iconId,
-          image: _resizedImage!,
-          isNew: isNew,
-        );
-      }
-      await _connector.updateUserFood(foodRecord: foodRecord, isNew: isNew);
-
-      // Emit a success state
-      emit(const SaveSuccessState());
-    } on Exception catch (e) {
-      // Emit a failure state with the error message if an exception occurs
-      emit(SaveFailureState(message: e.toString()));
     }
+
+    final userFoodId = await _connector.updateUserFood(
+      foodRecord: foodRecord,
+      isNew: !isUpdate,
+    );
+
+    if (_logUponCreate) {
+      foodRecord.id = _loggedFoodRecord?.id ?? '';
+      foodRecord.sourceId = '${AppCommonConstants.userFoods}$userFoodId';
+      foodRecord
+          .setCreatedAt(_loggedFoodRecord?.getCreatedAt() ?? DateTime.now());
+      foodRecord.mealLabel = _loggedFoodRecord?.mealLabel;
+      await _connector.updateRecord(foodRecord: foodRecord, isNew: false);
+    }
+
+    // Emit a success state
+    emit(const SaveSuccessState());
   }
 }

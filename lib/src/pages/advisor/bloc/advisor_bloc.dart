@@ -8,7 +8,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/advisor_chat/advisor_chat.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
-import '../../../common/util/string_extensions.dart';
 
 part 'advisor_event.dart';
 part 'advisor_state.dart';
@@ -32,34 +31,12 @@ Let's chat!
 ''';
 
   AdvisorBloc() : super(const AdvisorInitial()) {
-    on<DoConfigureEvent>(_handleDoConfigureEvent);
     on<DoInitializationEvent>(_handleDoInitializationEvent);
     on<DoSendMessageEvent>(_handleDoSendMessageEvent);
     on<DoFetchIngredientsEvent>(_handleDoFetchIngredientsEvent);
     on<DoSendImageEvent>(_handleDoSendImageEvent);
     on<DoChangeSelectionEvent>(_handleDoChangeSelectionEvent);
     on<DoFoodLogEvent>(_handleDoFoodLogEvent);
-  }
-
-  Future<void> _handleDoConfigureEvent(
-      DoConfigureEvent event, Emitter<AdvisorState> emit) async {
-    final key = NutritionAIModule.instance.configuration.advisorKey;
-    if (key == null || key.isEmpty) {
-      emit(
-          const ConfigureErrorListenerState('Please provide the advisor key.'));
-      return;
-    }
-    final result = await NutritionAdvisor.instance
-        .configure(NutritionAIModule.instance.configuration.advisorKey ?? '');
-    switch (result) {
-      case Error():
-        emit(ConfigureErrorListenerState(result.message));
-        emit(const ConfigureErrorBuilderState());
-        break;
-      case Success():
-        add(const DoInitializationEvent());
-        break;
-    }
   }
 
   Future<void> _handleDoInitializationEvent(
@@ -266,26 +243,16 @@ Let's chat!
         if (foodDataInfo == null) return null;
 
         try {
-          final foodItem =
-              await NutritionAI.instance.fetchFoodItemForDataInfo(foodDataInfo);
+          final nutritionPreview = foodDataInfo.nutritionPreview;
+          final foodItem = await NutritionAI.instance.fetchFoodItemForDataInfo(
+            foodDataInfo,
+            servingQuantity: nutritionPreview.servingQuantity,
+            servingUnit: nutritionPreview.servingUnit,
+          );
           if (foodItem == null) return null;
 
           final foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
 
-          final unitAndQuantity =
-              advisorFoodInfo?.portionSize.extractNumberAndString();
-          bool hasUnit = false;
-          if (unitAndQuantity != null && unitAndQuantity.string != null) {
-            hasUnit = foodRecord.setSelectedUnit(unitAndQuantity.string!);
-          }
-          if (!hasUnit) {
-            foodRecord.setSelectedUnit('gram');
-          }
-
-          double quantity = hasUnit
-              ? unitAndQuantity?.number ?? 1
-              : advisorFoodInfo?.weightGrams ?? 1;
-          foodRecord.setSelectedQuantity(quantity);
           return foodRecord;
         } catch (e) {
           return null;

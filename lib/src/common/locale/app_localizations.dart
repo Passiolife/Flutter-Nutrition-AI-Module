@@ -557,7 +557,7 @@ class AppLocalizations {
 
   String? get typeMessageHint => getLabel('typeMessageHint');
 
-  String? get configuringAdvisor => getLabel('configuringAdvisor');
+  String? get initializingAdvisor => getLabel('initializingAdvisor');
 
   String? get advisorIsAnalysing => getLabel('advisorIsAnalysing');
 
@@ -681,4 +681,52 @@ class AppLocalizations {
 
   String? get createCustomFoodWithoutBarcode =>
       getLabel('createCustomFoodWithoutBarcode');
+
+  String? get session => getLabel('session');
+
+  String? get lastRequest => getLabel('lastRequest');
+
+  String? get tokenTracking => getLabel('tokenTracking');
+
+  String? get enableTokenTracking => getLabel('enableTokenTracking');
+
+  String? get createNewRecipe => getLabel('createNewRecipe');
+
+  String? get recipeDetails => getLabel('recipeDetails');
+
+  String? get wholeFoodsMode => getLabel('wholeFoodsMode');
+
+  String? get barcodeMode => getLabel('barcodeMode');
+
+  String? get nutritionFactsMode => getLabel('nutritionFactsMode');
+
+  String? get alternatives => getLabel('alternatives');
+
+  String? get createUserFood => getLabel('createUserFood');
+
+  String? get createUserFoodDescription =>
+      getLabel('createUserFoodDescription');
+
+  String? get updateLogUponCreating => getLabel('updateLogUponCreating');
+
+  String? get customFoodCreatedWithUpdateSuccess =>
+      getLabel('customFoodCreatedWithUpdateSuccess');
+
+  String? get customFoodUpdatedWithUpdateSuccess =>
+      getLabel('customFoodUpdatedWithUpdateSuccess');
+
+  String? get customFoodCreatedWithSuccess =>
+      getLabel('customFoodCreatedWithSuccess');
+
+  String? get customFoodUpdatedWithSuccess =>
+      getLabel('customFoodUpdatedWithSuccess');
+
+  String? get foodNotFound => getLabel('foodNotFound');
+
+  String? get foodNotFoundDescription => getLabel('foodNotFoundDescription');
+
+  String? get createOrEditUserFood => getLabel('createOrEditUserFood');
+
+  String? get createOrEditUserFoodDescription =>
+      getLabel('createOrEditUserFoodDescription');
 }

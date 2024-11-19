@@ -6,7 +6,6 @@ import 'package:image_picker/image_picker.dart';
 
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
-import '../../../../common/util/string_extensions.dart';
 
 part 'select_photo_event.dart';
 part 'select_photo_state.dart';
@@ -99,26 +98,16 @@ class SelectPhotoBloc extends Bloc<SelectPhotoEvent, SelectPhotoState> {
         if (foodDataInfo == null) return null;
 
         try {
-          final foodItem =
-              await NutritionAI.instance.fetchFoodItemForDataInfo(foodDataInfo);
+          final nutritionPreview = foodDataInfo.nutritionPreview;
+          final foodItem = await NutritionAI.instance.fetchFoodItemForDataInfo(
+            foodDataInfo,
+            servingQuantity: nutritionPreview.servingQuantity,
+            servingUnit: nutritionPreview.servingUnit,
+          );
           if (foodItem == null) return null;
 
           final foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
 
-          final unitAndQuantity =
-              advisorFoodInfo?.portionSize.extractNumberAndString();
-          bool hasUnit = false;
-          if (unitAndQuantity != null && unitAndQuantity.string != null) {
-            hasUnit = foodRecord.setSelectedUnit(unitAndQuantity.string!);
-          }
-          if (!hasUnit) {
-            foodRecord.setSelectedUnit('gram');
-          }
-
-          double quantity = hasUnit
-              ? unitAndQuantity?.number ?? 1
-              : advisorFoodInfo?.weightGrams ?? 1;
-          foodRecord.setSelectedQuantity(quantity);
           return foodRecord;
         } catch (e) {
           return null;

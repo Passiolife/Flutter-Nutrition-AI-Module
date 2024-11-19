@@ -28,3 +28,12 @@ final class RefreshState extends DashboardState {
   @override
   List<Object?> get props => [dateTime];
 }
+
+final class TokenTrackingUpdateState extends DashboardState {
+  const TokenTrackingUpdateState({required this.enabled});
+  final bool enabled;
+
+  @override
+  List<Object?> get props => [enabled];
+
+}

@@ -10,12 +10,21 @@ part 'food_scan_event.dart';
 part 'food_scan_state.dart';
 
 class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
-    implements FoodRecognitionListener {
+    implements FoodRecognitionListener, NutritionFactsRecognitionListener {
   /// [_connector] is use to perform operations.
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
 
   bool? _previousResultForDrag;
+
+  int? _currentMode;
+
+  @override
+  void onNutritionFactsRecognized(
+      PassioNutritionFacts? nutritionFacts, String? text) {
+    // Adding a VisualDetectedEvent to the bloc
+    add(NutritionFactsDetectedEvent(nutritionFacts: nutritionFacts));
+  }
 
   @override
   void recognitionResults(
@@ -38,12 +47,16 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     on<IntroScreenCompleteEvent>(_handleIntroScreenCompleteEvent);
 
     // Scanning Events
+    on<DoModeChangeEvent>(_handleDoModeChangeEvent);
+    on<GetCameraZoomLevelEvent>(_handleGetCameraZoomLevelEvent);
+    on<DoUpdateCameraZoomLevelEvent>(_handleDoUpdateCameraZoomLevelEvent);
     on<ScanningEvent>(_handleScanningEvent);
     on<ScanningAnimationEvent>(_handleScanningAnimationEvent);
     on<StartScanningEvent>(_handleStartScanningEvent);
     on<StartFoodDetectionEvent>(_handleStartFoodDetectionEvent);
     on<StopFoodDetectionEvent>(_handleStopFoodDetectionEvent);
     on<DetectedEvent>(_handleDetectedEvent);
+    on<NutritionFactsDetectedEvent>(_handleNutritionFactsDetectedEvent);
 
     // Scan dialog event
     on<ScanResultDragEvent>(_handleScanResultDragEvent);
@@ -51,7 +64,6 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     on<PackagedFoodNotRecognizedEvent>(_handlePackagedFoodNotRecognizedEvent);
 
     // Do log event
-    on<DoConversionEvent>(_handleDoConversionEvent);
     on<DoFoodLogEvent>(_handleDoFoodLogEvent);
     on<AddedToDiaryVisibilityEvent>(_handleAddedToDiaryVisibilityEvent);
 
@@ -90,10 +102,14 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
   FutureOr<void> _handleStartFoodDetectionEvent(
       StartFoodDetectionEvent event, Emitter<FoodScanState> emit) async {
-    const detectionConfig = FoodDetectionConfiguration(
-      detectVisual: true,
-      detectBarcodes: true,
-      detectPackagedFood: true,
+    if (_currentMode == 2) {
+      NutritionAI.instance.startNutritionFactsDetection(this);
+      return;
+    }
+    final detectionConfig = FoodDetectionConfiguration(
+      detectVisual: _currentMode == null || _currentMode == 0,
+      detectBarcodes: _currentMode == 1,
+      detectPackagedFood: _currentMode == null || _currentMode == 0,
     );
     NutritionAI.instance.startFoodDetection(detectionConfig, this);
   }
@@ -110,9 +126,9 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     var detectedCandidates = event.detectedCandidates;
 
     PassioFoodItem? foodItem;
-    if ((barcodeCandidates?.isEmpty ?? false) &&
-        (packagedFoodCandidates?.isEmpty ?? false) &&
-        (detectedCandidates?.isEmpty ?? false)) {
+    if ((barcodeCandidates?.isEmpty ?? true) &&
+        (packagedFoodCandidates?.isEmpty ?? true) &&
+        (detectedCandidates?.isEmpty ?? true)) {
       emit(const ScanLoadingState());
     } else {
       DetectedCandidate? detectedCandidate;
@@ -144,6 +160,14 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
         alternatives: alternatives,
       ));
     }
+  }
+
+  Future<void> _handleNutritionFactsDetectedEvent(NutritionFactsDetectedEvent event, Emitter<FoodScanState> emit) async {
+    if(event.nutritionFacts==null) {
+      emit(const ScanLoadingState());
+      return;
+    }
+    emit(NutritionFactsResultState(nutritionFacts: event.nutritionFacts));
   }
 
   FutureOr<void> _handleBarcodeNotRecognizedEvent(
@@ -217,13 +241,33 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     emit(ScanningAnimationState(shouldAnimate: event.shouldAnimate));
   }
 
+  Future<void> _handleDoModeChangeEvent(
+      DoModeChangeEvent event, Emitter<FoodScanState> emit) async {
+    _currentMode = event.mode;
+    if(_currentMode==1) {
+      add(const DoUpdateCameraZoomLevelEvent(zoomLevel: 2));
+    } else {
+      add(const DoUpdateCameraZoomLevelEvent(zoomLevel: 1));
+    }
+    add(const StopFoodDetectionEvent());
+    add(const StartFoodDetectionEvent());
+  }
+
   FutureOr<void> _handleScanningEvent(
       ScanningEvent event, Emitter<FoodScanState> emit) {
     emit(const ScanningState());
   }
 
-  Future<FutureOr<void>> _handleDoConversionEvent(
-      DoConversionEvent event, Emitter<FoodScanState> emit) async {
-    if (event.detectedCandidate != null) {}
+  FutureOr<void> _handleDoUpdateCameraZoomLevelEvent(
+      DoUpdateCameraZoomLevelEvent event, Emitter<FoodScanState> emit) {
+    NutritionAI.instance.setCameraZoomLevel(zoomLevel: event.zoomLevel);
+    emit(UpdatedCameraZoomState(zoomLevel: event.zoomLevel));
+  }
+
+  Future<void> _handleGetCameraZoomLevelEvent(
+      GetCameraZoomLevelEvent event, Emitter<FoodScanState> emit) async {
+    final cameraZoomLevel =
+        await NutritionAI.instance.getMinMaxCameraZoomLevel();
+    emit(CameraZoomStateLoaded(cameraZoomLevel: cameraZoomLevel));
   }
 }

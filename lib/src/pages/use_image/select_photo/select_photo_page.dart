@@ -158,10 +158,9 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
                             final weightGrams = advisorInfo?.weightGrams ?? 0;
                             final caloriesForPortionSize =
                                 caloriesPerGram * weightGrams;
-                            final portionSize = advisorInfo?.portionSize ??
-                                '${weightGrams.format()} ${context.localization?.g}';
+                            final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
                             final subtitle =
-                                '$portionSize | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                                '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
 
                             final isSelected = data?.isSelected ?? false;
 
@@ -171,6 +170,7 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
                               subtitle: subtitle,
                               isAddVisible: false,
                               padding: EdgeInsets.zero,
+                              decoration: BoxDecoration(color: isSelected ? AppColors.indigo50: null),
                               suffix: IconButton(
                                 onPressed: () {
                                   if (data != null) {
