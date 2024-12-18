@@ -152,3 +152,16 @@ class DoFetchUserCreatedFoodEvent extends EditFoodEvent {
   @override
   List<Object?> get props => [foodRecord, logUpdateOnCreate];
 }
+
+class DoFetchUserCreatedRecipeEvent extends EditFoodEvent {
+  const DoFetchUserCreatedRecipeEvent({
+    this.foodRecord,
+    required this.logUpdateOnCreate,
+  });
+
+  final FoodRecord? foodRecord;
+  final bool logUpdateOnCreate;
+
+  @override
+  List<Object?> get props => [foodRecord, logUpdateOnCreate];
+}

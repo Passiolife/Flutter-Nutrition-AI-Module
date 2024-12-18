@@ -4,12 +4,26 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
-import '../../../common/widgets/action_buttons_widget.dart';
+import '../../../common/widgets/app_button.dart';
+
+abstract interface class NutritionFactsHandler {
+  void onNext();
+  void onCancel();
+}
 
 class NutritionFactsResultWidget extends StatelessWidget {
-  const NutritionFactsResultWidget({this.nutritionFacts, super.key});
+  const NutritionFactsResultWidget({
+    this.nutritionFacts,
+    this.isLoadingNext = false,
+    this.isEnableNext = false,
+    this.handler,
+    super.key,
+  });
 
   final PassioNutritionFacts? nutritionFacts;
+  final bool isLoadingNext;
+  final bool isEnableNext;
+  final NutritionFactsHandler? handler;
 
   @override
   Widget build(BuildContext context) {
@@ -58,10 +72,26 @@ class NutritionFactsResultWidget extends StatelessWidget {
         24.verticalSpace,
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: ActionButtonsWidget(
-            betweenSpace: 16,
-            negativeButtonText: context.localization?.cancel ?? '',
-            positiveButtonText: context.localization?.next,
+          child: Row(
+            children: [
+              Expanded(
+                child: AppButton(
+                  buttonText: context.localization?.cancel ?? '',
+                  appButtonModel: AppButtonStyles.primaryBordered,
+                  onTap: handler?.onCancel,
+                ),
+              ),
+              16.horizontalSpace,
+              Expanded(
+                child: AppButton(
+                  buttonText: context.localization?.next ?? '',
+                  appButtonModel: AppButtonStyles.primary,
+                  onTap: handler?.onNext,
+                  isLoading: isLoadingNext,
+                  isEnable: isEnableNext,
+                ),
+              ),
+            ],
           ),
         ),
       ],

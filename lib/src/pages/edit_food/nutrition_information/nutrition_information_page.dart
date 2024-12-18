@@ -42,11 +42,14 @@ class NutritionInformationPage extends StatelessWidget {
             margin: EdgeInsets.symmetric(horizontal: 16.w),
             decoration: AppShadows.base,
             child: FoodItemRowWidget(
-              padding: EdgeInsets.all(8.r),
-              iconId: foodRecord?.iconId,
-              title: foodRecord?.name,
-              subtitle: foodRecord?.additionalData,
-              isAddVisible: false,
+              data: FoodItemRowData(
+                padding: EdgeInsets.all(8.r),
+                iconId: foodRecord?.iconId,
+                title: foodRecord?.name,
+                subtitle: foodRecord?.additionalData,
+                isAddVisible: false,
+                enableSlidable: false,
+              ),
             ),
           ),
           Expanded(

@@ -350,5 +350,22 @@
   "createUserFood": "Create User Food?",
   "createUserFoodDescription": "You are about to create a user food from this food",
   "createOrEditUserFood": "Create or Edit User Food?",
-  "createOrEditUserFoodDescription": "Do you want to create a new user food based off this one, or edit the existing user food?"
+  "createOrEditUserFoodDescription": "Do you want to create a new user food based off this one, or edit the existing user food?",
+  "deleteDescription": "Are you sure you want to delete this?",
+  "recipeName": "Recipe Name",
+  "editRecipe": "Edit Recipe",
+  "editIngredient": "Edit Ingredient",
+  "searchResults": "Search Results",
+  "makeCustomRecipe": "Make custom recipe",
+  "customRecipeCreatedWithSuccess": "Custom recipe created successfully.",
+  "customRecipeUpdatedWithSuccess": "Custom recipe updated successfully.",
+  "customRecipeCreatedWithUpdateSuccess": "Custom recipe created successfully, and meal log updated.",
+  "customRecipeUpdatedWithUpdateSuccess": "Custom recipe updated successfully, and meal log updated.",
+  "recipeNotFound": "Recipe Not Found",
+  "recipeNotFoundDescription": "The custom recipe you are trying to edit no longer exists. You can continue to create a new one.",
+  "createUserRecipe": "Create User Recipe?",
+  "createUserRecipeDescription": "You are about to create a user recipe from this food",
+  "createOrEditUserRecipe": "Create or Edit User Recipe?",
+  "createOrEditUserRecipeDescription": "Do you want to create a new user recipe based off this one, or edit the existing recipe?",
+  "voiceLoggingNoResultsFoundDescription": "Sorry, we could not find any matches. Please try again or try searching manually"
 }

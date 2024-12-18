@@ -278,6 +278,19 @@ class MicroNutrient {
                 'iu',
       ),
       MicroNutrient(
+        name: 'Vitamin A RAE',
+        value: foodRecords.fold(
+            0,
+                (previousValue, element) =>
+            previousValue + (element?.totalVitaminARAE ?? 0)),
+        recommendedValue: 0,
+        unitSymbol: foodRecords.firstOrNull
+            ?.nutrientsSelectedSize()
+            .vitaminARAE
+            ?.symbol ??
+            UnitMassType.micrograms.symbol,
+      ),
+      MicroNutrient(
         name: 'Vitamin C',
         value: foodRecords.fold(
             0,
@@ -400,6 +413,7 @@ class MicroNutrient {
                 ?.symbol ??
             UnitMassType.micrograms.symbol,
       ),
+
       /*MicroNutrient(
         name: 'Vitamin K Phylloquinone',
         value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminKPhylloquinone ?? 0)),

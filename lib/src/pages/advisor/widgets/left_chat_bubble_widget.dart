@@ -192,14 +192,14 @@ class ResultWidget extends StatelessWidget {
                 final iconId = foodDataInfo?.iconID ?? '';
                 final title = foodDataInfo?.foodName ?? '';
                 final calories = foodDataInfo?.nutritionPreview.calories ?? 0;
-                final weightQuantity =
-                    foodDataInfo?.nutritionPreview.weightQuantity ?? 0;
-                final caloriesPerGram = calories / weightQuantity;
-                final weightGrams = advisorInfo?.weightGrams ?? 0;
-                final caloriesForPortionSize = caloriesPerGram * weightGrams;
-                final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
+
+                final servingQuantity =
+                    foodDataInfo?.nutritionPreview.servingQuantity ?? 0;
+                final servingUnit = foodDataInfo?.nutritionPreview.servingUnit ?? '';
+                final formattedWeight = '$servingQuantity $servingUnit';
+
                 final subtitle =
-                    '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                    '$formattedWeight | $calories ${context.localization?.cal}';
 
                 final isSelected = data.isSelected;
 
@@ -207,24 +207,32 @@ class ResultWidget extends StatelessWidget {
 
                 return Padding(
                   padding: EdgeInsets.symmetric(vertical: 4.h),
-                  child: FoodItemRowWidget.withSelection(
-                    rippleColor: AppColors.indigo50,
-                    iconId: iconId,
-                    title: title,
-                    subtitle: subtitle,
-                    isAddVisible: false,
-                    padding: EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
-                    decoration: BoxDecoration(color: isSelected ? AppColors.indigo50: null),
-                    isSelected: isSelected,
-                    suffix: isLogged != null
-                        ? SvgPicture.asset(
-                            isLogged ? AppImages.icCheck : AppImages.icUncheck,
-                            width: 24.r,
-                            height: 24.r,
-                          )
-                        : null,
-                    onSelect: () => onChangeSelection?.call(index, data),
-                    onTap: () => onChangeSelection?.call(index, data),
+                  child: FoodItemRowWidget(
+                    data: FoodItemRowData(
+                      withSelection: true,
+                      rippleColor: AppColors.indigo50,
+                      iconId: iconId,
+                      title: title,
+                      subtitle: subtitle,
+                      isAddVisible: false,
+                      padding:
+                          EdgeInsets.symmetric(vertical: 8.h, horizontal: 8.w),
+                      decoration: BoxDecoration(
+                          color: isSelected ? AppColors.indigo50 : null),
+                      isSelected: isSelected,
+                      suffix: isLogged != null
+                          ? SvgPicture.asset(
+                              isLogged
+                                  ? AppImages.icCheck
+                                  : AppImages.icUncheck,
+                              width: 24.r,
+                              height: 24.r,
+                            )
+                          : null,
+                      onSelect: () => onChangeSelection?.call(index, data),
+                      onTap: () => onChangeSelection?.call(index, data),
+                      enableSlidable: false,
+                    ),
                   ),
                 );
               }).toList() ??

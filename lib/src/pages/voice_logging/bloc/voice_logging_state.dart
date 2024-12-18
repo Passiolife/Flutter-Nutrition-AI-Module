@@ -25,47 +25,8 @@ final class ErrorListenerState extends ListenerState {
   List<Object?> get props => [error];
 }
 
-final class ListenerStateStarted extends ListenerState {
-  const ListenerStateStarted();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class RecognizeListenerState extends ListenerState {
-  const RecognizeListenerState(this.words);
-
-  final String words;
-
-  @override
-  List<Object?> get props => [words];
-}
-
-final class ListenerStateStopped extends ListenerState {
-  const ListenerStateStopped();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class VoiceLogsRecognitionSuccessListenerState extends ListenerState {
-  final List<VoiceLog>? data;
-
-  const VoiceLogsRecognitionSuccessListenerState({required this.data});
-
-  @override
-  List<Object?> get props => [data];
-}
-
 final class VoiceLogsRecognitionErrorListenerState extends ListenerState {
   const VoiceLogsRecognitionErrorListenerState();
-
-  @override
-  List<Object?> get props => [];
-}
-
-final class FoodLogLoadingListenerState extends ListenerState {
-  const FoodLogLoadingListenerState();
 
   @override
   List<Object?> get props => [];
@@ -91,10 +52,12 @@ sealed class BuilderState extends VoiceLoggingState {
 }
 
 final class RecognizeBuilderState extends BuilderState {
-  const RecognizeBuilderState();
+  const RecognizeBuilderState({required this.recognizeWords});
+
+  final String recognizeWords;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [recognizeWords];
 }
 
 final class ListenerStateStoppedBuilder extends BuilderState {
@@ -104,22 +67,62 @@ final class ListenerStateStoppedBuilder extends BuilderState {
   List<Object?> get props => [];
 }
 
-final class RecognizeVoiceLogsBuilderState extends BuilderState {
-  const RecognizeVoiceLogsBuilderState();
+final class RecognizeVoiceLogsSuccessState extends BuilderState {
+  const RecognizeVoiceLogsSuccessState({this.data});
+
+  final List<VoiceLog>? data;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [data];
 }
 
-final class UpdateSelectionBuilderState extends BuilderState {
-  const UpdateSelectionBuilderState();
+final class UpdateRecognizeVoiceLogsState extends BuilderState {
+  const UpdateRecognizeVoiceLogsState({this.data, required this.timeStamp});
+
+  final List<VoiceLog>? data;
+  final int timeStamp;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [timeStamp, data];
 }
 
 final class FoodLogLoadingBuilderState extends BuilderState {
-  const FoodLogLoadingBuilderState();
+  const FoodLogLoadingBuilderState({required this.isLogLoading, this.data});
+
+  final bool isLogLoading;
+  final List<VoiceLog>? data;
+
+  @override
+  List<Object?> get props => [isLogLoading, data];
+}
+
+final class ListeningUpdateBuilderState extends BuilderState {
+  const ListeningUpdateBuilderState({required this.isListening});
+
+  final bool isListening;
+
+  @override
+  List<Object?> get props => [isListening];
+}
+
+final class ProcessingUpdateBuilderState extends BuilderState {
+  const ProcessingUpdateBuilderState({required this.isProcessing});
+
+  final bool isProcessing;
+
+  @override
+  List<Object?> get props => [isProcessing];
+}
+
+final class NoResultsBuilderState extends BuilderState {
+  const NoResultsBuilderState();
+
+  @override
+  List<Object?> get props => [DateTime.timestamp()];
+}
+
+final class TryAgainSuccessState extends BuilderState {
+  const TryAgainSuccessState();
 
   @override
   List<Object?> get props => [];

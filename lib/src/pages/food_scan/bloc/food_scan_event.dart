@@ -91,6 +91,14 @@ class NutritionFactsDetectedEvent extends FoodScanEvent {
   List<Object?> get props => [nutritionFacts];
 }
 
+final class ClearNutritionFactsEvent extends FoodScanEvent {
+  const ClearNutritionFactsEvent();
+
+  @override
+  List<Object?> get props => [];
+
+}
+
 class ScanResultDragEvent extends FoodScanEvent {
   final bool isCollapsed;
 
@@ -172,4 +180,13 @@ class DoUpdateCameraZoomLevelEvent extends FoodScanEvent {
 
   @override
   List<Object?> get props => [zoomLevel];
+}
+
+final class DoNextNutritionFactsEvent extends FoodScanEvent {
+  const DoNextNutritionFactsEvent({this.nutritionFacts});
+
+  final PassioNutritionFacts? nutritionFacts;
+
+  @override
+  List<Object?> get props => [nutritionFacts];
 }

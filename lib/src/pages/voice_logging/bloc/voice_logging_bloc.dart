@@ -25,6 +25,11 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
 
+  bool _isListening = false;
+  bool _isProcessing = false;
+  String _recognizedWords = '';
+  bool _visibleLoadingForLog = false;
+
   VoiceLoggingBloc() : super(const VoiceLoggingInitial()) {
     on<StartListeningEvent>(_handleStartListeningEvent);
     on<ErrorEvent>(_handleErrorEvent);
@@ -35,6 +40,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
     on<ClearSelectionEvent>(_handleClearSelectionEvent);
     on<DoFoodLogEvent>(_handleDoFoodLogEvent);
     on<DoCancelEvent>(_handleDoDisposeEvent);
+    on<TryAgainEvent>(_handleTryAgainEvent);
   }
 
   FutureOr<void> _handleStartListeningEvent(
@@ -49,7 +55,10 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
         recognizedWords: _recognizeWords,
         finalResult: false,
       );
-      emit(const ListenerStateStarted());
+      _recognizedWords = '';
+      _isListening = true;
+      emit(ListeningUpdateBuilderState(isListening: _isListening));
+
     } else {
       add(const ErrorEvent());
     }
@@ -59,8 +68,9 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
       StopListeningEvent event, Emitter<VoiceLoggingState> emit) async {
     SpeechToTextUtil.instance.stopListening();
 
-    emit(const ListenerStateStopped());
-    emit(const ListenerStateStoppedBuilder());
+    _isListening = false;
+    emit(ListeningUpdateBuilderState(isListening: _isListening));
+    add(RecognizeSpeechRemoteEvent(text: _recognizedWords));
   }
 
   FutureOr<void> _handleErrorEvent(
@@ -88,17 +98,30 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
 
   FutureOr<void> _handleRecognizeEvent(
       RecognizeEvent event, Emitter<VoiceLoggingState> emit) {
-    emit(RecognizeListenerState(event.words));
-    emit(const RecognizeBuilderState());
+    _recognizedWords = event.words;
+    emit(RecognizeBuilderState(recognizeWords: _recognizedWords));
   }
 
   FutureOr<void> _handleRecognizeSpeechRemoteEvent(
       RecognizeSpeechRemoteEvent event, Emitter<VoiceLoggingState> emit) async {
     try {
+      _isProcessing = true;
+      emit(ProcessingUpdateBuilderState(isProcessing: _isProcessing));
+
       final result =
           await NutritionAI.instance.recognizeSpeechRemote(event.text);
       _recognitionLogs = result.toVoiceLogList();
-      _updateVoiceLogsAndEmit(emit);
+
+      _isProcessing = false;
+      emit(ProcessingUpdateBuilderState(isProcessing: _isProcessing));
+
+      if (_recognitionLogs?.isEmpty ?? true) {
+        emit(const VoiceLogsRecognitionErrorListenerState());
+        return;
+      }
+
+      emit(RecognizeVoiceLogsSuccessState(data: _recognitionLogs));
+
     } on Exception catch (e) {
       log('Exception: $e');
     }
@@ -107,19 +130,20 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
   FutureOr<void> _handleUpdateSelectionEvent(
       UpdateSelectionEvent event, Emitter<VoiceLoggingState> emit) async {
     _recognitionLogs = _recognitionLogs?.toggleSelectionFor(event.index);
-    _updateVoiceLogsAndEmit(emit);
+    emit(UpdateRecognizeVoiceLogsState(data: _recognitionLogs, timeStamp: DateTime.now().millisecondsSinceEpoch));
+    // _updateVoiceLogsAndEmit(emit);
   }
 
   FutureOr<void> _handleClearSelectionEvent(
       ClearSelectionEvent event, Emitter<VoiceLoggingState> emit) {
     _recognitionLogs = _recognitionLogs?.clearSelection();
-    _updateVoiceLogsAndEmit(emit);
+    emit(UpdateRecognizeVoiceLogsState(data: _recognitionLogs, timeStamp: DateTime.now().millisecondsSinceEpoch));
   }
 
   Future<void> _handleDoFoodLogEvent(
       DoFoodLogEvent event, Emitter<VoiceLoggingState> emit) async {
-    emit(const FoodLogLoadingListenerState());
-    emit(const FoodLogLoadingBuilderState());
+    _visibleLoadingForLog = true;
+    emit(FoodLogLoadingBuilderState(isLogLoading: _visibleLoadingForLog, data: _recognitionLogs));
 
     final selectedLogs = _recognitionLogs?.where((e) => e.isSelected).toList();
 
@@ -170,6 +194,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
       }
     }
 
+    _visibleLoadingForLog = false;
     emit(const FoodLogSuccessListenerState());
   }
 
@@ -178,12 +203,16 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
     SpeechToTextUtil.instance.cancel();
   }
 
-  void _updateVoiceLogsAndEmit(Emitter<VoiceLoggingState> emit) {
-    if (_recognitionLogs?.isEmpty ?? true) {
-      emit(const VoiceLogsRecognitionErrorListenerState());
-      return;
-    }
-    emit(VoiceLogsRecognitionSuccessListenerState(data: _recognitionLogs));
-    emit(const RecognizeVoiceLogsBuilderState());
+
+  FutureOr<void> _handleTryAgainEvent(TryAgainEvent event, Emitter<VoiceLoggingState> emit) {
+    _reset();
+    emit(VoiceLoggingInitial());
+  }
+
+  void _reset() {
+    _isListening = false;
+    _isProcessing = false;
+    _recognizedWords = '';
+    _recognitionLogs = null;
   }
 }

@@ -32,7 +32,7 @@ class CustomFoodsBloc extends Bloc<CustomFoodsEvent, CustomFoodsState> {
       DoFoodLogEvent event, Emitter<CustomFoodsState> emit) async {
     final foodRecord = event.foodRecord;
     foodRecord.logMeal();
-    foodRecord.sourceId = '${AppCommonConstants.userFoods}${foodRecord.id}';
+    foodRecord.refCode = '${AppCommonConstants.userFood}${foodRecord.id}';
     await _connector.updateRecord(foodRecord: foodRecord, isNew: true);
     emit(const LogSuccessState());
   }

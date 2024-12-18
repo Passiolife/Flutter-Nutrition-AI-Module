@@ -12,6 +12,7 @@ import '../models/weight_record/weight_record.dart';
 import '../util/database_helper.dart';
 import '../util/date_time_utility.dart';
 import '../util/file_utility.dart';
+import '../util/path_util.dart';
 import 'passio_connector.dart';
 
 class LocalDBConnector implements PassioConnector {
@@ -48,7 +49,6 @@ class LocalDBConnector implements PassioConnector {
     final values = {
       _databaseHelper.colCreatedAt: date,
       _databaseHelper.colData: jsonEncode(foodRecord),
-      _databaseHelper.colSourceId: foodRecord.sourceId,
     };
 
     // If [isNew] is [true] then perform the insert operation.
@@ -321,12 +321,8 @@ class LocalDBConnector implements PassioConnector {
 
   @override
   Future<List<FoodRecord>> fetchUserFoods() async {
-    final formattedFromDate = DateFormat('yyyyMMdd').format(DateTime.now());
-    final formattedEndDate = DateFormat('yyyyMMdd').format(DateTime.now());
     List<Map>? data = await _databaseHelper.database.query(
       _databaseHelper.tblUserFoods,
-      where: '${_databaseHelper.colCreatedAt} BETWEEN ? AND ?',
-      whereArgs: [formattedFromDate, formattedEndDate],
       orderBy: '${_databaseHelper.colId} DESC',
     );
     return data.map((e) {
@@ -346,16 +342,7 @@ class LocalDBConnector implements PassioConnector {
   @override
   Future<String> updateUserFood(
       {required FoodRecord foodRecord, required bool isNew}) async {
-    DateTime? createdAt = foodRecord.getCreatedAt();
-    if (createdAt == null) {
-      return '';
-    }
-
-    final date = createdAt.formatToString(format9);
-    final values = {
-      _databaseHelper.colCreatedAt: date,
-      _databaseHelper.colData: jsonEncode(foodRecord)
-    };
+    final values = {_databaseHelper.colData: jsonEncode(foodRecord)};
 
     // If [isNew] is [true] then perform the insert operation.
     if (isNew) {
@@ -377,15 +364,16 @@ class LocalDBConnector implements PassioConnector {
 
   @override
   Future<void> deleteUserFoodImage({required String id}) async {
-    await _databaseHelper.database.delete(_databaseHelper.tblUserFoodImages,
-        where: '${_databaseHelper.colId} = ?', whereArgs: [id]);
+    String defaultImagesPath = PathUtil.userImagesPath;
+    String customImagePath = '$defaultImagesPath$id.bin';
+    await FileUtility().deleteFile(customImagePath);
   }
 
   @override
   Future<Uint8List?> fetchUserFoodImage({required String id}) async {
-    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-    final fullPath = '${appDocumentsDir.path}/$id.bin';
-    return await FileUtility.readFile(fullPath);
+    String defaultImagesPath = PathUtil.userImagesPath;
+    String customImagePath = '$defaultImagesPath$id.bin';
+    return await FileUtility().readFile(customImagePath);
   }
 
   @override
@@ -394,28 +382,13 @@ class LocalDBConnector implements PassioConnector {
     required Uint8List image,
     required bool isNew,
   }) async {
-    final Directory appDocumentsDir = await getApplicationDocumentsDirectory();
-    final fullPath = '${appDocumentsDir.path}/$id.bin';
-
-    final values = {
-      _databaseHelper.colId: id,
-      _databaseHelper.colData: fullPath,
-    };
-
+    String defaultImagesPath = PathUtil.userImagesPath;
+    String customImagePath = '$defaultImagesPath$id.bin';
     if (isNew) {
-      await FileUtility.writeFile(fullPath, image);
-      await _databaseHelper.database
-          .insert(_databaseHelper.tblUserFoodImages, values);
+      await FileUtility().writeFile(customImagePath, image);
     } else {
-      await FileUtility.updateFile(fullPath, image);
-      await _databaseHelper.database.update(
-        _databaseHelper.tblUserFoodImages,
-        values,
-        where: '${_databaseHelper.colId} = ?',
-        whereArgs: [id],
-      );
+      await FileUtility().updateFile(customImagePath, image);
     }
-
     return;
   }
 
@@ -442,5 +415,80 @@ class LocalDBConnector implements PassioConnector {
       return foodRecord;
     }
     return null;
+  }
+
+  @override
+  Future<List<FoodRecord>> searchUserFoodsByName({required String term}) async {
+    return (await fetchUserFoods())
+        .where((element) =>
+            element.name.toLowerCase().contains(term.toLowerCase()))
+        .toList();
+  }
+
+  @override
+  Future<String> updateUserRecipe({
+    required FoodRecord foodRecord,
+    required bool isNew,
+  }) async {
+    final values = {_databaseHelper.colData: jsonEncode(foodRecord)};
+
+    // If [isNew] is [true] then perform the insert operation.
+    if (isNew) {
+      // await FileUtility().writeFile(
+      //     foodRecord.customImagePath, image);
+
+      final insertId = await _databaseHelper.database
+          .insert(_databaseHelper.tblUserRecipes, values);
+      if (insertId > 0) {
+        foodRecord.id = insertId.toString();
+      }
+    } else {
+      // await FileUtility().updateFile(
+      //     foodRecord.customImagePath, image);
+      await _databaseHelper.database.update(
+        _databaseHelper.tblUserRecipes,
+        values,
+        where: '${_databaseHelper.colId} = ?',
+        whereArgs: [foodRecord.id],
+      );
+    }
+    return foodRecord.id;
+  }
+
+  @override
+  Future<FoodRecord?> fetchUserRecipe({required String id}) async {
+    List<Map>? data = await _databaseHelper.database.query(
+      _databaseHelper.tblUserRecipes,
+      where: '${_databaseHelper.colId} = ?',
+      whereArgs: [id],
+    );
+    final record = data.firstOrNull;
+    if (record != null) {
+      final foodRecord =
+          FoodRecord.fromJson(jsonDecode(record[_databaseHelper.colData]));
+      foodRecord.id = record[_databaseHelper.colId].toString();
+      return foodRecord;
+    }
+    return null;
+  }
+
+  @override
+  Future<List<FoodRecord>> fetchUserRecipes() async {
+    List<Map>? data = await _databaseHelper.database.query(
+      _databaseHelper.tblUserRecipes,
+      orderBy: '${_databaseHelper.colId} DESC',
+    );
+    return data.map((e) {
+      final foodRecordResponse =
+          FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
+      foodRecordResponse.id = e[_databaseHelper.colId].toString();
+      return foodRecordResponse;
+    }).toList();
+  }
+
+  @override
+  Future<void> deleteUserRecipe({required FoodRecord foodRecord}) async {
+    await _databaseHelper.database.delete(_databaseHelper.tblUserRecipes,
+        where: '${_databaseHelper.colId} = ?', whereArgs: [foodRecord.id]);
   }
 }

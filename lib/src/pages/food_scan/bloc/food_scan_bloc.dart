@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
+import '../../../common/extension/passio_nutrition_facts_extension.dart';
 import '../../../common/models/settings/settings.dart';
 
 part 'food_scan_event.dart';
@@ -18,6 +19,8 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
   bool? _previousResultForDrag;
 
   int? _currentMode;
+
+  PassioNutritionFacts? _nutritionFacts;
 
   @override
   void onNutritionFactsRecognized(
@@ -56,7 +59,6 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     on<StartFoodDetectionEvent>(_handleStartFoodDetectionEvent);
     on<StopFoodDetectionEvent>(_handleStopFoodDetectionEvent);
     on<DetectedEvent>(_handleDetectedEvent);
-    on<NutritionFactsDetectedEvent>(_handleNutritionFactsDetectedEvent);
 
     // Scan dialog event
     on<ScanResultDragEvent>(_handleScanResultDragEvent);
@@ -69,6 +71,11 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
     // Barcode Not Recognized Events
     on<ScanNutritionFactsEvent>(_handleScanNutritionFactsEvent);
+
+    // Nutrition Facts Events
+    on<NutritionFactsDetectedEvent>(_handleNutritionFactsDetectedEvent);
+    on<DoNextNutritionFactsEvent>(_handleDoNextNutritionFactsEvent);
+    on<ClearNutritionFactsEvent>(_handleClearNutritionFactsEvent);
   }
 
   FutureOr<void> _handleIntroScreenEvent(
@@ -117,6 +124,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
   FutureOr<void> _handleStopFoodDetectionEvent(
       StopFoodDetectionEvent event, Emitter<FoodScanState> emit) async {
     NutritionAI.instance.stopFoodDetection();
+    NutritionAI.instance.stopNutritionFactsDetection();
   }
 
   FutureOr<void> _handleDetectedEvent(
@@ -162,12 +170,17 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     }
   }
 
-  Future<void> _handleNutritionFactsDetectedEvent(NutritionFactsDetectedEvent event, Emitter<FoodScanState> emit) async {
-    if(event.nutritionFacts==null) {
-      emit(const ScanLoadingState());
-      return;
+  Future<void> _handleNutritionFactsDetectedEvent(
+      NutritionFactsDetectedEvent event, Emitter<FoodScanState> emit) async {
+    if (event.nutritionFacts == null) {
+      if (_nutritionFacts == null) {
+        emit(const ScanLoadingState());
+        return;
+      }
+    } else {
+      _nutritionFacts = event.nutritionFacts;
     }
-    emit(NutritionFactsResultState(nutritionFacts: event.nutritionFacts));
+    emit(NutritionFactsResultState(nutritionFacts: _nutritionFacts));
   }
 
   FutureOr<void> _handleBarcodeNotRecognizedEvent(
@@ -244,8 +257,8 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
   Future<void> _handleDoModeChangeEvent(
       DoModeChangeEvent event, Emitter<FoodScanState> emit) async {
     _currentMode = event.mode;
-    if(_currentMode==1) {
-      add(const DoUpdateCameraZoomLevelEvent(zoomLevel: 2));
+    if (_currentMode == 1) {
+      add(const DoUpdateCameraZoomLevelEvent(zoomLevel: 1.5));
     } else {
       add(const DoUpdateCameraZoomLevelEvent(zoomLevel: 1));
     }
@@ -269,5 +282,28 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     final cameraZoomLevel =
         await NutritionAI.instance.getMinMaxCameraZoomLevel();
     emit(CameraZoomStateLoaded(cameraZoomLevel: cameraZoomLevel));
+  }
+
+  FutureOr<void> _handleDoNextNutritionFactsEvent(
+      DoNextNutritionFactsEvent event, Emitter<FoodScanState> emit) async {
+
+    final nutritionFacts = event.nutritionFacts;
+    if (nutritionFacts == null) {
+      return;
+    }
+
+    emit(const NutritionFactsLoadingNextState());
+
+    PassioFoodItem foodItem = nutritionFacts.toPassioFoodItem();
+
+    final foodRecord =
+        FoodRecord.fromPassioFoodItem(foodItem);
+
+    emit(NutritionFactsSuccessState(foodRecord: foodRecord));
+  }
+
+  FutureOr<void> _handleClearNutritionFactsEvent(ClearNutritionFactsEvent event, Emitter<FoodScanState> emit) {
+    _nutritionFacts = null;
+    emit(ScanLoadingState());
   }
 }

@@ -9,7 +9,11 @@ import '../../../common/util/snackbar_extension.dart';
 typedef OnModeChanged = Function(int mode);
 
 class ScannerModeWidget extends StatelessWidget {
-  ScannerModeWidget({this.initialMode, this.onModeChanged, super.key});
+  ScannerModeWidget({
+    this.initialMode,
+    this.onModeChanged,
+    super.key,
+  });
 
   final int? initialMode;
   final OnModeChanged? onModeChanged;
@@ -30,13 +34,13 @@ class ScannerModeWidget extends StatelessWidget {
   final List<String> _images = [
     AppImages.icFoods,
     AppImages.icBarcode,
-    // AppImages.icNutritionFacts,
+    AppImages.icNutritionFacts,
   ];
 
   List<String?> _getModeNames(BuildContext context) => [
         context.localization?.wholeFoodsMode?.replaceAll('\n', ''),
         context.localization?.barcodeMode?.replaceAll('\n', ''),
-        // context.localization?.nutritionFactsMode?.replaceAll('\n', ''),
+        context.localization?.nutritionFactsMode?.replaceAll('\n', ''),
       ];
 
   @override

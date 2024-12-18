@@ -3,6 +3,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../common/constant/app_constants.dart';
+import '../../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../../common/models/day_log/day_log.dart';
 import '../../../common/models/food_record/food_record.dart';
 import '../../../common/util/context_extension.dart';
@@ -147,6 +148,7 @@ class _ExpansionTile extends StatelessWidget {
       children: foodRecords
           .map(
             (e) => _ExpansionTileChildWidget(
+              foodRecord: e,
               iconId: e.iconId,
               foodName: e.name.toUpperCaseWord,
               foodSize:
@@ -172,6 +174,7 @@ class _ExpansionTileChildWidget extends StatelessWidget {
     this.foodCalories,
     this.onEdit,
     this.onDelete,
+    this.foodRecord,
   });
 
   final String? iconId;
@@ -180,6 +183,7 @@ class _ExpansionTileChildWidget extends StatelessWidget {
   final String? foodCalories;
   final VoidCallback? onEdit;
   final VoidCallback? onDelete;
+  final FoodRecord? foodRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -200,7 +204,12 @@ class _ExpansionTileChildWidget extends StatelessWidget {
             label: context.localization?.edit ?? '',
           ),
           SlidableAction(
-            onPressed: (context) => onDelete?.call(),
+            onPressed: (context) {
+              DeleteConfirmationDialog.show(
+                context: context,
+                onConfirm: () => onDelete?.call()
+              );
+            },
             backgroundColor: AppColors.red500,
             foregroundColor: Colors.white,
             label: context.localization?.delete ?? '',
@@ -219,6 +228,7 @@ class _ExpansionTileChildWidget extends StatelessWidget {
         leading: PassioImageWidget(
           iconId: iconId ?? '',
           radius: AppDimens.r20,
+          foodRecord: foodRecord,
         ),
         title: Text(
           foodName ?? '',

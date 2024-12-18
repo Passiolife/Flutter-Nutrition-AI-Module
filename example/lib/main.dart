@@ -93,7 +93,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     ? ElevatedButton(
                         onPressed: () async {
                           await NutritionAIModule.instance
-                              .setPassioConnector(MyPassioConnector())
+                              // .setPassioConnector(MyPassioConnector())
                               .setAdvisorKey(
                                   AppSecret.advisorKey) // This is optional
                               .launch(context);
@@ -109,7 +109,8 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _initialize() {
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) async {
-      const passioConfig = PassioConfiguration(AppSecret.passioKey, debugMode: 1);
+      const passioConfig =
+          PassioConfiguration(AppSecret.passioKey, debugMode: 1);
       NutritionAI.instance.configureSDK(passioConfig).then((value) async {
         _passioStatus.value = value;
       });
@@ -468,6 +469,39 @@ class MyPassioConnector implements PassioConnector {
   @override
   Future<FoodRecord?> fetchUserFood({required String id}) {
     // TODO: implement fetchUserFood
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<FoodRecord>> searchUserFoodsByName({required String term}) {
+    // TODO: implement searchUserFoodsByName
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<FoodRecord?> fetchUserRecipe({required String id}) {
+    // TODO: implement fetchUserRecipe
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<List<FoodRecord>> fetchUserRecipes() {
+    // TODO: implement fetchUserRecipes
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String> updateUserRecipe({
+    required FoodRecord foodRecord,
+    required bool isNew,
+  }) {
+    // TODO: implement updateUserRecipe
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteUserRecipe({required FoodRecord foodRecord}) {
+    // TODO: implement deleteUserRecipe
     throw UnimplementedError();
   }
 }

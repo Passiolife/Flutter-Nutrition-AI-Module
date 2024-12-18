@@ -9,7 +9,7 @@ import '../../common/util/context_extension.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/util/string_extensions.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
-import '../edit_food/edit_food_page.dart';
+import '../edit_food/ui/edit_food_page.dart';
 import 'bloc/meal_plan_bloc.dart';
 import 'widgets/widgets.dart';
 
@@ -210,12 +210,14 @@ class _MealPlanPageState extends State<MealPlanPage>
       PassioFoodDataInfo? passioFoodDataInfo, PassioMealTime? mealTime) {
     EditFoodPage.navigate(
       context: context,
-      passioFoodDataInfo: passioFoodDataInfo,
-      redirectToDiaryOnLog: true,
-      mealLabel:
-          MealLabel.stringToMealLabel(mealTime?.name.toUpperCaseWord ?? ''),
-      visibleFoodCreator: true,
-      shouldUpdateServingUnit: true,
+      params: EditFoodPageParams(
+        passioFoodDataInfo: passioFoodDataInfo,
+        redirectToDiaryOnLog: true,
+        mealLabel:
+        MealLabel.stringToMealLabel(mealTime?.name.toUpperCaseWord ?? ''),
+        visibleFoodCreator: true,
+        shouldUpdateServingUnit: true,
+      ),
     );
   }
 

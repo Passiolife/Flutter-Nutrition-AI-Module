@@ -57,7 +57,7 @@ class MyProfileBloc extends Bloc<MyProfileEvent, MyProfileState> {
 
   Future<void> _handleDoGenderUpdateEvent(
       DoGenderUpdateEvent event, Emitter<MyProfileState> emit) async {
-    _profileModel?.gender = event.genderSelection;
+    _profileModel?.setGender(event.genderSelection);
     emit(GenderUpdateSuccessState(gender: _profileModel?.gender));
   }
 

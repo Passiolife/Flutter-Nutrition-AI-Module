@@ -11,7 +11,7 @@ import '../../common/util/snackbar_extension.dart';
 import '../../common/util/user_session.dart';
 import '../../common/widgets/bottom_nav_bar_space_widget.dart';
 import '../dashboard/bloc/dashboard_bloc.dart';
-import '../edit_food/edit_food_page.dart';
+import '../edit_food/ui/edit_food_page.dart';
 import 'bloc/diary_bloc.dart';
 import 'widgets/widgets.dart';
 
@@ -39,11 +39,13 @@ class _DiaryPageState extends State<DiaryPage>
   Future<void> onEditRecord(FoodRecord record) async {
     final foodRecord = FoodRecord.fromJson(record.toJson());
     final isUpdated = await EditFoodPage.navigate(
-      foodRecord: foodRecord,
       context: context,
-      isUpdate: true,
-      visibleFoodCreator: true,
-      visibleDelete: true,
+      params: EditFoodPageParams(
+        foodRecord: foodRecord,
+        isUpdate: true,
+        visibleFoodCreator: true,
+        visibleDelete: true,
+      ),
     );
     if (isUpdated != null && isUpdated) {
       _bloc.add(FetchRecordsEvent(dateTime: _selectedDate));
@@ -180,10 +182,12 @@ class _DiaryPageState extends State<DiaryPage>
   Future<void> onTap(QuickSuggestion data) async {
     bool? isLogged = await EditFoodPage.navigate(
       context: context,
-      passioFoodDataInfo: data.passioFoodDataInfo,
-      foodRecord: data.foodRecord,
-      visibleFoodCreator: true,
-      message: context.localization?.itemAddedToDiary,
+      params: EditFoodPageParams(
+        passioFoodDataInfo: data.passioFoodDataInfo,
+        foodRecord: data.foodRecord,
+        visibleFoodCreator: true,
+        message: context.localization?.itemAddedToDiary,
+      ),
     );
     if (isLogged != null && isLogged) {
       _bloc.add(const FetchSuggestionsEvent());

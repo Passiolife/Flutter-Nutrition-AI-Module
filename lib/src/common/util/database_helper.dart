@@ -24,13 +24,12 @@ class DatabaseHelper {
   final String tblWater = 'water';
   final String tblWeight = 'weight';
   final String tblUserFoods = 'user_foods';
-  final String tblUserFoodImages = 'user_food_images';
+  final String tblUserRecipes = 'user_recipes';
 
   /// Table Columns:
   final String colId = 'id';
   final String colData = 'data';
   final String colCreatedAt = 'created_at';
-  final String colSourceId = 'source_id';
 
   Future<void> init() async {
     // Open the database and store the reference.
@@ -51,8 +50,7 @@ class DatabaseHelper {
           CREATE TABLE $tblFoodRecord (
             $colId INTEGER PRIMARY KEY,
             $colData TEXT NOT NULL,
-            $colCreatedAt TEXT NOT NULL,
-            $colSourceId TEXT NULL
+            $colCreatedAt TEXT NOT NULL
           )
           ''');
     // Query for [tblUserProfile].
@@ -75,7 +73,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $tblWater (
             $colId INTEGER PRIMARY KEY,
-            $colData INTEGER NOT NULL,
+            $colData TEXT NOT NULL,
             $colCreatedAt INTEGER NOT NULL
           )
           ''');
@@ -84,7 +82,7 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $tblWeight (
             $colId INTEGER PRIMARY KEY,
-            $colData INTEGER NOT NULL,
+            $colData TEXT NOT NULL,
             $colCreatedAt INTEGER NOT NULL
           )
           ''');
@@ -93,17 +91,15 @@ class DatabaseHelper {
     await db.execute('''
           CREATE TABLE $tblUserFoods (
             $colId INTEGER PRIMARY KEY,
-            $colData INTEGER NOT NULL,
-            $colCreatedAt INTEGER NOT NULL
+            $colData INTEGER NOT NULL
           )
           ''');
 
     // Query for [tblUserFoodImages].
     await db.execute('''
-          CREATE TABLE $tblUserFoodImages (
-            $colId TEXT PRIMARY KEY,
-            $colData INTEGER NOT NULL,
-            $colCreatedAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+          CREATE TABLE $tblUserRecipes (
+            $colId INTEGER PRIMARY KEY,
+            $colData TEXT NOT NULL
           )
           ''');
   }

@@ -173,4 +173,18 @@ abstract interface class PassioConnector {
   });
 
   Future<void> deleteUserFoodImage({required String id});
+
+  Future<List<FoodRecord>> searchUserFoodsByName({required String term});
+
+  Future<String> updateUserRecipe({
+    required FoodRecord foodRecord,
+    required bool isNew,
+  });
+
+  Future<FoodRecord?> fetchUserRecipe({required String id});
+
+  Future<List<FoodRecord>> fetchUserRecipes();
+
+  Future<void> deleteUserRecipe({required FoodRecord foodRecord});
+
 }

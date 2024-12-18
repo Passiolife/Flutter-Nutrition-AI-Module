@@ -182,18 +182,28 @@ class UserProfileModel {
   @JsonKey(includeFromJson: true, includeToJson: true)
   int? _age;
 
-  /// Set the age of the user.
-  void setAge(int? age) {
-    if (_age == age) return;
-    _age = age;
-    int calories = _calculateRecommendedCalorie();
+  /// Updates the calories target.
+  void _updateCaloriesTarget() {
+    final int calories = _calculateRecommendedCalorie();
     if (calories > 0) {
       caloriesTarget = calories;
     }
   }
 
+  /// Set the age of the user.
+  void setAge(int? age) {
+    if (_age == age) return;
+    _age = age;
+    _updateCaloriesTarget();
+  }
+
   /// Get the age of the user.
   int? getAge() => _age;
+
+  void setGender(GenderSelection gender) {
+    this.gender = gender;
+    _updateCaloriesTarget();
+  }
 
   // Weight
   @JsonKey(includeFromJson: true, includeToJson: true)
@@ -206,10 +216,7 @@ class UserProfileModel {
       MeasurementSystem.imperial => (weight ?? 0) / Conversion.kgToLbs.value,
       _ => weight,
     };
-    int calories = _calculateRecommendedCalorie();
-    if (calories > 0) {
-      caloriesTarget = calories;
-    }
+    _updateCaloriesTarget();
   }
 
   /// Get the weight of the user.
@@ -286,12 +293,7 @@ class UserProfileModel {
     if (_activityLevel == activityLevel) return;
     // Set the new activity level.
     _activityLevel = activityLevel;
-    // Recalculate the recommended calorie target.
-    int calories = _calculateRecommendedCalorie();
-    if (calories > 0) {
-      // Update the calorie target if it's positive.
-      caloriesTarget = calories;
-    }
+    _updateCaloriesTarget();
   }
 
   /// Gets the user's activity level.
@@ -326,9 +328,9 @@ class UserProfileModel {
       case MeasurementSystem.metric:
         // If the measurement system is metric, calculate height in meters and centimeters
         int meters = _height?.toInt() ?? 0;
-        int centimeter = (((_height ?? 0) - (_height?.toInt() ?? 0)).round() *
+        int centimeter = (((_height ?? 0) - (_height?.toInt() ?? 0)) *
                 Conversion.centiMeterToMeter.value)
-            .toInt();
+            .round();
         return _height != null
             ? (unit: meters, subunit: centimeter)
             : (unit: 1, subunit: 6);
@@ -367,11 +369,7 @@ class UserProfileModel {
     // Set the new calorie deficit.
     _calorieDeficit = calorieDeficit;
     // Recalculate the recommended calorie target.
-    int calories = _calculateRecommendedCalorie();
-    if (calories > 0) {
-      // Update the calorie target if it's positive.
-      caloriesTarget = calories;
-    }
+    _updateCaloriesTarget();
   }
 
   /// Gets the user's selected calorie deficit.

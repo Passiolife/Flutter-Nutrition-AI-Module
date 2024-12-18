@@ -2,8 +2,6 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -15,7 +13,6 @@ import '../../../../../common/widgets/custom_app_bar_widget.dart';
 import '../../../../../common/widgets/passio_image_widget.dart';
 import '../../../../use_image/select_photo/select_photo_page.dart';
 import '../../../../use_image/take_photo/take_photo_page.dart';
-import '../bloc/food_creator_bloc.dart';
 
 typedef OnChangeFoodDetails = Function(
   Uint8List? image,
@@ -106,9 +103,9 @@ class _FoodDetailsWidgetState extends State<FoodDetailsWidget> {
                       initialBarcode: _barcode,
                       onTapBarcode: widget.onTapBarcode,
                       onChange: (profile, name, brand) {
-                          _name = name;
-                          _brand = brand;
-                          _handleDetailsChange();
+                        _name = name;
+                        _brand = brand;
+                        _handleDetailsChange();
                       },
                     ),
                   ),
@@ -194,7 +191,8 @@ class _EditImageWidgetState extends State<EditImageWidget> {
               builder: (context, value, child) {
                 return AnimatedSwitcher(
                   duration: const Duration(milliseconds: 250),
-                  child: (widget.iconId?.isNotEmpty ?? false) || (value?.isNotEmpty ?? false)
+                  child: (widget.iconId?.isNotEmpty ?? false) ||
+                          (value?.isNotEmpty ?? false)
                       ? PassioImageWidget(
                           key: ObjectKey([widget.iconId, value]),
                           iconId: widget.iconId ?? '',
@@ -299,6 +297,7 @@ class _FormWidgetState extends State<_FormWidget> {
           hintText: context.localization?.enterName,
           controller: nameController,
           inputAction: TextInputAction.next,
+          isMandatory: true,
         ),
         16.verticalSpace,
         _FoodDetailField(
@@ -338,6 +337,7 @@ class _FoodDetailField extends StatelessWidget {
     this.inputAction,
     this.suffix,
     this.onTap,
+    this.isMandatory = false,
   });
 
   final String? title;
@@ -346,18 +346,33 @@ class _FoodDetailField extends StatelessWidget {
   final TextInputAction? inputAction;
   final Widget? suffix;
   final VoidCallback? onTap;
+  final bool isMandatory;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          title ?? '',
-          style: AppTextStyle.textSm.addAll([
-            AppTextStyle.textSm.leading5,
-            AppTextStyle.medium
-          ]).copyWith(color: AppColors.gray500),
+        RichText(
+          text: TextSpan(
+            children: [
+              TextSpan(
+                text: title ?? '',
+                style: AppTextStyle.textSm.addAll([
+                  AppTextStyle.textSm.leading5,
+                  AppTextStyle.medium
+                ]).copyWith(color: AppColors.gray500),
+              ),
+              if(isMandatory)
+              TextSpan(
+                text: ' *',
+                style: AppTextStyle.textSm.addAll([
+                  AppTextStyle.textSm.leading5,
+                  AppTextStyle.medium
+                ]).copyWith(color: AppColors.red500),
+              ),
+            ],
+          ),
         ),
         4.verticalSpace,
         AppTextField(

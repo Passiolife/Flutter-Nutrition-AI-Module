@@ -55,7 +55,6 @@ class FoodRecordIngredient {
     required this.id,
     required this.passioID,
     required this.refCode,
-    required this.sourceId,
     required this.name,
     required this.additionalData,
     required this.iconId,
@@ -65,6 +64,7 @@ class FoodRecordIngredient {
     required this.selectedUnit,
     required this.entityType,
     required this.referenceNutrients,
+    this.sourceId,
     this.openFoodLicense,
     this.barcode,
   });
@@ -76,7 +76,6 @@ class FoodRecordIngredient {
       id: foodRecord.id,
       passioID: foodRecord.passioID,
       refCode: foodRecord.refCode,
-      sourceId: foodRecord.sourceId,
       name: foodRecord.name,
       additionalData: foodRecord.additionalData,
       iconId: foodRecord.iconId,
@@ -98,7 +97,6 @@ class FoodRecordIngredient {
       id: '',
       passioID: ingredient.id,
       refCode: ingredient.refCode,
-      sourceId: null,
       name: ingredient.name,
       additionalData: '',
       iconId: ingredient.iconId,
@@ -208,6 +206,11 @@ class FoodRecordIngredient {
       openFoodLicense,
       barcode,
     );
+  }
+
+  FoodRecordIngredient clone() {
+    final json = toJson();
+    return FoodRecordIngredient.fromJson(json);
   }
 
   /// Calculates the serving weight of the ingredient based on the selected unit and quantity.

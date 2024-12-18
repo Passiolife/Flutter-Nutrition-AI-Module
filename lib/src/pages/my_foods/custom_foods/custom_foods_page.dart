@@ -5,11 +5,13 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../common/constant/app_button_styles.dart';
 import '../../../common/constant/app_colors.dart';
+import '../../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../../common/models/food_record/food_record.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../../common/widgets/app_button.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
+import '../../edit_food/ui/edit_food_page.dart';
 import 'bloc/custom_foods_bloc.dart';
 import 'food_creator/food_creator_page.dart';
 
@@ -85,18 +87,22 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
                           ],
                         ),
                         child: FoodItemRowWidget(
-                          rippleColor: AppColors.white,
-                          padding: EdgeInsets.all(8.r),
-                          index: index,
-                          title: data.name,
-                          iconId: data.iconId,
-                          subtitle: data.additionalData,
-                          onTap: () async {
-                            _doEditRecord(data);
-                          },
-                          onTapAdd: () {
-                            _bloc.add(DoFoodLogEvent(foodRecord: data));
-                          },
+                          data: FoodItemRowData(
+                            rippleColor: AppColors.white,
+                            padding: EdgeInsets.all(8.r),
+                            index: index,
+                            title: data.name,
+                            iconId: data.iconId,
+                            subtitle: data.additionalData,
+                            onTap: () async {
+                              _doShowDetails(data);
+                            },
+                            onTapAdd: () {
+                              _bloc.add(DoFoodLogEvent(foodRecord: data));
+                            },
+                            // TODO: Handle this with true flag.
+                            enableSlidable: false,
+                          ),
                         ),
                       );
                     },
@@ -127,6 +133,18 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
     _fetchUserFoods();
   }
 
+  void _doShowDetails(FoodRecord foodRecord) {
+    EditFoodPage.navigate(
+      context: context,
+      params: EditFoodPageParams(
+        foodRecord: foodRecord,
+        message: context.localization?.itemAddedToDiary,
+        visibleFoodCreator: true,
+        source: 'foodCreator',
+      ),
+    );
+  }
+
   Future<void> _doEditRecord(FoodRecord foodRecord) async {
     final result = await FoodCreatorPage.navigate(
       context: context,
@@ -138,7 +156,10 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
   }
 
   void _doDeleteRecord(FoodRecord foodRecord) {
-    _bloc.add(DoDeleteUserFoodEvent(foodRecord: foodRecord));
+    DeleteConfirmationDialog.show(
+      context: context,
+      onConfirm: () => _bloc.add(DoDeleteUserFoodEvent(foodRecord: foodRecord)),
+    );
   }
 
   void _handleStateChanges(BuildContext context, CustomFoodsState state) {

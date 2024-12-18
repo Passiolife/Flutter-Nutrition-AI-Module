@@ -86,6 +86,11 @@ class AppButtonStyles {
       horizontal: 8.r,
     ),
   );
+
+  static AppButtonModel delete = primary.copyWith(
+    textStyle: primary.textStyle?.copyWith(color: AppColors.white),
+    decoration: primary.decoration?.copyWith(color: AppColors.red500),
+  );
 }
 
 class AppButtonModel {

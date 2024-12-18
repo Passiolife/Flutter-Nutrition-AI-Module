@@ -28,7 +28,7 @@ class MyProfilePage extends StatefulWidget {
 
 class _MyProfilePageState extends State<MyProfilePage>
     implements PersonalInformationListener, NutritionGoalsListener {
-  UserProfileModel? _profileModel;
+  UserProfileModel? _profileModel = UserProfileModel();
 
   final _bloc = MyProfileBloc();
 
@@ -97,7 +97,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                           listener: this,
                         ),
                         16.verticalSpace,
-                        (_profileModel?.recommendedCalories ?? 0) > 0
+                        (_profileModel?.caloriesTarget ?? 0) > 0
                             ? DailyNutritionWidgetWidget(
                                 calories: _profileModel?.caloriesTarget ?? 0,
                                 carbs: _profileModel?.carbsPercentage ?? 0,
@@ -115,7 +115,7 @@ class _MyProfilePageState extends State<MyProfilePage>
                               )
                             : const SizedBox.shrink(),
                         16.verticalSpace,
-                        (_profileModel?.recommendedCalories ?? 0) > 0
+                        (_profileModel?.caloriesTarget ?? 0) > 0
                             ? CalculatedBMIWidget(
                                 value: _profileModel?.bmi,
                               )

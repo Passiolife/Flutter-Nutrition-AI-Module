@@ -4,7 +4,9 @@ sealed class FoodCreatorState extends Equatable {
   const FoodCreatorState();
 }
 
-final class FoodCreatorInitial extends FoodCreatorState {
+final class FoodCreatorInitialState extends FoodCreatorState {
+  const FoodCreatorInitialState();
+
   @override
   List<Object> get props => [];
 }

@@ -2,7 +2,8 @@ import 'package:flutter/foundation.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../constant/app_common_constants.dart';
-import '../../extension/map_extension.dart';
+import '../../util/file_utility.dart';
+import '../../util/path_util.dart';
 import 'food_record_ingredient.dart';
 import 'meal_label.dart';
 
@@ -16,9 +17,6 @@ class FoodRecord {
 
   /// A reference code serving as a unique identifier for the food item.
   String refCode;
-
-  /// The reference ID of the place from which this entry is logged.
-  String? sourceId;
 
   /// Name of the food item.
   String name;
@@ -64,6 +62,18 @@ class FoodRecord {
 
   String? barcode;
 
+  /// Custom user food Members
+  static const userFoodPrefix = 'user_food';
+  bool get isUserFoodIcon => iconId.startsWith(userFoodPrefix);
+  bool get hasUserFoodReference => refCode.startsWith(userFoodPrefix);
+  String get foodIdFromRefCode => refCode.replaceFirst(userFoodPrefix, '');
+
+  /// Custom user recipe Members
+  static const String userRecipePrefix = 'user_recipe';
+  bool get iconIsUserRecipe => iconId.startsWith(userRecipePrefix);
+  bool get hasUserRecipeReference => refCode.startsWith(userRecipePrefix);
+  String get recipeIdFromRefCode => refCode.replaceFirst(userRecipePrefix, '');
+
   /// Sets the selected unit for the food item while keeping the weight consistent.
   bool setSelectedUnitKeepWeight(String unit) {
     if (_selectedUnit == unit) return true;
@@ -85,7 +95,6 @@ class FoodRecord {
     this.id,
     this.passioID,
     this.refCode,
-    this.sourceId,
     this.name,
     this.additionalData,
     this.iconId,
@@ -101,6 +110,24 @@ class FoodRecord {
     this.barcode,
   });
 
+  factory FoodRecord.empty() {
+    return FoodRecord._(
+      '',
+      '',
+      '',
+      '',
+      '',
+      '',
+      [],
+      [],
+      0,
+      '',
+      PassioIDEntityType.item,
+      [],
+      null,
+    );
+  }
+
   /// Factory constructor to create a FoodRecord from a FoodRecordIngredient instance.
   factory FoodRecord.fromFoodRecordIngredient(FoodRecordIngredient ingredient,
       {PassioIDEntityType entityType = PassioIDEntityType.item}) {
@@ -108,7 +135,6 @@ class FoodRecord {
       ingredient.id,
       ingredient.passioID,
       ingredient.refCode,
-      ingredient.sourceId,
       ingredient.name,
       ingredient.additionalData,
       ingredient.iconId,
@@ -134,7 +160,6 @@ class FoodRecord {
       '',
       foodItem.id,
       foodItem.refCode,
-      null,
       foodItem.name,
       foodItem.details,
       foodItem.iconId,
@@ -142,7 +167,7 @@ class FoodRecord {
       foodItem.amount.servingUnits,
       foodItem.amount.selectedQuantity,
       foodItem.amount.selectedUnit,
-      entityType,
+      foodItem.ingredients.length <= 1 ? entityType : PassioIDEntityType.recipe,
       foodItem.ingredients
           .map(FoodRecordIngredient.fromPassioIngredient)
           .toList(),
@@ -164,7 +189,6 @@ class FoodRecord {
         json['id'] as String,
         json['passioID'] as String,
         json['refCode'] as String,
-        json.ifValueNotNull<String?>('sourceId'),
         json['name'] as String,
         json['additionalData'] as String,
         json['iconId'] as String,
@@ -204,7 +228,6 @@ class FoodRecord {
         'id': id,
         'passioID': passioID,
         'refCode': refCode,
-        'sourceId': sourceId,
         'name': name,
         'additionalData': additionalData,
         'iconId': iconId,
@@ -267,6 +290,11 @@ class FoodRecord {
         openFoodLicense,
         barcode,
       );
+
+  FoodRecord clone() {
+    var json = toJson();
+    return FoodRecord.fromJson(json);
+  }
 
   /// Calculates the quantity of ingredients based on the ratio of serving weight to ingredient weight.
   void _calculateQuantityForIngredients() {
@@ -412,7 +440,16 @@ class FoodRecord {
     mealLabel = MealLabel.dateToMealLabel(dateTime);
   }
 
-  void setCreatedAt(DateTime dateTime) {
+  void removeMeal() {
+    _createdAt = null;
+    mealLabel = null;
+  }
+
+  void setCreatedAt(DateTime? dateTime) {
+    if (dateTime == null) {
+      _createdAt = null;
+      return;
+    }
     _createdAt = dateTime.toUtc().millisecondsSinceEpoch;
   }
 
@@ -679,5 +716,65 @@ extension FoodRecordExtension on FoodRecord {
   /// Retrieves the total vitamin K (dihydrophylloquinone) content in the food record based on the selected serving size.
   double get totalVitaminKDihydrophylloquinone {
     return nutrientsSelectedSize().vitaminKDihydrophylloquinone?.value ?? 0;
+  }
+
+  double get totalVitaminARAE {
+    return nutrientsSelectedSize().vitaminARAE?.value ?? 0;
+  }
+}
+
+extension CustomRecipeExtension on FoodRecord {
+  /// Add Ingredient
+  void addRecipeIngredientFromFoodRecord({required FoodRecord foodRecord}) {
+    final ingredient = FoodRecordIngredient.fromFoodRecord(foodRecord);
+    addRecipeIngredient(ingredient: ingredient);
+  }
+
+  void addRecipeIngredient({required FoodRecordIngredient ingredient}) {
+    ingredients.add(ingredient);
+    updateServingUnits();
+    updateServingSizes();
+  }
+
+  /// Update Ingredient
+  void updateRecipeIngredientFromFoodRecord(
+      {required int index, required FoodRecord foodRecord}) {
+    final ingredient = FoodRecordIngredient.fromFoodRecord(foodRecord);
+    updateRecipeIngredient(index: index, ingredient: ingredient);
+  }
+
+  void updateRecipeIngredient(
+      {required int index, required FoodRecordIngredient ingredient}) {
+    ingredients[index] = ingredient;
+    updateServingUnits();
+    updateServingSizes();
+  }
+
+  // Remove Ingredient
+  FoodRecord? removeRecipeIngredient({required int index}) {
+    ingredients.removeAt(index);
+    if (ingredients.isEmpty) {
+      return null;
+    }
+    updateServingUnits();
+    updateServingSizes();
+    return this;
+  }
+
+  void updateServingUnits() {
+    final weight = UnitMass(
+        ingredientWeight().gramsValue() / getSelectedQuantity(),
+        UnitMassType.grams);
+    servingUnits = [
+      PassioServingUnit('Serving', weight),
+      PassioServingUnit('Gram', UnitMass(1, UnitMassType.grams)),
+    ];
+  }
+
+  void updateServingSizes() {
+    servingSizes = [
+      PassioServingSize(1, 'Serving'),
+      PassioServingSize(100, 'Gram'),
+    ];
   }
 }

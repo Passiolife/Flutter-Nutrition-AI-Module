@@ -7,6 +7,7 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 import '../../nutrition_ai_module_sdk.dart';
 import '../constant/app_common_constants.dart';
 import '../constant/app_images.dart';
+import '../models/food_record/food_record.dart';
 
 class PassioImageWidget extends StatefulWidget {
   const PassioImageWidget({
@@ -16,6 +17,7 @@ class PassioImageWidget extends StatefulWidget {
     this.iconSize = IconSize.px90,
     this.radius = 30,
     this.heroTag,
+    this.foodRecord,
     super.key,
   });
 
@@ -25,22 +27,21 @@ class PassioImageWidget extends StatefulWidget {
   final IconSize iconSize;
   final double radius;
   final Object? heroTag;
+  final FoodRecord? foodRecord;
 
   @override
   State<PassioImageWidget> createState() => _PassioImageWidgetState();
 }
 
 class _PassioImageWidgetState extends State<PassioImageWidget> {
-  final ValueNotifier<Uint8List?> _image = ValueNotifier(null);
+  late ValueNotifier<Uint8List?> _image;
 
   bool get _isRecipeIcon =>
       widget.iconId.startsWith(AppCommonConstants.recipePrefix);
 
-  bool get _isUserFoodIcon =>
-      widget.iconId.startsWith(AppCommonConstants.userFoods);
-
   @override
   void initState() {
+    _image = ValueNotifier(null);
     _fetchImage();
     super.initState();
   }
@@ -79,7 +80,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
     }
     if (_isRecipeIcon) {
       return;
-    } else if (_isUserFoodIcon) {
+    } else if(widget.iconId.startsWith(FoodRecord.userFoodPrefix) || widget.iconId.startsWith(FoodRecord.userRecipePrefix)) {
       final result = await NutritionAIModule.instance.configuration.connector
           .fetchUserFoodImage(id:  widget.iconId);
       _image.value = result;

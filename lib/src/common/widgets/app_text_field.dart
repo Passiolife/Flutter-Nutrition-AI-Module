@@ -40,6 +40,8 @@ class AppTextField extends StatelessWidget {
     this.borderColor = AppColors.gray300,
     this.cursorColor = AppColors.indigo600Main,
     this.textCapitalization = TextCapitalization.none,
+    this.autoValidateMode,
+    this.initialValue,
     super.key,
   });
 
@@ -77,6 +79,8 @@ class AppTextField extends StatelessWidget {
   final int? maxLength;
   final ValueChanged<String>? onChanged;
   final TextCapitalization textCapitalization;
+  final AutovalidateMode? autoValidateMode;
+  final String? initialValue;
 
   @override
   Widget build(BuildContext context) {
@@ -85,10 +89,12 @@ class AppTextField extends StatelessWidget {
       height: height,
       decoration: AppShadows.sm,
       child: TextFormField(
+        initialValue: initialValue,
         textCapitalization: textCapitalization,
         onChanged: onChanged,
         autofocus: autofocus,
         inputFormatters: inputFormatters,
+        autovalidateMode: autoValidateMode,
         onTapOutside: onTapOutside ??
             (_) {
               context.hideKeyboard();

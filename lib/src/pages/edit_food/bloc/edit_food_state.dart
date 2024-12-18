@@ -156,3 +156,25 @@ class UserFoodFetchFailureState extends EditFoodState {
   @override
   List<Object?> get props => [logUpdateOnCreate];
 }
+
+class UserRecipeFetchSuccessState extends EditFoodState {
+  const UserRecipeFetchSuccessState({
+    required this.logUpdateOnCreate,
+    this.userRecipeRecord,
+  });
+
+  final FoodRecord? userRecipeRecord;
+  final bool logUpdateOnCreate;
+
+  @override
+  List<Object?> get props => [logUpdateOnCreate, userRecipeRecord];
+}
+
+class UserRecipeFetchFailureState extends EditFoodState {
+  const UserRecipeFetchFailureState({required this.logUpdateOnCreate});
+
+  final bool logUpdateOnCreate;
+
+  @override
+  List<Object?> get props => [logUpdateOnCreate];
+}

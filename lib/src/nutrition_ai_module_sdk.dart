@@ -8,6 +8,7 @@ import 'common/constant/app_constants.dart';
 import 'common/locale/app_localizations.dart';
 import 'common/models/user_profile/user_profile_model.dart';
 import 'common/util/database_helper.dart';
+import 'common/util/path_util.dart';
 import 'common/util/preference_store.dart';
 import 'common/util/user_session.dart';
 import 'nutrition_ai_module_configuration.dart';
@@ -80,6 +81,8 @@ class NutritionAIModule {
 
     // Initialize preference store.
     await PreferenceStore.instance.init();
+
+    await PathUtil.initialize();
 
     // Getting user profile from connector.
     final userProfile = await configuration.connector.fetchUserProfile();

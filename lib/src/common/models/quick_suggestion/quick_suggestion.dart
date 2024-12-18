@@ -51,7 +51,7 @@ class QuickSuggestion {
 
     // Create QuickSuggestion objects for unique records
     final quickSuggestions =
-        uniqueRecords.map((e) => QuickSuggestion(foodRecord: e)).toList();
+        uniqueRecords.map((e) => QuickSuggestion(foodRecord: e..removeMeal())).toList();
 
     return quickSuggestions;
   }

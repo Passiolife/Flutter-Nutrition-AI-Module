@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
@@ -41,11 +43,9 @@ class SpeechToTextUtil {
       listenOptions:
           stt.SpeechListenOptions(listenMode: stt.ListenMode.dictation),
       onResult: (result) {
-        if (result.finalResult && finalResult) {
-          recognizedWords?.call(result.recognizedWords);
-        } else if (!result.finalResult) {
-          recognizedWords?.call(result.recognizedWords);
-        }
+        log(result.recognizedWords);
+        recognizedWords?.call(result.recognizedWords);
+        return;
       },
     );
   }

@@ -92,15 +92,18 @@ class MealWidget extends StatelessWidget {
             itemBuilder: (context, index) {
               final data = isLoading ? null : listOfFoodData?.elementAt(index);
               return FoodItemRowWidget(
-                decoration: const BoxDecoration(),
-                isLoading: isLoading,
-                index: index,
-                iconId: data?.iconID,
-                title: data?.foodName.toUpperCaseWord,
-                subtitle:
-                    '${data?.nutritionPreview.servingQuantity.format() ?? ''} ${data?.nutritionPreview.servingUnit.toUpperCaseWord ?? ''} (${data?.nutritionPreview.weightQuantity.format()} ${data?.nutritionPreview.weightUnit}) | ${data?.nutritionPreview.calories ?? 0} ${context.localization?.cal.toUpperCaseWord ?? ''}',
-                onTap: () => listener?.onTappedMealItem(data, mealTime),
-                onTapAdd: () => listener?.onTappedAdd(data, mealTime),
+                data: FoodItemRowData(
+                  decoration: const BoxDecoration(),
+                  isLoading: isLoading,
+                  index: index,
+                  iconId: data?.iconID,
+                  title: data?.foodName.toUpperCaseWord,
+                  subtitle:
+                      '${data?.nutritionPreview.servingQuantity.format() ?? ''} ${data?.nutritionPreview.servingUnit.toUpperCaseWord ?? ''} (${data?.nutritionPreview.weightQuantity.format()} ${data?.nutritionPreview.weightUnit}) | ${data?.nutritionPreview.calories ?? 0} ${context.localization?.cal.toUpperCaseWord ?? ''}',
+                  onTap: () => listener?.onTappedMealItem(data, mealTime),
+                  onTapAdd: () => listener?.onTappedAdd(data, mealTime),
+                  enableSlidable: false,
+                ),
               );
             },
             separatorBuilder: (context, index) {

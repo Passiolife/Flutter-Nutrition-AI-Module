@@ -10,8 +10,11 @@ import '../../../common/constant/app_constants.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
+import '../../../common/util/show_widget_util.dart';
 import '../../../common/util/snackbar_extension.dart';
+import '../../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
 import '../../dashboard/dashboard_page.dart';
+import '../../food_search/food_search_page.dart';
 import 'bloc/take_photo_bloc.dart';
 import 'dialogs/intro_dialog.dart';
 import 'widgets/widgets.dart';
@@ -123,7 +126,7 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
                         height: 380.h,
                       ),
                     ),
-                    _advisorFoodInfoList != null
+                    _advisorFoodInfoList?.isNotEmpty ?? false
                         ? ResultWidget(
                             title: context.localization?.result ?? '',
                             subtitle: ((_advisorFoodInfoList?.length ?? 0) > 0)
@@ -144,20 +147,19 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
                               final title = foodDataInfo?.foodName ?? '';
                               final calories =
                                   foodDataInfo?.nutritionPreview.calories ?? 0;
-                              final weightQuantity = foodDataInfo
-                                      ?.nutritionPreview.weightQuantity ??
-                                  0;
-                              final caloriesPerGram = calories / weightQuantity;
-                              final weightGrams = advisorInfo?.weightGrams ?? 0;
-                              final caloriesForPortionSize =
-                                  caloriesPerGram * weightGrams;
-                              final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
+
+                              final servingQuantity =
+                                  foodDataInfo?.nutritionPreview.servingQuantity ?? 0;
+                              final servingUnit = foodDataInfo?.nutritionPreview.servingUnit ?? '';
+                              final formattedWeight = '$servingQuantity $servingUnit';
+
                               final subtitle =
-                                  '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                                  '$formattedWeight | $calories ${context.localization?.cal}';
 
                               final isSelected = data?.isSelected ?? false;
 
                               return FoodItemRowWidget(
+                                data: FoodItemRowData(
                                 iconId: iconId,
                                 title: title,
                                 subtitle: subtitle,
@@ -182,6 +184,8 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
                                         index: index));
                                   }
                                 },
+                                enableSlidable: false,
+                                ),
                               );
                             },
                             emptyBuilder: () {
@@ -254,6 +258,24 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
         case RecognizeImageSuccessListenerState():
           _isNextLoading = false;
           _advisorFoodInfoList = state.data;
+          _originalImages.clear();
+          _thumbImages.clear();
+          if(_advisorFoodInfoList?.isEmpty ?? true) {
+            ShowWidgetUtil.showCustomModalBottomSheet(
+              context: context,
+              builder: (bsContext) {
+                return NoResultsFoundBottomSheet(
+                  height: 222.h,
+                  onTapNegative: () {
+                    Navigator.pop(bsContext);
+                  },
+                  onTapPositive: () {
+                    _onTapSearch(context: context);
+                  },
+                );
+              },
+            );
+          }
           break;
         case FoodLogLoadingListenerState():
           _visibleLoadingForLog = true;
@@ -285,6 +307,10 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
           break;
       }
     }
+  }
+
+  void _onTapSearch({required BuildContext context}) {
+    FoodSearchPage.navigate(context, needsReturn: false);
   }
 
   Future<void> _takePicture() async {

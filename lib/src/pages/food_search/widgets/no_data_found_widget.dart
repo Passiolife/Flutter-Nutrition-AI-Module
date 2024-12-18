@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
+import '../../../common/constant/app_padding.dart';
 import '../../../common/util/context_extension.dart';
 
 class NoDataFoundWidget extends StatelessWidget {
@@ -12,14 +13,11 @@ class NoDataFoundWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: AppShadows.customShadow,
-      margin: EdgeInsets.symmetric(
-        horizontal: AppDimens.w16,
-        vertical: AppDimens.h8,
-      ),
-      padding: EdgeInsets.symmetric(
-        horizontal: AppDimens.r8,
-        vertical: AppDimens.h16,
-      ),
+      // padding: EdgeInsets.symmetric(
+      //   horizontal: AppDimens.r8,
+      //   vertical: AppDimens.h16,
+      // ),
+      padding: AppPadding.ph8 + AppPadding.pv16,
       child: Row(
         children: [
           SvgPicture.asset(

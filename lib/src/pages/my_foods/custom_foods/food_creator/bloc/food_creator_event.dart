@@ -7,16 +7,23 @@ sealed class FoodCreatorEvent extends Equatable {
 final class DoConversionEvent extends FoodCreatorEvent {
   final FoodRecord? loggedFoodRecord;
   final FoodRecord? userFoodRecord;
+  final PassioNutritionFacts? nutritionFacts;
   final bool logUponCreate;
 
   const DoConversionEvent({
     this.loggedFoodRecord,
     this.userFoodRecord,
+    this.nutritionFacts,
     required this.logUponCreate,
   });
 
   @override
-  List<Object?> get props => [loggedFoodRecord, userFoodRecord, logUponCreate];
+  List<Object?> get props => [
+        loggedFoodRecord,
+        userFoodRecord,
+        nutritionFacts,
+        logUponCreate,
+      ];
 }
 
 final class DoUpdateFoodDetailsEvent extends FoodCreatorEvent {

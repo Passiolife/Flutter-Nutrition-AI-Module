@@ -11,12 +11,14 @@ import '../../../common/constant/app_colors.dart';
 import '../../../common/constant/app_text_styles.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
 import '../../../common/util/context_extension.dart';
-import '../../../common/util/double_extensions.dart';
 import '../../../common/util/permission_manager_utility.dart';
+import '../../../common/util/show_widget_util.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../../common/util/string_extensions.dart';
+import '../../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 import '../../dashboard/dashboard_page.dart';
+import '../../food_search/food_search_page.dart';
 import 'bloc/select_photo_bloc.dart';
 import 'widgets/widgets.dart';
 
@@ -125,107 +127,102 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
                       ),
                     );
                   }),
-              _isResultLoading
-                  ? Positioned(
-                      left: 0,
-                      right: 0,
-                      bottom: context.bottomPadding.h + (context.height * 0.1),
-                      child: const GeneratingResultsWidget(),
-                    )
-                  : _advisorFoodInfoList != null
-                      ? ResultWidget(
-                          title: context.localization?.result ?? '',
-                          subtitle: ((_advisorFoodInfoList?.length ?? 0) > 0)
-                              ? context.localization?.resultDescription ?? ''
-                              : '',
-                          data: _advisorFoodInfoList,
-                          clearVisible:
-                              _advisorFoodInfoList?.hasSelectedItems() ?? false,
-                          itemBuilder: (BuildContext context, int index) {
-                            final data = _advisorFoodInfoList?.elementAt(index);
+              if (_isResultLoading)
+                Positioned(
+                  left: 0,
+                  right: 0,
+                  bottom: context.bottomPadding.h + (context.height * 0.1),
+                  child: const GeneratingResultsWidget(),
+                )
+              else if (_advisorFoodInfoList?.isNotEmpty ?? false)
+                ResultWidget(
+                  title: context.localization?.result ?? '',
+                  subtitle: ((_advisorFoodInfoList?.length ?? 0) > 0)
+                      ? context.localization?.resultDescription ?? ''
+                      : '',
+                  data: _advisorFoodInfoList,
+                  clearVisible:
+                      _advisorFoodInfoList?.hasSelectedItems() ?? false,
+                  itemBuilder: (BuildContext context, int index) {
+                    final data = _advisorFoodInfoList?.elementAt(index);
 
-                            final advisorInfo = data?.advisorFoodInfoModel;
+                    final advisorInfo = data?.advisorFoodInfoModel;
 
-                            final foodDataInfo = advisorInfo?.foodDataInfo;
-                            final iconId = foodDataInfo?.iconID ?? '';
-                            final title = foodDataInfo?.foodName ?? '';
-                            final calories =
-                                foodDataInfo?.nutritionPreview.calories ?? 0;
-                            final weightQuantity =
-                                foodDataInfo?.nutritionPreview.weightQuantity ??
-                                    0;
-                            final caloriesPerGram = calories / weightQuantity;
-                            final weightGrams = advisorInfo?.weightGrams ?? 0;
-                            final caloriesForPortionSize =
-                                caloriesPerGram * weightGrams;
-                            final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
-                            final subtitle =
-                                '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                    final foodDataInfo = advisorInfo?.foodDataInfo;
+                    final iconId = foodDataInfo?.iconID ?? '';
+                    final title = foodDataInfo?.foodName ?? '';
+                    final calories =
+                        foodDataInfo?.nutritionPreview.calories ?? 0;
 
-                            final isSelected = data?.isSelected ?? false;
+                    final servingQuantity =
+                        foodDataInfo?.nutritionPreview.servingQuantity ?? 0;
+                    final servingUnit =
+                        foodDataInfo?.nutritionPreview.servingUnit ?? '';
+                    final formattedWeight = '$servingQuantity $servingUnit';
 
-                            return FoodItemRowWidget(
-                              iconId: iconId,
-                              title: title,
-                              subtitle: subtitle,
-                              isAddVisible: false,
-                              padding: EdgeInsets.zero,
-                              decoration: BoxDecoration(color: isSelected ? AppColors.indigo50: null),
-                              suffix: IconButton(
-                                onPressed: () {
-                                  if (data != null) {
-                                    _bloc.add(UpdateSelectionEvent(
-                                        data: _advisorFoodInfoList,
-                                        index: index));
-                                  }
-                                },
-                                icon:
-                                    SelectionIndicator(isSelected: isSelected),
-                              ),
-                              onTap: () {
-                                if (data != null) {
-                                  _bloc.add(UpdateSelectionEvent(
-                                      data: _advisorFoodInfoList,
-                                      index: index));
-                                }
-                              },
-                            );
+                    final subtitle =
+                        '$formattedWeight | $calories ${context.localization?.cal}';
+
+                    final isSelected = data?.isSelected ?? false;
+
+                    return FoodItemRowWidget(
+                      data: FoodItemRowData(
+                        iconId: iconId,
+                        title: title,
+                        subtitle: subtitle,
+                        isAddVisible: false,
+                        padding: EdgeInsets.zero,
+                        decoration: BoxDecoration(
+                            color: isSelected ? AppColors.indigo50 : null),
+                        suffix: IconButton(
+                          onPressed: () {
+                            if (data != null) {
+                              _bloc.add(UpdateSelectionEvent(
+                                  data: _advisorFoodInfoList, index: index));
+                            }
                           },
-                          emptyBuilder: () {
-                            return Center(
-                              child: Text(
-                                context.localization?.noResultsFound ?? '',
-                                style: AppTextStyle.textSm,
-                              ),
-                            );
-                          },
-                          onCalculateResultSize: (size) {
-                            _gridSize.value = 1 - size;
-                          },
-                          onClear: () {
-                            _bloc.add(ClearSelectionEvent(
-                                data: _advisorFoodInfoList));
-                          },
-                          neutralButtonText: context.localization?.reselect,
-                          onNeutralClick: () {
-                            _checkPermission(
-                                from: context.localization?.reselect);
-                          },
-                          negativeButtonText: context.localization?.cancel,
-                          onNegativeClick: () {
-                            Navigator.pop(context);
-                          },
-                          positiveButtonText: context.localization?.logSelected,
-                          positiveButtonEnabled:
-                              _advisorFoodInfoList?.hasSelectedItems() ?? false,
-                          visibleLoadingForPositiveButton:
-                              _visibleLoadingForLog,
-                          onPositiveClick: () {
-                            _bloc.add(
-                                DoFoodLogEvent(data: _advisorFoodInfoList));
-                          },
-                        )
-                      : const SizedBox.shrink(),
+                          icon: SelectionIndicator(isSelected: isSelected),
+                        ),
+                        onTap: () {
+                          if (data != null) {
+                            _bloc.add(UpdateSelectionEvent(
+                                data: _advisorFoodInfoList, index: index));
+                          }
+                        },
+                        enableSlidable: false,
+                      ),
+                    );
+                  },
+                  emptyBuilder: () {
+                    return Center(
+                      child: Text(
+                        context.localization?.noResultsFound ?? '',
+                        style: AppTextStyle.textSm,
+                      ),
+                    );
+                  },
+                  onCalculateResultSize: (size) {
+                    _gridSize.value = 1 - size;
+                  },
+                  onClear: () {
+                    _bloc.add(ClearSelectionEvent(data: _advisorFoodInfoList));
+                  },
+                  neutralButtonText: context.localization?.reselect,
+                  onNeutralClick: () {
+                    _checkPermission(from: context.localization?.reselect);
+                  },
+                  negativeButtonText: context.localization?.cancel,
+                  onNegativeClick: () {
+                    Navigator.pop(context);
+                  },
+                  positiveButtonText: context.localization?.logSelected,
+                  positiveButtonEnabled:
+                      _advisorFoodInfoList?.hasSelectedItems() ?? false,
+                  visibleLoadingForPositiveButton: _visibleLoadingForLog,
+                  onPositiveClick: () {
+                    _bloc.add(DoFoodLogEvent(data: _advisorFoodInfoList));
+                  },
+                )
             ],
           ),
         );
@@ -293,6 +290,23 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
         case RecognizeImageSuccessListenerState():
           _isResultLoading = false;
           _advisorFoodInfoList = state.data;
+          if(_advisorFoodInfoList?.isEmpty ?? true) {
+            ShowWidgetUtil.showCustomModalBottomSheet(
+              context: context,
+              builder: (bsContext) {
+                return NoResultsFoundBottomSheet(
+                  height: 222.h,
+                  onTapNegative: () {
+                    Navigator.pop(bsContext);
+                    _checkPermission();
+                  },
+                  onTapPositive: () {
+                    _onTapSearch(context: context);
+                  },
+                );
+              },
+            );
+          }
           break;
         case RecognizeImageFailureListenerState():
           context.showSnackbar(
@@ -318,6 +332,10 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
           break;
       }
     }
+  }
+
+  void _onTapSearch({required BuildContext context}) {
+    FoodSearchPage.navigate(context, needsReturn: false);
   }
 
   int _calculateCrossAxisCount(int itemCount) {

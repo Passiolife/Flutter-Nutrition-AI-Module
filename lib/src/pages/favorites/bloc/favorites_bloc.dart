@@ -22,7 +22,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   Future<void> _handleGetAllFavoritesEvent(
       GetAllFavoritesEvent event, Emitter<FavoritesState> emit) async {
     try {
-      final result = await _connector.fetchFavorites();
+      List<FoodRecord>? result = await _connector.fetchFavorites();
       // No any error, so emit the success state.
       emit(GetAllFavouritesSuccessState(data: result));
     } catch (e) {

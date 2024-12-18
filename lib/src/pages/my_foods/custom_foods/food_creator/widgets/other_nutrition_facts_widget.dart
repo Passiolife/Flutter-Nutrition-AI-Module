@@ -9,7 +9,8 @@ import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/dialogs/ok_button_with_keyboard.dart';
 import '../../../../../common/util/context_extension.dart';
-import '../../../../../common/util/string_extensions.dart';
+import '../../../../../common/util/double_extensions.dart';
+import '../../../../../common/util/string_extensions.dart' as string_extensions;
 import '../../../../../common/util/text_input_formatter_util.dart';
 import '../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../common/widgets/app_text_field.dart';
@@ -18,30 +19,9 @@ import '../view_models/nutrient_view_model.dart';
 class OtherNutritionFactsWidget extends StatefulWidget {
   const OtherNutritionFactsWidget({
     this.viewModel,
-    // this.satFat,
-    // this.transFat,
-    // this.cholesterol,
-    // this.sodium,
-    // this.dietaryFiber,
-    // this.totalSugars,
-    // this.addedSugar,
-    // this.vitaminD,
-    // this.calcium,
-    // this.potassium,
     this.onChanged,
     super.key,
   });
-
-  // final Unit? satFat;
-  // final Unit? transFat;
-  // final Unit? cholesterol;
-  // final Unit? sodium;
-  // final Unit? dietaryFiber;
-  // final Unit? totalSugars;
-  // final Unit? addedSugar;
-  // final Unit? vitaminD;
-  // final Unit? calcium;
-  // final Unit? potassium;
 
   final FoodCreatorViewModel? viewModel;
 
@@ -57,52 +37,52 @@ class _OtherNutritionFactsWidgetState extends State<OtherNutritionFactsWidget> {
         NutrientViewModel(
           label: context.localization?.saturatedFat ?? '',
           type: UnitMassType.grams,
-          value: '${widget.viewModel?.satFat?.value ?? ''}',
+          value: widget.viewModel?.satFat?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.transFat ?? '',
           type: UnitMassType.grams,
-          value: '${widget.viewModel?.transFat?.value ?? ''}',
+          value: widget.viewModel?.transFat?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.cholesterol ?? '',
           type: UnitMassType.milligrams,
-          value: '${widget.viewModel?.cholesterol?.value ?? ''}',
+          value: widget.viewModel?.cholesterol?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.sodium ?? '',
           type: UnitMassType.milligrams,
-          value: '${widget.viewModel?.sodium?.value ?? ''}',
+          value: widget.viewModel?.sodium?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.dietaryFiber ?? '',
           type: UnitMassType.grams,
-          value: '${widget.viewModel?.dietaryFiber?.value ?? ''}',
+          value: widget.viewModel?.dietaryFiber?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.totalSugars ?? '',
           type: UnitMassType.grams,
-          value: '${widget.viewModel?.totalSugars?.value ?? ''}',
+          value: widget.viewModel?.totalSugars?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.addedSugar ?? '',
           type: UnitMassType.grams,
-          value: '${widget.viewModel?.addedSugars?.value ?? ''}',
+          value: widget.viewModel?.addedSugars?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.vitaminD ?? '',
           type: UnitMassType.micrograms,
-          value: '${widget.viewModel?.vitaminD?.value ?? ''}',
+          value: widget.viewModel?.vitaminD?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.calcium ?? '',
           type: UnitMassType.milligrams,
-          value: '${widget.viewModel?.calcium?.value ?? ''}',
+          value: widget.viewModel?.calcium?.value.format(places: 2) ?? '',
         ),
         NutrientViewModel(
           label: context.localization?.potassium ?? '',
           type: UnitMassType.milligrams,
-          value: '${widget.viewModel?.potassium?.value ?? ''}',
+          value: widget.viewModel?.potassium?.value.format(places: 2) ?? '',
         ),
       ]..removeWhere(
           (e) => _addedEntries.value.any((added) => added.label == e.label));
@@ -120,47 +100,10 @@ class _OtherNutritionFactsWidgetState extends State<OtherNutritionFactsWidget> {
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _addedEntries.value.addAll(_getNutrients().where((e) => e.value.isNotEmpty).map((e) => e).toList());
-      // if (widget.satFat != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.saturatedFat));
-      // }
-      // if (widget.transFat != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.transFat));
-      // }
-      // if (widget.cholesterol != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.cholesterol));
-      // }
-      // if (widget.sodium != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.sodium));
-      // }
-      // if (widget.dietaryFiber != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.dietaryFiber));
-      // }
-      // if (widget.totalSugars != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.totalSugars));
-      // }
-      // if (widget.addedSugar != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.addedSugar));
-      // }
-      // if (widget.vitaminD != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.vitaminD));
-      // }
-      // if (widget.calcium != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.calcium));
-      // }
-      // if (widget.potassium != null) {
-      //   _addedEntries.value.add(_getNutrients()
-      //       .firstWhere((e) => e.label == context.localization?.potassium));
-      // }
+      _addedEntries.value.addAll(_getNutrients()
+          .where((e) => e.value.isNotEmpty)
+          .map((e) => e)
+          .toList());
       _addedEntries.value = List.from(_addedEntries.value);
     });
   }
@@ -202,9 +145,14 @@ class _OtherNutritionFactsWidgetState extends State<OtherNutritionFactsWidget> {
                               _onEntriesChanged();
                             },
                             onChanged: (newValue) {
+                              final newDoubleValue = double.tryParse(newValue);
+                              if (newDoubleValue == null) {
+                                return;
+                              }
                               _addedEntries
                                   .value = List.from(_addedEntries.value)
-                                ..[index] = nutrient.copyWith(value: newValue);
+                                ..[index] = nutrient.copyWith(
+                                    value: newDoubleValue.format(places: 2));
                               _onEntriesChanged();
                             },
                             suffix: SizedBox(
@@ -288,20 +236,45 @@ class _NutritionFactFieldState extends State<_NutritionFactField> {
 
   final _focusNode = FocusNode();
 
+  bool _isUpdatingController = false;
+
   @override
   void initState() {
     _controller.addListener(() {
+      if (_isUpdatingController) {
+        return; // Skip if we're updating the controller manually
+      }
       if (widget.onChanged != null) {
         widget.onChanged!(_controller.text);
       }
     });
-    OkButtonWithKeyboard.setup(context: context, focusNode: _focusNode);
+    OkButtonWithKeyboard.setup(
+        context: context,
+        focusNode: _focusNode,
+        onTap: () {
+          final newValue = double.tryParse(_controller.text);
+          if (newValue == null) {
+            return;
+          }
+          // Format the value and call the callback
+          final formattedValue = newValue.format(places: 2);
+          widget.onChanged!(formattedValue);
+
+          // Temporarily disable the listener and update the controller
+          _isUpdatingController = true;
+          _controller.text = formattedValue;
+          _controller.selection = TextSelection.fromPosition(
+            TextPosition(offset: _controller.text.length),
+          );
+          _isUpdatingController = false;
+        });
     super.initState();
   }
 
   @override
   void dispose() {
     _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -333,7 +306,9 @@ class _NutritionFactFieldState extends State<_NutritionFactField> {
                         widget.onChanged!(newValue);
                       }
                     },
-                    hintText: context.localization?.value?.toUpperCaseWord,
+                    hintText:
+                        string_extensions.Util(context.localization?.value)
+                            ?.toUpperCaseWord,
                     suffixIcon: widget.suffix,
                     suffixIconConstraints:
                         BoxConstraints(maxHeight: 24.h, minWidth: 48.w),

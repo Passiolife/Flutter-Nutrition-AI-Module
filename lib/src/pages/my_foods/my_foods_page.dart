@@ -8,25 +8,31 @@ import '../../common/widgets/custom_app_bar_widget.dart';
 import '../../common/widgets/sub_tab_bar.dart';
 import 'bloc/my_foods_bloc.dart';
 import 'custom_foods/custom_foods_page.dart';
-import 'recipes/recipes_page.dart';
+import 'recipes/ui/recipes_page.dart';
 
 class MyFoodsPage extends StatefulWidget {
-  const MyFoodsPage({super.key});
+  const MyFoodsPage({required this.index, super.key});
+
+  final int index;
 
   static Future navigate({
     required BuildContext context,
     bool isReplace = false,
+    int index = 0,
   }) async {
     if (isReplace) {
       Navigator.pop(context);
-      return await Navigator.pushReplacement(context, MaterialPageRoute(
-        builder: (_) => const MyFoodsPage(),
-      ),);
+      return await Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => MyFoodsPage(index: index),
+        ),
+      );
     }
     return await Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (_) => const MyFoodsPage(),
+        builder: (_) => MyFoodsPage(index: index),
       ),
     );
   }
@@ -59,8 +65,12 @@ class _MyFoodsPageState extends State<MyFoodsPage>
 
   @override
   void initState() {
-    _tabController = TabController(length: 2, vsync: this);
-    _pageController = PageController();
+    _tabController = TabController(
+      initialIndex: widget.index,
+      length: 2,
+      vsync: this,
+    );
+    _pageController = PageController(initialPage: widget.index);
 
     _tabController?.addListener(() {
       _pageController?.animateToPage(

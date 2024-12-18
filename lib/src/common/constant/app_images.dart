@@ -60,7 +60,7 @@ class AppImages {
   static const icProfile = '${imageDir}ic_profile.svg';
   static const icProgress = '${imageDir}ic_progress.svg';
   static const icQuestionMarkCircle = '${imageDir}ic_question_mark_circle.svg';
-  static const icRecipe = '${imageDir}ic_recipe.svg';
+  static const icRecipe = '${imageDir}ic_recipe.png';
   static const icScan = '${imageDir}ic_scan.svg';
   static const icScanFrame = '${imageDir}ic_scan_frame.svg';
   static const icSearch = '${imageDir}ic_search.svg';

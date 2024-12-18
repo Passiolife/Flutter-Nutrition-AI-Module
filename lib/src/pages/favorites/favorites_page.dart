@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../common/constant/app_constants.dart';
+import '../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../common/dialogs/one_button_dialog.dart';
 import '../../common/models/food_record/food_record.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/snackbar_extension.dart';
-import '../edit_food/edit_food_page.dart';
+import '../edit_food/ui/edit_food_page.dart';
 import 'bloc/favorites_bloc.dart';
 import 'widgets/widgets.dart';
 
@@ -90,7 +91,9 @@ class _FavoritesPageState extends State<FavoritesPage> implements RowListener {
   Future<void> onEdit(int index) async {
     final data = await EditFoodPage.navigate(
       context: context,
-      foodRecord: _list.elementAt(index),
+      params: EditFoodPageParams(
+        foodRecord: _list.elementAt(index),
+      ),
     );
     if (data != null && data is bool && data && mounted) {
       context.showSnackbar(text: context.localization?.addedToLog);
@@ -100,9 +103,14 @@ class _FavoritesPageState extends State<FavoritesPage> implements RowListener {
 
   @override
   void onDelete(int index) {
-    final foodRecord = _list.elementAt(index);
-    _list.removeAt(index);
-    _bloc.add(DoFavoriteDeleteEvent(data: foodRecord));
+    DeleteConfirmationDialog.show(
+      context: context,
+      onConfirm: () {
+        final foodRecord = _list.elementAt(index);
+        _list.removeAt(index);
+        _bloc.add(DoFavoriteDeleteEvent(data: foodRecord));
+      },
+    );
   }
 
   void _doFetchFavorites() {

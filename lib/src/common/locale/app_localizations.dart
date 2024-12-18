@@ -729,4 +729,38 @@ class AppLocalizations {
 
   String? get createOrEditUserFoodDescription =>
       getLabel('createOrEditUserFoodDescription');
+
+  String? get deleteDescription => getLabel('deleteDescription');
+
+  String? get recipeName => getLabel('recipeName');
+
+  String? get editRecipe => getLabel('editRecipe');
+
+  String? get editIngredient => getLabel('editIngredient');
+
+  String? get searchResults => getLabel('searchResults');
+
+  String? get makeCustomRecipe => getLabel('makeCustomRecipe');
+
+  String? get customRecipeCreatedWithSuccess =>
+      getLabel('customRecipeCreatedWithSuccess');
+
+  String? get customRecipeUpdatedWithSuccess =>
+      getLabel('customRecipeUpdatedWithSuccess');
+
+  String? get customRecipeCreatedWithUpdateSuccess =>
+      getLabel('customRecipeCreatedWithUpdateSuccess');
+
+  String? get customRecipeUpdatedWithUpdateSuccess =>
+      getLabel('customRecipeUpdatedWithUpdateSuccess');
+
+  String? get recipeNotFound => getLabel('recipeNotFound');
+  String? get recipeNotFoundDescription => getLabel('recipeNotFoundDescription');
+  String? get createUserRecipe => getLabel('createUserRecipe');
+  String? get createUserRecipeDescription => getLabel('createUserRecipeDescription');
+  String? get createOrEditUserRecipe => getLabel('createOrEditUserRecipe');
+  String? get createOrEditUserRecipeDescription => getLabel('createOrEditUserRecipeDescription');
+
+  String? get voiceLoggingNoResultsFoundDescription => getLabel('voiceLoggingNoResultsFoundDescription');
+
 }

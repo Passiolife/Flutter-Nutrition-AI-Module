@@ -13,9 +13,11 @@ import '../../common/util/permission_manager_utility.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/widgets/draggable_bottom_sheet_widget.dart';
 import '../dashboard/dashboard_page.dart';
-import '../edit_food/edit_food_page.dart';
+import '../edit_food/ui/edit_food_page.dart';
 import '../food_search/food_search_page.dart';
+import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/food_scan_bloc.dart';
+import 'widgets/nutrition_facts_result_widget.dart';
 import 'widgets/widgets.dart';
 
 class FoodScanPage extends StatefulWidget {
@@ -39,7 +41,7 @@ class FoodScanPage extends StatefulWidget {
 
 class _FoodScanPageState extends State<FoodScanPage>
     with TickerProviderStateMixin
-    implements FoodScanListener {
+    implements FoodScanListener, NutritionFactsHandler {
   // Instance of PermissionManagerUtility to handle permissions
   final PermissionManagerUtility _permissionManager =
       PermissionManagerUtility();
@@ -149,7 +151,9 @@ class _FoodScanPageState extends State<FoodScanPage>
                         },
                       ),
                     ),
-                    (state is ScanLoadingState || state is ScanResultState || state is NutritionFactsResultState)
+                    (state is ScanLoadingState ||
+                            state is ScanResultState ||
+                            state is NutritionFactsResultState)
                         ? DraggableBottomSheetWidget(
                             key: ObjectKey(state is ScanResultState
                                 ? state.foodItem
@@ -160,9 +164,16 @@ class _FoodScanPageState extends State<FoodScanPage>
                             shouldDraggable: _sheetDraggable,
                             builder: (context, dragController, controller,
                                 widgetState) {
-                              return state is ScanResultState || state is NutritionFactsResultState
+                              return state is ScanResultState ||
+                                      state is NutritionFactsResultState
                                   ? _currentMode == 2
-                                      ? const SizedBox.shrink() //NutritionFactsResultWidget(nutritionFacts: _nutritionFacts)
+                                      ? NutritionFactsResultWidget(
+                                          nutritionFacts: _nutritionFacts,
+                                          isLoadingNext: state
+                                              is NutritionFactsLoadingNextState,
+                                          isEnableNext: _nutritionFacts != null,
+                                          handler: this,
+                                        )
                                       : ResultWidget(
                                           dragController: dragController,
                                           scrollController: controller,
@@ -209,7 +220,6 @@ class _FoodScanPageState extends State<FoodScanPage>
   void dispose() {
     _bloc.add(const StopFoodDetectionEvent());
     _lifecycleListener?.dispose();
-    _bloc.close();
     super.dispose();
   }
 
@@ -250,7 +260,7 @@ class _FoodScanPageState extends State<FoodScanPage>
       _detectedCandidate = state.detectedCandidate;
       _alternatives = state.alternatives;
       _sheetDraggable = _alternatives.isNotEmpty;
-    } else if(state is NutritionFactsResultState) {
+    } else if (state is NutritionFactsResultState) {
       _nutritionFacts = state.nutritionFacts;
     } else if (state is ConversionSuccessState) {
       _redirectToEdit(state.foodItem);
@@ -258,6 +268,9 @@ class _FoodScanPageState extends State<FoodScanPage>
       _currentZoom = state.zoomLevel;
     } else if (state is CameraZoomStateLoaded) {
       _cameraZoomLevel = state.cameraZoomLevel;
+    } else if (state is NutritionFactsSuccessState) {
+      FoodCreatorPage.navigate(
+          context: context, loggedFoodRecord: state.foodRecord);
     }
   }
 
@@ -396,10 +409,12 @@ class _FoodScanPageState extends State<FoodScanPage>
     }
     EditFoodPage.navigate(
       context: context,
-      foodItem: _foodItem,
-      detectedCandidate: candidate,
-      redirectToDiaryOnLog: true,
-      visibleFoodCreator: true,
+      params: EditFoodPageParams(
+        foodItem: _foodItem,
+        detectedCandidate: candidate,
+        redirectToDiaryOnLog: true,
+        visibleFoodCreator: true,
+      ),
     );
   }
 
@@ -414,8 +429,10 @@ class _FoodScanPageState extends State<FoodScanPage>
   void _redirectToEdit(PassioFoodItem? foodItem) {
     EditFoodPage.navigate(
       context: context,
-      foodItem: foodItem,
-      visibleSwitch: true,
+      params: EditFoodPageParams(
+        foodItem: foodItem,
+        visibleSwitch: true,
+      ),
     );
   }
 
@@ -423,4 +440,19 @@ class _FoodScanPageState extends State<FoodScanPage>
   void onTapSearch() {
     FoodSearchPage.navigate(context, needsReturn: false);
   }
+
+  // NutritionFactsHandler methods
+  @override
+  void onCancel() {
+    _bloc.add(const ClearNutritionFactsEvent());
+  }
+
+  @override
+  void onNext() {
+    FoodCreatorPage.navigate(
+      context: context,
+      nutritionFacts: _nutritionFacts,
+    );
+  }
+// END: NutritionFactsHandler methods
 }

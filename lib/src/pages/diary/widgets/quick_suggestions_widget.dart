@@ -132,6 +132,7 @@ class QuickSuggestionsWidget extends StatelessWidget {
                                     suggestion.passioFoodDataInfo?.iconID ??
                                     '',
                                 radius: 16.r,
+                                foodRecord: suggestion.foodRecord,
                               ),
                               8.horizontalSpace,
                               Expanded(

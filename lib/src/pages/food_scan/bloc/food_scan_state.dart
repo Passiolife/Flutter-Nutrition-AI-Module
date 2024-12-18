@@ -138,3 +138,18 @@ class CameraZoomStateLoaded extends FoodScanState {
   @override
   List<Object?> get props => [cameraZoomLevel];
 }
+
+final class NutritionFactsLoadingNextState extends FoodScanState {
+  const NutritionFactsLoadingNextState();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class NutritionFactsSuccessState extends FoodScanState {
+  const NutritionFactsSuccessState({this.foodRecord});
+  final FoodRecord? foodRecord;
+
+  @override
+  List<Object?> get props => [foodRecord];
+}

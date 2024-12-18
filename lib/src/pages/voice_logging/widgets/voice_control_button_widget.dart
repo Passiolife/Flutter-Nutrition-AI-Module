@@ -7,8 +7,8 @@ import '../../../common/constant/app_images.dart';
 import '../../../common/util/context_extension.dart';
 import '../../../common/widgets/app_button.dart';
 
-class ListeningButton extends StatelessWidget {
-  const ListeningButton({this.isPlaying = false, this.onTap, super.key});
+class VoiceControlButtonWidget extends StatelessWidget {
+  const VoiceControlButtonWidget({this.isPlaying = false, this.onTap, super.key});
 
   final bool isPlaying;
   final VoidCallback? onTap;

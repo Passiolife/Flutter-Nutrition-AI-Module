@@ -72,7 +72,7 @@ class _RequiredNutritionFactsWidgetState
           ),
           8.verticalSpace,
           _FormWidget(
-            initialServingSize: widget.initialServingSize,
+            initialServingQuantity: widget.initialServingSize,
             initialUnit: widget.initialUnit,
             initialWeightValue: widget.initialWeightValue,
             initialWeightSymbol: widget.initialWeightSymbol,
@@ -91,7 +91,7 @@ class _RequiredNutritionFactsWidgetState
 class _FormWidget extends StatefulWidget {
   const _FormWidget({
     this.onChange,
-    this.initialServingSize,
+    this.initialServingQuantity,
     this.initialUnit,
     this.initialWeightValue,
     this.initialWeightSymbol,
@@ -101,7 +101,7 @@ class _FormWidget extends StatefulWidget {
     this.initialProtein,
   });
 
-  final double? initialServingSize;
+  final double? initialServingQuantity;
   final String? initialUnit;
   final double? initialWeightValue;
   final String? initialWeightSymbol;
@@ -116,7 +116,11 @@ class _FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<_FormWidget> {
-  List<DropdownMenuEntry<String>> _getUnitsDropDownEntries(
+
+  List<DropdownMenuEntry<String>> _unitDropdownEntries = [];
+
+
+  List<DropdownMenuEntry<String>> _getDefaultUnitsDropDownEntries(
           BuildContext context) =>
       [
         DropdownMenuEntry(
@@ -191,10 +195,9 @@ class _FormWidgetState extends State<_FormWidget> {
           value: context.localization?.large ?? '',
           label: context.localization?.large?.toUpperCaseWord ?? '',
         ),
-
       ];
 
-  final _servingSizeController = TextEditingController();
+  final _servingQuantityController = TextEditingController();
   final _weightController = TextEditingController();
   final _caloriesController = TextEditingController();
   final _fatController = TextEditingController();
@@ -221,7 +224,7 @@ class _FormWidgetState extends State<_FormWidget> {
         ),
       ];
 
-  final _servingSizeFocusNode = FocusNode();
+  final _servingQuantityFocusNode = FocusNode();
   final _weightFocusNode = FocusNode();
   final _caloriesFocusNode = FocusNode();
   final _fatFocusNode = FocusNode();
@@ -230,31 +233,31 @@ class _FormWidgetState extends State<_FormWidget> {
 
   void _handleOnChange() {
     widget.onChange?.call(
-      double.tryParse(_servingSizeController.text),
+      double.tryParse(_servingQuantityController.text)?.parseFormatted(places: 2),
       _selectedUnit,
-      double.tryParse(_weightController.text),
+      double.tryParse(_weightController.text)?.parseFormatted(places: 2),
       _selectedWeightSymbol.value,
       double.tryParse(_caloriesController.text) != null
           ? UnitEnergy(
-              double.tryParse(_caloriesController.text)?.parseFormatted() ?? 0,
+              double.tryParse(_caloriesController.text)?.parseFormatted(places: 2) ?? 0,
               UnitEnergyType.kilocalories,
             )
           : null,
       double.tryParse(_fatController.text) != null
           ? UnitMass(
-              double.tryParse(_fatController.text)?.parseFormatted() ?? 0,
+              double.tryParse(_fatController.text)?.parseFormatted(places: 2) ?? 0,
               UnitMassType.grams,
             )
           : null,
       double.tryParse(_carbsController.text) != null
           ? UnitMass(
-              double.tryParse(_carbsController.text)?.parseFormatted() ?? 0,
+              double.tryParse(_carbsController.text)?.parseFormatted(places: 2) ?? 0,
               UnitMassType.grams,
             )
           : null,
       double.tryParse(_proteinController.text) != null
           ? UnitMass(
-              double.tryParse(_proteinController.text)?.parseFormatted() ?? 0,
+              double.tryParse(_proteinController.text)?.parseFormatted(places: 2) ?? 0,
               UnitMassType.grams,
             )
           : null,
@@ -270,7 +273,7 @@ class _FormWidgetState extends State<_FormWidget> {
   @override
   void dispose() {
     // Controller
-    _servingSizeController.dispose();
+    _servingQuantityController.dispose();
     _weightController.dispose();
     _caloriesController.dispose();
     _fatController.dispose();
@@ -278,7 +281,7 @@ class _FormWidgetState extends State<_FormWidget> {
     _proteinController.dispose();
 
     // Focus Nodes
-    _servingSizeFocusNode.dispose();
+    _servingQuantityFocusNode.dispose();
     _weightFocusNode.dispose();
     _caloriesFocusNode.dispose();
     _fatFocusNode.dispose();
@@ -291,7 +294,7 @@ class _FormWidgetState extends State<_FormWidget> {
   void initState() {
     OkButtonWithKeyboard.setup(
       context: context,
-      focusNode: _servingSizeFocusNode,
+      focusNode: _servingQuantityFocusNode,
     );
     OkButtonWithKeyboard.setup(
       context: context,
@@ -315,21 +318,22 @@ class _FormWidgetState extends State<_FormWidget> {
     );
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _servingSizeController.text =
-          widget.initialServingSize?.format().toString() ?? '';
+      _updateUnitsDropDownEntries();
+      _servingQuantityController.text =
+          widget.initialServingQuantity?.format(places: 2).toString() ?? '';
       _weightController.text =
-          widget.initialWeightValue?.format().toString() ?? '';
+          widget.initialWeightValue?.format(places: 2).toString() ?? '';
       _setServingUnit(widget.initialUnit, onChange: false);
       _caloriesController.text =
-          widget.initialCalories?.value.format().toString() ?? '';
-      _fatController.text = widget.initialFat?.value.format().toString() ?? '';
+          widget.initialCalories?.value.format(places: 2).toString() ?? '';
+      _fatController.text = widget.initialFat?.value.format(places: 2).toString() ?? '';
       _carbsController.text =
-          widget.initialCarbs?.value.format().toString() ?? '';
+          widget.initialCarbs?.value.format(places: 2).toString() ?? '';
       _proteinController.text =
-          widget.initialProtein?.value.format().toString() ?? '';
+          widget.initialProtein?.value.format(places: 2).toString() ?? '';
 
 
-      _setupListener(_servingSizeController);
+      _setupListener(_servingQuantityController);
       _setupListener(_weightController);
       _setupListener(_caloriesController);
       _setupListener(_fatController);
@@ -337,8 +341,19 @@ class _FormWidgetState extends State<_FormWidget> {
       _setupListener(_proteinController);
     });
 
-
     super.initState();
+  }
+
+  void _updateUnitsDropDownEntries() {
+    setState(() {
+      _unitDropdownEntries = _getDefaultUnitsDropDownEntries(context);
+      if(widget.initialUnit.isNotNullOrEmpty && !(_unitDropdownEntries.any((element) => element.value == widget.initialUnit))) {
+        _unitDropdownEntries.insert(0, DropdownMenuEntry(
+          value: widget.initialUnit ?? '',
+          label: widget.initialUnit?.toUpperCaseWord ?? '',
+        ));
+      }
+    });
   }
 
   @override
@@ -349,17 +364,19 @@ class _FormWidgetState extends State<_FormWidget> {
         _NutritionFactField(
           title: context.localization?.servingQuantity ?? '',
           inputType: const TextInputType.numberWithOptions(decimal: true),
-          focusNode: _servingSizeFocusNode,
+          focusNode: _servingQuantityFocusNode,
           inputFormatters: <TextInputFormatter>[
             TextInputFormatterUtil.decimalNumber
           ],
-          controller: _servingSizeController,
+          controller: _servingQuantityController,
+          isMandatory: true,
         ),
         _NutritionFactDropDown(
           title: context.localization?.servingUnit.toUpperCaseWord ?? '',
           initial: _selectedUnit,
-          menuEntries: _getUnitsDropDownEntries(context),
+          menuEntries: _unitDropdownEntries,
           onSelected: _setServingUnit,
+          isMandatory: true,
         ),
         ValueListenableBuilder(
             valueListenable: _visibleWeight,
@@ -378,6 +395,7 @@ class _FormWidgetState extends State<_FormWidget> {
                             TextInputFormatterUtil.decimalNumber
                           ],
                           controller: _weightController,
+                          isMandatory: true,
                           suffix: Padding(
                             padding: EdgeInsets.only(right: 8.w),
                             child: DropdownButtonHideUnderline(
@@ -424,6 +442,7 @@ class _FormWidgetState extends State<_FormWidget> {
               ),
             ),
           ),
+          isMandatory: true,
         ),
         _NutritionFactField(
           title: context.localization?.fat ?? '',
@@ -446,6 +465,7 @@ class _FormWidgetState extends State<_FormWidget> {
               ),
             ),
           ),
+          isMandatory: true,
         ),
         _NutritionFactField(
           title: context.localization?.carbs ?? '',
@@ -468,6 +488,7 @@ class _FormWidgetState extends State<_FormWidget> {
               ),
             ),
           ),
+          isMandatory: true,
         ),
         _NutritionFactField(
           title: context.localization?.protein ?? '',
@@ -490,6 +511,7 @@ class _FormWidgetState extends State<_FormWidget> {
               ),
             ),
           ),
+          isMandatory: true,
         ),
       ],
     );
@@ -526,6 +548,7 @@ class _NutritionFactField extends StatelessWidget {
   final FocusNode? focusNode;
   final List<TextInputFormatter>? inputFormatters;
   final TextEditingController? controller;
+  final bool isMandatory;
 
   const _NutritionFactField({
     this.title,
@@ -534,6 +557,7 @@ class _NutritionFactField extends StatelessWidget {
     this.focusNode,
     this.inputFormatters,
     this.controller,
+    this.isMandatory = false,
   });
 
   @override
@@ -543,12 +567,26 @@ class _NutritionFactField extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title ?? '',
-              style: AppTextStyle.textSm.addAll([
-                AppTextStyle.textSm.leading5,
-                AppTextStyle.medium
-              ]).copyWith(color: AppColors.gray500),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: title ?? '',
+                    style: AppTextStyle.textSm.addAll([
+                      AppTextStyle.textSm.leading5,
+                      AppTextStyle.medium
+                    ]).copyWith(color: AppColors.gray500),
+                  ),
+                  if(isMandatory)
+                    TextSpan(
+                      text: ' *',
+                      style: AppTextStyle.textSm.addAll([
+                        AppTextStyle.textSm.leading5,
+                        AppTextStyle.medium
+                      ]).copyWith(color: AppColors.red500),
+                    ),
+                ],
+              ),
             ),
           ),
           Expanded(
@@ -580,12 +618,14 @@ class _NutritionFactDropDown extends StatelessWidget {
   final List<DropdownMenuEntry<String>> menuEntries;
   final ValueChanged<String?>? onSelected;
   final String? initial;
+  final bool isMandatory;
 
   const _NutritionFactDropDown({
     required this.title,
     required this.menuEntries,
     this.initial,
     this.onSelected,
+    this.isMandatory = false,
   });
 
   @override
@@ -595,12 +635,26 @@ class _NutritionFactDropDown extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(
-              title ?? '',
-              style: AppTextStyle.textSm.addAll([
-                AppTextStyle.textSm.leading5,
-                AppTextStyle.medium
-              ]).copyWith(color: AppColors.gray500),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: title ?? '',
+                    style: AppTextStyle.textSm.addAll([
+                      AppTextStyle.textSm.leading5,
+                      AppTextStyle.medium
+                    ]).copyWith(color: AppColors.gray500),
+                  ),
+                  if(isMandatory)
+                    TextSpan(
+                      text: ' *',
+                      style: AppTextStyle.textSm.addAll([
+                        AppTextStyle.textSm.leading5,
+                        AppTextStyle.medium
+                      ]).copyWith(color: AppColors.red500),
+                    ),
+                ],
+              ),
             ),
           ),
           Expanded(

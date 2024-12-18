@@ -19,10 +19,11 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
 
   FoodRecord? _userFoodRecord;
   FoodRecord? _loggedFoodRecord;
+  PassioNutritionFacts? _nutritionFacts;
   bool _logUponCreate = false;
   FoodCreatorViewModel? _foodCreatorViewModel;
 
-  FoodCreatorBloc() : super(FoodCreatorInitial()) {
+  FoodCreatorBloc() : super(const FoodCreatorInitialState()) {
     on<DoConversionEvent>(_handleDoConversionEvent);
     on<DoUpdateFoodDetailsEvent>(_handleDoUpdateFoodDetailsEvent);
     on<DoUpdateBarcodeEvent>(_handleDoUpdateBarcodeEvent);
@@ -36,6 +37,13 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
   Future<void> _handleDoConversionEvent(
       DoConversionEvent event, Emitter<FoodCreatorState> emit) async {
     _initializeConversion(event);
+
+    if (_nutritionFacts != null) {
+      _foodCreatorViewModel =
+          FoodCreatorViewModel.fromNutritionFacts(_nutritionFacts!);
+      _emitConversionSuccess(emit);
+      return;
+    }
 
     // Fetch or use the existing food record based on the update state
     final foodRecord = _userFoodRecord ?? _loggedFoodRecord;
@@ -65,16 +73,17 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
   void _initializeConversion(DoConversionEvent event) {
     _userFoodRecord = event.userFoodRecord;
     _loggedFoodRecord = event.loggedFoodRecord;
+    _nutritionFacts = event.nutritionFacts;
     _logUponCreate = event.logUponCreate;
   }
 
   bool _shouldSetIconIdToEmpty(FoodRecord foodRecord) {
     return !(_userFoodRecord != null) &&
-        (foodRecord.iconId.startsWith(AppCommonConstants.userFoods));
+        (foodRecord.iconId.startsWith(AppCommonConstants.userFood));
   }
 
   Future<void> _fetchAndSetUserFoodImage(FoodRecord foodRecord) async {
-    if (foodRecord.iconId.startsWith(AppCommonConstants.userFoods)) {
+    if (foodRecord.iconId.startsWith(AppCommonConstants.userFood)) {
       final image = await _connector.fetchUserFoodImage(id: foodRecord.iconId);
       if (_foodCreatorViewModel != null) {
         _foodCreatorViewModel =
@@ -173,7 +182,7 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
 
     final isUpdate = _userFoodRecord != null;
 
-    if (foodRecord.iconId.startsWith(AppCommonConstants.userFoods)) {
+    if (foodRecord.iconId.startsWith(AppCommonConstants.userFood)) {
       // Use image from viewModel if available; otherwise, load default image
       final image = _foodCreatorViewModel?.image ??
           (await rootBundle.load(AppImages.imgMyFoodsThumbnail))
@@ -187,6 +196,7 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
       );
     }
 
+    foodRecord.removeMeal();
     final userFoodId = await _connector.updateUserFood(
       foodRecord: foodRecord,
       isNew: !isUpdate,
@@ -194,7 +204,7 @@ class FoodCreatorBloc extends Bloc<FoodCreatorEvent, FoodCreatorState> {
 
     if (_logUponCreate) {
       foodRecord.id = _loggedFoodRecord?.id ?? '';
-      foodRecord.sourceId = '${AppCommonConstants.userFoods}$userFoodId';
+      foodRecord.refCode = '${AppCommonConstants.userFood}$userFoodId';
       foodRecord
           .setCreatedAt(_loggedFoodRecord?.getCreatedAt() ?? DateTime.now());
       foodRecord.mealLabel = _loggedFoodRecord?.mealLabel;

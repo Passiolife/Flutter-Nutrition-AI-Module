@@ -21,18 +21,21 @@ class FoodCreatorPage extends StatefulWidget {
   const FoodCreatorPage({
     this.loggedFoodRecord,
     this.userFoodRecord,
+    this.nutritionFacts,
     required this.logUponCreate,
     super.key,
   });
 
   final FoodRecord? loggedFoodRecord;
   final FoodRecord? userFoodRecord;
+  final PassioNutritionFacts? nutritionFacts;
   final bool logUponCreate;
 
   static Future<bool?> navigate({
     required BuildContext context,
     FoodRecord? loggedFoodRecord,
     FoodRecord? userFoodRecord,
+    PassioNutritionFacts? nutritionFacts,
     bool logUponCreate = false,
   }) async {
     return await Navigator.push(
@@ -41,6 +44,7 @@ class FoodCreatorPage extends StatefulWidget {
             builder: (_) => FoodCreatorPage(
               loggedFoodRecord: loggedFoodRecord,
               userFoodRecord: userFoodRecord,
+              nutritionFacts: nutritionFacts,
               logUponCreate: logUponCreate,
             ),
           ),
@@ -67,6 +71,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
       _bloc.add(DoConversionEvent(
         loggedFoodRecord: widget.loggedFoodRecord,
         userFoodRecord: widget.userFoodRecord,
+        nutritionFacts: widget.nutritionFacts,
         logUponCreate: widget.logUponCreate,
       ));
     });
@@ -241,7 +246,9 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
         case SaveSuccessState():
           if (widget.logUponCreate) {
             context.showSnackbar(
-                text:widget.userFoodRecord == null ?  context.localization?.customFoodCreatedWithUpdateSuccess : context.localization?.customFoodUpdatedWithUpdateSuccess);
+                text: widget.userFoodRecord == null
+                    ? context.localization?.customFoodCreatedWithUpdateSuccess
+                    : context.localization?.customFoodUpdatedWithUpdateSuccess);
             DashboardPage.navigate(
               context,
               page: 1,
@@ -249,7 +256,9 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
             );
           } else {
             context.showSnackbar(
-                text: widget.userFoodRecord == null ?  context.localization?.customFoodCreatedWithSuccess : context.localization?.customFoodUpdatedWithSuccess);
+                text: widget.userFoodRecord == null
+                    ? context.localization?.customFoodCreatedWithSuccess
+                    : context.localization?.customFoodUpdatedWithSuccess);
             MyFoodsPage.navigate(context: context, isReplace: true);
           }
           break;

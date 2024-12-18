@@ -2,7 +2,8 @@ import 'dart:async';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
+
+import '../../../../nutrition_ai_module.dart';
 
 part 'food_search_event.dart';
 part 'food_search_state.dart';
@@ -10,69 +11,63 @@ part 'food_search_state.dart';
 class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
   String _previousSearchText = '';
 
-  List<PassioFoodDataInfo> _results = [];
-  List<String> _alternatives = [];
+  List<dynamic>? searchResults;
+  List<dynamic> myFoods = [];
+
+  List<String> alternatives = [];
+
+  /// [_connector] use to perform operations.
+  final PassioConnector _connector =
+      NutritionAIModule.instance.configuration.connector;
+
+  String searchTerm = '';
 
   FoodSearchBloc() : super(const FoodSearchInitial()) {
+    on<DoUpdateSearchEvent>(_handleDoUpdateSearchEvent);
     on<DoFoodSearchEvent>(_handleDoFoodSearchEvent);
+  }
+
+  FutureOr<void> _handleDoUpdateSearchEvent(
+      DoUpdateSearchEvent event, Emitter<FoodSearchState> emit) async {
+    emit(UpdateSearchState(searchText: event.searchText));
   }
 
   FutureOr<void> _handleDoFoodSearchEvent(
       DoFoodSearchEvent event, Emitter<FoodSearchState> emit) async {
-    final searchText = event.searchText;
-    if (_previousSearchText == searchText) return;
+    searchTerm = event.searchText;
+    if (_previousSearchText == searchTerm) return;
 
-    _previousSearchText = searchText;
-    _results.clear();
-    _alternatives.clear();
+    _previousSearchText = searchTerm;
 
     // Here, checking the length of [searchQuery] and based on that we will do operations.
     //
     // If the [_searchQuery] is empty then do nothing.
-    if (searchText.isEmpty) {
+    if (searchTerm.isEmpty) {
       emit(const FoodSearchInitial());
       return;
-    } else if (searchText.length < 3) {
+    } else if (searchTerm.length < 3) {
       /// If [searchQuery] length is less than 3 then set "Keep Typing" text.
       emit(const KeepTypingState());
       return;
     } else {
-      _results = List.generate(
-        20,
-        (index) => const PassioFoodDataInfo(
-          brandName: '',
-          foodName: '',
-          iconID: '',
-          labelId: '',
-          nutritionPreview: PassioSearchNutritionPreview(
-            calories: 0,
-            carbs: 0,
-            fat: 0,
-            protein: 0,
-            servingUnit: '',
-            servingQuantity: 0,
-            weightUnit: '',
-            weightQuantity: 0,
-            fiber: 0,
-          ),
-          resultId: '-1',
-          scoredName: '',
-          score: 0,
-          type: '',
-          isShortName: false, tags: [],
-        ),
-      );
-      _alternatives = List.generate(10, (index) => '-1');
+      searchResults = List.generate(20, (index) => index);
+      myFoods = List.generate(20, (index) => index);
+      alternatives = List.generate(10, (index) => '-1');
 
       emit(SearchForFoodSuccessState(
-          results: _results, alternatives: _alternatives));
+        results: searchResults,
+        alternatives: alternatives,
+      ));
+
       final searchResponse =
-          await NutritionAI.instance.searchForFood(searchText);
+          await NutritionAI.instance.searchForFood(searchTerm);
 
-      _results = searchResponse.results;
-      _alternatives = searchResponse.alternateNames;
+      myFoods = await _connector.searchUserFoodsByName(term: searchTerm);
+
+      searchResults = searchResponse.results;
+      alternatives = searchResponse.alternateNames;
       emit(SearchForFoodSuccessState(
-          results: _results, alternatives: _alternatives));
+          results: searchResults, alternatives: alternatives));
     }
   }
 }

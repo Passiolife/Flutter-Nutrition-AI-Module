@@ -73,3 +73,11 @@ final class DoCancelEvent extends VoiceLoggingEvent {
   @override
   List<Object?> get props => [];
 }
+
+class TryAgainEvent extends VoiceLoggingEvent {
+  const TryAgainEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+

@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
 
 import '../../../common/constant/app_constants.dart';
-import 'alternative_row_skeleton_widget.dart';
-import 'alternative_row_widget.dart';
-import 'interfaces.dart';
+import '../../../common/constant/app_padding.dart';
+import '../../../common/util/string_extensions.dart';
+import '../../../common/widgets/shimmer_widget.dart';
+
+typedef OnSelectAlternative = Function(String alternative);
 
 class AlternativeListWidget extends StatelessWidget {
   const AlternativeListWidget({
     required this.alternatives,
-    this.listener,
+    this.onSelectAlternative,
     super.key,
   });
 
   final List<String> alternatives;
 
-  final PassioSearchListener? listener;
+  final OnSelectAlternative? onSelectAlternative;
 
   @override
   Widget build(BuildContext context) {
@@ -24,25 +26,74 @@ class AlternativeListWidget extends StatelessWidget {
         shrinkWrap: true,
         itemCount: alternatives.length,
         scrollDirection: Axis.horizontal,
-        padding: EdgeInsets.symmetric(
-          horizontal: AppDimens.w16,
-          vertical: AppDimens.h4,
-        ),
+        padding: AppPadding.ph16 + AppPadding.pv4,
         itemBuilder: (BuildContext context, int index) {
           final data = alternatives.elementAt(index);
           if (data != '-1') {
-            return AlternativeRowWidget(
+            return _AlternativeRowWidget(
               data: data,
-              listener: listener,
+              onSelectAlternative: onSelectAlternative,
             );
           } else {
-            return const AlternativeRowSkeletonWidget();
+            return const _AlternativeRowSkeletonWidget();
           }
         },
         separatorBuilder: (BuildContext context, int index) {
           return SizedBox(width: AppDimens.w8);
         },
       ),
+    );
+  }
+}
+
+
+class _AlternativeRowWidget extends StatelessWidget {
+  const _AlternativeRowWidget({required this.data, this.onSelectAlternative, super.key});
+  final String? data;
+
+  final OnSelectAlternative? onSelectAlternative;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: AppShadows.base,
+      height: AppDimens.h76,
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          splashColor: AppColors.blue50,
+          highlightColor: AppColors.blue50,
+          onTap: () => onSelectAlternative?.call(data.toUpperCaseWord),
+          child: Padding(
+            padding: EdgeInsets.all(AppDimens.r16),
+            child: Center(
+              child: Text(
+                data.toUpperCaseWord,
+                maxLines: 1,
+                textAlign: TextAlign.center,
+                style: AppTextStyle.textSm.addAll([
+                  AppTextStyle.textSm.leading5,
+                  AppTextStyle.semiBold
+                ]).copyWith(color: AppColors.gray900),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _AlternativeRowSkeletonWidget extends StatelessWidget {
+  const _AlternativeRowSkeletonWidget();
+
+  @override
+  Widget build(BuildContext context) {
+    return ShimmerWidget.rectangular(
+      height: AppDimens.h52,
+      width: AppDimens.w120,
+      baseColor: AppColors.gray300,
+      highlightColor: AppColors.gray200,
     );
   }
 }

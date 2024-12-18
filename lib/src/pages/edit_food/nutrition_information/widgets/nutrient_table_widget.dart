@@ -61,7 +61,7 @@ class NutrientTableRow extends StatelessWidget {
             child: FittedBox(
               child: RichText(
                 text: TextSpan(
-                  text: nutrient?.value.format(),
+                  text: nutrient?.value.format(places: 2),
                   style: AppTextStyle.text3xl.addAll([
                     AppTextStyle.text3xl.leading9,
                     AppTextStyle.extraBold

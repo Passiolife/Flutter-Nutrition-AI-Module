@@ -155,19 +155,20 @@ class _ResultWidgetState extends State<ResultWidget> {
                     final title = foodDataInfo?.foodName ?? '';
                     final calories =
                         foodDataInfo?.nutritionPreview.calories ?? 0;
-                    final weightQuantity =
-                        foodDataInfo?.nutritionPreview.weightQuantity ?? 0;
-                    final caloriesPerGram = calories / weightQuantity;
-                    final weightGrams = advisorInfo?.weightGrams ?? 0;
-                    final caloriesForPortionSize =
-                        caloriesPerGram * weightGrams;
-                    final formattedWeightGrams = '${weightGrams.format()} ${context.localization?.g}';
+
+                    final servingQuantity =
+                        foodDataInfo?.nutritionPreview.servingQuantity ?? 0;
+
+                    final servingUnit = foodDataInfo?.nutritionPreview.servingUnit ?? '';
+
+                    final formattedWeight = '$servingQuantity $servingUnit';
                     final subtitle =
-                        '$formattedWeightGrams | ${caloriesForPortionSize.format()} ${context.localization?.cal}';
+                        '$formattedWeight | $calories ${context.localization?.cal}';
 
                     final isSelected = data?.isSelected ?? false;
 
                     return FoodItemRowWidget(
+                      data: FoodItemRowData(
                       iconId: iconId,
                       title: title,
                       subtitle: subtitle,
@@ -187,6 +188,8 @@ class _ResultWidgetState extends State<ResultWidget> {
                           widget.onChangeSelection?.call(index, data);
                         }
                       },
+                      enableSlidable: false,
+                      ),
                     );
                   },
                   separatorBuilder: (context, index) => 8.verticalSpace,

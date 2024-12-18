@@ -62,8 +62,7 @@ class ResultWidgetState extends State<ResultWidget> {
       widget.dragController?.addListener(() {
         _heightNotifier.value = (widget.widgetState?.getDraggedPixels() ?? 0) -
             (widget.widgetState?.getInitialSizePixels() ?? 0);
-        widget.listener
-            ?.onDragResult(_heightNotifier.value==0);
+        widget.listener?.onDragResult(_heightNotifier.value == 0);
       });
       widget.widgetState?.setMaxSizeInPixels(
           (widget.widgetState?.getInitialSizePixels() ?? 0) + _alternativeSize);
@@ -109,9 +108,12 @@ class ResultWidgetState extends State<ResultWidget> {
                 16.verticalSpace,
                 FoodItemRowWidget(
                   key: ValueKey(widget.iconId),
-                  iconId: widget.iconId,
-                  title: widget.foodName?.toUpperCaseWord ?? '',
-                  padding: EdgeInsets.all(8.r),
+                  data: FoodItemRowData(
+                    iconId: widget.iconId,
+                    title: widget.foodName?.toUpperCaseWord ?? '',
+                    padding: EdgeInsets.all(8.r),
+                    enableSlidable: false,
+                  ),
                 ),
               ],
             ),
@@ -156,10 +158,14 @@ class ResultWidgetState extends State<ResultWidget> {
                           widget.listener?.onEdit(index);
                         },
                         child: FoodItemRowWidget(
-                          decoration: const BoxDecoration(color: AppColors.indigo50),
-                          iconId: data.passioID,
-                          title: data.foodName.toUpperCaseWord,
-                          padding: EdgeInsets.all(8.r),
+                          data: FoodItemRowData(
+                            decoration:
+                                const BoxDecoration(color: AppColors.indigo50),
+                            iconId: data.passioID,
+                            title: data.foodName.toUpperCaseWord,
+                            padding: EdgeInsets.all(8.r),
+                            enableSlidable: false,
+                          ),
                         ),
                       );
                     },

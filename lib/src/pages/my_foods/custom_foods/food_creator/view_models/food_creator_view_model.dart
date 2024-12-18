@@ -2,6 +2,7 @@ import 'dart:typed_data';
 
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_common_constants.dart';
+import '../../../../../common/extension/null_safety_extension.dart';
 import '../../../../../common/util/unit_extension.dart';
 import 'nutrient_view_model.dart';
 
@@ -12,10 +13,10 @@ class FoodCreatorViewModel {
   final String iconId;
   final String name;
   final String additionalData;
-  final double servingQuantity;
-  final String servingUnit;
-  final double weightValue;
-  final String weightSymbol;
+  final double? servingQuantity;
+  final String? servingUnit;
+  final double? weightValue;
+  final String? weightSymbol;
   final String? barcode;
   final Unit? calories;
   final Unit? fat;
@@ -37,7 +38,7 @@ class FoodCreatorViewModel {
       DateTime.now().millisecondsSinceEpoch.toString();
 
   static String get _uniqueIconId =>
-      '${AppCommonConstants.userFoods}$_uniqueId';
+      '${AppCommonConstants.userFood}$_uniqueId';
 
   const FoodCreatorViewModel._({
     required this.id,
@@ -46,10 +47,10 @@ class FoodCreatorViewModel {
     required this.iconId,
     required this.name,
     required this.additionalData,
-    required this.servingQuantity,
-    required this.servingUnit,
-    required this.weightValue,
-    required this.weightSymbol,
+    this.servingQuantity,
+    this.servingUnit,
+    this.weightValue,
+    this.weightSymbol,
     this.barcode,
     this.calories,
     this.fat,
@@ -73,9 +74,6 @@ class FoodCreatorViewModel {
     bool setIdToEmpty = false,
     bool setIconIdToEmpty = false,
   }) {
-    final iconId =
-        foodRecord.iconId.isEmpty ? _uniqueIconId : foodRecord.iconId;
-
     return FoodCreatorViewModel._(
       id: setIdToEmpty ? '' : foodRecord.id,
       refCode: foodRecord.refCode,
@@ -85,7 +83,7 @@ class FoodCreatorViewModel {
       additionalData: foodRecord.additionalData,
       barcode: foodRecord.barcode,
       servingQuantity: foodRecord.getSelectedQuantity(),
-      servingUnit: foodRecord.getSelectedUnit(),
+      servingUnit: foodRecord.getSelectedUnit().trim(),
       weightValue: foodRecord.computedWeight.value,
       weightSymbol: foodRecord.computedWeight.symbol,
       calories: foodRecord.nutrientsSelectedSize().calories,
@@ -114,9 +112,9 @@ class FoodCreatorViewModel {
       name: '',
       additionalData: '',
       barcode: '',
-      servingQuantity: 0,
+      servingQuantity: null,
       servingUnit: '',
-      weightValue: 0,
+      weightValue: null,
       weightSymbol: '',
       calories: null,
       fat: null,
@@ -132,6 +130,36 @@ class FoodCreatorViewModel {
       vitaminD: null,
       calcium: null,
       potassium: null,
+    );
+  }
+
+  factory FoodCreatorViewModel.fromNutritionFacts(PassioNutritionFacts nutritionFacts) {
+    return FoodCreatorViewModel._(
+      id: '',
+      refCode: '',
+      passioID: '',
+      iconId: '',
+      name: '',
+      additionalData: '',
+      barcode: '',
+      servingQuantity: nutritionFacts.servingQuantity,
+      servingUnit: nutritionFacts.servingUnit,
+      weightValue: nutritionFacts.weightQuantity,
+      weightSymbol: nutritionFacts.weightUnit,
+      calories: nutritionFacts.calories?.let((it) => UnitEnergy(it, UnitEnergyType.kilocalories)),
+      fat: nutritionFacts.fat.let((it) => UnitMass(it, UnitMassType.grams)),
+      carbs: nutritionFacts.carbs.let((it) => UnitMass(it, UnitMassType.grams)),
+      protein: nutritionFacts.protein.let((it) => UnitMass(it, UnitMassType.grams)),
+      satFat: nutritionFacts.saturatedFat.let((it) => UnitMass(it, UnitMassType.grams)),
+      transFat: nutritionFacts.transFat.let((it) => UnitMass(it, UnitMassType.grams)),
+      cholesterol: nutritionFacts.cholesterol.let((it) => UnitMass(it, UnitMassType.milligrams)),
+      sodium: nutritionFacts.sodium.let((it) => UnitMass(it, UnitMassType.milligrams)),
+      dietaryFiber: nutritionFacts.dietaryFiber.let((it) => UnitMass(it, UnitMassType.grams)),
+      totalSugars: nutritionFacts.sugars.let((it) => UnitMass(it, UnitMassType.grams)),
+      addedSugars: nutritionFacts.addedSugar.let((it) => UnitMass(it, UnitMassType.grams)),
+      vitaminD: nutritionFacts.vitaminD.let((it) => UnitMass(it, UnitMassType.micrograms)),
+      calcium: nutritionFacts.calcium.let((it) => UnitMass(it, UnitMassType.milligrams)),
+      potassium: nutritionFacts.potassium.let((it) => UnitMass(it, UnitMassType.milligrams)),
     );
   }
 
@@ -192,6 +220,7 @@ class FoodCreatorViewModel {
       image: image ?? this.image,
     );
   }
+
 
   @override
   bool operator ==(Object other) {
@@ -315,14 +344,14 @@ class FoodCreatorViewModel {
   bool get validate {
     final bool isNameNotEmpty = name.isNotEmpty;
     final bool isServingQuantityNotNull = servingQuantity != 0;
-    final bool isServingUnitNotNull = servingUnit.isNotEmpty;
+    final bool isServingUnitNotNull = servingUnit?.isNotEmpty ?? false;
 
     const gram = 'gram';
     const ml = 'ml';
 
     // Check if serving unit is not gram or ml and if so, ensure weight value and unit are not null
     final bool isWeightValid = (servingUnit != gram && servingUnit != ml)
-        ? weightValue != 0 && weightSymbol.isNotEmpty
+        ? weightValue != 0 && (weightSymbol?.isNotEmpty ?? false)
         : true;
 
     final caloriesValid = calories != null;
@@ -342,34 +371,34 @@ class FoodCreatorViewModel {
 
   FoodRecord toFoodRecord() {
     // Create a list of serving sizes with a default serving unit if not provided
-    final servingSizes = [PassioServingSize(servingQuantity, servingUnit)];
+    final servingSizes = [PassioServingSize(servingQuantity!, servingUnit!)];
 
     double servingWeightValue;
     // Create a serving weight with a default value of 100 grams if not provided
-    if (servingUnit.toLowerCase() != 'gram' &&
-        servingUnit.toLowerCase() != 'ml') {
-      servingWeightValue = weightValue / servingQuantity;
+    if (servingUnit!.toLowerCase() != 'gram' &&
+        servingUnit!.toLowerCase() != 'ml') {
+      servingWeightValue = weightValue! / servingQuantity!;
     } else {
       servingWeightValue = 1;
     }
 
     UnitMass servingWeight = UnitMass(
       servingWeightValue,
-      (weightSymbol == 'ml' || servingUnit.toLowerCase() == 'ml')
+      (weightSymbol == 'ml' || servingUnit!.toLowerCase() == 'ml')
           ? UnitMassType.milliliter
           : UnitMassType.grams,
     );
 
     // Create a list of serving units with the serving weight and a default serving unit if not provided
     final servingUnits = [
-      PassioServingUnit(servingUnit, servingWeight),
+      PassioServingUnit(servingUnit!, servingWeight),
       PassioServingUnit('gram', UnitMass(1, UnitMassType.grams)),
     ];
 
     // Create a food amount object with the selected quantity, unit, serving sizes, and serving units
     final amount = PassioFoodAmount(
-      selectedQuantity: servingQuantity,
-      selectedUnit: servingUnit,
+      selectedQuantity: servingQuantity!,
+      selectedUnit: servingUnit!,
       servingSizes: servingSizes,
       servingUnits: servingUnits,
     );
@@ -379,7 +408,7 @@ class FoodCreatorViewModel {
 
     // Define a reference unit of 100 grams for nutrient conversion
     final targetUnit = UnitMass(100, UnitMassType.grams);
-    final currentUnit = UnitMass(weightValue, UnitMassType.grams);
+    final currentUnit = UnitMass(weightValue!, UnitMassType.grams);
 
     final referenceNutrients = PassioNutrients.fromNutrients(
       calories:
@@ -407,7 +436,7 @@ class FoodCreatorViewModel {
 
     final bool isIconIdEmpty = iconId.isEmpty;
     final bool isImageNull = image == null;
-    final bool isUserFoodIcon = iconId.startsWith(AppCommonConstants.userFoods);
+    final bool isUserFoodIcon = iconId.startsWith(AppCommonConstants.userFood);
 
     final newIconId = (isIconIdEmpty || (isImageNull && isIconIdEmpty) || (!isImageNull && !isUserFoodIcon))
         ? _uniqueIconId

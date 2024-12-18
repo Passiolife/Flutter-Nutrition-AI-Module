@@ -25,11 +25,22 @@ class SearchingState extends FoodSearchState {
   List<Object?> get props => [];
 }
 
-class SearchForFoodSuccessState extends FoodSearchState {
-  const SearchForFoodSuccessState(
-      {required this.results, required this.alternatives});
+class UpdateSearchState extends FoodSearchState {
+  const UpdateSearchState({required this.searchText});
 
-  final List<PassioFoodDataInfo> results;
+  final String searchText;
+
+  @override
+  List<Object?> get props => [searchText];
+}
+
+class SearchForFoodSuccessState extends FoodSearchState {
+  const SearchForFoodSuccessState({
+    required this.results,
+    required this.alternatives,
+  });
+
+  final List<dynamic>? results;
   final List<String> alternatives;
 
   @override

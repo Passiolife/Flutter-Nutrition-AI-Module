@@ -8,7 +8,7 @@ import '../../../../../common/constant/app_colors.dart';
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/util/context_extension.dart';
 import '../../../../../common/util/permission_manager_utility.dart';
-import '../../../../edit_food/edit_food_page.dart';
+import '../../../../edit_food/ui/edit_food_page.dart';
 import '../../../../food_scan/widgets/scanning_animation_widget.dart';
 import '../food_creator_page.dart';
 import 'bloc/barcode_scanner_bloc.dart';
@@ -225,10 +225,12 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
       onViewExistingItem: (context) {
         EditFoodPage.navigate(
           context: context,
-          foodRecord: foodRecord,
-          redirectToDiaryOnLog: true,
-          visibleFoodCreator: !fromCustomFood,
-          visibleLogUponCreate: false,
+          params: EditFoodPageParams(
+            foodRecord: foodRecord,
+            redirectToDiaryOnLog: true,
+            visibleFoodCreator: !fromCustomFood,
+            visibleLogUponCreate: false,
+          ),
         );
       },
       customFoodButtonText: customFoodButtonText,
@@ -240,9 +242,12 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           Navigator.pop(context, barcode);
           return;
         }
+        Navigator.pop(context);
+        Navigator.pop(context);
+        Navigator.pop(context);
         FoodCreatorPage.navigate(
           context: context,
-          userFoodRecord: foodRecord,
+          loggedFoodRecord: foodRecord,
         );
       },
     );
