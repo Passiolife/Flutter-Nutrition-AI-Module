@@ -20,7 +20,7 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
     return IntrinsicHeight(
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.white,
+          color: AppColors.black,
           borderRadius: BorderRadius.circular(AppDimens.r16),
         ),
         padding: EdgeInsets.all(AppDimens.r16),

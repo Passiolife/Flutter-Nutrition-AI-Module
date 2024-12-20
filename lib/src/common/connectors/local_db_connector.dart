@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:intl/intl.dart';
-import 'package:path_provider/path_provider.dart';
 
 import '../models/food_record/food_record.dart';
 import '../models/user_profile/user_profile_model.dart';
@@ -419,10 +417,22 @@ class LocalDBConnector implements PassioConnector {
 
   @override
   Future<List<FoodRecord>> searchUserFoodsByName({required String term}) async {
-    return (await fetchUserFoods())
+    final userFoods = await fetchUserFoods();
+    final userRecipes = await fetchUserRecipes();
+
+    final filteredUserFoods = userFoods
         .where((element) =>
             element.name.toLowerCase().contains(term.toLowerCase()))
         .toList();
+
+    final filteredUserRecipes = userRecipes
+        .where((element) =>
+            element.name.toLowerCase().contains(term.toLowerCase()))
+        .toList();
+
+    final combinedList = [...filteredUserFoods, ...filteredUserRecipes];
+
+    return combinedList;
   }
 
   @override

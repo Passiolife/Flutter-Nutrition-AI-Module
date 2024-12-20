@@ -278,7 +278,7 @@
   "takePictureIntroTitle": "Taking a good picture",
   "takePictureIntroSubtitle": "Make sure all your food items are clearly visible in the shot",
   "myFoods": "My Foods",
-  "customFoods": "Custom Foods",
+  "custom": "Custom",
   "createNewFood": "Create New Food",
   "foodDetails": "Food Details",
   "editImage": "Edit Image",
@@ -286,7 +286,7 @@
   "brand": "Brand",
   "enterBrand": "enter brand",
   "barcode": "Barcode",
-  "scanABarcode": "scan a barcode",
+  "scanABarcode": "Scan a Barcode",
   "requiredNutritionFacts": "Required Nutrition Facts",
   "otherNutritionFacts": "Other Nutrition Facts",
   "serving": "serving",
@@ -367,5 +367,9 @@
   "createUserRecipeDescription": "You are about to create a user recipe from this food",
   "createOrEditUserRecipe": "Create or Edit User Recipe?",
   "createOrEditUserRecipeDescription": "Do you want to create a new user recipe based off this one, or edit the existing recipe?",
-  "voiceLoggingNoResultsFoundDescription": "Sorry, we could not find any matches. Please try again or try searching manually"
+  "voiceLoggingNoResultsFoundDescription": "Sorry, we could not find any matches. Please try again or try searching manually",
+  "photoLogging": "Photo Logging",
+  "barcodeScan": "Barcode Scan",
+  "details": "Details",
+  "upc": "UPC"
 }

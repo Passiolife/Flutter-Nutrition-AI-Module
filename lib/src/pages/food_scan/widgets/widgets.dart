@@ -12,4 +12,4 @@ export 'result_widget.dart';
 export 'scanning_animation_widget.dart';
 export 'scanning_widget.dart';
 export 'scanner_mode_widget.dart';
-export 'camera_zoom_focus_widget.dart';
+export 'camera_control_widget.dart';

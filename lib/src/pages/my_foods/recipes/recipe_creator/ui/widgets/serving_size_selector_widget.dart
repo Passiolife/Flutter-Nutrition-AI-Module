@@ -116,5 +116,7 @@ class _ServingSizeSelectorWidgetState extends State<ServingSizeSelectorWidget> {
     }
   }
 
-  void _onChangeUnit(String? value) {}
+  void _onChangeUnit(String? value) {
+    _bloc.add(DoUpdateUnitEvent(unit: value));
+  }
 }

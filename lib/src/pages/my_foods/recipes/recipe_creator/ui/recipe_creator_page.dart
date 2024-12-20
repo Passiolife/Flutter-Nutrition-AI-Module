@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/constant/app_colors.dart';
+import '../../../../../common/domain/use_cases/food_logs/convert_food_data_info_to_food_record_use_case.dart';
 import '../../../../../common/util/context_extension.dart';
 import '../../../../../common/util/snackbar_extension.dart';
 import '../../../../../common/widgets/custom_app_bar_widget.dart';
@@ -46,7 +47,7 @@ class RecipeCreatorPage extends StatelessWidget {
     return NavigationDataProvider(
       params: params,
       child: BlocProvider(
-        create: (context) => RecipeCreatorBloc(),
+        create: (context) => RecipeCreatorBloc(convertFoodDataInfoToFoodRecordUseCase: ConvertFoodDataInfoToFoodRecordUseCase()),
         child: const _RecipeCreatorScreen(),
       ),
     );

@@ -30,16 +30,6 @@ class GetAllFavouritesFailureState extends FavoritesState {
   List<Object?> get props => [message];
 }
 
-// States for [DoFavoriteDeleteEvent]
-class FavoriteDeleteSuccessState extends FavoritesState {
-  const FavoriteDeleteSuccessState({required this.milliseconds});
-
-  final int milliseconds;
-
-  @override
-  List<Object?> get props => [milliseconds];
-}
-
 class FavoriteDeleteFailureState extends FavoritesState {
   final String message;
 

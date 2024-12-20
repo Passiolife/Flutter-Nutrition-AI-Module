@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 import '../locale/app_localizations.dart';
 
@@ -25,4 +25,8 @@ extension Dimension on BuildContext {
 
   /// [localization] is use to get the locale string.
   AppLocalizations? get localization => AppLocalizations.instance;
+
+  ThemeData get theme => Theme.of(this);
+
+  TextTheme get textTheme => theme.textTheme;
 }

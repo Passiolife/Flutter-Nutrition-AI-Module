@@ -13,8 +13,12 @@ class AppCommonConstants {
   static const needsReturn = 'needs_return';
   static const visibleSwitch = 'visible_switch';
 
-  // Recipe
+
   static const recipePrefix = 'MyRec';
   static const userFood = 'user_food';
+  static const userRecipe = 'user_recipe';
+
   static const recipe = 'recipe';
+
+
 }

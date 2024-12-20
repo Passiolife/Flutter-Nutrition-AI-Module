@@ -2,8 +2,6 @@ import 'package:flutter/foundation.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../constant/app_common_constants.dart';
-import '../../util/file_utility.dart';
-import '../../util/path_util.dart';
 import 'food_record_ingredient.dart';
 import 'meal_label.dart';
 
@@ -64,14 +62,20 @@ class FoodRecord {
 
   /// Custom user food Members
   static const userFoodPrefix = 'user_food';
+
   bool get isUserFoodIcon => iconId.startsWith(userFoodPrefix);
+
   bool get hasUserFoodReference => refCode.startsWith(userFoodPrefix);
+
   String get foodIdFromRefCode => refCode.replaceFirst(userFoodPrefix, '');
 
   /// Custom user recipe Members
   static const String userRecipePrefix = 'user_recipe';
+
   bool get iconIsUserRecipe => iconId.startsWith(userRecipePrefix);
+
   bool get hasUserRecipeReference => refCode.startsWith(userRecipePrefix);
+
   String get recipeIdFromRefCode => refCode.replaceFirst(userRecipePrefix, '');
 
   /// Sets the selected unit for the food item while keeping the weight consistent.
@@ -416,9 +420,26 @@ class FoodRecord {
     if (servingUnits.cast<PassioServingUnit?>().firstWhere(
             (element) => element?.unitName == unit,
             orElse: () => null) ==
-        null) return false;
+        null) {
+      return false;
+    }
 
     _selectedUnit = unit;
+    _calculateQuantityForIngredients();
+    return true;
+  }
+
+  bool setSelectedServingSize(String unit) {
+    if (_selectedUnit == unit) return true;
+    final servingSize = servingSizes
+        .cast<PassioServingSize?>()
+        .firstWhere((element) => element?.unitName == unit, orElse: () => null);
+    if (servingSize == null) {
+      return false;
+    }
+
+    _selectedUnit = servingSize.unitName;
+    _selectedQuantity = servingSize.quantity;
     _calculateQuantityForIngredients();
     return true;
   }

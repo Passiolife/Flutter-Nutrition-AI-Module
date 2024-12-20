@@ -5,6 +5,7 @@ import '../constant/app_colors.dart';
 import '../constant/app_dimens.dart';
 import '../constant/app_shadow.dart';
 import '../constant/app_text_styles.dart';
+import '../util/context_extension.dart';
 
 // This class represents a widget for a floating button with expanded content.
 class FloatingButtonExpandedWidget extends StatelessWidget {
@@ -18,6 +19,7 @@ class FloatingButtonExpandedWidget extends StatelessWidget {
 
   // Path to the image asset for the button icon.
   final String imagePath;
+
   // Text to display next to the button icon.
   final String? text;
 
@@ -43,7 +45,11 @@ class FloatingButtonExpandedWidget extends StatelessWidget {
           // Widget to display the icon.
           SvgPicture.asset(
             imagePath,
-            colorFilter: colorFilter,
+            colorFilter: colorFilter ??
+                ColorFilter.mode(
+                  AppColors.indigo600Main,
+                  BlendMode.srcIn,
+                ),
             width: AppDimens.r24,
             height: AppDimens.r24,
           ),
@@ -58,6 +64,7 @@ class FloatingButtonExpandedWidget extends StatelessWidget {
           ),
         ],
       ),
+
     );
   }
 }

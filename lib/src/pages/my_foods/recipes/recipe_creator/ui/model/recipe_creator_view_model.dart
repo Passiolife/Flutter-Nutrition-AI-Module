@@ -31,17 +31,18 @@ class RecipeCreatorViewModel {
     return RecipeCreatorViewModel._();
   }
 
-  static Future<RecipeCreatorViewModel> fromRecord(FoodRecord record, Uint8List? image) async {
+  static Future<RecipeCreatorViewModel> fromRecord(
+      FoodRecord record, Uint8List? image) async {
     // final image = await record.customImage;
     final foodRecord = FoodRecord.fromJson(record.toJson());
+    final sliderData = SliderData().updateSliderData(
+        foodRecord.getSelectedUnit(), foodRecord.getSelectedQuantity());
     return RecipeCreatorViewModel._(
-      recipeName: record.name,
-      image: image,
-      foodRecord: foodRecord,
-      servingSize: record.computedWeight,
-      sliderData: SliderData().updateSliderData(foodRecord.getSelectedUnit(), foodRecord.getSelectedQuantity())
-    );
-
+        recipeName: record.name,
+        image: image,
+        foodRecord: foodRecord,
+        servingSize: record.computedWeight,
+        sliderData: sliderData);
   }
 
   RecipeCreatorViewModel _copyWith({
@@ -68,6 +69,17 @@ class RecipeCreatorViewModel {
     return _copyWith(recipeName: name);
   }
 
+  RecipeCreatorViewModel doUpdateUnit({String? unit}) {
+    if (unit == null) return this;
+    foodRecord?.setSelectedServingSize(unit);
+    final updatedSliderData = sliderData?.updateSliderData(
+        foodRecord!.getSelectedUnit(), foodRecord!.getSelectedQuantity());
+    return _copyWith(
+      foodRecord: foodRecord,
+      sliderData: updatedSliderData,
+    );
+  }
+
   RecipeCreatorViewModel doRemoveIngredient(int index) {
     foodRecord = foodRecord?.removeRecipeIngredient(index: index);
     return _copyWith(
@@ -84,13 +96,13 @@ class RecipeCreatorViewModel {
     if (!fromSlider) {
       return _copyWith(foodRecord: foodRecord);
     }
-    sliderData?.updateSliderData(
+    final updatedSliderData = sliderData?.updateSliderData(
         foodRecord!.getSelectedUnit(), foodRecord!.getSelectedQuantity());
 
     return _copyWith(
       foodRecord: foodRecord,
       servingSize: foodRecord?.computedWeight,
-      sliderData: sliderData,
+      sliderData: updatedSliderData,
     );
   }
 

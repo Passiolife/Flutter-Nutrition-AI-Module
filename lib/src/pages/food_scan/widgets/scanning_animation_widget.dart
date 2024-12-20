@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../common/constant/app_constants.dart';
 import 'scanner_widget.dart';
 
-class ScanningAnimationWidget extends StatefulWidget {
+/*class ScanningAnimationWidget extends StatefulWidget {
   const ScanningAnimationWidget({super.key});
 
   @override
@@ -90,4 +90,4 @@ class ScanningAnimationWidgetState extends State<ScanningAnimationWidget>
   bool isRunningAnimation() {
     return _scanningAnimationController.isAnimating;
   }
-}
+}*/

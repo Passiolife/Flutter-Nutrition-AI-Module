@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -10,13 +8,12 @@ import '../../common/constant/app_constants.dart';
 import '../../common/models/settings/settings.dart';
 import '../../common/util/context_extension.dart';
 import '../../common/util/permission_manager_utility.dart';
-import '../../common/util/snackbar_extension.dart';
-import '../../common/widgets/draggable_bottom_sheet_widget.dart';
 import '../dashboard/dashboard_page.dart';
 import '../edit_food/ui/edit_food_page.dart';
 import '../food_search/food_search_page.dart';
 import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/food_scan_bloc.dart';
+import 'screen/food_scan_screen.dart';
 import 'widgets/nutrition_facts_result_widget.dart';
 import 'widgets/widgets.dart';
 
@@ -52,8 +49,8 @@ class _FoodScanPageState extends State<FoodScanPage>
   // Bloc instance responsible for managing the state of the FoodScan feature
   final FoodScanBloc _bloc = FoodScanBloc();
 
-  final GlobalKey<ScanningAnimationWidgetState> _scanningAnimationKey =
-      GlobalKey<ScanningAnimationWidgetState>();
+  // final GlobalKey<ScanningAnimationWidgetState> _scanningAnimationKey =
+  //     GlobalKey<ScanningAnimationWidgetState>();
 
   // This flag controls the visibility of the Passio preview,
   // ensuring it's only shown after the screen has rendered to provide a smoother navigation experience.
@@ -80,158 +77,152 @@ class _FoodScanPageState extends State<FoodScanPage>
 
   PassioNutritionFacts? _nutritionFacts;
 
-  @override
+ /* @override
   void initState() {
-    _initialize();
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _initialize();
+    });
     super.initState();
-  }
+  }*/
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Set background color
-      backgroundColor: AppColors.gray50,
-      // Prevent the screen from resizing when the keyboard is shown
-      resizeToAvoidBottomInset: false,
-      body: BlocConsumer<FoodScanBloc, FoodScanState>(
-        bloc: _bloc,
-        listener: _handleStateChanges,
-        buildWhen: (_, state) =>
-            state is! ScanningAnimationState &&
-            state is! ConversionSuccessState,
-        builder: (context, state) {
-          return Column(
-            children: [
-              CustomAppBarWidget(
-                title: context.localization?.foodScanner,
-                isMenuVisible: false,
-                suffix: GestureDetector(
-                  behavior: HitTestBehavior.opaque,
-                  onTap: () {
-                    _bloc.add(const IntroScreenEvent(shouldVisible: true));
-                  },
-                  child: SvgPicture.asset(
-                    AppImages.icQuestionMarkCircle,
-                    width: AppDimens.r24,
-                    height: AppDimens.r24,
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    _showPassioPreview
-                        ? const PassioPreview()
-                        : Container(color: AppColors.black),
-                    GestureDetector(
-                      behavior: HitTestBehavior.opaque,
-                      onTap: state is ScanResultState
-                          ? () => _bottomBackgroundWidgetKey.currentState
-                              ?.setInitialHeight()
-                          : null,
-                      child:
-                          ScanningAnimationWidget(key: _scanningAnimationKey),
-                    ),
-                    Positioned(
-                      top: 500.h,
-                      left: 24.w,
-                      right: 24.w,
-                      child: CameraZoomFocusWidget(
-                        currentZoomLevel: _currentZoom,
-                        minZoomLevel: _cameraZoomLevel?.minZoomLevel ?? 1,
-                        maxZoomLevel: _cameraZoomLevel?.maxZoomLevel ?? 10,
-                        onChanged: (value) {
-                          _bloc.add(
-                              DoUpdateCameraZoomLevelEvent(zoomLevel: value));
-                        },
-                        isFocusOn: false,
-                        onChangeFocus: () {
-                          context.showSnackbar(text: 'Work is in progress.');
-                        },
-                      ),
-                    ),
-                    (state is ScanLoadingState ||
-                            state is ScanResultState ||
-                            state is NutritionFactsResultState)
-                        ? DraggableBottomSheetWidget(
-                            key: ObjectKey(state is ScanResultState
-                                ? state.foodItem
-                                : true),
-                            initialSize: _initialSheetSize,
-                            minSize: _initialSheetSize,
-                            maxSize: _maxSheetSize,
-                            shouldDraggable: _sheetDraggable,
-                            builder: (context, dragController, controller,
-                                widgetState) {
-                              return state is ScanResultState ||
-                                      state is NutritionFactsResultState
-                                  ? _currentMode == 2
-                                      ? NutritionFactsResultWidget(
-                                          nutritionFacts: _nutritionFacts,
-                                          isLoadingNext: state
-                                              is NutritionFactsLoadingNextState,
-                                          isEnableNext: _nutritionFacts != null,
-                                          handler: this,
-                                        )
-                                      : ResultWidget(
-                                          dragController: dragController,
-                                          scrollController: controller,
-                                          widgetState: widgetState,
-                                          iconId: _foodItem?.iconId ??
-                                              _detectedCandidate?.passioID ??
-                                              '',
-                                          foodName: _foodItem?.name ??
-                                              _detectedCandidate?.foodName ??
-                                              '',
-                                          alternatives: _alternatives,
-                                          listener: this,
-                                          shouldDraggable: _sheetDraggable,
-                                          visibleDragIntro: !Settings.instance
-                                              .getDragIntroSeen(),
-                                        )
-                                  : const ScanningWidget();
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                    ScannerModeWidget(
-                      initialMode: _currentMode,
-                      onModeChanged: (mode) {
-                        _bottomBackgroundWidgetKey.currentState
-                            ?.setMaxSizeWithInitialInPixels(
-                                _bottomBackgroundWidgetKey.currentState
-                                        ?.getInitialSizePixels() ??
-                                    0);
-                        _currentMode = mode;
-                        _bloc.add(DoModeChangeEvent(mode: _currentMode ?? 0));
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          );
-        },
-      ),
+    return BlocProvider(
+      create: (context) => FoodScanBloc(),
+      child: FoodScanScreen(),
+      /*Scaffold(
+        // Set background color
+        backgroundColor: AppColors.gray50,
+        // Prevent the screen from resizing when the keyboard is shown
+        resizeToAvoidBottomInset: false,
+        body: BlocConsumer<FoodScanBloc, FoodScanState>(
+          bloc: _bloc,
+          listener: _handleStateChanges,
+          buildWhen: (_, state) =>
+          state is! ScanningAnimationState &&
+              state is! ConversionSuccessState,
+          builder: (context, state) {
+            return Column(
+              children: [
+                const AppBarSection(),
+                const CameraSection(),
+                // Expanded(
+                //   child: Stack(
+                //     fit: StackFit.expand,
+                //     children: [
+                //       _showPassioPreview
+                //           ? const PassioPreview()
+                //           : Container(color: AppColors.black),
+                //       GestureDetector(
+                //         behavior: HitTestBehavior.opaque,
+                //         onTap: state is ScanResultState
+                //             ? () =>
+                //             _bottomBackgroundWidgetKey.currentState
+                //                 ?.setInitialHeight()
+                //             : null,
+                //         child:
+                //         ScanningAnimationWidget(key: _scanningAnimationKey),
+                //       ),
+                //       Positioned(
+                //         top: 500.h,
+                //         left: 24.w,
+                //         right: 24.w,
+                //         child: CameraZoomFocusWidget(
+                //           currentZoomLevel: _currentZoom,
+                //           minZoomLevel: _cameraZoomLevel?.minZoomLevel ?? 1,
+                //           maxZoomLevel: _cameraZoomLevel?.maxZoomLevel ?? 10,
+                //           onChanged: (value) {
+                //             _bloc.add(
+                //                 DoUpdateCameraZoomLevelEvent(zoomLevel: value));
+                //           },
+                //           isFocusOn: false,
+                //           onChangeFocus: () {
+                //             context.showSnackbar(text: 'Work is in progress.');
+                //           },
+                //         ),
+                //       ),
+                //       (state is ScanLoadingState ||
+                //           state is ScanResultState ||
+                //           state is NutritionFactsResultState)
+                //           ? DraggableBottomSheetWidget(
+                //         key: ObjectKey(state is ScanResultState
+                //             ? state.foodItem
+                //             : true),
+                //         initialSize: _initialSheetSize,
+                //         minSize: _initialSheetSize,
+                //         maxSize: _maxSheetSize,
+                //         shouldDraggable: _sheetDraggable,
+                //         builder: (context, dragController, controller,
+                //             widgetState) {
+                //           return state is ScanResultState ||
+                //               state is NutritionFactsResultState
+                //               ? _currentMode == 2
+                //               ? NutritionFactsResultWidget(
+                //             nutritionFacts: _nutritionFacts,
+                //             isLoadingNext: state
+                //             is NutritionFactsLoadingNextState,
+                //             isEnableNext: _nutritionFacts != null,
+                //             handler: this,
+                //           )
+                //               : ResultWidget(
+                //             dragController: dragController,
+                //             scrollController: controller,
+                //             widgetState: widgetState,
+                //             iconId: _foodItem?.iconId ??
+                //                 _detectedCandidate?.passioID ??
+                //                 '',
+                //             foodName: _foodItem?.name ??
+                //                 _detectedCandidate?.foodName ??
+                //                 '',
+                //             alternatives: _alternatives,
+                //             listener: this,
+                //             shouldDraggable: _sheetDraggable,
+                //             visibleDragIntro: !Settings.instance
+                //                 .getDragIntroSeen(),
+                //           )
+                //               : const ScanningWidget();
+                //         },
+                //       )
+                //           : const SizedBox.shrink(),
+                //       ScannerModeWidget(
+                //         initialMode: _currentMode,
+                //         onModeChanged: (mode) {
+                //           _bottomBackgroundWidgetKey.currentState
+                //               ?.setMaxSizeWithInitialInPixels(
+                //               _bottomBackgroundWidgetKey.currentState
+                //                   ?.getInitialSizePixels() ??
+                //                   0);
+                //           _currentMode = mode;
+                //           _bloc.add(DoModeChangeEvent(mode: _currentMode ?? 0));
+                //         },
+                //       ),
+                //     ],
+                //   ),
+                // ),
+              ],
+            );
+          },
+        ),
+      ),*/
     );
   }
 
-  @override
-  void dispose() {
-    _bloc.add(const StopFoodDetectionEvent());
-    _lifecycleListener?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _bloc.add(const StopFoodDetectionEvent());
+  //   _lifecycleListener?.dispose();
+  //   super.dispose();
+  // }
 
   void _initialize() {
     // Create an AppLifecycleListener to listen for changes in the app lifecycle
-    _lifecycleListener = AppLifecycleListener(
-      // Callback function triggered on app lifecycle state change
-      onStateChange: (state) {
-        // Call permission manager to handle app lifecycle state change
-        _permissionManager.didChangeAppLifecycleState(state);
-      },
-    );
+    // _lifecycleListener = AppLifecycleListener(
+    //   // Callback function triggered on app lifecycle state change
+    //   onStateChange: (state) {
+    //     // Call permission manager to handle app lifecycle state change
+    //     _permissionManager.didChangeAppLifecycleState(state);
+    //   },
+    // );
 
     // Trigger the IntroScreenEvent in the bloc to initialize the intro screen
     _bloc.add(const IntroScreenEvent());
@@ -264,11 +255,13 @@ class _FoodScanPageState extends State<FoodScanPage>
       _nutritionFacts = state.nutritionFacts;
     } else if (state is ConversionSuccessState) {
       _redirectToEdit(state.foodItem);
-    } else if (state is UpdatedCameraZoomState) {
-      _currentZoom = state.zoomLevel;
-    } else if (state is CameraZoomStateLoaded) {
-      _cameraZoomLevel = state.cameraZoomLevel;
-    } else if (state is NutritionFactsSuccessState) {
+    }
+    // else if (state is UpdatedCameraZoomState) {
+    //   _currentZoom = state.zoomLevel;
+    // } else if (state is CameraZoomLoadedState) {
+    //   _cameraZoomLevel = state.cameraZoomLevel;
+    // }
+    else if (state is NutritionFactsSuccessState) {
       FoodCreatorPage.navigate(
           context: context, loggedFoodRecord: state.foodRecord);
     }
@@ -328,9 +321,9 @@ class _FoodScanPageState extends State<FoodScanPage>
   // Handle scan result visibility
   void _handleScanningAnimationState(bool shouldStart) {
     if (shouldStart) {
-      _scanningAnimationKey.currentState?.startScanningAnimation();
+      // _scanningAnimationKey.currentState?.startScanningAnimation();
     } else {
-      _scanningAnimationKey.currentState?.stopScanningAnimation();
+      // _scanningAnimationKey.currentState?.stopScanningAnimation();
     }
   }
 
@@ -353,7 +346,7 @@ class _FoodScanPageState extends State<FoodScanPage>
   }
 
   void _handleBarcodeNotRecognizedState(BarcodeNotRecognizedState state) {
-    _handleScanningAnimationState(!state.shouldVisible);
+    // _handleScanningAnimationState(!state.shouldVisible);
     BarcodeNotRecognizedDialog.show(
       context: context,
       onTapCancel: (context) {
@@ -394,7 +387,7 @@ class _FoodScanPageState extends State<FoodScanPage>
         _bloc.add(ScanResultDragEvent(isCollapsed: isCollapsed));
       });
     } else {
-      _scanningAnimationKey.currentState?.stopScanningAnimation();
+      // _scanningAnimationKey.currentState?.stopScanningAnimation();
       _bloc.add(ScanResultDragEvent(isCollapsed: isCollapsed));
     }
   }
@@ -414,6 +407,7 @@ class _FoodScanPageState extends State<FoodScanPage>
         detectedCandidate: candidate,
         redirectToDiaryOnLog: true,
         visibleFoodCreator: true,
+        visibleRecipeCreator: true,
       ),
     );
   }

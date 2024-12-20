@@ -9,6 +9,7 @@ import '../../../common/widgets/food_item_row_widget.dart';
 import '../../../common/widgets/loading/shimmer_loading.dart';
 import '../../edit_food/ui/edit_food_page.dart';
 import '../bloc/food_search_bloc.dart';
+import '../models/food_selection_result.dart';
 import '../models/navigation_data_provider.dart';
 
 class MyFoodsSection extends StatelessWidget {
@@ -44,12 +45,13 @@ class MyFoodsSection extends StatelessWidget {
                 final subtitle = data.additionalData;
                 return FoodItemRowWidget(
                   data: FoodItemRowData(
-                  index: index,
-                  iconId: iconId,
-                  title: title,
-                  subtitle: subtitle,
-                  onTap: () => _onSearchItemClick(context: context, data: data),
-                  enableSlidable: false,
+                    index: index,
+                    iconId: iconId,
+                    title: title,
+                    subtitle: subtitle,
+                    onTap: () => _onTap(context: context, data: data),
+                    onTapAdd: () => _onTapAdd(context: context, data: data),
+                    enableSlidable: false,
                   ),
                 );
               }
@@ -64,22 +66,53 @@ class MyFoodsSection extends StatelessWidget {
     );
   }
 
-  void _onSearchItemClick({
+  void _handleNavigation({
     required BuildContext context,
-    required FoodRecord data,
+    required VoidCallback ifNeedsReturn,
+    required VoidCallback ifNoNeedsReturn,
   }) {
     final navigationDataProvider = SearchNavigationDataProvider.of(context);
     if (navigationDataProvider.needsReturn) {
-      Navigator.pop(context, data);
+      ifNeedsReturn();
     } else {
-      EditFoodPage.navigate(
+      ifNoNeedsReturn();
+    }
+  }
+
+  void _onTap({
+    required BuildContext context,
+    required FoodRecord data,
+  }) {
+    _handleNavigation(
+      context: context,
+      ifNeedsReturn: () {
+        final result = FoodSelectionResult(foodRecord: data, fromAdd: false);
+        Navigator.pop(context, result);
+      },
+      ifNoNeedsReturn: () => EditFoodPage.navigate(
         context: context,
         params: EditFoodPageParams(
           foodRecord: data,
           visibleFoodCreator: true,
+          visibleRecipeCreator: true,
           redirectToDiaryOnLog: true,
         ),
-      );
-    }
+      ),
+    );
+  }
+
+  void _onTapAdd({
+    required BuildContext context,
+    required FoodRecord data,
+  }) {
+    _handleNavigation(
+      context: context,
+      ifNeedsReturn: () {
+        final result = FoodSelectionResult(foodRecord: data, fromAdd: true);
+        Navigator.pop(context, result);
+      },
+      ifNoNeedsReturn: () =>
+          context.read<FoodSearchBloc>().add(DoFoodLogEvent(foodRecord: data)),
+    );
   }
 }

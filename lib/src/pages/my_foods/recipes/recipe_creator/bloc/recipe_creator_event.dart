@@ -31,8 +31,18 @@ class DoUpdateRecipeNameEvent extends RecipeCreatorEvent {
   List<Object?> get props => [name];
 }
 
+class DoUpdateUnitEvent extends RecipeCreatorEvent {
+  const DoUpdateUnitEvent({this.unit});
+
+  final String? unit;
+
+  @override
+  List<Object?> get props => [unit];
+}
+
 class DoUpdateQuantityEvent extends RecipeCreatorEvent {
-  const DoUpdateQuantityEvent({required this.quantity, this.fromSlider = false});
+  const DoUpdateQuantityEvent(
+      {required this.quantity, this.fromSlider = false});
 
   final double quantity;
   final bool fromSlider;
@@ -41,8 +51,22 @@ class DoUpdateQuantityEvent extends RecipeCreatorEvent {
   List<Object?> get props => [quantity, fromSlider];
 }
 
+class DoConvertIngredientEvent extends RecipeCreatorEvent {
+  const DoConvertIngredientEvent({
+    this.foodDataInfo,
+    this.foodRecord,
+  });
+
+  final PassioFoodDataInfo? foodDataInfo;
+  final FoodRecord? foodRecord;
+
+  @override
+  List<Object?> get props => [foodDataInfo, foodRecord];
+}
+
 class DoUpdateIngredients extends RecipeCreatorEvent {
-  const DoUpdateIngredients({this.index, required this.foodRecord, this.isUpdate = false});
+  const DoUpdateIngredients(
+      {this.index, required this.foodRecord, this.isUpdate = false});
 
   final FoodRecord foodRecord;
   final int? index;

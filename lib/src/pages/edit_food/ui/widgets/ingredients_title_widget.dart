@@ -6,6 +6,9 @@ import '../../../../common/constant/app_padding.dart';
 import '../../../../common/models/food_record/food_record.dart';
 import '../../../../common/util/context_extension.dart';
 import '../../../../common/widgets/app_button.dart';
+import '../../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart'
+    as recipe;
+import '../../../my_foods/recipes/recipe_creator/ui/recipe_creator_page.dart';
 import '../../bloc/edit_food_bloc.dart';
 import '../dialogs/create_user_recipe_dialog.dart';
 import '../edit_food_page.dart';
@@ -15,6 +18,8 @@ class IngredientsTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final navigationParams = NavigationDataProvider.of(context).params;
+
     final foodRecord = context.watch<EditFoodBloc>().foodRecord;
     bool isRecipe = (foodRecord?.ingredients ?? []).length >= 2;
     return Padding(
@@ -27,7 +32,7 @@ class IngredientsTitleWidget extends StatelessWidget {
               style: AppTextStyle.textBase.addAll([AppTextStyle.semiBold]),
             ),
           ),
-          AppButton(
+          navigationParams.visibleRecipeCreator ? AppButton(
             buttonText: isRecipe
                 ? context.localization?.editRecipe
                 : context.localization?.makeCustomRecipe,
@@ -36,18 +41,27 @@ class IngredientsTitleWidget extends StatelessWidget {
             ),
             onTap: () => _handleRecipeTapped(
                 context: context, isRecipe: isRecipe, foodRecord: foodRecord),
-          ),
+          ) : const SizedBox.shrink(),
         ],
       ),
     );
   }
 
-  void _handleRecipeTapped({
+  Future<void> _handleRecipeTapped({
     required BuildContext context,
     bool isRecipe = false,
     FoodRecord? foodRecord,
-  }) {
+  }) async {
     if (foodRecord != null) {
+      final navigationParams = NavigationDataProvider.of(context).params;
+      if (navigationParams.source == AppCommonConstants.userRecipe) {
+        await RecipeCreatorPage.navigate(
+          context: context,
+          params: recipe.NavigationData(recipeFoodRecord: foodRecord),
+        );
+        return;
+      }
+
       final params = NavigationDataProvider.of(context).params;
       CreateUserRecipeDialog.show(
         context: context,

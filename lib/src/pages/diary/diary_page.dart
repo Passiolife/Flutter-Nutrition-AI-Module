@@ -44,6 +44,7 @@ class _DiaryPageState extends State<DiaryPage>
         foodRecord: foodRecord,
         isUpdate: true,
         visibleFoodCreator: true,
+        visibleRecipeCreator: true,
         visibleDelete: true,
       ),
     );
@@ -186,6 +187,7 @@ class _DiaryPageState extends State<DiaryPage>
         passioFoodDataInfo: data.passioFoodDataInfo,
         foodRecord: data.foodRecord,
         visibleFoodCreator: true,
+        visibleRecipeCreator: true,
         message: context.localization?.itemAddedToDiary,
       ),
     );

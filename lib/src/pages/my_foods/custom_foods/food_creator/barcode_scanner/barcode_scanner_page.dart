@@ -9,7 +9,6 @@ import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/util/context_extension.dart';
 import '../../../../../common/util/permission_manager_utility.dart';
 import '../../../../edit_food/ui/edit_food_page.dart';
-import '../../../../food_scan/widgets/scanning_animation_widget.dart';
 import '../food_creator_page.dart';
 import 'bloc/barcode_scanner_bloc.dart';
 import 'dialogs/barcode_dialog.dart';
@@ -42,7 +41,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
   // ensuring it's only shown after the screen has rendered to provide a smoother navigation experience.
   bool _showPassioPreview = false;
 
-  final _scanningAnimationKey = GlobalKey<ScanningAnimationWidgetState>();
+  // final _scanningAnimationKey = GlobalKey<ScanningAnimationWidgetState>();
 
   bool _visibleDialog = false;
 
@@ -94,12 +93,13 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
                     _showPassioPreview
                         ? const PassioPreview()
                         : Container(color: AppColors.black),
-                    AnimatedOpacity(
+                    // TODO: Handle animation
+                    /*AnimatedOpacity(
                       opacity: _visibleDialog ? 0 : 1,
                       duration: const Duration(milliseconds: 250),
                       child:
                           ScanningAnimationWidget(key: _scanningAnimationKey),
-                    ),
+                    ),*/
                     Positioned(
                       top: 110.h + 380.h,
                       left: 0,
@@ -196,11 +196,11 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
 
   // Handle scan result visibility
   void _handleScanningAnimationState(bool shouldStart) {
-    if (shouldStart) {
-      _scanningAnimationKey.currentState?.startScanningAnimation();
-    } else {
-      _scanningAnimationKey.currentState?.stopScanningAnimation();
-    }
+    // if (shouldStart) {
+    //   _scanningAnimationKey.currentState?.startScanningAnimation();
+    // } else {
+    //   _scanningAnimationKey.currentState?.stopScanningAnimation();
+    // }
   }
 
   // Helper method to show the barcode dialog
@@ -228,7 +228,6 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           params: EditFoodPageParams(
             foodRecord: foodRecord,
             redirectToDiaryOnLog: true,
-            visibleFoodCreator: !fromCustomFood,
             visibleLogUponCreate: false,
           ),
         );

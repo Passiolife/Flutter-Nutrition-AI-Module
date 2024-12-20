@@ -22,6 +22,11 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
   PassioNutritionFacts? _nutritionFacts;
 
+  // Camera Zoom Members
+  double _currentZoom = 1;
+  double _minZoom = 1;
+  double _maxZoom = 1;
+
   @override
   void onNutritionFactsRecognized(
       PassioNutritionFacts? nutritionFacts, String? text) {
@@ -51,14 +56,16 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
     // Scanning Events
     on<DoModeChangeEvent>(_handleDoModeChangeEvent);
-    on<GetCameraZoomLevelEvent>(_handleGetCameraZoomLevelEvent);
-    on<DoUpdateCameraZoomLevelEvent>(_handleDoUpdateCameraZoomLevelEvent);
     on<ScanningEvent>(_handleScanningEvent);
     on<ScanningAnimationEvent>(_handleScanningAnimationEvent);
     on<StartScanningEvent>(_handleStartScanningEvent);
     on<StartFoodDetectionEvent>(_handleStartFoodDetectionEvent);
     on<StopFoodDetectionEvent>(_handleStopFoodDetectionEvent);
     on<DetectedEvent>(_handleDetectedEvent);
+
+    // Camera Zoom Events
+    on<GetCameraZoomLevelEvent>(_handleGetCameraZoomLevelEvent);
+    on<DoUpdateCameraZoomLevelEvent>(_handleDoUpdateCameraZoomLevelEvent);
 
     // Scan dialog event
     on<ScanResultDragEvent>(_handleScanResultDragEvent);
@@ -105,18 +112,19 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
       StartScanningEvent event, Emitter<FoodScanState> emit) async {
     add(const ScanningEvent());
     add(const StartFoodDetectionEvent());
+    add(const GetCameraZoomLevelEvent());
   }
 
   FutureOr<void> _handleStartFoodDetectionEvent(
       StartFoodDetectionEvent event, Emitter<FoodScanState> emit) async {
-    if (_currentMode == 2) {
-      NutritionAI.instance.startNutritionFactsDetection(this);
-      return;
-    }
+    // if (_currentMode == 2) {
+    //   NutritionAI.instance.startNutritionFactsDetection(this);
+    //   return;
+    // }
     final detectionConfig = FoodDetectionConfiguration(
-      detectVisual: _currentMode == null || _currentMode == 0,
-      detectBarcodes: _currentMode == 1,
-      detectPackagedFood: _currentMode == null || _currentMode == 0,
+      detectVisual: false,
+      detectBarcodes: true,
+      detectPackagedFood: false,
     );
     NutritionAI.instance.startFoodDetection(detectionConfig, this);
   }
@@ -137,7 +145,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     if ((barcodeCandidates?.isEmpty ?? true) &&
         (packagedFoodCandidates?.isEmpty ?? true) &&
         (detectedCandidates?.isEmpty ?? true)) {
-      emit(const ScanLoadingState());
+      // emit(const ScanLoadingState());
     } else {
       DetectedCandidate? detectedCandidate;
       List<DetectedCandidate> alternatives = [];
@@ -146,7 +154,8 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
         foodItem = await NutritionAI.instance
             .fetchFoodItemForProductCode(barcodeCandidates!.first.value);
         if (foodItem == null) {
-          add(const BarcodeNotRecognizedEvent(shouldVisible: true));
+          add(StopFoodDetectionEvent());
+          add(const BarcodeNotRecognizedEvent());
           return;
         }
       } else if (packagedFoodCandidates?.firstOrNull != null) {
@@ -185,12 +194,12 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
   FutureOr<void> _handleBarcodeNotRecognizedEvent(
       BarcodeNotRecognizedEvent event, Emitter<FoodScanState> emit) async {
-    if (event.shouldVisible) {
-      add(const StopFoodDetectionEvent());
-    } else {
-      add(const StartScanningEvent());
-    }
-    emit(BarcodeNotRecognizedState(shouldVisible: event.shouldVisible));
+    // if (event.shouldVisible) {
+    //   add(const StopFoodDetectionEvent());
+    // } else {
+    //   add(const StartScanningEvent());
+    // }
+    emit(const BarcodeNotRecognizedState());
   }
 
   FutureOr<void> _handlePackagedFoodNotRecognizedEvent(
@@ -273,15 +282,18 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
 
   FutureOr<void> _handleDoUpdateCameraZoomLevelEvent(
       DoUpdateCameraZoomLevelEvent event, Emitter<FoodScanState> emit) {
-    NutritionAI.instance.setCameraZoomLevel(zoomLevel: event.zoomLevel);
-    emit(UpdatedCameraZoomState(zoomLevel: event.zoomLevel));
+    _currentZoom = event.zoomLevel;
+    NutritionAI.instance.setCameraZoomLevel(zoomLevel: _currentZoom);
+    emit(UpdatedCameraZoomState(currentZoom: _currentZoom, minZoom: _minZoom, maxZoom: _maxZoom));
   }
 
   Future<void> _handleGetCameraZoomLevelEvent(
       GetCameraZoomLevelEvent event, Emitter<FoodScanState> emit) async {
     final cameraZoomLevel =
         await NutritionAI.instance.getMinMaxCameraZoomLevel();
-    emit(CameraZoomStateLoaded(cameraZoomLevel: cameraZoomLevel));
+    _minZoom = cameraZoomLevel.minZoomLevel ?? 1;
+    _maxZoom = cameraZoomLevel.maxZoomLevel ?? 1;
+    emit(UpdatedCameraZoomState(currentZoom: _currentZoom, minZoom: _minZoom, maxZoom: _maxZoom));
   }
 
   FutureOr<void> _handleDoNextNutritionFactsEvent(

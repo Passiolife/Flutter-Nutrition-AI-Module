@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../nutrition_ai_module.dart';
+import '../../../../../nutrition_ai_module.dart';
 
 part 'favorites_event.dart';
 part 'favorites_state.dart';
@@ -41,9 +41,8 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
         return;
       }
       await _connector.deleteFavorite(foodRecord: foodRecord);
-      // No any error, so emit the success state.
-      emit(FavoriteDeleteSuccessState(
-          milliseconds: DateTime.now().millisecondsSinceEpoch));
+
+      add(const GetAllFavoritesEvent());
     } catch (e) {
       // If found any error then emit the failure state.
       emit(FavoriteDeleteFailureState(message: e.toString()));

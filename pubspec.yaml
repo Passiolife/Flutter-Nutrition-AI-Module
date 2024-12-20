@@ -46,7 +46,7 @@ dependencies:
 
   # https://pub.dev/packages/flutter_slidable
   # A Flutter implementation of slidable list item with directional slide actions that can be dismissed.
-  flutter_slidable: ^3.1.0
+  flutter_slidable: ^3.1.2
 
   # https://pub.dev/packages/flutter_speed_dial
   # Flutter package to render a Material Design Speed Dial.
@@ -54,7 +54,7 @@ dependencies:
 
   # https://pub.dev/packages/flutter_svg
   # Draw SVG files using Flutter.
-  flutter_svg: ^2.0.10+1
+  flutter_svg: ^2.0.16
 
   # https://pub.dev/packages/flutter_timezone
   # A flutter plugin for getting the local timezone of the OS.
@@ -135,6 +135,8 @@ dependencies:
   # A Flutter plugin for launching a URL.
   url_launcher: ^6.3.0
 
+  vector_graphics: ^1.1.15
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -143,6 +145,8 @@ dev_dependencies:
   # https://pub.dev/packages/build_runner
   # The build_runner package provides a concrete way of generating files using Dart code.
   build_runner: ^2.4.11
+
+  vector_graphics_compiler: ^1.1.16
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -155,6 +159,9 @@ flutter:
   assets:
     - assets/images/
     - assets/translation/
+    - path: assets/icons/
+      transformers:
+        - package: vector_graphics_compiler
   fonts:
     - family: Inter
       fonts:

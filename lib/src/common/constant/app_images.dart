@@ -4,6 +4,9 @@ class AppImages {
   static const imageDir =
       'packages/${AppCommonConstants.packageName}/assets/images/';
 
+  static const iconsDir =
+      'packages/${AppCommonConstants.packageName}/assets/icons/';
+
   // Gifs
   static const wave = '${imageDir}wave.gif';
 
@@ -14,11 +17,26 @@ class AppImages {
   static const imgMyFoodsThumbnail = '${imageDir}img_my_foods_thumbnail.png';
 
   // Icons
-  static const icAIChat = '${imageDir}ic_ai_chat.svg';
+  static const icClose = '${iconsDir}ic_close.svg';
+  static const icPlus = '${iconsDir}ic_plus.svg';
+  // ic_arrow_left/svg // TODO: test because facing some issue with naming. Asset not found error.
+  static const icTest = '${iconsDir}ic_test.svg';
+  static const icQuestionMarkCircle = '${iconsDir}ic_question_mark_circle.svg';
+  static const icScanFrame = '${iconsDir}ic_scan_frame.svg';
+  static const icFlashOn = '${iconsDir}ic_flashlight_on.svg';
+  static const icFlashOff = '${iconsDir}ic_flashlight_off.svg';
+
+
+  static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';
+  static const icApple = '${imageDir}ic_apple.svg';
+  // static const icArrowLeft = '${imageDir}ic_arrow_left.svg';
+  static const icArrowLeft = '${iconsDir}ic_arrow_left.svg';
+  // static const icTest = '${iconsDir}ic_test.svg';
   static const icBadgeCheck = '${imageDir}ic_badge_check.svg';
   static const icBalancedDiet = '${imageDir}ic_balanced_diet.svg';
   static const icBarcode = '${imageDir}ic_barcode.svg';
   static const icBarcodes = '${imageDir}ic_barcodes.svg';
+  static const icBarcodeNew = '${imageDir}ic_barcode_new.svg';
   static const icBarcodeNotRecognized =
       '${imageDir}ic_barcode_not_recognized.svg';
   static const icBeverages = '${imageDir}ic_beverages.svg';
@@ -59,10 +77,9 @@ class AppImages {
   static const icPlusSolid = '${imageDir}ic_plus_solid.svg';
   static const icProfile = '${imageDir}ic_profile.svg';
   static const icProgress = '${imageDir}ic_progress.svg';
-  static const icQuestionMarkCircle = '${imageDir}ic_question_mark_circle.svg';
   static const icRecipe = '${imageDir}ic_recipe.png';
   static const icScan = '${imageDir}ic_scan.svg';
-  static const icScanFrame = '${imageDir}ic_scan_frame.svg';
+  // static const icScanFrame = '${imageDir}ic_scan_frame.svg';
   static const icSearch = '${imageDir}ic_search.svg';
   static const icSearchFilled = '${imageDir}ic_search_filled.svg';
   static const icSettings = '${imageDir}ic_settings.svg';

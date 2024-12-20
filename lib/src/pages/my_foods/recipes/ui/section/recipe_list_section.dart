@@ -64,8 +64,9 @@ class RecipeListSection extends StatelessWidget {
       params: EditFoodPageParams(
         foodRecord: foodRecord,
         message: context.localization?.itemAddedToDiary,
-        visibleFoodCreator: true,
-        source: 'recipeCreator',
+        source: AppCommonConstants.userRecipe,
+        visibleRecipeCreator: true,
+        redirectToDiaryOnLog: true,
       ),
     );
   }
@@ -83,17 +84,13 @@ class RecipeListSection extends StatelessWidget {
       context: context,
       params: NavigationData(recipeFoodRecord: foodRecord),
     );
-    /*final result = await FoodCreatorPage.navigate(
-        context: context, foodRecord: foodRecord, isUpdate: true);
-    if (result != null && result) {
-      _fetchUserFoods();
-    }*/
   }
 
-  void _doDeleteRecord(
-      {required BuildContext context,
-      required FoodRecord foodRecord,
-      required bool forced}) {
+  void _doDeleteRecord({
+    required BuildContext context,
+    required FoodRecord foodRecord,
+    required bool forced,
+  }) {
     if (forced) {
       context
           .read<RecipesBloc>()

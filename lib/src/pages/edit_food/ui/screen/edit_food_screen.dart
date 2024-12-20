@@ -188,18 +188,6 @@ class _EditFoodScreenState extends State<EditFoodScreen>
                                   IngredientsSection(
                                     visibleAddIngredient: visibleAddIngredient,
                                   ),
-                                  /*Visibility(
-                                    visible: widget.visibleAddIngredient,
-                                    child: Padding(
-                                      padding: EdgeInsets.only(
-                                          bottom: AppDimens.h16),
-                                      child: IngredientWidget(
-                                        ingredients:
-                                            _foodRecord?.ingredients ?? [],
-                                        listener: this,
-                                      ),
-                                    ),
-                                  ),*/
                                   SizedBox(height: AppDimens.h16),
                                 ],
                               ),
@@ -297,7 +285,7 @@ class _EditFoodScreenState extends State<EditFoodScreen>
         logUpdateOnCreate: state.logUpdateOnCreate,
       );
     } else if (state is UserFoodFlowState) {
-      if (source == 'foodCreator') {
+      if (source == AppCommonConstants.userFood) {
         await FoodCreatorPage.navigate(
           context: context,
           userFoodRecord: _foodRecord,

@@ -13,12 +13,9 @@ class AlternativeSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final alternatives = context.watch<FoodSearchBloc>().alternatives;
     if (alternatives.isNotEmpty) {
-      return Padding(
-        padding: AppPadding.pt16,
-        child: AlternativeListWidget(
-          alternatives: alternatives,
-          onSelectAlternative: (alternative) => _onSelectAlternative(context: context, alternative: alternative),
-        ),
+      return AlternativeListWidget(
+        alternatives: alternatives,
+        onSelectAlternative: (alternative) => _onSelectAlternative(context: context, alternative: alternative),
       );
     }
     return const SizedBox.shrink();

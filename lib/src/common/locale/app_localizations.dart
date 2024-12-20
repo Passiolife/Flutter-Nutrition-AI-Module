@@ -576,7 +576,7 @@ class AppLocalizations {
 
   String? get myFoods => getLabel('myFoods');
 
-  String? get customFoods => getLabel('customFoods');
+  String? get custom => getLabel('custom');
 
   String? get createNewFood => getLabel('createNewFood');
 
@@ -762,5 +762,9 @@ class AppLocalizations {
   String? get createOrEditUserRecipeDescription => getLabel('createOrEditUserRecipeDescription');
 
   String? get voiceLoggingNoResultsFoundDescription => getLabel('voiceLoggingNoResultsFoundDescription');
+  String? get photoLogging => getLabel('photoLogging');
+  String? get barcodeScan => getLabel('barcodeScan');
+  String? get details => getLabel('details');
+  String? get upc => getLabel('upc');
 
 }

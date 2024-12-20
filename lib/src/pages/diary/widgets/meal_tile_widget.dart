@@ -10,6 +10,7 @@ import '../../../common/util/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/string_extensions.dart';
 import '../../../common/widgets/custom_expansion_tile_widget.dart';
+import '../../../common/widgets/food_item_row_widget.dart';
 import '../../../common/widgets/passio_image_widget.dart';
 import 'interfaces.dart';
 
@@ -201,7 +202,7 @@ class _ExpansionTileChildWidget extends StatelessWidget {
             onPressed: (context) => onEdit?.call(),
             backgroundColor: AppColors.indigo600Main,
             foregroundColor: Colors.white,
-            label: context.localization?.edit ?? '',
+            label: context.localization?.details ?? '',
           ),
           SlidableAction(
             onPressed: (context) {

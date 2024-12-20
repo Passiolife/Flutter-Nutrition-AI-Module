@@ -24,6 +24,12 @@ class NutritionInformationPage extends StatelessWidget {
                 NutritionInformationPage(foodRecord: foodRecord)));
   }
 
+  String _getSubtitle(BuildContext context) {
+    return (foodRecord?.barcode?.isNotEmpty ?? false)
+        ? '${context.localization?.upc}: ${foodRecord?.barcode}'
+        : foodRecord?.additionalData ?? '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -46,7 +52,7 @@ class NutritionInformationPage extends StatelessWidget {
                 padding: EdgeInsets.all(8.r),
                 iconId: foodRecord?.iconId,
                 title: foodRecord?.name,
-                subtitle: foodRecord?.additionalData,
+                subtitle: _getSubtitle(context),
                 isAddVisible: false,
                 enableSlidable: false,
               ),

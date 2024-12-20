@@ -5,6 +5,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../common/constant/app_button_styles.dart';
 import '../../../common/constant/app_colors.dart';
+import '../../../common/constant/app_common_constants.dart';
 import '../../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../../common/models/food_record/food_record.dart';
 import '../../../common/util/context_extension.dart';
@@ -140,7 +141,8 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
         foodRecord: foodRecord,
         message: context.localization?.itemAddedToDiary,
         visibleFoodCreator: true,
-        source: 'foodCreator',
+        visibleRecipeCreator: true,
+        source: AppCommonConstants.userFood,
       ),
     );
   }

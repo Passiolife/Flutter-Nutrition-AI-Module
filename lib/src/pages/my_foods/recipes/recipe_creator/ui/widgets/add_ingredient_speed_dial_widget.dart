@@ -10,6 +10,7 @@ import '../../../../../../common/util/context_extension.dart';
 import '../../../../../../common/widgets/floating_buttion_expanded_widget.dart';
 import '../../../../../edit_food/ui/edit_food_page.dart';
 import '../../../../../food_search/food_search_page.dart';
+import '../../../../../food_search/models/food_selection_result.dart';
 import '../../bloc/recipe_creator_bloc.dart';
 
 class AddIngredientSpeedDialWidget extends StatelessWidget {
@@ -90,12 +91,19 @@ class AddIngredientSpeedDialWidget extends StatelessWidget {
     if (action == context.localization?.textSearch) {
       final searchData = await FoodSearchPage.navigate(context);
       if (searchData != null &&
-          searchData is PassioFoodDataInfo? &&
+          searchData is FoodSelectionResult &&
           context.mounted) {
+        if (searchData.fromAdd) {
+          context.read<RecipeCreatorBloc>().add(DoConvertIngredientEvent(
+              foodDataInfo: searchData.foodDataInfo,
+              foodRecord: searchData.foodRecord));
+          return;
+        }
         final foodRecord = await EditFoodPage.navigate(
           context: context,
           params: EditFoodPageParams(
-            passioFoodDataInfo: searchData,
+            passioFoodDataInfo: searchData.foodDataInfo,
+            foodRecord: searchData.foodRecord,
             visibleMealTimeView: false,
             visibleDateView: false,
             visibleAddIngredient: false,

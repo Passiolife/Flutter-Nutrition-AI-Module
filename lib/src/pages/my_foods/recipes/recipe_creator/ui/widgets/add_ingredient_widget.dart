@@ -10,8 +10,7 @@ import '../../../../../../common/util/context_extension.dart';
 import '../../bloc/recipe_creator_bloc.dart';
 
 class AddIngredientWidget extends StatelessWidget {
-  const AddIngredientWidget({this.isExpanded = false, super.key});
-  final bool isExpanded;
+  const AddIngredientWidget({super.key});
 
   List<MenuModel> getMenu(BuildContext context) => [
         MenuModel(
@@ -22,36 +21,33 @@ class AddIngredientWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: AppShadows.base.copyWith(borderRadius: isExpanded ? AppBorderCircular.bt16 : AppBorderCircular.ba16),
-      child: InkWell(
-        onTap: () => _onTapAddIngredient(context),
-        splashColor: AppColors.blue50,
-        highlightColor: AppColors.blue50,
-        child: Padding(
-          padding: AppPadding.pa16,
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  context.localization?.addIngredient ?? '',
-                  style: AppTextStyle.textBase.addAll([
-                    AppTextStyle.textBase.leading6,
-                    AppTextStyle.semiBold
-                  ]).copyWith(color: AppColors.gray900),
-                ),
+    return InkWell(
+      onTap: () => _onTapAddIngredient(context),
+      splashColor: AppColors.blue50,
+      highlightColor: AppColors.blue50,
+      child: Padding(
+        padding: AppPadding.pa16,
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                context.localization?.addIngredient ?? '',
+                style: AppTextStyle.textBase.addAll([
+                  AppTextStyle.textBase.leading6,
+                  AppTextStyle.semiBold
+                ]).copyWith(color: AppColors.gray900),
               ),
-              SvgPicture.asset(
-                AppImages.icPlusSolid,
-                width: AppDimens.r24,
-                height: AppDimens.r24,
-                colorFilter: const ColorFilter.mode(
-                  AppColors.gray400,
-                  BlendMode.srcIn,
-                ),
+            ),
+            SvgPicture.asset(
+              AppImages.icPlusSolid,
+              width: AppDimens.r24,
+              height: AppDimens.r24,
+              colorFilter: const ColorFilter.mode(
+                AppColors.gray400,
+                BlendMode.srcIn,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

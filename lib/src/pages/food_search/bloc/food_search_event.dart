@@ -6,6 +6,7 @@ abstract class FoodSearchEvent extends Equatable {
 
 class DoUpdateSearchEvent extends FoodSearchEvent {
   const DoUpdateSearchEvent({required this.searchText});
+
   final String searchText;
 
   @override
@@ -19,4 +20,14 @@ class DoFoodSearchEvent extends FoodSearchEvent {
 
   @override
   List<Object?> get props => [searchText];
+}
+
+class DoFoodLogEvent extends FoodSearchEvent {
+  final PassioFoodDataInfo? foodDataInfo;
+  final FoodRecord? foodRecord;
+
+  const DoFoodLogEvent({this.foodDataInfo, this.foodRecord});
+
+  @override
+  List<Object?> get props => [foodDataInfo, foodRecord];
 }

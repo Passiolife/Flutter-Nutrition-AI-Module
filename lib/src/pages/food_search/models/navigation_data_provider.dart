@@ -1,17 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../../edit_food/ui/edit_food_page.dart';
+
 class SearchNavigationDataProvider extends InheritedWidget {
   const SearchNavigationDataProvider({
     required this.needsReturn,
+    this.editFoodPageParams,
     required super.child,
     super.key,
   });
 
   final bool needsReturn;
+  final EditFoodPageParams? editFoodPageParams;
 
   @override
   bool updateShouldNotify(SearchNavigationDataProvider oldWidget) {
-    return needsReturn != oldWidget.needsReturn;
+    return needsReturn != oldWidget.needsReturn && editFoodPageParams != oldWidget.editFoodPageParams;
   }
 
   static SearchNavigationDataProvider? maybeOf(BuildContext context) {

@@ -42,6 +42,15 @@ final class UpdateQuantityBuilderState extends RecipeCreatorBuilderState {
   List<Object?> get props => [quantity];
 }
 
+final class UpdateUnitBuilderState extends RecipeCreatorBuilderState {
+  const UpdateUnitBuilderState({required this.unit});
+
+  final String? unit;
+
+  @override
+  List<Object?> get props => [unit];
+}
+
 final class ShowAddIngredientOptionsBuilderState
     extends RecipeCreatorBuilderState {
   const ShowAddIngredientOptionsBuilderState({required this.isVisible});

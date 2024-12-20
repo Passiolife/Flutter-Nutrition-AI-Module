@@ -6,7 +6,6 @@ import '../../common/util/context_extension.dart';
 import '../../common/util/overlay_widget.dart';
 import '../advisor/advisor_page.dart';
 import '../diary/diary_page.dart';
-import '../favorites/favorites_page.dart';
 import '../food_scan/food_scan_page.dart';
 import '../food_search/food_search_page.dart';
 import '../home/home_page.dart';
@@ -136,7 +135,7 @@ class _DashboardPageState extends State<DashboardPage> {
     // Check the value of e.text against context.localization and perform actions accordingly.
     //
     // Action for when the text matches the 'scan' localization.
-    if (action == context.localization?.foodScanner) {
+    if (action == context.localization?.scanABarcode) {
       FoodScanPage.navigate(context);
     }
     // Action for when the text matches the 'search' localization.
@@ -149,11 +148,7 @@ class _DashboardPageState extends State<DashboardPage> {
     } else if (action == context.localization?.selectPhotos) {
       SelectPhotoPage.navigate(context);
     }
-    // Action for when the text matches the 'favourite' localization.
-    else if (action == context.localization?.favourites) {
-      await FavoritesPage.navigate(context: context);
-      _bloc.add(const RefreshEvent());
-    } else if (action == context.localization?.aiAdvisor) {
+    else if (action == context.localization?.aiAdvisor) {
       await AdvisorPage.navigate(context);
       _bloc.add(const RefreshEvent());
     } else if (action == context.localization?.myFoods) {

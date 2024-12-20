@@ -109,13 +109,10 @@ class ScanResultDragEvent extends FoodScanEvent {
 }
 
 class BarcodeNotRecognizedEvent extends FoodScanEvent {
-  // Indicates whether it should be visible or not
-  final bool shouldVisible;
-
-  const BarcodeNotRecognizedEvent({required this.shouldVisible});
+  const BarcodeNotRecognizedEvent();
 
   @override
-  List<Object?> get props => [shouldVisible];
+  List<Object?> get props => [];
 }
 
 class PackagedFoodNotRecognizedEvent extends FoodScanEvent {

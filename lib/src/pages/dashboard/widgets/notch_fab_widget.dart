@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/util/context_extension.dart';
@@ -20,15 +21,19 @@ class NotchFABWidget extends StatefulWidget {
 
 class _NotchFABWidgetState extends State<NotchFABWidget> {
   // List of floating action buttons with expanded widgets
-  List<FloatingButtonExpandedWidget> _fabExpandedWidget(BuildContext context) =>
+  List<FloatingButtonExpandedWidget> _getPrimaryFABWidgets(BuildContext context) =>
       [
         FloatingButtonExpandedWidget(
-          imagePath: AppImages.icScan,
-          text: context.localization?.foodScanner,
+          imagePath: AppImages.icApple,
+          text: context.localization?.myFoods,
         ),
         FloatingButtonExpandedWidget(
           imagePath: AppImages.icSearch,
           text: context.localization?.textSearch,
+        ),
+        FloatingButtonExpandedWidget(
+          imagePath: AppImages.icAIAdvisor,
+          text: context.localization?.aiAdvisor,
         ),
         FloatingButtonExpandedWidget(
           imagePath: AppImages.icMic,
@@ -39,24 +44,16 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
           text: context.localization?.voiceLogging,
         ),
         FloatingButtonExpandedWidget(
+          imagePath: AppImages.icBarcodeNew,
+          text: context.localization?.scanABarcode,
+        ),
+        FloatingButtonExpandedWidget(
           imagePath: AppImages.icPhotograph,
-          text: context.localization?.useImage,
-        ),
-        FloatingButtonExpandedWidget(
-          imagePath: AppImages.icAIChat,
-          text: context.localization?.aiAdvisor,
-        ),
-        FloatingButtonExpandedWidget(
-          imagePath: AppImages.icFavoriteFilled,
-          text: context.localization?.favourites,
-        ),
-        FloatingButtonExpandedWidget(
-          imagePath: AppImages.icMyFoods,
-          text: context.localization?.myFoods,
+          text: context.localization?.photoLogging,
         ),
       ];
 
-  List<FloatingButtonExpandedWidget> _useImageExpandedWidget(
+  List<FloatingButtonExpandedWidget> _getImageMenuWidgets(
           BuildContext context) =>
       [
         FloatingButtonExpandedWidget(
@@ -68,6 +65,7 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
           text: context.localization?.takePhotos,
         ),
       ];
+
 
   bool _showImageMenu = false;
   final ValueNotifier<bool> _isDialOpen = ValueNotifier(false);
@@ -83,6 +81,9 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
       onClose: () {
         if (_isUseImageDialOpen.value) {
           _isUseImageDialOpen.value = false;
+          Future.delayed(const Duration(milliseconds: 250), () {
+            _isDialOpen.value = true;
+          });
         }
       },
       dialRoot: (context, isOpen, toggleChildren) {
@@ -95,8 +96,14 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
               foregroundColor: AppColors.white,
               shape: const CircleBorder(),
               onPressed: toggleChildren,
-              child: SvgPicture.asset(
-                isOpen ? AppImages.icCloseSolid : AppImages.icPlusSolid,
+              child: VectorGraphic(
+                loader: AssetBytesLoader(
+                  isOpen
+                      ? _isUseImageDialOpen.value
+                          ? AppImages.icTest
+                          : AppImages.icClose
+                      : AppImages.icPlus,
+                ),
                 colorFilter: const ColorFilter.mode(
                   AppColors.white,
                   BlendMode.srcIn,
@@ -110,7 +117,7 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
       },
       childrenButtonSize: Size(200.w, 78.h),
       children: _showImageMenu
-          ? _useImageExpandedWidget(context)
+          ? _getImageMenuWidgets(context)
               .map(
                 (e) => SpeedDialChild(
                   backgroundColor: AppColors.transparent,
@@ -122,7 +129,7 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
                 ),
               )
               .toList()
-          : _fabExpandedWidget(context)
+          : _getPrimaryFABWidgets(context)
               .map(
                 (e) => SpeedDialChild(
                   backgroundColor: AppColors.transparent,
@@ -130,12 +137,12 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
                   onTap: () {
                     _isDialOpen.value = false;
 
-                    if (e.text == context.localization?.useImage) {
+                    if (e.text == context.localization?.photoLogging) {
                       setState(() {
                         _showImageMenu = true;
                       });
 
-                      Future.delayed(const Duration(milliseconds: 300), () {
+                      Future.delayed(const Duration(milliseconds: 250), () {
                         _isUseImageDialOpen.value = true;
 
                         setState(() {

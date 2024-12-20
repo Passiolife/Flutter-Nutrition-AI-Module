@@ -34,8 +34,8 @@ class UpdateSearchState extends FoodSearchState {
   List<Object?> get props => [searchText];
 }
 
-class SearchForFoodSuccessState extends FoodSearchState {
-  const SearchForFoodSuccessState({
+class FoodSearchSuccessState extends FoodSearchState {
+  const FoodSearchSuccessState({
     required this.results,
     required this.alternatives,
   });
@@ -45,4 +45,14 @@ class SearchForFoodSuccessState extends FoodSearchState {
 
   @override
   List<Object?> get props => [results, alternatives];
+}
+
+class FoodLogSuccessState extends FoodSearchState {
+  const FoodLogSuccessState(this.timestamp);
+
+  final int timestamp;
+
+  @override
+  List<Object?> get props => [timestamp];
+
 }

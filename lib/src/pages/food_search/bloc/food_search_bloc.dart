@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
+import '../../../common/domain/use_cases/food_logs/add_food_log_use_case.dart';
 
 part 'food_search_event.dart';
 part 'food_search_state.dart';
@@ -22,9 +23,13 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
 
   String searchTerm = '';
 
-  FoodSearchBloc() : super(const FoodSearchInitial()) {
+  final AddFoodLogUseCase addFoodLogUseCase;
+
+  FoodSearchBloc({required this.addFoodLogUseCase})
+      : super(const FoodSearchInitial()) {
     on<DoUpdateSearchEvent>(_handleDoUpdateSearchEvent);
     on<DoFoodSearchEvent>(_handleDoFoodSearchEvent);
+    on<DoFoodLogEvent>(_handleDoFoodLogEvent);
   }
 
   FutureOr<void> _handleDoUpdateSearchEvent(
@@ -54,7 +59,7 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
       myFoods = List.generate(20, (index) => index);
       alternatives = List.generate(10, (index) => '-1');
 
-      emit(SearchForFoodSuccessState(
+      emit(FoodSearchSuccessState(
         results: searchResults,
         alternatives: alternatives,
       ));
@@ -66,8 +71,34 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
 
       searchResults = searchResponse.results;
       alternatives = searchResponse.alternateNames;
-      emit(SearchForFoodSuccessState(
+      emit(FoodSearchSuccessState(
           results: searchResults, alternatives: alternatives));
     }
+  }
+
+  Future<void> _handleDoFoodLogEvent(
+      DoFoodLogEvent event, Emitter<FoodSearchState> emit) async {
+    final foodDataInfo = event.foodDataInfo;
+    final passedFoodRecord = event.foodRecord;
+    if (foodDataInfo == null && passedFoodRecord == null) {
+      return;
+    }
+
+    FoodRecord foodRecord;
+
+    if (foodDataInfo != null) {
+      final foodItem =
+          await NutritionAI.instance.fetchFoodItemForDataInfo(foodDataInfo);
+      if (foodItem == null) {
+        return;
+      }
+      foodRecord = FoodRecord.fromPassioFoodItem(foodItem);
+    } else {
+      foodRecord = passedFoodRecord!;
+    }
+
+    addFoodLogUseCase(foodRecord: foodRecord, isNew: true);
+
+    emit(FoodLogSuccessState(DateTime.now().millisecondsSinceEpoch));
   }
 }

@@ -5,6 +5,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
+import '../../../../../common/domain/use_cases/food_logs/convert_food_data_info_to_food_record_use_case.dart';
 import '../ui/model/navigation_data_provider.dart';
 import '../ui/model/recipe_creator_view_model.dart';
 
@@ -20,7 +21,11 @@ class RecipeCreatorBloc extends Bloc<RecipeCreatorEvent, RecipeCreatorState> {
 
   NavigationData? _navigationData;
 
-  RecipeCreatorBloc() : super(const RecipeCreatorInitial()) {
+  final ConvertFoodDataInfoToFoodRecordUseCase
+      convertFoodDataInfoToFoodRecordUseCase;
+
+  RecipeCreatorBloc({required this.convertFoodDataInfoToFoodRecordUseCase})
+      : super(const RecipeCreatorInitial()) {
     on<DoUpdateImageEvent>(_handleUpdateImageEvent);
     on<DoUpdateRecipeNameEvent>(_handleDoUpdateRecipeNameEvent);
     on<DoUpdateQuantityEvent>(_handleDoQuantityUpdateEvent);
@@ -30,6 +35,8 @@ class RecipeCreatorBloc extends Bloc<RecipeCreatorEvent, RecipeCreatorState> {
     on<DoDeleteIngredientEvent>(_handleDoDeleteIngredientEvent);
     on<SaveRecipeEvent>(_handleSaveRecipeEvent);
     on<DoPrefillEvent>(_handleDoPrefillEvent);
+    on<DoConvertIngredientEvent>(_handleDoConvertIngredient);
+    on<DoUpdateUnitEvent>(_handleDoUpdateUnitEvent);
   }
 
   FutureOr<void> _handleUpdateImageEvent(
@@ -44,6 +51,13 @@ class RecipeCreatorBloc extends Bloc<RecipeCreatorEvent, RecipeCreatorState> {
     final name = event.name.trim();
     viewModel = viewModel.doUpdateRecipeName(name: name);
     emit(UpdateRecipeNameBuilderState(name: name));
+  }
+
+  FutureOr<void> _handleDoUpdateUnitEvent(
+      DoUpdateUnitEvent event, Emitter<RecipeCreatorState> emit) async {
+    final unit = event.unit;
+    viewModel = viewModel.doUpdateUnit(unit: unit);
+    emit(UpdateUnitBuilderState(unit: unit));
   }
 
   FutureOr<void> _handleDoQuantityUpdateEvent(
@@ -137,8 +151,24 @@ class RecipeCreatorBloc extends Bloc<RecipeCreatorEvent, RecipeCreatorState> {
 
       viewModel =
           await RecipeCreatorViewModel.fromRecord(foodRecord!, foodImage);
-;
+
       emit(PrefillSuccessState(viewModel: viewModel));
     } catch (e) {}
+  }
+
+  FutureOr<void> _handleDoConvertIngredient(
+      DoConvertIngredientEvent event, Emitter<RecipeCreatorState> emit) async {
+    final foodDataInfo = event.foodDataInfo;
+    final foodRecord = event.foodRecord;
+
+    if (foodDataInfo != null) {
+      final foodRecord = await convertFoodDataInfoToFoodRecordUseCase(
+          foodDataInfo: foodDataInfo);
+      if (foodRecord != null) {
+        add(DoUpdateIngredients(foodRecord: foodRecord));
+      }
+    } else if (foodRecord != null) {
+      add(DoUpdateIngredients(foodRecord: foodRecord));
+    }
   }
 }

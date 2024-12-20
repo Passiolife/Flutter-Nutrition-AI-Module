@@ -216,6 +216,7 @@ class _MealPlanPageState extends State<MealPlanPage>
         mealLabel:
         MealLabel.stringToMealLabel(mealTime?.name.toUpperCaseWord ?? ''),
         visibleFoodCreator: true,
+        visibleRecipeCreator: true,
         shouldUpdateServingUnit: true,
       ),
     );

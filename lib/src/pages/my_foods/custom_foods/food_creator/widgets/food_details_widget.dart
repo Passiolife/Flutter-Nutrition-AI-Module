@@ -308,7 +308,7 @@ class _FormWidgetState extends State<_FormWidget> {
         16.verticalSpace,
         _FoodDetailField(
           title: context.localization?.barcode,
-          hintText: context.localization?.scanABarcode,
+          hintText: context.localization?.scanABarcode?.toLowerCase(),
           controller: barcodeController,
           onTap: widget.onTapBarcode,
           suffix: Padding(

@@ -3,10 +3,16 @@ import 'package:flutter/material.dart';
 import '../constant/app_constants.dart';
 
 class AppTabBar extends StatelessWidget {
-  const AppTabBar({required this.tabs, this.controller, super.key});
+  const AppTabBar({
+    required this.tabs,
+    this.controller,
+    this.onTap,
+    super.key,
+  });
 
   final List<Tab> tabs;
   final TabController? controller;
+  final ValueChanged<int>? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -30,6 +36,7 @@ class AppTabBar extends StatelessWidget {
           padding: EdgeInsets.zero,
           controller: controller,
           tabs: tabs,
+          onTap: onTap,
         ),
       ),
     );

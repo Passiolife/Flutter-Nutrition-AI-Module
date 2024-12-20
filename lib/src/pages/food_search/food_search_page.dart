@@ -3,6 +3,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/constant/app_constants.dart';
 import '../../common/constant/app_padding.dart';
+import '../../common/domain/use_cases/food_logs/add_food_log_use_case.dart';
+import '../../common/util/context_extension.dart';
+import '../../common/util/snackbar_extension.dart';
 import 'bloc/food_search_bloc.dart';
 import 'models/navigation_data_provider.dart';
 import 'sections/alternative_section.dart';
@@ -23,7 +26,8 @@ class FoodSearchPage extends StatelessWidget {
     return Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (_) => FoodSearchPage(needsReturn: needsReturn)),
+        builder: (_) => FoodSearchPage(needsReturn: needsReturn),
+      ),
     );
   }
 
@@ -32,7 +36,7 @@ class FoodSearchPage extends StatelessWidget {
     return SearchNavigationDataProvider(
       needsReturn: needsReturn,
       child: BlocProvider<FoodSearchBloc>(
-        create: (_) => FoodSearchBloc(),
+        create: (_) => FoodSearchBloc(addFoodLogUseCase: AddFoodLogUseCase()),
         child: FoodSearchScreen(),
       ),
     );
