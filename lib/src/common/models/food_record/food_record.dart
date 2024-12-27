@@ -114,24 +114,6 @@ class FoodRecord {
     this.barcode,
   });
 
-  factory FoodRecord.empty() {
-    return FoodRecord._(
-      '',
-      '',
-      '',
-      '',
-      '',
-      '',
-      [],
-      [],
-      0,
-      '',
-      PassioIDEntityType.item,
-      [],
-      null,
-    );
-  }
-
   /// Factory constructor to create a FoodRecord from a FoodRecordIngredient instance.
   factory FoodRecord.fromFoodRecordIngredient(FoodRecordIngredient ingredient,
       {PassioIDEntityType entityType = PassioIDEntityType.item}) {
@@ -787,15 +769,15 @@ extension CustomRecipeExtension on FoodRecord {
         ingredientWeight().gramsValue() / getSelectedQuantity(),
         UnitMassType.grams);
     servingUnits = [
-      PassioServingUnit('Serving', weight),
-      PassioServingUnit('Gram', UnitMass(1, UnitMassType.grams)),
+      PassioServingUnit('serving', weight),
+      PassioServingUnit('gram', UnitMass(1, UnitMassType.grams)),
     ];
   }
 
   void updateServingSizes() {
     servingSizes = [
-      PassioServingSize(1, 'Serving'),
-      PassioServingSize(100, 'Gram'),
+      PassioServingSize(1, 'serving'),
+      PassioServingSize(100, 'gram'),
     ];
   }
 }

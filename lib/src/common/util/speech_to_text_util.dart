@@ -17,6 +17,8 @@ class SpeechToTextUtil {
 
   static SpeechToTextUtil get instance => _instance;
 
+  stt.LocaleName? _selectedLocale;
+
   Future<bool> initialize({
     StatusListener? statusListener,
     ErrorListener? errorListener,
@@ -40,6 +42,7 @@ class SpeechToTextUtil {
   void startListening(
       {Function(String)? recognizedWords, bool finalResult = true}) async {
     await _speech.listen(
+      localeId: _selectedLocale?.localeId,
       listenOptions:
           stt.SpeechListenOptions(listenMode: stt.ListenMode.dictation),
       onResult: (result) {
@@ -70,5 +73,23 @@ class SpeechToTextUtil {
     _speech.errorListener ??= (e) {
       listener?.call(e.errorMsg);
     };
+  }
+
+  // Locale related
+  Future<List<stt.LocaleName>> getLocales() async {
+    return await _speech.locales();
+  }
+
+  Future<bool> setLocale(String? locale) async {
+    final locales = await getLocales();
+    _selectedLocale = locales.cast<stt.LocaleName?>().firstWhere(
+      (localeName) {
+        return localeName?.name == locale;
+      },
+      orElse: () {
+        return null;
+      },
+    );
+    return _selectedLocale != null;
   }
 }

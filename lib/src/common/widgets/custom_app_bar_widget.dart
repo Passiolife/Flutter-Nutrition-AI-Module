@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../common/util/context_extension.dart';
+import '../extension/context_extension.dart';
 import '../../pages/dashboard/bloc/dashboard_bloc.dart';
 import '../../pages/my_profile/my_profile_page.dart';
 import '../../pages/settings/settings_page.dart';
 import '../constant/app_constants.dart';
-import '../util/string_extensions.dart';
+import '../router/navigation_route_observer.dart';
+import '../router/routes.dart';
+import '../extension/string_extensions.dart';
 import 'app_pop_up_widget.dart';
 
 // Define a custom callback type for menu item tap
@@ -82,11 +84,15 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
             children: [
               IconButton(
                 onPressed: () {
-                  (widget.onTapBack != null)
-                      ? widget.onTapBack?.call()
-                      : Navigator.canPop(context)
-                          ? Navigator.pop(context)
-                          : null;
+                  if(widget.onTapBack != null) widget.onTapBack?.call();
+                  if(NavigationRouteObserver.instance.currentRouteName == Routes.dashboard) {
+                    Navigator.popUntil(context, (_) => false);
+                  }
+                  if(Navigator.canPop(context)) {
+                    Navigator.pop(context);
+                    return;
+                  }
+                  Navigator.of(context, rootNavigator: true).pop();
                 },
                 icon: SvgPicture.asset(
                   AppImages.icChevronLeft,

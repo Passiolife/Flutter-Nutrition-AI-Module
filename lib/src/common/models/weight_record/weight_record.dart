@@ -63,7 +63,7 @@ class WeightRecord {
   ///   - [json]: A JSON object representing the weight record.
   factory WeightRecord.fromJson(Map<String, dynamic> json) => WeightRecord._(
         json['id'],
-        (json['data'] as num).toDouble(),
+        double.parse(json['data']),
         json['created_at'],
       );
 

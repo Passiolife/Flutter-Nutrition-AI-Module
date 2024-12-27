@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../../../nutrition_ai_module.dart';
 import '../../../../../../common/constant/app_constants.dart';
-import '../../../../../../common/util/context_extension.dart';
+import '../../../../../../common/extension/context_extension.dart';
 import '../../../../../../common/widgets/floating_buttion_expanded_widget.dart';
 import '../../../../../edit_food/ui/edit_food_page.dart';
 import '../../../../../food_search/food_search_page.dart';

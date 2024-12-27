@@ -32,7 +32,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
       FetchRecordsEvent event, Emitter<HomeState> emit) async {
     if (_rangeDates == null ||
         (_rangeDates != null &&
-            !event.dateTime.isBetween(
+            !event.dateTime.isSame(
                 from: _rangeDates!.startDate, to: _rangeDates!.endDate))) {
       if (_calendarFormat == CalendarFormat.week) {
         _rangeDates = event.dateTime.weekStartEndDates();

@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/keyboard_extension.dart';
 import '../../../common/widgets/app_button.dart';
 import '../../../common/widgets/app_loading_button_widget.dart';

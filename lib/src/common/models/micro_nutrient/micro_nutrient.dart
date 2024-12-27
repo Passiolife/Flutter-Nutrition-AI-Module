@@ -299,7 +299,7 @@ class MicroNutrient {
         recommendedValue: 90,
         unitSymbol:
             foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminC?.symbol ??
-                UnitMassType.micrograms.symbol,
+                UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Zinc',
@@ -359,7 +359,7 @@ class MicroNutrient {
         recommendedValue: 0,
         unitSymbol:
             foodRecords.firstOrNull?.nutrientsSelectedSize().alcohol?.symbol ??
-                UnitMassType.micrograms.symbol,
+                UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Phosphorus',
@@ -372,7 +372,7 @@ class MicroNutrient {
                 ?.nutrientsSelectedSize()
                 .phosphorus
                 ?.symbol ??
-            UnitMassType.micrograms.symbol,
+            UnitMassType.milligrams.symbol,
       ),
       MicroNutrient(
         name: 'Alcohol Sugar',
@@ -385,7 +385,7 @@ class MicroNutrient {
                 ?.nutrientsSelectedSize()
                 .sugarAlcohol
                 ?.symbol ??
-            UnitMassType.micrograms.symbol,
+            UnitMassType.grams.symbol,
       ),
       MicroNutrient(
         name: 'Added Vitamin B12',
@@ -413,25 +413,6 @@ class MicroNutrient {
                 ?.symbol ??
             UnitMassType.micrograms.symbol,
       ),
-
-      /*MicroNutrient(
-        name: 'Vitamin K Phylloquinone',
-        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminKPhylloquinone ?? 0)),
-        recommendedValue: 0,
-        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminKPhylloquinone?.symbol ?? UnitMassType.micrograms.symbol,
-      ),
-      MicroNutrient(
-        name: 'Vitamin K Menaquinone4',
-        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminKMenaquinone4 ?? 0)),
-        recommendedValue: 0,
-        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminKMenaquinone4?.symbol ?? UnitMassType.micrograms.symbol,
-      ),
-      MicroNutrient(
-        name: 'Vitamin K Dihydrophylloquinone',
-        value: foodRecords.fold(0, (previousValue, element) => previousValue + (element?.totalVitaminKDihydrophylloquinone ?? 0)),
-        recommendedValue: 0,
-        unitSymbol: foodRecords.firstOrNull?.nutrientsSelectedSize().vitaminKDihydrophylloquinone?.symbol ?? UnitMassType.micrograms.symbol,
-      ),*/
     ];
   }
 }

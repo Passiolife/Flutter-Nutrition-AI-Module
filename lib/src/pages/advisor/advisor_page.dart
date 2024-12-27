@@ -6,7 +6,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/constant/app_constants.dart';
 import '../../common/models/advisor_chat/advisor_chat.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/router/routes.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/widgets/adaptive_loader.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
 import '../dashboard/bloc/dashboard_bloc.dart';
@@ -18,7 +19,16 @@ import 'widgets/widgets.dart';
 class AdvisorPage extends StatefulWidget {
   const AdvisorPage({super.key});
 
+  static MaterialPageRoute route() {
+    return MaterialPageRoute(
+      settings: const RouteSettings(name: Routes.advisor),
+      builder: (_) => const AdvisorPage(),
+    );
+  }
+
   static Future navigate(BuildContext context) async {
+    // TODO: Need handle Dashboard bloc.
+    return await Navigator.pushNamed(context, Routes.advisor);
     return await Navigator.push(
       context,
       MaterialPageRoute(

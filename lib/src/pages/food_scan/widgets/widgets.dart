@@ -8,7 +8,7 @@ export '../widgets/bottom_background_widget.dart';
 export 'added_to_diary_widget.dart';
 export 'barcode_not_recognized_widget.dart';
 export 'interfaces.dart';
-export 'result_widget.dart';
+export 'result_widget_old.dart';
 export 'scanning_animation_widget.dart';
 export 'scanning_widget.dart';
 export 'scanner_mode_widget.dart';

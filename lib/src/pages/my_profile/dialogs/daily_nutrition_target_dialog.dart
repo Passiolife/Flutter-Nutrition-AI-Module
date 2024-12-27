@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/dialogs/ok_button_with_keyboard.dart';
 import '../../../common/models/user_profile/user_profile_model.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/action_buttons_widget.dart';
 import '../../../common/widgets/app_slider.dart';
 import '../../../common/widgets/app_text_field.dart';

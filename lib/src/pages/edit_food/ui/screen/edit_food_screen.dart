@@ -270,7 +270,6 @@ class _EditFoodScreenState extends State<EditFoodScreen>
 
     // States for User food creation.
     else if (state is UserFoodFetchSuccessState) {
-      Navigator.pop(context);
       await FoodCreatorPage.navigate(
         context: context,
         userFoodRecord: state.userFoodRecord,
@@ -278,7 +277,6 @@ class _EditFoodScreenState extends State<EditFoodScreen>
         logUponCreate: state.logUpdateOnCreate,
       );
     } else if (state is UserFoodFetchFailureState) {
-      Navigator.pop(context);
       UserFoodNotFoundDialog.show(
         context: context,
         foodRecord: _foodRecord,
@@ -306,7 +304,6 @@ class _EditFoodScreenState extends State<EditFoodScreen>
 
     // States for User recipe creation.
     else if (state is UserRecipeFetchSuccessState) {
-      Navigator.pop(context);
       await RecipeCreatorPage.navigate(
         context: context,
         params: NavigationData(
@@ -316,7 +313,6 @@ class _EditFoodScreenState extends State<EditFoodScreen>
         ),
       );
     } else if (state is UserRecipeFetchFailureState) {
-      Navigator.pop(context);
       UserRecipeNotFoundDialog.show(
         context: context,
         foodRecord: _foodRecord,

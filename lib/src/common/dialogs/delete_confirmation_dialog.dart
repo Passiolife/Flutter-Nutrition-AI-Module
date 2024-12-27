@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../constant/app_constants.dart';
-import '../util/context_extension.dart';
-import '../util/string_extensions.dart';
+import '../extension/context_extension.dart';
+import '../extension/string_extensions.dart';
 import '../widgets/app_button.dart';
 
 class DeleteConfirmationDialog {

@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/models/food_record/food_record.dart';
-import '../../../../common/util/context_extension.dart';
-import '../../../../common/util/string_extensions.dart';
+import '../../../../common/extension/context_extension.dart';
+import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/widgets/app_button.dart';
 import '../../../my_foods/custom_foods/food_creator/food_creator_page.dart';
 

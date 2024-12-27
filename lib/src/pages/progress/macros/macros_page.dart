@@ -10,7 +10,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/day_log/day_log.dart';
 import '../../../common/models/day_logs/day_logs.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/widgets/app_button.dart';
 import 'bloc/macros_bloc.dart';

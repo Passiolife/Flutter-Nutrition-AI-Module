@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/constant/app_padding.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/shimmer_widget.dart';
 
 typedef OnSelectAlternative = Function(String alternative);
@@ -48,7 +48,7 @@ class AlternativeListWidget extends StatelessWidget {
 
 
 class _AlternativeRowWidget extends StatelessWidget {
-  const _AlternativeRowWidget({required this.data, this.onSelectAlternative, super.key});
+  const _AlternativeRowWidget({required this.data, this.onSelectAlternative});
   final String? data;
 
   final OnSelectAlternative? onSelectAlternative;

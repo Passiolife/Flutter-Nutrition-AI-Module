@@ -279,6 +279,9 @@ class AppLocalizations {
 
   String? get barcodeNotRecognized => getLabel('barcodeNotRecognized');
 
+  String? get barcodeNotRecognizedDescription =>
+      getLabel('barcodeNotRecognizedDescription');
+
   String? get packagedFoodNotRecognized =>
       getLabel('packagedFoodNotRecognized');
 
@@ -392,6 +395,9 @@ class AppLocalizations {
   String? get showLess => getLabel('showLess');
 
   String? get addedToLog => getLabel('addedToLog');
+
+  String? get favoriteUpdatedSuccessfully =>
+      getLabel('favoriteUpdatedSuccessfully');
 
   String? get nameYourFavorite => getLabel('nameYourFavorite');
 
@@ -682,6 +688,9 @@ class AppLocalizations {
   String? get createCustomFoodWithoutBarcode =>
       getLabel('createCustomFoodWithoutBarcode');
 
+  String? get api => getLabel('api');
+  String? get totalUsage => getLabel('totalUsage');
+
   String? get session => getLabel('session');
 
   String? get lastRequest => getLabel('lastRequest');
@@ -755,16 +764,28 @@ class AppLocalizations {
       getLabel('customRecipeUpdatedWithUpdateSuccess');
 
   String? get recipeNotFound => getLabel('recipeNotFound');
-  String? get recipeNotFoundDescription => getLabel('recipeNotFoundDescription');
+
+  String? get recipeNotFoundDescription =>
+      getLabel('recipeNotFoundDescription');
+
   String? get createUserRecipe => getLabel('createUserRecipe');
-  String? get createUserRecipeDescription => getLabel('createUserRecipeDescription');
+
+  String? get createUserRecipeDescription =>
+      getLabel('createUserRecipeDescription');
+
   String? get createOrEditUserRecipe => getLabel('createOrEditUserRecipe');
-  String? get createOrEditUserRecipeDescription => getLabel('createOrEditUserRecipeDescription');
 
-  String? get voiceLoggingNoResultsFoundDescription => getLabel('voiceLoggingNoResultsFoundDescription');
+  String? get createOrEditUserRecipeDescription =>
+      getLabel('createOrEditUserRecipeDescription');
+
+  String? get voiceLoggingNoResultsFoundDescription =>
+      getLabel('voiceLoggingNoResultsFoundDescription');
+
   String? get photoLogging => getLabel('photoLogging');
-  String? get barcodeScan => getLabel('barcodeScan');
-  String? get details => getLabel('details');
-  String? get upc => getLabel('upc');
 
+  String? get barcodeScan => getLabel('barcodeScan');
+
+  String? get details => getLabel('details');
+
+  String? get upc => getLabel('upc');
 }

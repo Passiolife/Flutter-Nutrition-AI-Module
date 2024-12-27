@@ -16,6 +16,7 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
   FavoritesBloc() : super(const FavoritesInitial()) {
     on<GetAllFavoritesEvent>(_handleGetAllFavoritesEvent);
     on<DoFavoriteDeleteEvent>(_handleDoFavoriteDeleteEvent);
+    on<DoFavoriteUpdateEvent>(_handleDoFavoriteUpdateEvent);
     on<DoLogEvent>(_handleDoLogEvent);
   }
 
@@ -46,6 +47,30 @@ class FavoritesBloc extends Bloc<FavoritesEvent, FavoritesState> {
     } catch (e) {
       // If found any error then emit the failure state.
       emit(FavoriteDeleteFailureState(message: e.toString()));
+    }
+  }
+
+  Future<void> _handleDoFavoriteUpdateEvent(
+      DoFavoriteUpdateEvent event, Emitter<FavoritesState> emit) async {
+    try {
+      final foodRecord = event.data;
+      if (foodRecord == null) {
+        emit(const FavoriteUpdateFailureState(
+            message: 'Something went wrong while parsing data.'));
+        return;
+      }
+
+      foodRecord.removeMeal();
+
+      await _connector.updateFavorite(foodRecord: foodRecord, isNew: false);
+
+      add(const GetAllFavoritesEvent());
+
+      // No any error, so emit the success state.
+      emit(FavoriteUpdateSuccessState(timestamp: DateTime.now().millisecondsSinceEpoch));
+    } catch (e) {
+      // If found any error then emit the failure state.
+      emit(FavoriteUpdateFailureState(message: e.toString()));
     }
   }
 

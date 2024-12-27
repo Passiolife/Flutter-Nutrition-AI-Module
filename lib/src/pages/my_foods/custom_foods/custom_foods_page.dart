@@ -8,7 +8,7 @@ import '../../../common/constant/app_colors.dart';
 import '../../../common/constant/app_common_constants.dart';
 import '../../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../../common/models/food_record/food_record.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../../common/widgets/app_button.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
@@ -70,7 +70,7 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
                           extentRatio: 0.6,
                           motion: const DrawerMotion(),
                           dismissible: DismissiblePane(
-                            onDismissed: () => _doDeleteRecord(data),
+                            onDismissed: () => _doDeleteRecord(data, forcible: true),
                           ),
                           children: [
                             SlidableAction(
@@ -135,14 +135,18 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
   }
 
   void _doShowDetails(FoodRecord foodRecord) {
+    final record = foodRecord.clone();
+    record.refCode = '${AppCommonConstants.userFood}${record.id}';
     EditFoodPage.navigate(
       context: context,
       params: EditFoodPageParams(
-        foodRecord: foodRecord,
+        foodRecord: record,
         message: context.localization?.itemAddedToDiary,
         visibleFoodCreator: true,
         visibleRecipeCreator: true,
         source: AppCommonConstants.userFood,
+        visibleLogUponCreate: false,
+        redirectToDiaryOnLog: true,
       ),
     );
   }
@@ -157,7 +161,11 @@ class _CustomFoodsPageState extends State<CustomFoodsPage> {
     }
   }
 
-  void _doDeleteRecord(FoodRecord foodRecord) {
+  void _doDeleteRecord(FoodRecord foodRecord, {bool forcible = false}) {
+    if(forcible) {
+      _bloc.add(DoDeleteUserFoodEvent(foodRecord: foodRecord));
+      return;
+    }
     DeleteConfirmationDialog.show(
       context: context,
       onConfirm: () => _bloc.add(DoDeleteUserFoodEvent(foodRecord: foodRecord)),

@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/user_profile/user_profile_model.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/app_drop_down_menu.dart';
 
 class UnitsForProfileWidget extends StatelessWidget {

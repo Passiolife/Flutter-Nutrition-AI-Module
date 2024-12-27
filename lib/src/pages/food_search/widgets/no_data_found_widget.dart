@@ -3,7 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/constant/app_padding.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 
 class NoDataFoundWidget extends StatelessWidget {
   const NoDataFoundWidget({required this.searchQuery, super.key});

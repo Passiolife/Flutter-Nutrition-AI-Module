@@ -6,7 +6,8 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_colors.dart';
 import '../../../../../common/constant/app_constants.dart';
-import '../../../../../common/util/context_extension.dart';
+import '../../../../../common/router/routes.dart';
+import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/util/permission_manager_utility.dart';
 import '../../../../edit_food/ui/edit_food_page.dart';
 import '../food_creator_page.dart';
@@ -17,10 +18,14 @@ import 'widgets/widgets.dart';
 class BarcodeScannerPage extends StatefulWidget {
   const BarcodeScannerPage({super.key});
 
+  static MaterialPageRoute route() {
+    return MaterialPageRoute(builder: (_) => const BarcodeScannerPage());
+  }
+
   static Future navigate({required BuildContext context}) async {
-    return await Navigator.push(
+    return await Navigator.pushNamed(
       context,
-      MaterialPageRoute(builder: (_) => const BarcodeScannerPage()),
+      Routes.barcodeScanner,
     );
   }
 
@@ -170,7 +175,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
             title: context.localization?.barcodeInSystem,
             description: context.localization?.barcodeInSystemDescription,
             customFoodButtonText: context.localization?.createCustomFoodAnyway,
-            barcode: state.foodRecord.barcode,
+            barcode: state.barcode,
           );
           break;
         case UnknownBarcodeFoundListenerState():

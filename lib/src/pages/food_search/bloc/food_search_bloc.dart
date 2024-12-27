@@ -4,7 +4,10 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
+import '../../../common/constant/app_common_constants.dart';
 import '../../../common/domain/use_cases/food_logs/add_food_log_use_case.dart';
+import '../../../common/util/preference_store.dart';
+import '../../../nutrition_ai_module_configuration.dart';
 
 part 'food_search_event.dart';
 part 'food_search_state.dart';
@@ -17,9 +20,11 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
 
   List<String> alternatives = [];
 
+  NutritionConfiguration get _configuration =>
+      NutritionAIModule.instance.configuration;
+
   /// [_connector] use to perform operations.
-  final PassioConnector _connector =
-      NutritionAIModule.instance.configuration.connector;
+  PassioConnector get _connector => _configuration.connector;
 
   String searchTerm = '';
 
@@ -64,8 +69,14 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
         alternatives: alternatives,
       ));
 
-      final searchResponse =
-          await NutritionAI.instance.searchForFood(searchTerm);
+      PassioSearchResponse searchResponse;
+      final enableLegacySearch = _configuration.enableLegacySearch;
+      if (enableLegacySearch) {
+        searchResponse = await NutritionAI.instance.searchForFood(searchTerm);
+      } else {
+        searchResponse =
+            await NutritionAI.instance.searchForFoodSemantic(searchTerm);
+      }
 
       myFoods = await _connector.searchUserFoodsByName(term: searchTerm);
 
@@ -96,6 +107,8 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
     } else {
       foodRecord = passedFoodRecord!;
     }
+
+    foodRecord.logMeal();
 
     addFoodLogUseCase(foodRecord: foodRecord, isNew: true);
 

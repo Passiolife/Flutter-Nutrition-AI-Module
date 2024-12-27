@@ -57,3 +57,19 @@ class FoodRecordLogFailureState extends FavoritesState {
   @override
   List<Object?> get props => [];
 }
+
+class FavoriteUpdateSuccessState extends FavoritesState {
+  const FavoriteUpdateSuccessState({required this.timestamp});
+  final int timestamp;
+
+  @override
+  List<Object?> get props => [timestamp];
+}
+
+class FavoriteUpdateFailureState extends FavoritesState {
+  const FavoriteUpdateFailureState({required this.message});
+  final String? message;
+
+  @override
+  List<Object?> get props => [message];
+}

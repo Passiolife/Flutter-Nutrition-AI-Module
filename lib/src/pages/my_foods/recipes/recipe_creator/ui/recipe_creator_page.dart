@@ -5,7 +5,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/constant/app_colors.dart';
 import '../../../../../common/domain/use_cases/food_logs/convert_food_data_info_to_food_record_use_case.dart';
-import '../../../../../common/util/context_extension.dart';
+import '../../../../../common/router/routes.dart';
+import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/util/snackbar_extension.dart';
 import '../../../../../common/widgets/custom_app_bar_widget.dart';
 import '../../../../dashboard/dashboard_page.dart';
@@ -28,17 +29,21 @@ class RecipeCreatorPage extends StatelessWidget {
 
   final NavigationData params;
 
+  static MaterialPageRoute route({required NavigationData params}) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.recipeCreator),
+      builder: (_) => RecipeCreatorPage(params: params),
+    );
+  }
+
   static Future navigate({
     required BuildContext context,
     NavigationData params = const NavigationData(),
   }) async {
-    return await Navigator.push(
+    return await Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (_) => RecipeCreatorPage(
-          params: params,
-        ),
-      ),
+      Routes.recipeCreator,
+      arguments: params,
     );
   }
 
@@ -47,7 +52,9 @@ class RecipeCreatorPage extends StatelessWidget {
     return NavigationDataProvider(
       params: params,
       child: BlocProvider(
-        create: (context) => RecipeCreatorBloc(convertFoodDataInfoToFoodRecordUseCase: ConvertFoodDataInfoToFoodRecordUseCase()),
+        create: (context) => RecipeCreatorBloc(
+            convertFoodDataInfoToFoodRecordUseCase:
+                ConvertFoodDataInfoToFoodRecordUseCase()),
         child: const _RecipeCreatorScreen(),
       ),
     );

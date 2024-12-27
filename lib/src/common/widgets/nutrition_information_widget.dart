@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 
 import '../constant/app_constants.dart';
 import '../models/micro_nutrient/micro_nutrient.dart';
-import '../util/context_extension.dart';
+import '../extension/context_extension.dart';
 import 'custom_linear_progress_indicator.dart';
 
 class NutritionInformationWidget extends StatefulWidget {

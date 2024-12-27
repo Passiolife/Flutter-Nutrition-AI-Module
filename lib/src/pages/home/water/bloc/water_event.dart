@@ -4,17 +4,30 @@ sealed class WaterEvent extends Equatable {
   const WaterEvent();
 }
 
+// final class FetchRecordsEvent extends WaterEvent {
+//   const FetchRecordsEvent({
+//     required this.dateTime,
+//     required this.isMonth,
+//   });
+//
+//   final DateTime dateTime;
+//   final bool isMonth;
+//
+//   @override
+//   List<Object?> get props => [dateTime, isMonth];
+// }
+
 final class FetchRecordsEvent extends WaterEvent {
   const FetchRecordsEvent({
-    required this.dateTime,
-    required this.isMonth,
+    required this.startDate,
+    required this.endDate,
   });
 
-  final DateTime dateTime;
-  final bool isMonth;
+  final DateTime startDate;
+  final DateTime endDate;
 
   @override
-  List<Object?> get props => [dateTime, isMonth];
+  List<Object?> get props => [startDate, endDate];
 }
 
 final class QuickAddEvent extends WaterEvent {

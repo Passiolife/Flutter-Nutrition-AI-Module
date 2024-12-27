@@ -53,8 +53,15 @@ class _FavoritesScreenState extends State<_FavoritesScreen> {
     }
     // States for [DoLogEvent]
     else if (state is FoodRecordLogSuccessState) {
-      context.showSnackbar(text: context.localization?.addedToLog);
+      context.showSnackbar(text: context.localization?.itemAddedToDiary);
     } else if (state is FoodRecordLogFailureState) {
+      context.showSnackbar(text: state.message);
+    }
+
+    // States for Update
+    else if (state is FavoriteUpdateSuccessState) {
+      context.showSnackbar(text: context.localization?.favoriteUpdatedSuccessfully);
+    } else if (state is FavoriteUpdateFailureState) {
       context.showSnackbar(text: state.message);
     }
   }

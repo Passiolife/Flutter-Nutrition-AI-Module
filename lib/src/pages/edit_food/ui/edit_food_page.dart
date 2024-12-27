@@ -5,7 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../nutrition_ai_module.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/food_record/meal_label.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/router/routes.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../dashboard/dashboard_page.dart';
@@ -35,10 +36,19 @@ class EditFoodPage extends StatefulWidget {
 
   final EditFoodPageParams params;
 
+  static MaterialPageRoute route({required EditFoodPageParams params}) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.editFood),
+      builder: (_) => EditFoodPage._(params: params),
+    );
+  }
+
   static Future navigate({
     required BuildContext context,
     required EditFoodPageParams params,
   }) async {
+    return await Navigator.pushNamed(context, Routes.editFood,
+        arguments: params);
     return await Navigator.push(
       context,
       MaterialPageRoute(

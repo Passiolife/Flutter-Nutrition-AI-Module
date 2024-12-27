@@ -37,12 +37,18 @@ class RecipeCreatorViewModel {
     final foodRecord = FoodRecord.fromJson(record.toJson());
     final sliderData = SliderData().updateSliderData(
         foodRecord.getSelectedUnit(), foodRecord.getSelectedQuantity());
-    return RecipeCreatorViewModel._(
-        recipeName: record.name,
-        image: image,
-        foodRecord: foodRecord,
-        servingSize: record.computedWeight,
-        sliderData: sliderData);
+    RecipeCreatorViewModel recipeViewModel = RecipeCreatorViewModel._(
+      recipeName: foodRecord.name,
+      image: image,
+      servingSize: foodRecord.computedWeight,
+      sliderData: sliderData,
+    );
+    recipeViewModel = recipeViewModel.doUpdateIngredients(
+        foodRecord: foodRecord, isUpdate: false);
+    if(foodRecord.iconId.isNotEmpty) {
+      recipeViewModel.foodRecord?.iconId = foodRecord.iconId;
+    }
+    return recipeViewModel;
   }
 
   RecipeCreatorViewModel _copyWith({
@@ -150,7 +156,7 @@ class RecipeCreatorViewModel {
     this.foodRecord?.barcode = null;
     this.foodRecord?.iconId = _uniqueIconId;
     this.foodRecord?.setSelectedQuantity(1);
-    this.foodRecord?.setSelectedUnit('Serving');
+    this.foodRecord?.setSelectedUnit('serving');
     this.foodRecord?.removeMeal();
     this.foodRecord?.ingredients = [];
   }

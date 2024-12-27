@@ -6,9 +6,10 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/dialogs/ok_button_with_keyboard.dart';
-import '../../../../../common/util/context_extension.dart';
+import '../../../../../common/extension/number_extension.dart';
+import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/util/double_extensions.dart';
-import '../../../../../common/util/string_extensions.dart';
+import '../../../../../common/extension/string_extensions.dart';
 import '../../../../../common/util/text_input_formatter_util.dart';
 import '../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../common/widgets/app_text_field.dart';
@@ -116,9 +117,7 @@ class _FormWidget extends StatefulWidget {
 }
 
 class _FormWidgetState extends State<_FormWidget> {
-
   List<DropdownMenuEntry<String>> _unitDropdownEntries = [];
-
 
   List<DropdownMenuEntry<String>> _getDefaultUnitsDropDownEntries(
           BuildContext context) =>
@@ -233,34 +232,36 @@ class _FormWidgetState extends State<_FormWidget> {
 
   void _handleOnChange() {
     widget.onChange?.call(
-      double.tryParse(_servingQuantityController.text)?.parseFormatted(places: 2),
+      // double.tryParse(_servingQuantityController.text)?.parseFormatted(places: 2),
+      _servingQuantityController.text.localeFormatted(places: 2),
       _selectedUnit,
-      double.tryParse(_weightController.text)?.parseFormatted(places: 2),
+      // double.tryParse(_weightController.text)?.parseFormatted(places: 2),
+      _weightController.text.localeFormatted(places: 2),
       _selectedWeightSymbol.value,
-      double.tryParse(_caloriesController.text) != null
-          ? UnitEnergy(
-              double.tryParse(_caloriesController.text)?.parseFormatted(places: 2) ?? 0,
-              UnitEnergyType.kilocalories,
-            )
-          : null,
-      double.tryParse(_fatController.text) != null
-          ? UnitMass(
-              double.tryParse(_fatController.text)?.parseFormatted(places: 2) ?? 0,
-              UnitMassType.grams,
-            )
-          : null,
-      double.tryParse(_carbsController.text) != null
-          ? UnitMass(
-              double.tryParse(_carbsController.text)?.parseFormatted(places: 2) ?? 0,
-              UnitMassType.grams,
-            )
-          : null,
-      double.tryParse(_proteinController.text) != null
-          ? UnitMass(
-              double.tryParse(_proteinController.text)?.parseFormatted(places: 2) ?? 0,
-              UnitMassType.grams,
-            )
-          : null,
+      _caloriesController.text.localeFormatted(places: 2, callback: (value) {
+        return UnitEnergy(
+          value,
+          UnitEnergyType.kilocalories,
+        );
+      }),
+      _fatController.text.localeFormatted(places: 2, callback: (value) {
+        return UnitMass(
+          value,
+          UnitMassType.grams,
+        );
+      }),
+        _carbsController.text.localeFormatted(places: 2, callback: (value) {
+          return UnitMass(
+            value,
+            UnitMassType.grams,
+          );
+        }),
+      _proteinController.text.localeFormatted(places: 2, callback: (value) {
+        return UnitMass(
+          value,
+          UnitMassType.grams,
+        );
+      }),
     );
   }
 
@@ -326,12 +327,12 @@ class _FormWidgetState extends State<_FormWidget> {
       _setServingUnit(widget.initialUnit, onChange: false);
       _caloriesController.text =
           widget.initialCalories?.value.format(places: 2).toString() ?? '';
-      _fatController.text = widget.initialFat?.value.format(places: 2).toString() ?? '';
+      _fatController.text =
+          widget.initialFat?.value.format(places: 2).toString() ?? '';
       _carbsController.text =
           widget.initialCarbs?.value.format(places: 2).toString() ?? '';
       _proteinController.text =
           widget.initialProtein?.value.format(places: 2).toString() ?? '';
-
 
       _setupListener(_servingQuantityController);
       _setupListener(_weightController);
@@ -347,11 +348,15 @@ class _FormWidgetState extends State<_FormWidget> {
   void _updateUnitsDropDownEntries() {
     setState(() {
       _unitDropdownEntries = _getDefaultUnitsDropDownEntries(context);
-      if(widget.initialUnit.isNotNullOrEmpty && !(_unitDropdownEntries.any((element) => element.value == widget.initialUnit))) {
-        _unitDropdownEntries.insert(0, DropdownMenuEntry(
-          value: widget.initialUnit ?? '',
-          label: widget.initialUnit?.toUpperCaseWord ?? '',
-        ));
+      if (widget.initialUnit.isNotNullOrEmpty &&
+          !(_unitDropdownEntries
+              .any((element) => element.value == widget.initialUnit))) {
+        _unitDropdownEntries.insert(
+            0,
+            DropdownMenuEntry(
+              value: widget.initialUnit ?? '',
+              label: widget.initialUnit?.toUpperCaseWord ?? '',
+            ));
       }
     });
   }
@@ -532,11 +537,10 @@ class _FormWidgetState extends State<_FormWidget> {
     _selectedWeightSymbol.value =
         _visibleWeight.value ? _selectedWeightSymbol.value : null;
 
-    if(onChange) {
+    if (onChange) {
       _handleOnChange();
     } else {
-      setState(() {
-      });
+      setState(() {});
     }
   }
 }
@@ -577,7 +581,7 @@ class _NutritionFactField extends StatelessWidget {
                       AppTextStyle.medium
                     ]).copyWith(color: AppColors.gray500),
                   ),
-                  if(isMandatory)
+                  if (isMandatory)
                     TextSpan(
                       text: ' *',
                       style: AppTextStyle.textSm.addAll([
@@ -645,7 +649,7 @@ class _NutritionFactDropDown extends StatelessWidget {
                       AppTextStyle.medium
                     ]).copyWith(color: AppColors.gray500),
                   ),
-                  if(isMandatory)
+                  if (isMandatory)
                     TextSpan(
                       text: ' *',
                       style: AppTextStyle.textSm.addAll([

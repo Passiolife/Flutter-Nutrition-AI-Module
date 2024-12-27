@@ -52,12 +52,13 @@ final class CustomUserFoodRecordFoundEvent extends BarcodeScannerEvent {
 }
 
 final class SystemFoodRecordFoundEvent extends BarcodeScannerEvent {
-  const SystemFoodRecordFoundEvent({required this.foodRecord});
+  const SystemFoodRecordFoundEvent({required this.foodRecord, required this.barcode});
 
   final FoodRecord foodRecord;
+  final String barcode;
 
   @override
-  List<Object?> get props => [foodRecord];
+  List<Object?> get props => [foodRecord, barcode];
 }
 
 final class UnknownBarcodeFoundEvent extends BarcodeScannerEvent {

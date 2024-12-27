@@ -4,7 +4,7 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/constant/app_padding.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 import '../../../common/widgets/loading/shimmer_loading.dart';
 import '../../edit_food/ui/edit_food_page.dart';

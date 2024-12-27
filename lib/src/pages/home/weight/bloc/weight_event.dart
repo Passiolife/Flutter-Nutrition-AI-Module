@@ -4,7 +4,7 @@ sealed class WeightEvent extends Equatable {
   const WeightEvent();
 }
 
-final class FetchRecordsEvent extends WeightEvent {
+/*final class FetchRecordsEvent extends WeightEvent {
   const FetchRecordsEvent({
     required this.dateTime,
     required this.isMonth,
@@ -15,6 +15,19 @@ final class FetchRecordsEvent extends WeightEvent {
 
   @override
   List<Object?> get props => [dateTime, isMonth];
+}*/
+
+final class FetchRecordsEvent extends WeightEvent {
+  const FetchRecordsEvent({
+    required this.startDate,
+    required this.endDate,
+  });
+
+  final DateTime startDate;
+  final DateTime endDate;
+
+  @override
+  List<Object?> get props => [startDate, endDate];
 }
 
 final class DoDeleteLogEvent extends WeightEvent {

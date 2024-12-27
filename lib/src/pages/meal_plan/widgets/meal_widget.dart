@@ -3,9 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/util/debouncer.dart';
 import '../../../common/util/double_extensions.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/app_loading_button_widget.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 
@@ -20,7 +21,7 @@ abstract interface class MealListener {
       PassioFoodDataInfo? passioFoodDataInfo, PassioMealTime? mealTime);
 }
 
-class MealWidget extends StatelessWidget {
+class MealWidget extends StatefulWidget {
   const MealWidget({
     this.title,
     this.mealTime,
@@ -39,6 +40,20 @@ class MealWidget extends StatelessWidget {
   final bool isLogMealLoading;
 
   @override
+  State<MealWidget> createState() => _MealWidgetState();
+}
+
+class _MealWidgetState extends State<MealWidget> {
+
+  final _deBouncer = DeBouncer(milliseconds: 500);
+
+  @override
+  void dispose() {
+    _deBouncer.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       decoration: AppShadows.base,
@@ -50,24 +65,24 @@ class MealWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    title ?? '',
+                    widget.title ?? '',
                     style: AppTextStyle.textBase.addAll([
                       AppTextStyle.textBase.leading6,
                       AppTextStyle.semiBold
                     ]),
                   ),
                 ),
-                isLogMealLoading
+                widget.isLogMealLoading
                     ? Padding(
                         padding: EdgeInsets.symmetric(vertical: 16.h),
                         child: const AppLoadingButtonWidget(),
                       )
                     : GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: isLoading
+                        onTap: widget.isLoading
                             ? null
-                            : () => listener?.onTappedLogEntireMeal(
-                                listOfFoodData, mealTime),
+                            : () => widget.listener?.onTappedLogEntireMeal(
+                                widget.listOfFoodData, widget.mealTime),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 16.h),
                           child: Text(
@@ -85,23 +100,23 @@ class MealWidget extends StatelessWidget {
           const Divider(color: AppColors.gray200),
           8.verticalSpace,
           ListView.separated(
-            itemCount: isLoading ? 2 : listOfFoodData?.length ?? 0,
+            itemCount: widget.isLoading ? 2 : widget.listOfFoodData?.length ?? 0,
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              final data = isLoading ? null : listOfFoodData?.elementAt(index);
+              final data = widget.isLoading ? null : widget.listOfFoodData?.elementAt(index);
               return FoodItemRowWidget(
                 data: FoodItemRowData(
                   decoration: const BoxDecoration(),
-                  isLoading: isLoading,
+                  isLoading: widget.isLoading,
                   index: index,
                   iconId: data?.iconID,
                   title: data?.foodName.toUpperCaseWord,
                   subtitle:
                       '${data?.nutritionPreview.servingQuantity.format() ?? ''} ${data?.nutritionPreview.servingUnit.toUpperCaseWord ?? ''} (${data?.nutritionPreview.weightQuantity.format()} ${data?.nutritionPreview.weightUnit}) | ${data?.nutritionPreview.calories ?? 0} ${context.localization?.cal.toUpperCaseWord ?? ''}',
-                  onTap: () => listener?.onTappedMealItem(data, mealTime),
-                  onTapAdd: () => listener?.onTappedAdd(data, mealTime),
+                  onTap: () => widget.listener?.onTappedMealItem(data, widget.mealTime),
+                  onTapAdd: () => _handleTap(data),
                   enableSlidable: false,
                 ),
               );
@@ -114,5 +129,11 @@ class MealWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _handleTap(PassioFoodDataInfo? data) {
+    _deBouncer.run(() {
+      widget.listener?.onTappedAdd(data, widget.mealTime);
+    });
   }
 }

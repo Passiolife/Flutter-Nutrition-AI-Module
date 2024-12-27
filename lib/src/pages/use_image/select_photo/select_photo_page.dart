@@ -10,11 +10,12 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/constant/app_colors.dart';
 import '../../../common/constant/app_text_styles.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/router/routes.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/permission_manager_utility.dart';
 import '../../../common/util/show_widget_util.dart';
 import '../../../common/util/snackbar_extension.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 import '../../dashboard/dashboard_page.dart';
@@ -32,16 +33,23 @@ class SelectPhotoPage extends StatefulWidget {
   final bool returnResult;
   final int maxLimit;
 
+  static MaterialPageRoute route(
+      {required bool returnResult, required int maxLimit}) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.selectPhoto),
+      builder: (_) => SelectPhotoPage(
+        returnResult: returnResult,
+        maxLimit: maxLimit,
+      ),
+    );
+  }
+
   static Future navigate(BuildContext context,
       {bool returnResult = false, int maxLimit = 7}) async {
-    return await Navigator.push(
+    return await Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (_) => SelectPhotoPage(
-          returnResult: returnResult,
-          maxLimit: maxLimit,
-        ),
-      ),
+      Routes.selectPhoto,
+      arguments: [returnResult, maxLimit],
     );
   }
 

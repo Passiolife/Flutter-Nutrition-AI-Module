@@ -3,14 +3,15 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:nutrition_ai_module/src/pages/my_foods/custom_foods/food_creator/view_models/food_creator_view_model.dart';
+import '../view_models/food_creator_view_model.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/dialogs/ok_button_with_keyboard.dart';
-import '../../../../../common/util/context_extension.dart';
+import '../../../../../common/extension/number_extension.dart';
+import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/util/double_extensions.dart';
-import '../../../../../common/util/string_extensions.dart' as string_extensions;
+import '../../../../../common/extension/string_extensions.dart' as string_extensions;
 import '../../../../../common/util/text_input_formatter_util.dart';
 import '../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../common/widgets/app_text_field.dart';
@@ -145,14 +146,14 @@ class _OtherNutritionFactsWidgetState extends State<OtherNutritionFactsWidget> {
                               _onEntriesChanged();
                             },
                             onChanged: (newValue) {
-                              final newDoubleValue = double.tryParse(newValue);
+                              final newDoubleValue = newValue.localeFormatted(places: 2);
                               if (newDoubleValue == null) {
                                 return;
                               }
                               _addedEntries
                                   .value = List.from(_addedEntries.value)
                                 ..[index] = nutrient.copyWith(
-                                    value: newDoubleValue.format(places: 2));
+                                    value: newDoubleValue.toString());
                               _onEntriesChanged();
                             },
                             suffix: SizedBox(

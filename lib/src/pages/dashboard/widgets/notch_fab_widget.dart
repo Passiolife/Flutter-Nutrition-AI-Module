@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/floating_buttion_expanded_widget.dart';
 
 typedef OnTapQuickAction = Function(String? action);
@@ -115,7 +115,7 @@ class _NotchFABWidgetState extends State<NotchFABWidget> {
           ),
         );
       },
-      childrenButtonSize: Size(200.w, 78.h),
+      childrenButtonSize: Size(208.w, 78.h),
       children: _showImageMenu
           ? _getImageMenuWidgets(context)
               .map(

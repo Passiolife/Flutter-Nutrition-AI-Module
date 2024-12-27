@@ -7,7 +7,7 @@ import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/dialogs/delete_confirmation_dialog.dart';
-import '../../../../../common/util/context_extension.dart';
+import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/widgets/food_item_row_widget.dart';
 import '../../../../edit_food/ui/edit_food_page.dart';
 import '../../bloc/recipes_bloc.dart';
@@ -59,10 +59,12 @@ class RecipeListSection extends StatelessWidget {
 
   Future<void> _doOpenRecord(
       {required BuildContext context, required FoodRecord foodRecord}) async {
+    final record = foodRecord.clone();
+    record.refCode = '${FoodRecord.userRecipePrefix}${record.id}';
     EditFoodPage.navigate(
       context: context,
       params: EditFoodPageParams(
-        foodRecord: foodRecord,
+        foodRecord: record,
         message: context.localization?.itemAddedToDiary,
         source: AppCommonConstants.userRecipe,
         visibleRecipeCreator: true,

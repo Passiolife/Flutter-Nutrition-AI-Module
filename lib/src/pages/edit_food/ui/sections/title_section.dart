@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../common/constant/app_constants.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/widgets/custom_app_bar_widget.dart';
 import '../../../food_search/food_search_page.dart';
 import '../../../food_search/models/food_selection_result.dart';

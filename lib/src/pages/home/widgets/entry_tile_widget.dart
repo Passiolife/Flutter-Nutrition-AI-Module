@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/widgets/custom_expansion_tile_widget.dart';
 import '../../../common/widgets/typedefs.dart';
@@ -29,14 +29,17 @@ abstract interface class EntryTileListener {
 
 class EntryTileWidget extends StatelessWidget {
   const EntryTileWidget({
-    this.rangeDates,
+    required this.startDate,
+    required this.endDate,
     this.data,
     this.isMonthRange = false,
     this.listener,
     super.key,
   });
 
-  final RangeDates? rangeDates;
+  // final RangeDates? rangeDates;
+  final DateTime startDate;
+  final DateTime endDate;
   final List<EntryTileChildData>? data;
   final EntryTileListener? listener;
   final bool isMonthRange;
@@ -45,9 +48,9 @@ class EntryTileWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlidableAutoCloseBehavior(
       child: CustomExpansionTileWidget(
-        title: rangeDates?.startDate.rangeString(
+        title: startDate.rangeString(
             isMonthRange: isMonthRange,
-            endDateTime: rangeDates?.endDate ?? DateTime.now()),
+            endDateTime: endDate),
         children: data
                 ?.map(
                   (e) => EntryTileChildWidget(
@@ -111,7 +114,6 @@ class EntryTileChildWidget extends StatelessWidget {
         child: ListTile(
           onTap: onEdit,
           dense: true,
-          visualDensity: VisualDensity.compact,
           minVerticalPadding: 0,
           contentPadding: EdgeInsets.only(
             left: AppDimens.w8,

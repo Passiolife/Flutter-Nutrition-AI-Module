@@ -12,6 +12,7 @@ import 'common/util/path_util.dart';
 import 'common/util/preference_store.dart';
 import 'common/util/user_session.dart';
 import 'nutrition_ai_module_configuration.dart';
+import 'nutrition_ai_page.dart';
 import 'pages/dashboard/dashboard_page.dart';
 
 /// The `NutritionAIModule` class is a singleton that handles the initialization
@@ -39,6 +40,11 @@ class NutritionAIModule {
   /// Returns the singleton instance of `NutritionAIModule`.
   NutritionAIModule setPassioConnector(PassioConnector passioConnector) {
     configuration = configuration.copyWith(connector: passioConnector);
+    return this;
+  }
+
+  NutritionAIModule setEnableLegacySearch(bool enableLegacySearch) {
+    configuration = configuration.copyWith(enableLegacySearch: enableLegacySearch);
     return this;
   }
 
@@ -110,7 +116,7 @@ class NutritionAIModule {
       );
 
       // Navigate to the DashboardPage screen
-      await DashboardPage.navigate(context);
+      await NavigationAIPage.navigate(context);
     }
   }
 }

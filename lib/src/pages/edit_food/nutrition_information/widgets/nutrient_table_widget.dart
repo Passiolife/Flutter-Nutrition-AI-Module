@@ -4,8 +4,9 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/constant/app_constants.dart';
+import '../../../../common/constant/app_padding.dart';
 import '../../../../common/models/micro_nutrient/micro_nutrient.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/util/double_extensions.dart';
 
 class NutrientTableWidget extends StatelessWidget {
@@ -17,12 +18,12 @@ class NutrientTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      padding: EdgeInsets.only(top: 24.h, bottom: context.bottomPadding + 24.h),
+      padding: AppPadding.pv16 + EdgeInsets.only(bottom: context.bottomPadding),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 16.h,
         crossAxisSpacing: 16.w,
-        childAspectRatio: (1 / 0.62),
+        childAspectRatio: 190.w / 124.h,
       ),
       itemCount: nutrientList?.length ?? 0,
       itemBuilder: (context, index) {
@@ -45,9 +46,11 @@ class NutrientTableRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: AppShadows.base,
-      padding: EdgeInsets.all(16.r),
+      padding: AppPadding.pa16,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        spacing: 16.h,
         children: [
           FittedBox(
             child: Text(
@@ -56,7 +59,6 @@ class NutrientTableRow extends StatelessWidget {
                   [AppTextStyle.textLg.leading6, AppTextStyle.semiBold]),
             ),
           ),
-          16.verticalSpace,
           Center(
             child: FittedBox(
               child: RichText(

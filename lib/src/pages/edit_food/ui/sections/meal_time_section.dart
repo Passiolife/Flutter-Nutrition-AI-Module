@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/models/food_record/meal_label.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../bloc/edit_food_bloc.dart';
 import '../widgets/meal_time_widget.dart';
 

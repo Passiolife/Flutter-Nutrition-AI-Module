@@ -57,7 +57,7 @@ class WaterRecord {
   /// Constructs a [WaterRecord] instance from a JSON map.
   factory WaterRecord.fromJson(Map<String, dynamic> json) => WaterRecord._(
         json['id'],
-        (json['data'] as num).toDouble(),
+        double.parse(json['data']),
         json['created_at'],
       );
 

@@ -4,7 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/food_record/food_record.dart';
 import '../../../common/models/micro_nutrient/micro_nutrient.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/custom_app_bar_widget.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 import 'widgets/nutrient_table_widget.dart';

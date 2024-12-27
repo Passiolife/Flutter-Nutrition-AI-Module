@@ -5,9 +5,9 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../common/constant/app_constants.dart';
 import '../../common/models/food_record/meal_label.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/util/snackbar_extension.dart';
-import '../../common/util/string_extensions.dart';
+import '../../common/extension/string_extensions.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
 import '../edit_food/ui/edit_food_page.dart';
 import 'bloc/meal_plan_bloc.dart';

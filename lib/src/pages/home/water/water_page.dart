@@ -10,11 +10,12 @@ import '../../../common/models/user_profile/user_profile_model.dart';
 import '../../../common/models/water_day_log/water_day_log.dart';
 import '../../../common/models/water_day_logs/water_day_logs.dart';
 import '../../../common/models/water_record/water_record.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../../common/util/user_session.dart';
+import '../../../common/widgets/date_time/range_date_time_widget.dart';
 import '../../../common/widgets/typedefs.dart';
 import 'add_water/add_water_page.dart';
 import 'bloc/water_bloc.dart';
@@ -93,10 +94,12 @@ class _WaterPageState extends State<WaterPage>
               _profileModel?.weightUnit ?? MeasurementSystem.imperial) ??
       0;
 
-  double get targetWater => ((_profileModel?.getTargetWater() ?? 0) *
+  /*double get targetWater => ((_profileModel?.getTargetWater() ?? 0) *
       (_rangeDates != null
           ? _rangeDates!.startDate.daysBetween(_rangeDates!.endDate) + 1
-          : 0));
+          : 0));*/
+
+  double get targetWater => _profileModel?.getTargetWater() ?? 0;
 
   double get maximumValue => max(max(chartMaximumValue, targetWater), 5);
 
@@ -115,23 +118,39 @@ class _WaterPageState extends State<WaterPage>
   final PageController _pageController = PageController();
 
   List<WaterRecord> get _records =>
-      _dayLogs?.dayLog.expand((element) => element.records).toList() ?? [];
+      (_dayLogs?.dayLog.expand((element) => element.records).toList()
+        ?..sort((a, b) {
+          final aId = a.id;
+          final bId = b.id;
+          if (aId == null || bId == null) {
+            return 0;
+          }
+          return bId.compareTo(aId);
+        })) ??
+      [];
+
+  late DateTime _startDate;
+  late DateTime _endDate;
 
   @override
   void initState() {
     super.initState();
     SchedulerBinding.instance.addPostFrameCallback((timeStamp) {
       _selectedTab = _tabs.firstOrNull;
-      _fetchRecords();
+      // _fetchRecords();
     });
   }
 
-  void _fetchRecords({bool isFirstTime = true}) {
-    _bloc.add(FetchRecordsEvent(
-      dateTime: _selectedDateTime,
-      isMonth: _selectedTab == context.localization?.month,
-    ));
+  void _fetchRecords() {
+    _bloc.add(FetchRecordsEvent(startDate: _startDate, endDate: _endDate));
   }
+
+  // void _fetchRecords({bool isFirstTime = true}) {
+  //   _bloc.add(FetchRecordsEvent(
+  //     dateTime: _selectedDateTime,
+  //     isMonth: _selectedTab == context.localization?.month,
+  //   ));
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -176,13 +195,17 @@ class _WaterPageState extends State<WaterPage>
                             (index) {
                               return Column(
                                 children: [
-                                  RangeDateNavigatorWidget(
-                                    startDateTime: _rangeDates?.startDate ??
-                                        DateTime.now(),
-                                    endDateTime:
-                                        _rangeDates?.endDate ?? DateTime.now(),
-                                    listener: this,
-                                    isMonthRange: isMonthTab,
+                                  RangeDateTimeWidget(
+                                    key: ValueKey(_selectedTab),
+                                    period: _selectedTab != null &&
+                                            _selectedTab != _tabs.first
+                                        ? DatesPeriod.month
+                                        : DatesPeriod.week,
+                                    onRangeChange: (start, end) {
+                                      _startDate = start;
+                                      _endDate = end;
+                                      _fetchRecords();
+                                    },
                                   ),
                                   Expanded(
                                     child: ListView(
@@ -218,8 +241,9 @@ class _WaterPageState extends State<WaterPage>
                                         SizedBox(height: AppDimens.h16),
                                         _records.isNotEmpty
                                             ? EntryTileWidget(
+                                                startDate: _startDate,
+                                                endDate: _endDate,
                                                 isMonthRange: isMonthTab,
-                                                rangeDates: _rangeDates,
                                                 data: _records
                                                     .map(
                                                       (e) => EntryTileChildData(
@@ -376,6 +400,6 @@ class _WaterPageState extends State<WaterPage>
     }
 
     _selectedDateTime = newDateTime;
-    _fetchRecords(isFirstTime: false);
+    _fetchRecords();
   }
 }

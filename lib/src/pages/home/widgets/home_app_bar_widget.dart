@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/custom_app_bar_widget.dart';
 import '../../../common/widgets/custom_calendar_app_bar_widget.dart';
 import 'interfaces.dart';

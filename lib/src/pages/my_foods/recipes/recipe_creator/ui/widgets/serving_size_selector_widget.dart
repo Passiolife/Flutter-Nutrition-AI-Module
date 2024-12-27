@@ -9,6 +9,7 @@ import '../../../../../../common/dialogs/ok_button_with_keyboard.dart';
 import '../../../../../../common/models/food_record/food_record.dart';
 import '../../../../../../common/util/double_extensions.dart';
 import '../../../../../../common/util/keyboard_extension.dart';
+import '../../../../../../common/extension/string_extensions.dart';
 import '../../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../../common/widgets/app_slider.dart';
 import '../../../../../../common/widgets/app_text_field.dart';
@@ -59,7 +60,7 @@ class _ServingSizeSelectorWidgetState extends State<ServingSizeSelectorWidget> {
     _selectedQuantity = foodRecord?.getSelectedQuantity();
 
     List<DropdownMenuEntry<String>> unitEntries = foodRecord?.servingUnits
-            .map((e) => DropdownMenuEntry(value: e.unitName, label: e.unitName))
+            .map((e) => DropdownMenuEntry(value: e.unitName, label: e.unitName.toUpperCaseWord))
             .toList() ??
         [];
     final selectedUnit = foodRecord?.getSelectedUnit();

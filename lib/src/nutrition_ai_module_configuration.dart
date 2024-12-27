@@ -13,21 +13,31 @@ class NutritionConfiguration {
 
   final String? advisorKey;
 
+  final bool enableLegacySearch;
+
   /// Constructor for creating a `NutritionConfiguration` instance.
   ///
   /// Takes a [PassioConnector] as a required named parameter to initialize the configuration.
-  const NutritionConfiguration({required this.connector, this.advisorKey});
+  const NutritionConfiguration({
+    required this.connector,
+    this.advisorKey,
+    this.enableLegacySearch = false,
+  });
 
   /// Creates a copy of the current `NutritionConfiguration` instance with optional modifications.
   ///
   /// The [connector] parameter can be provided to override the existing connector.
   ///
   /// Returns a new `NutritionConfiguration` instance with the updated values.
-  NutritionConfiguration copyWith(
-      {PassioConnector? connector, String? advisorKey}) {
+  NutritionConfiguration copyWith({
+    PassioConnector? connector,
+    String? advisorKey,
+    bool? enableLegacySearch,
+  }) {
     return NutritionConfiguration(
       connector: connector ?? this.connector,
       advisorKey: advisorKey ?? this.advisorKey,
+      enableLegacySearch: enableLegacySearch ?? this.enableLegacySearch,
     );
   }
 }

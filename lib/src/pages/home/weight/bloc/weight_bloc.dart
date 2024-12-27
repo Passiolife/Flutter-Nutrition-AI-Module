@@ -20,18 +20,18 @@ class WeightBloc extends Bloc<WeightEvent, WeightState> {
 
   Future<void> _handleFetchRecordsEvent(
       FetchRecordsEvent event, Emitter<WeightState> emit) async {
-    if (event.isMonth) {
+    /*if (event.isMonth) {
       _rangeDates = event.dateTime.monthStartEndDates();
     } else {
       _rangeDates = event.dateTime.weekStartEndDates(weekDay: DateTime.monday);
     }
-    if (_rangeDates == null) return;
+    if (_rangeDates == null) return;*/
+    final startDate = event.startDate;
+    final endDate = event.endDate;
     final records = await _connector.fetchWeightRecords(
-        fromDate: _rangeDates!.startDate, endDate: _rangeDates!.endDate);
+        fromDate: startDate, endDate: endDate);
     final dayLogs = WeightDayLogs.from(records);
-    dayLogs.fromDates(
-        _rangeDates?.startDate.getDatesBetween(endDate: _rangeDates!.endDate) ??
-            []);
+    dayLogs.fromDates(startDate.getDatesBetween(endDate: endDate));
     emit(FetchRecordsSuccessState(
       rangeDates: _rangeDates,
       dayLogs: dayLogs,

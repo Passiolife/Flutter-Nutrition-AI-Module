@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 /// A utility class for debouncing actions.
@@ -14,21 +13,21 @@ import 'package:flutter/material.dart';
 /// ```dart
 /// void main() {
 ///   // Create a DeBouncer instance with a delay of 500 milliseconds.
-///   final debouncer = DeBouncer(milliseconds: 500);
+///   final deBouncer = DeBouncer(milliseconds: 500);
 ///
 ///   // Simulate a user typing multiple times quickly.
 ///   for (var i = 0; i < 5; i++) {
 ///     // Schedule a debounced action for each typing event.
-///     debouncer.run(() {
+///     deBouncer.run(() {
 ///       print('Debounced Action Executed at: ${DateTime.now()}');
 ///     });
 ///   }
 ///
 ///   // Cancel the current debounced action before it executes.
-///   debouncer.cancel();
+///   deBouncer.cancel();
 ///
 ///   // Clean up the DeBouncer when it's no longer needed.
-///   debouncer.dispose();
+///   deBouncer.dispose();
 /// }
 /// ```
 class DeBouncer {

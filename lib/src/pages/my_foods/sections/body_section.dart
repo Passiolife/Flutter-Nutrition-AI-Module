@@ -49,7 +49,7 @@ class _BodySectionState extends State<BodySection> with SingleTickerProviderStat
     _tabController.addListener(() {
       _isTabChange = true;
       _pageController.animateToPage(
-        _tabController.index ?? 0,
+        _tabController.index,
         duration: const Duration(milliseconds: 250),
         curve: Curves.linear,
       );

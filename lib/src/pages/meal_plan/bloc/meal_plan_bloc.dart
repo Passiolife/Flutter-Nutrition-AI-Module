@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/models/food_record/meal_label.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/string_extensions.dart';
 
 part 'meal_plan_event.dart';
 part 'meal_plan_state.dart';

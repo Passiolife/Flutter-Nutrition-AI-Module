@@ -6,7 +6,7 @@ import '../../common/models/day_log/day_log.dart';
 import '../../common/models/food_record/food_record.dart';
 import '../../common/models/quick_suggestion/quick_suggestion.dart';
 import '../../common/models/user_profile/user_profile_model.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/util/user_session.dart';
 import '../../common/widgets/bottom_nav_bar_space_widget.dart';

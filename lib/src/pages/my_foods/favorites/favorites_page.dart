@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/models/food_record/food_record.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/snackbar_extension.dart';
 import 'bloc/favorites_bloc.dart';
 import 'sections/favorites_list_section.dart';

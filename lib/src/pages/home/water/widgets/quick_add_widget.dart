@@ -4,33 +4,47 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/models/user_profile/user_profile_model.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
+import '../../../../common/util/debouncer.dart';
 import '../../../../common/util/double_extensions.dart';
 import 'interfaces.dart';
 
-class QuickAddWidget extends StatelessWidget {
+class QuickAddWidget extends StatefulWidget {
   const QuickAddWidget({required this.listener, this.unit, super.key});
 
   final WaterListener? listener;
   final MeasurementSystem? unit;
 
+  @override
+  State<QuickAddWidget> createState() => _QuickAddWidgetState();
+}
+
+class _QuickAddWidgetState extends State<QuickAddWidget> {
   double get glassValue =>
       236.588 *
-      (unit == MeasurementSystem.imperial ? Conversion.mlToOz.value : 1);
+      (widget.unit == MeasurementSystem.imperial ? Conversion.mlToOz.value : 1);
 
   double get smallBottleValue =>
       473.176 *
-      (unit == MeasurementSystem.imperial ? Conversion.mlToOz.value : 1);
+      (widget.unit == MeasurementSystem.imperial ? Conversion.mlToOz.value : 1);
 
   double get largeBottleValue =>
       709.765 *
-      (unit == MeasurementSystem.imperial ? Conversion.mlToOz.value : 1);
+      (widget.unit == MeasurementSystem.imperial ? Conversion.mlToOz.value : 1);
 
   String _getUnitSymbol(BuildContext context) {
-    return (unit == MeasurementSystem.imperial
+    return (widget.unit == MeasurementSystem.imperial
             ? context.localization?.oz
             : context.localization?.ml) ??
         '';
+  }
+
+  final _deBouncer = DeBouncer(milliseconds: 500);
+
+  @override
+  void dispose() {
+    _deBouncer.dispose();
+    super.dispose();
   }
 
   @override
@@ -55,7 +69,7 @@ class QuickAddWidget extends StatelessWidget {
                   type: context.localization?.glass ?? '',
                   value: glassValue,
                   unit: _getUnitSymbol(context),
-                  onTap: () => listener?.onTapQuickAdd(glassValue),
+                  onTap: () => _handleTap(glassValue),
                 ),
               ),
               Expanded(
@@ -64,7 +78,7 @@ class QuickAddWidget extends StatelessWidget {
                   type: context.localization?.smBottle ?? '',
                   value: smallBottleValue,
                   unit: _getUnitSymbol(context),
-                  onTap: () => listener?.onTapQuickAdd(smallBottleValue),
+                  onTap: () => _handleTap(smallBottleValue),
                 ),
               ),
               Expanded(
@@ -73,7 +87,7 @@ class QuickAddWidget extends StatelessWidget {
                   type: context.localization?.lgBottle ?? '',
                   value: largeBottleValue,
                   unit: _getUnitSymbol(context),
-                  onTap: () => listener?.onTapQuickAdd(largeBottleValue),
+                  onTap: () => _handleTap(largeBottleValue),
                 ),
               ),
             ],
@@ -81,6 +95,12 @@ class QuickAddWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  void _handleTap(double value) {
+    _deBouncer.run(() {
+      widget.listener?.onTapQuickAdd(value);
+    });
   }
 }
 

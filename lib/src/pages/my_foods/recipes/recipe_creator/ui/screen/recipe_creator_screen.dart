@@ -79,7 +79,7 @@ class _RecipeCreatorScreenState extends State<_RecipeCreatorScreen> {
             text: state.userRecipeRecord == null
                 ? context.localization?.customRecipeCreatedWithSuccess
                 : context.localization?.customRecipeUpdatedWithSuccess);
-        MyFoodsPage.navigate(context: context, isReplace: true, index: 1);
+        MyFoodsPage.navigate(context: context, isReplace: true, page: 1);
       }
     }
   }

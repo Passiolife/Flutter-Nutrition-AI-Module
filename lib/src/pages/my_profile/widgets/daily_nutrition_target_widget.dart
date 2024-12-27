@@ -5,7 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/chart_model/chart_data_model.dart';
 import '../../../common/models/user_profile/user_profile_model.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/nutritional_graph_widget.dart';
 import '../dialogs/daily_nutrition_target_dialog.dart';
 

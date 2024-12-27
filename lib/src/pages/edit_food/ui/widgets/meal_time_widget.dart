@@ -3,7 +3,7 @@ import 'package:flutter/scheduler.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/models/food_record/meal_label.dart';
-import '../../../../common/util/string_extensions.dart';
+import '../../../../common/extension/string_extensions.dart';
 
 typedef MealLabelCallback = void Function(MealLabel mealLabel);
 

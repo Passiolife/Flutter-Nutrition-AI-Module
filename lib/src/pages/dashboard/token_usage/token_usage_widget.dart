@@ -4,27 +4,26 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/overlay_widget.dart';
+import '../../../common/constant/app_padding.dart';
+import '../../../common/extension/context_extension.dart';
 import 'bloc/token_usage_bloc.dart';
 
 class TokenUsageWidget extends StatefulWidget {
-  const TokenUsageWidget(this.overlayUtil, {super.key});
-  final OverlayUtil overlayUtil;
+  const TokenUsageWidget({super.key});
 
   @override
   State<TokenUsageWidget> createState() => _TokenUsageWidgetState();
 }
 
 class _TokenUsageWidgetState extends State<TokenUsageWidget> {
-  final _bloc = TokenUsageBloc.instance;
-
+  final _bloc = TokenUsageBloc();
   PassioTokenBudget? _tokenBudget;
   int _session = 0;
 
   @override
   void initState() {
     _bloc.add(const GetLastUpdatedEvent());
+    _bloc.add(const StartListeningEvent());
     super.initState();
   }
 
@@ -34,43 +33,50 @@ class _TokenUsageWidgetState extends State<TokenUsageWidget> {
       bloc: _bloc,
       listener: _handleStateChanges,
       builder: (context, state) {
-        return Align(
-          alignment: Alignment.bottomRight,
-          child: FractionallySizedBox(
-            widthFactor: 0.3,
-            child: Material(
-              borderRadius: BorderRadius.circular(6.r),
-              color: AppColors.tutorialBackgroundColor,
-              child: Padding(
-                padding: EdgeInsets.symmetric(vertical: 2.h, horizontal: 4.w),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      '${context.localization?.session}: $_session',
-                      style: AppTextStyle.textXs
-                          .copyWith(color: AppColors.white, fontSize: 10.sp),
-                    ),
-                    Text(
-                      '${context.localization?.lastRequest}: ${_tokenBudget?.tokensUsed ?? 0}',
-                      style: AppTextStyle.textXs
-                          .copyWith(color: AppColors.white, fontSize: 10.sp),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 32.w),
-                      child: LinearProgressIndicator(
-                        value: (_tokenBudget?.usedPercent() ?? 0),
-                        color: AppColors.indigo600Main,
-                        backgroundColor: AppColors.white,
+        return _tokenBudget != null
+            ? Align(
+                alignment: Alignment.bottomRight,
+                child: FractionallySizedBox(
+                  widthFactor: 0.3,
+                  child: Material(
+                    borderRadius: BorderRadius.circular(6.r),
+                    color: AppColors.black.withValues(alpha: 0.7),
+                    child: Padding(
+                      padding: AppPadding.ph4 + AppPadding.pv2,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            '${context.localization?.api}: ${_tokenBudget?.apiName ?? ''}',
+                            style: AppTextStyle.text3xs.addAll([AppTextStyle.bold]).copyWith(
+                                color: AppColors.white),
+                          ),
+                          Text(
+                            '${context.localization?.session}: $_session',
+                            style: AppTextStyle.text3xs.addAll([AppTextStyle.bold]).copyWith(
+                                color: AppColors.white),
+                          ),
+                          Text(
+                            '${context.localization?.lastRequest}: ${_tokenBudget?.tokensUsed ?? 0}',
+                            style: AppTextStyle.text3xs.addAll([AppTextStyle.bold]).copyWith(
+                                color: AppColors.white),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 40.w),
+                            child: LinearProgressIndicator(
+                              value: (_tokenBudget?.usedPercent() ?? 0),
+                              color: AppColors.indigo600Main,
+                              backgroundColor: AppColors.white,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-          ),
-        );
+              )
+            : SizedBox.shrink();
       },
     );
   }

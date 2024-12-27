@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../../../common/constant/app_constants.dart';
-import '../../../../../../common/util/context_extension.dart';
+import '../../../../../../common/extension/context_extension.dart';
 import '../../../../../../common/util/double_extensions.dart';
 import '../../bloc/recipe_creator_bloc.dart';
 
@@ -12,7 +11,8 @@ class ServingSizeTitleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final servingSize = context.watch<RecipeCreatorBloc>().viewModel.foodRecord?.computedWeight;
+    final servingSize =
+        context.watch<RecipeCreatorBloc>().viewModel.foodRecord?.computedWeight;
 
     return RichText(
       text: TextSpan(

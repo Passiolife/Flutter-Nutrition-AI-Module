@@ -206,8 +206,10 @@ class LocalDBConnector implements PassioConnector {
   @override
   Future<List<WaterRecord>> fetchWaterRecords(
       {required DateTime fromDate, required DateTime endDate}) async {
-    final fromDateMillis = fromDate.toUtc().millisecondsSinceEpoch;
-    final endDateMillis = endDate.toUtc().millisecondsSinceEpoch;
+
+    final fromDateMillis = fromDate.millisecondsSinceEpoch; //fromDate.toLocal().millisecondsSinceEpoch;
+    final endDateMillis = endDate.millisecondsSinceEpoch;//endDate.toLocal().millisecondsSinceEpoch;
+
 
     List<Map> data = await _databaseHelper.database.query(
       _databaseHelper.tblWater,

@@ -11,10 +11,6 @@ part 'token_usage_state.dart';
 class TokenUsageBloc extends Bloc<TokenUsageEvent, TokenUsageState>
     implements PassioAccountListener {
 
-  static final TokenUsageBloc _instance = TokenUsageBloc._privateConstructor();
-
-  static TokenUsageBloc get instance => _instance;
-
   int _session = 0;
   PassioTokenBudget? _tokenBudget;
 
@@ -24,7 +20,7 @@ class TokenUsageBloc extends Bloc<TokenUsageEvent, TokenUsageState>
     add(TokenBudgetUpdateEvent(tokenBudget));
   }
 
-  TokenUsageBloc._privateConstructor() : super(const TokenUsageInitial()) {
+  TokenUsageBloc() : super(const TokenUsageInitial()) {
     on<StartListeningEvent>(_handleStartListeningEvent);
     on<StopListeningEvent>(_handleStopListeningEvent);
     on<TokenBudgetUpdateEvent>(_handleTokenBudgetUpdateEvent);

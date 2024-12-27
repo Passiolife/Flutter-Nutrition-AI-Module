@@ -6,7 +6,7 @@ import '../../../common/constant/app_constants.dart';
 import '../../../common/models/day_log/day_log.dart';
 import '../../../common/models/food_record/food_record.dart';
 import '../../../common/models/micro_nutrient/micro_nutrient.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/app_button.dart';
 import '../../../common/widgets/custom_calendar_app_bar_widget.dart';
 import '../../../common/widgets/nutrition_information_widget.dart';

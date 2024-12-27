@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../common/constant/app_colors.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/constant/app_constants.dart';
+import '../../common/router/routes.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/util/overlay_widget.dart';
+import '../../common/util/preference_store.dart';
 import '../advisor/advisor_page.dart';
 import '../diary/diary_page.dart';
 import '../food_scan/food_scan_page.dart';
@@ -16,7 +19,6 @@ import '../use_image/select_photo/select_photo_page.dart';
 import '../use_image/take_photo/take_photo_page.dart';
 import '../voice_logging/voice_logging_page.dart';
 import 'bloc/dashboard_bloc.dart';
-import 'token_usage/bloc/token_usage_bloc.dart';
 import 'token_usage/token_usage_widget.dart';
 import 'widgets/widgets.dart';
 
@@ -25,29 +27,31 @@ class DashboardPage extends StatefulWidget {
 
   final int? page;
 
+  static MaterialPageRoute route({int? page}) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.dashboard),
+      builder: (_) => BlocProvider(
+        create: (context) => DashboardBloc(),
+        child: DashboardPage(page: page),
+      ),
+    );
+  }
+
   // Static method to navigate to the DashboardPage.
-  static Future<void> navigate(BuildContext context,
+  static Future navigate(BuildContext context,
       {int? page, bool removeUntil = false}) async {
     if (removeUntil) {
-      await Navigator.pushAndRemoveUntil(
+      return await Navigator.pushNamedAndRemoveUntil(
         context,
-        MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => DashboardBloc(),
-            child: DashboardPage(page: page),
-          ),
-        ),
+        Routes.dashboard,
         (route) => route.isFirst,
+        arguments: page,
       );
     } else {
-      await Navigator.push(
+      return await Navigator.pushNamed(
         context,
-        MaterialPageRoute(
-          builder: (_) => BlocProvider(
-            create: (context) => DashboardBloc(),
-            child: DashboardPage(page: page),
-          ),
-        ),
+        Routes.dashboard,
+        arguments: page,
       );
     }
   }
@@ -63,15 +67,23 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget? _getPage(int index) {
     switch (index) {
       case 1:
-        return DiaryPage(key: UniqueKey(),);
+        return DiaryPage(
+          key: UniqueKey(),
+        );
       case 2:
         return const SizedBox.shrink();
       case 3:
-        return MealPlanPage(key: UniqueKey(),);
+        return MealPlanPage(
+          key: UniqueKey(),
+        );
       case 4:
-        return ProgressPage(key: UniqueKey(),);
+        return ProgressPage(
+          key: UniqueKey(),
+        );
       default:
-        return HomePage(key: UniqueKey(),);
+        return HomePage(
+          key: UniqueKey(),
+        );
     }
   }
 
@@ -84,9 +96,10 @@ class _DashboardPageState extends State<DashboardPage> {
     if (widget.page != null) {
       _selectedNavigationItem = widget.page!;
     }
-    _bloc.add(const RequestTokenTrackingEvent());
-    TokenUsageBloc.instance.add(const StartListeningEvent());
 
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _checkTokenTrackingStatus(context: context);
+    });
     super.initState();
   }
 
@@ -99,8 +112,6 @@ class _DashboardPageState extends State<DashboardPage> {
         listener: (context, state) {
           if (state is PageUpdateState) {
             _selectedNavigationItem = state.index;
-          } else if (state is TokenTrackingUpdateState) {
-            _handleTokenTrackingSuccessState(context: context, state: state);
           }
         },
         builder: (context, state) {
@@ -147,8 +158,7 @@ class _DashboardPageState extends State<DashboardPage> {
       TakePhotoPage.navigate(context);
     } else if (action == context.localization?.selectPhotos) {
       SelectPhotoPage.navigate(context);
-    }
-    else if (action == context.localization?.aiAdvisor) {
+    } else if (action == context.localization?.aiAdvisor) {
       await AdvisorPage.navigate(context);
       _bloc.add(const RefreshEvent());
     } else if (action == context.localization?.myFoods) {
@@ -159,14 +169,12 @@ class _DashboardPageState extends State<DashboardPage> {
     else {}
   }
 
-  void _handleTokenTrackingSuccessState({
-    required TokenTrackingUpdateState state,
-    required BuildContext context,
-  }) {
-    if (state.enabled) {
+  void _checkTokenTrackingStatus({required BuildContext context}) {
+    final isEnabled = PreferenceStore.instance.getValue(AppCommonConstants.tokenTracking, AppCommonConstants.defaultTokenTracking);
+    if (isEnabled) {
       _overlayUtil.show(
         context: context,
-        child: TokenUsageWidget(_overlayUtil),
+        child: const TokenUsageWidget(),
       );
     } else {
       _overlayUtil.remove();

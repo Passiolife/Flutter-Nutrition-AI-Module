@@ -4,8 +4,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/quick_suggestion/quick_suggestion.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/util/debouncer.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/app_loading_button_widget.dart';
 import '../../../common/widgets/draggable_bottom_sheet_widget.dart';
 import '../../../common/widgets/passio_image_widget.dart';
@@ -18,7 +19,7 @@ abstract interface class QuickSuggestionsListener {
   void onDrag(double draggedSize, double draggedPixels);
 }
 
-class QuickSuggestionsWidget extends StatelessWidget {
+class QuickSuggestionsWidget extends StatefulWidget {
   const QuickSuggestionsWidget({
     this.data = const [],
     this.isAddLoading = false,
@@ -29,6 +30,13 @@ class QuickSuggestionsWidget extends StatelessWidget {
   final List<QuickSuggestion> data;
   final bool isAddLoading;
   final QuickSuggestionsListener? listener;
+
+  @override
+  State<QuickSuggestionsWidget> createState() => _QuickSuggestionsWidgetState();
+}
+
+class _QuickSuggestionsWidgetState extends State<QuickSuggestionsWidget> {
+  final _deBouncer = DeBouncer(milliseconds: 500);
 
   double _getInitialSize(BuildContext context) {
     // Define the pixel value you want to convert to initialSize
@@ -50,6 +58,12 @@ class QuickSuggestionsWidget extends StatelessWidget {
   }
 
   double get _maxSize => 0.6;
+
+  @override
+  void dispose() {
+    _deBouncer.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +119,7 @@ class QuickSuggestionsWidget extends StatelessWidget {
                       mainAxisSpacing: 8.h,
                       childAspectRatio: (1 / .25),
                     ),
-                    itemCount: data.length,
+                    itemCount: widget.data.length,
                     shrinkWrap: true,
                     padding: EdgeInsets.only(
                       top: 32.h,
@@ -115,10 +129,10 @@ class QuickSuggestionsWidget extends StatelessWidget {
                           context.bottomPadding + kBottomNavigationBarHeight,
                     ),
                     itemBuilder: (context, index) {
-                      final suggestion = data.elementAt(index);
+                      final suggestion = widget.data.elementAt(index);
                       return GestureDetector(
                         behavior: HitTestBehavior.opaque,
-                        onTap: () => listener?.onTap(suggestion),
+                        onTap: () => widget.listener?.onTap(suggestion),
                         child: Container(
                           color: AppColors.indigo50,
                           child: Row(
@@ -149,11 +163,13 @@ class QuickSuggestionsWidget extends StatelessWidget {
                                   overflow: TextOverflow.ellipsis,
                                 ),
                               ),
-                              isAddLoading
+                              widget.isAddLoading
                                   ? const AppLoadingButtonWidget()
                                   : IconButton(
                                       onPressed: () {
-                                        listener?.onTapAdd(suggestion);
+                                        _deBouncer.run(() {
+                                          widget.listener?.onTapAdd(suggestion);
+                                        });
                                       },
                                       icon: SvgPicture.asset(
                                         AppImages.icPlusSolid,
@@ -174,7 +190,7 @@ class QuickSuggestionsWidget extends StatelessWidget {
             ),
           );
         },
-        dragListener: listener?.onDrag,
+        dragListener: widget.listener?.onDrag,
       ),
     );
   }

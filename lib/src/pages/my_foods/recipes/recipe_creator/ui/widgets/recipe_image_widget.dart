@@ -19,7 +19,7 @@ class RecipeImageWidget extends StatelessWidget {
       builder: (context, state) {
         String? iconId;
         if (state is PrefillSuccessState) {
-          iconId = state.viewModel.foodRecord?.iconId ?? null;
+          iconId = state.viewModel.foodRecord?.iconId;
         }
 
         Uint8List? image;

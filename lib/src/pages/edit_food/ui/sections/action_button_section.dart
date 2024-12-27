@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/dialogs/delete_confirmation_dialog.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/widgets/app_button.dart';
 import '../../bloc/edit_food_bloc.dart';
 

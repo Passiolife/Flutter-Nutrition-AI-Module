@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../../../../common/constant/app_border.dart';
 import '../../../../../../common/constant/app_constants.dart';
 import '../../../../../../common/constant/app_padding.dart';
 import '../../../../../../common/models/menu_model/menu_model.dart';
-import '../../../../../../common/util/context_extension.dart';
+import '../../../../../../common/extension/context_extension.dart';
 import '../../bloc/recipe_creator_bloc.dart';
 
 class AddIngredientWidget extends StatelessWidget {
@@ -54,7 +53,8 @@ class AddIngredientWidget extends StatelessWidget {
   }
 
   void _onTapAddIngredient(BuildContext context) {
-    context.read<RecipeCreatorBloc>().add(DoUpdateVisibilityAddIngredientOptionsEvent(isVisible: true));
+    context
+        .read<RecipeCreatorBloc>()
+        .add(DoUpdateVisibilityAddIngredientOptionsEvent(isVisible: true));
   }
-
 }

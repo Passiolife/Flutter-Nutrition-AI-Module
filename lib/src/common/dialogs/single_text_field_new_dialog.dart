@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constant/app_constants.dart';
-import '../util/context_extension.dart';
-import '../util/string_extensions.dart';
+import '../extension/context_extension.dart';
+import '../extension/string_extensions.dart';
 import '../widgets/adaptive_action_button_widget.dart';
 
 class SingleTextFieldNewDialog {

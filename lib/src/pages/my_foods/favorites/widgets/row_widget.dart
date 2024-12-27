@@ -3,7 +3,7 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../common/constant/app_constants.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/widgets/passio_image_widget.dart';
 
 abstract interface class RowListener {

@@ -1,7 +1,7 @@
 part of '../recipes_page.dart';
 
 class _RecipesScreen extends StatefulWidget {
-  const _RecipesScreen({super.key});
+  const _RecipesScreen();
 
   @override
   State<_RecipesScreen> createState() => _RecipesScreenState();

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/custom_app_bar_widget.dart';
 import '../bloc/food_scan_bloc.dart';
 import '../widgets/help_widget.dart';

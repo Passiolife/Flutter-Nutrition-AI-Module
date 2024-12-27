@@ -7,7 +7,7 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 import '../../../common/constant/app_constants.dart';
 import '../../../common/dialogs/ok_button_with_keyboard.dart';
 import '../../../common/models/user_profile/user_profile_model.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/widgets/app_drop_down_menu.dart';
 import '../../../common/widgets/app_text_field.dart';

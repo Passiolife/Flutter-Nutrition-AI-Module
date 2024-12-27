@@ -22,6 +22,15 @@ class DoFavoriteDeleteEvent extends FavoritesEvent {
   List<Object?> get props => [data];
 }
 
+class DoFavoriteUpdateEvent extends FavoritesEvent {
+  final FoodRecord? data;
+
+  const DoFavoriteUpdateEvent({required this.data});
+
+  @override
+  List<Object?> get props => [data];
+}
+
 // Event will add the data into log.
 class DoLogEvent extends FavoritesEvent {
   final FoodRecord? data;

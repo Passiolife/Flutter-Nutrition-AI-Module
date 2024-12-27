@@ -5,7 +5,7 @@ import '../constant/app_colors.dart';
 import '../constant/app_dimens.dart';
 import '../constant/app_shadow.dart';
 import '../constant/app_text_styles.dart';
-import '../util/context_extension.dart';
+import '../extension/context_extension.dart';
 
 // This class represents a widget for a floating button with expanded content.
 class FloatingButtonExpandedWidget extends StatelessWidget {

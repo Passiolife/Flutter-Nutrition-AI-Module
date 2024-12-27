@@ -76,7 +76,7 @@ class BarcodeScannerBloc extends Bloc<BarcodeScannerEvent, BarcodeScannerState>
           await NutritionAI.instance.fetchFoodItemForProductCode(barcode);
       if (foodItem != null) {
         final systemFoodRecord = FoodRecord.fromPassioFoodItem(foodItem);
-        add(SystemFoodRecordFoundEvent(foodRecord: systemFoodRecord));
+        add(SystemFoodRecordFoundEvent(foodRecord: systemFoodRecord, barcode: barcode));
       } else {
         add(const StartFoodDetectionEvent());
         add(UnknownBarcodeFoundEvent(barcode: barcode));
@@ -91,7 +91,7 @@ class BarcodeScannerBloc extends Bloc<BarcodeScannerEvent, BarcodeScannerState>
 
   FutureOr<void> _handleSystemFoodRecordFoundEvent(
       SystemFoodRecordFoundEvent event, Emitter<BarcodeScannerState> emit) {
-    emit(SystemFoodRecordFoundListenerState(foodRecord: event.foodRecord));
+    emit(SystemFoodRecordFoundListenerState(foodRecord: event.foodRecord, barcode: event.barcode));
   }
 
   FutureOr<void> _handleUnknownBarcodeFoundEvent(

@@ -10,11 +10,12 @@ import '../../../common/models/user_profile/user_profile_model.dart';
 import '../../../common/models/weight_day_log/weight_day_log.dart';
 import '../../../common/models/weight_day_logs/weight_day_logs.dart';
 import '../../../common/models/weight_record/weight_record.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../../common/util/user_session.dart';
+import '../../../common/widgets/date_time/range_date_time_widget.dart';
 import '../../../common/widgets/range_date_navigator_widget.dart';
 import '../../../common/widgets/trend_widget.dart';
 import '../../../common/widgets/typedefs.dart';
@@ -74,10 +75,13 @@ class _WeightPageState extends State<WeightPage>
           ? WeightUnits.lbs.name
           : WeightUnits.kg.name;
 
+  late DateTime _startDate;
+  late DateTime _endDate;
+
   @override
   void onTapAdd() {
     AddWeightPage.navigate(context: context).then((value) {
-      if (value is bool? && (value ?? false)) {
+      if (value is bool? && (value ?? false) && mounted) {
         context.showSnackbar(text: context.localization?.weightRecorded);
         _fetchRecords();
       }
@@ -154,15 +158,27 @@ class _WeightPageState extends State<WeightPage>
                             (index) {
                               return Column(
                                 children: [
-                                  RangeDateNavigatorWidget(
-                                    startDateTime: _rangeDates?.startDate ??
-                                        DateTime.now(),
-                                    endDateTime:
-                                        _rangeDates?.endDate ?? DateTime.now(),
-                                    listener: this,
-                                    isMonthRange: _selectedTab != null &&
-                                        _selectedTab != _tabs.first,
+                                  RangeDateTimeWidget(
+                                    key: ValueKey(_selectedTab),
+                                    period: _selectedTab != null &&
+                                            _selectedTab != _tabs.first
+                                        ? DatesPeriod.month
+                                        : DatesPeriod.week,
+                                    onRangeChange: (start, end) {
+                                      _startDate = start;
+                                      _endDate = end;
+                                      _fetchRecords();
+                                    },
                                   ),
+                                  // RangeDateNavigatorWidget(
+                                  //   startDateTime: _rangeDates?.startDate ??
+                                  //       DateTime.now(),
+                                  //   endDateTime:
+                                  //       _rangeDates?.endDate ?? DateTime.now(),
+                                  //   listener: this,
+                                  //   isMonthRange: _selectedTab != null &&
+                                  //       _selectedTab != _tabs.first,
+                                  // ),
                                   Expanded(
                                     child: ListView(
                                       shrinkWrap: true,
@@ -186,10 +202,11 @@ class _WeightPageState extends State<WeightPage>
                                         SizedBox(height: AppDimens.h16),
                                         _records.isNotEmpty
                                             ? EntryTileWidget(
+                                                startDate: _startDate,
+                                                endDate: _endDate,
                                                 isMonthRange: _selectedTab !=
                                                         null &&
                                                     _selectedTab != _tabs.first,
-                                                rangeDates: _rangeDates,
                                                 data: _records
                                                     .map(
                                                       (e) => EntryTileChildData(
@@ -230,11 +247,8 @@ class _WeightPageState extends State<WeightPage>
     );
   }
 
-  void _fetchRecords({bool isFirstTime = true}) {
-    _bloc.add(FetchRecordsEvent(
-      dateTime: _selectedDateTime,
-      isMonth: _selectedTab == context.localization?.month,
-    ));
+  void _fetchRecords() {
+    _bloc.add(FetchRecordsEvent(startDate: _startDate, endDate: _endDate));
   }
 
   void _doTabChange(String tab) {
@@ -260,7 +274,7 @@ class _WeightPageState extends State<WeightPage>
     }
 
     _selectedDateTime = newDateTime;
-    _fetchRecords(isFirstTime: false);
+    _fetchRecords();
   }
 
   void _handleStateChanges(
@@ -293,7 +307,7 @@ class _WeightPageState extends State<WeightPage>
         .cast<WeightRecord?>()
         .firstWhere((element) => element?.id == id, orElse: () => null);
     AddWeightPage.navigate(context: context, record: record).then((value) {
-      if (value is bool? && (value ?? false)) {
+      if (value is bool? && (value ?? false) && mounted) {
         context.showSnackbar(
             text: context.localization?.weightRecordUpdateMessage);
         _fetchRecords();

@@ -8,11 +8,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/double_extensions.dart';
+import '../../../common/router/routes.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/show_widget_util.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
+import '../../../common/widgets/camera_frame_widget.dart';
 import '../../dashboard/dashboard_page.dart';
 import '../../food_search/food_search_page.dart';
 import 'bloc/take_photo_bloc.dart';
@@ -31,16 +32,23 @@ class TakePhotoPage extends StatefulWidget {
   // Maximum number of images allowed to be stored
   final int maxLimit;
 
+  static MaterialPageRoute route(
+      {required bool returnResult, required int maxLimit}) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.takePhoto),
+      builder: (_) => TakePhotoPage(
+        returnResult: returnResult,
+        maxLimit: maxLimit,
+      ),
+    );
+  }
+
   static Future navigate(BuildContext context,
       {bool returnResult = false, int maxLimit = 7}) async {
-    return await Navigator.push(
+    return await Navigator.pushNamed(
       context,
-      MaterialPageRoute(
-        builder: (context) => TakePhotoPage(
-          returnResult: returnResult,
-          maxLimit: maxLimit,
-        ),
-      ),
+      Routes.takePhoto,
+      arguments: [returnResult, maxLimit],
     );
   }
 
@@ -116,15 +124,10 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
                       },
                     ),
                     Positioned(
-                      top: 0,
+                      top: 194.h,
                       left: 24.w,
                       right: 24.w,
-                      bottom: 88.h,
-                      child: SvgPicture.asset(
-                        AppImages.icScanFrame,
-                        width: double.infinity,
-                        height: 380.h,
-                      ),
+                      child: CameraFrameWidget(height: 380.h),
                     ),
                     _advisorFoodInfoList?.isNotEmpty ?? false
                         ? ResultWidget(
@@ -148,10 +151,14 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
                               final calories =
                                   foodDataInfo?.nutritionPreview.calories ?? 0;
 
-                              final servingQuantity =
-                                  foodDataInfo?.nutritionPreview.servingQuantity ?? 0;
-                              final servingUnit = foodDataInfo?.nutritionPreview.servingUnit ?? '';
-                              final formattedWeight = '$servingQuantity $servingUnit';
+                              final servingQuantity = foodDataInfo
+                                      ?.nutritionPreview.servingQuantity ??
+                                  0;
+                              final servingUnit =
+                                  foodDataInfo?.nutritionPreview.servingUnit ??
+                                      '';
+                              final formattedWeight =
+                                  '$servingQuantity $servingUnit';
 
                               final subtitle =
                                   '$formattedWeight | $calories ${context.localization?.cal}';
@@ -160,31 +167,34 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
 
                               return FoodItemRowWidget(
                                 data: FoodItemRowData(
-                                iconId: iconId,
-                                title: title,
-                                subtitle: subtitle,
-                                isAddVisible: false,
-                                padding: EdgeInsets.zero,
-                                decoration: BoxDecoration(color: isSelected ? AppColors.indigo50: null),
-                                suffix: IconButton(
-                                  onPressed: () {
+                                  iconId: iconId,
+                                  title: title,
+                                  subtitle: subtitle,
+                                  isAddVisible: false,
+                                  padding: EdgeInsets.zero,
+                                  decoration: BoxDecoration(
+                                      color: isSelected
+                                          ? AppColors.indigo50
+                                          : null),
+                                  suffix: IconButton(
+                                    onPressed: () {
+                                      if (data != null) {
+                                        _bloc.add(UpdateSelectionEvent(
+                                            data: _advisorFoodInfoList,
+                                            index: index));
+                                      }
+                                    },
+                                    icon: SelectionIndicator(
+                                        isSelected: isSelected),
+                                  ),
+                                  onTap: () {
                                     if (data != null) {
                                       _bloc.add(UpdateSelectionEvent(
                                           data: _advisorFoodInfoList,
                                           index: index));
                                     }
                                   },
-                                  icon: SelectionIndicator(
-                                      isSelected: isSelected),
-                                ),
-                                onTap: () {
-                                  if (data != null) {
-                                    _bloc.add(UpdateSelectionEvent(
-                                        data: _advisorFoodInfoList,
-                                        index: index));
-                                  }
-                                },
-                                enableSlidable: false,
+                                  enableSlidable: false,
                                 ),
                               );
                             },
@@ -260,7 +270,7 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
           _advisorFoodInfoList = state.data;
           _originalImages.clear();
           _thumbImages.clear();
-          if(_advisorFoodInfoList?.isEmpty ?? true) {
+          if (_advisorFoodInfoList?.isEmpty ?? true) {
             ShowWidgetUtil.showCustomModalBottomSheet(
               context: context,
               builder: (bsContext) {

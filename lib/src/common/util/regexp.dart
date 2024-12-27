@@ -11,5 +11,6 @@ abstract class RegExps {
   static final RegExp string = RegExp(r'[a-zA-Z]+');
 
   // Allows only numeric values, including decimals.
-  static final RegExp decimalNumber = RegExp(r'^\d+\.?\d*');
+  static final RegExp decimalNumber = RegExp(r'^\d+,?\.?\d*');
+  // static final RegExp decimalNumber = RegExp(r'^\d+[,.]*\d*$');
 }

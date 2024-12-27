@@ -20,5 +20,12 @@ class AppCommonConstants {
 
   static const recipe = 'recipe';
 
+  // Demo App SharedPreferences
+  // Token Tracking
+  static const String tokenTracking = 'tokenTracking';
+  static const bool defaultTokenTracking = false;
+  // Legacy Search
+  static const String legacySearch = 'legacySearch';
+  static const bool defaultLegacySearch = false;
 
 }

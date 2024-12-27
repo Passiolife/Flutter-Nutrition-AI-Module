@@ -4,8 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/app_pop_up_widget.dart';
 
 abstract interface class HeaderListener {

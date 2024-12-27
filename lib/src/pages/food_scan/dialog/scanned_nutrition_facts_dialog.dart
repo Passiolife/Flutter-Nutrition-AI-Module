@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 import '../../../common/constant/app_dimens.dart';
 import '../../../common/dialogs/single_text_field_dialog.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../widgets/scanned_nutrition_facts_widget.dart';
 
 class ScannedNutritionFactsDialog {

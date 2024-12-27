@@ -6,7 +6,7 @@ import '../../common/constant/app_dimens.dart';
 import '../../common/constant/app_images.dart';
 import '../../common/constant/app_shadow.dart';
 import '../../common/constant/app_text_styles.dart';
-import '../../common/util/context_extension.dart';
+import '../extension/context_extension.dart';
 import '../../common/widgets/macros_graph_widget.dart';
 
 abstract interface class DailyNutritionListener {

@@ -1,8 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import 'app_border.dart';
-
 class AppPadding {
   AppPadding._();
 
@@ -24,13 +22,16 @@ class AppPadding {
   static EdgeInsets pb8 = EdgeInsets.only(bottom: 8.h);
   static EdgeInsets pb16 = EdgeInsets.only(bottom: 16.h);
   static EdgeInsets pb32 = EdgeInsets.only(bottom: 32.h);
+  static EdgeInsets pb64 = EdgeInsets.only(bottom: 64.h);
 
   /// Vertical Padding
+  static EdgeInsets pv2 = EdgeInsets.symmetric(vertical: 2.h);
   static EdgeInsets pv4 = EdgeInsets.symmetric(vertical: 4.h);
   static EdgeInsets pv8 = EdgeInsets.symmetric(vertical: 8.h);
   static EdgeInsets pv16 = EdgeInsets.symmetric(vertical: 16.h);
 
   /// Horizontal Padding
+  static EdgeInsets ph4 = EdgeInsets.symmetric(horizontal: 4.w);
   static EdgeInsets ph8 = EdgeInsets.symmetric(horizontal: 8.w);
   static EdgeInsets ph16 = EdgeInsets.symmetric(horizontal: 16.w);
 }

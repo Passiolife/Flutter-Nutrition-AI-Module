@@ -6,9 +6,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_colors.dart';
 import '../../../../common/constant/app_constants.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/router/routes.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/util/snackbar_extension.dart';
-import '../../../../common/util/string_extensions.dart';
+import '../../../../common/extension/string_extensions.dart';
 import '../../../dashboard/dashboard_page.dart';
 import '../../my_foods_page.dart';
 import 'barcode_scanner/barcode_scanner_page.dart';
@@ -31,25 +32,40 @@ class FoodCreatorPage extends StatefulWidget {
   final PassioNutritionFacts? nutritionFacts;
   final bool logUponCreate;
 
-  static Future<bool?> navigate({
+  static MaterialPageRoute route({
+    FoodRecord? loggedFoodRecord,
+    FoodRecord? userFoodRecord,
+    PassioNutritionFacts? nutritionFacts,
+    bool logUponCreate = false,
+  }) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.foodCreator),
+      builder: (_) => FoodCreatorPage(
+        loggedFoodRecord: loggedFoodRecord,
+        userFoodRecord: userFoodRecord,
+        nutritionFacts: nutritionFacts,
+        logUponCreate: logUponCreate,
+      ),
+    );
+  }
+
+  static Future navigate({
     required BuildContext context,
     FoodRecord? loggedFoodRecord,
     FoodRecord? userFoodRecord,
     PassioNutritionFacts? nutritionFacts,
     bool logUponCreate = false,
   }) async {
-    return await Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (_) => FoodCreatorPage(
-              loggedFoodRecord: loggedFoodRecord,
-              userFoodRecord: userFoodRecord,
-              nutritionFacts: nutritionFacts,
-              logUponCreate: logUponCreate,
-            ),
-          ),
-        ) ??
-        false;
+    return await Navigator.pushNamed(
+      context,
+      Routes.foodCreator,
+      arguments: [
+        loggedFoodRecord,
+        userFoodRecord,
+        nutritionFacts,
+        logUponCreate,
+      ],
+    );
   }
 
   @override

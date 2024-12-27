@@ -35,8 +35,6 @@ extension PassioNutritionFactsExtension on PassioNutritionFacts {
     final metadata = PassioFoodMetadata();
     final referenceNutrients = _buildReferenceNutrients(weight);
 
-    print('calories: ${referenceNutrients.calories?.value}');
-
     return PassioIngredient(
       amount: amount,
       iconId: '',

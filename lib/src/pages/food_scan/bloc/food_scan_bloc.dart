@@ -145,7 +145,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     if ((barcodeCandidates?.isEmpty ?? true) &&
         (packagedFoodCandidates?.isEmpty ?? true) &&
         (detectedCandidates?.isEmpty ?? true)) {
-      // emit(const ScanLoadingState());
+      emit(const ScanLoadingState());
     } else {
       DetectedCandidate? detectedCandidate;
       List<DetectedCandidate> alternatives = [];

@@ -5,7 +5,8 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../common/constant/app_constants.dart';
 import '../../common/models/user_profile/user_profile_model.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/router/routes.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/util/keyboard_extension.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/widgets/app_button.dart';
@@ -15,11 +16,15 @@ import 'widgets/widgets.dart';
 class MyProfilePage extends StatefulWidget {
   const MyProfilePage({super.key});
 
-  static Future navigate({required BuildContext context}) {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const MyProfilePage()),
+  static MaterialPageRoute route() {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.profile),
+      builder: (_) => const MyProfilePage(),
     );
+  }
+
+  static Future navigate({required BuildContext context}) {
+    return Navigator.pushNamed(context, Routes.profile);
   }
 
   @override

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/constant/app_padding.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/permission_manager_utility.dart';
 import '../bloc/voice_logging_bloc.dart';
 import '../widgets/voice_control_button_widget.dart';

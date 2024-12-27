@@ -1,18 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/constant/app_padding.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/app_button.dart';
 
 class BarcodeNotRecognizedWidget extends StatelessWidget {
   const BarcodeNotRecognizedWidget({
-    this.onTapScanNutritionFacts,
+    this.onTapTakePhoto,
     this.onTapCancel,
     super.key,
   });
 
-  final VoidCallback? onTapScanNutritionFacts;
+  final VoidCallback? onTapTakePhoto;
   final VoidCallback? onTapCancel;
 
   @override
@@ -20,14 +22,11 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
     return IntrinsicHeight(
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.black,
+          color: AppColors.white,
           borderRadius: BorderRadius.circular(AppDimens.r16),
         ),
-        padding: EdgeInsets.all(AppDimens.r16),
-        margin: EdgeInsets.symmetric(
-          horizontal: AppDimens.r16,
-          vertical: AppDimens.r64,
-        ),
+        padding: AppPadding.pa16,
+        margin: AppPadding.ph16 + AppPadding.pb64,
         child: Material(
           color: AppColors.white,
           surfaceTintColor: AppColors.white,
@@ -46,16 +45,17 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              /*SizedBox(height: AppDimens.h4),
+              SizedBox(height: AppDimens.h4),
               Text(
-                context.localization?.tryScanningNutritionFactsInstead ?? '',
+                context.localization?.barcodeNotRecognizedDescription ?? '',
                 style: AppTextStyle.textSm,
                 textAlign: TextAlign.center,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
-              ),*/
+              ),
               SizedBox(height: AppDimens.h16),
               Row(
+                spacing: 16.w,
                 children: [
                   Expanded(
                     child: AppButton(
@@ -66,16 +66,15 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
                       onTap: onTapCancel,
                     ),
                   ),
-                  /*SizedBox(width: AppDimens.w8),
                   Expanded(
                     child: AppButton(
-                      buttonText: context.localization?.scanNutritionFacts,
+                      buttonText: context.localization?.takePhoto,
                       appButtonModel: AppButtonStyles.primary.copyWith(
                         padding: EdgeInsets.symmetric(vertical: AppDimens.h13),
                       ),
-                      onTap: onTapScanNutritionFacts,
+                      onTap: onTapCancel,
                     ),
-                  ),*/
+                  ),
                 ],
               ),
             ],

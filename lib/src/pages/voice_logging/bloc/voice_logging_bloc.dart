@@ -10,7 +10,7 @@ import '../../../common/models/food_record/meal_label.dart';
 import '../../../common/models/voice_log/voice_log.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/util/speech_to_text_util.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/string_extensions.dart';
 
 part 'voice_logging_event.dart';
 part 'voice_logging_state.dart';

@@ -3,7 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../common/constant/app_button_styles.dart';
-import '../../../../../../common/util/context_extension.dart';
+import '../../../../../../common/extension/context_extension.dart';
 import '../../../../../../common/widgets/app_button.dart';
 import '../../bloc/recipe_creator_bloc.dart';
 

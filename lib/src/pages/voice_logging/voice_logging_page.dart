@@ -3,7 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/constant/app_constants.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/router/routes.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/util/show_widget_util.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
@@ -22,16 +23,16 @@ part 'screen/voice_logging_screen.dart';
 class VoiceLoggingPage extends StatelessWidget {
   const VoiceLoggingPage({super.key});
 
-  static Future navigate(BuildContext context) async {
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: BlocProvider.of<DashboardBloc>(context),
-          child: const VoiceLoggingPage(),
-        ),
-      ),
+  static MaterialPageRoute route() {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.voiceLogging),
+      builder: (_) => const VoiceLoggingPage(),
     );
+  }
+
+  static Future navigate(BuildContext context) async {
+    // TODO: need to handle Dashboard BlocProvider.
+    return await Navigator.pushNamed(context, Routes.voiceLogging);
   }
 
   @override

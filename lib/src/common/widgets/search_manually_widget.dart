@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../constant/app_colors.dart';
 import '../constant/app_text_styles.dart';
-import '../util/context_extension.dart';
+import '../extension/context_extension.dart';
 
 class SearchManuallyWidget extends StatelessWidget {
   const SearchManuallyWidget({this.onTap, super.key});

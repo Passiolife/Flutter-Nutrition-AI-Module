@@ -9,7 +9,7 @@ import '../../../common/constant/app_text_styles.dart';
 import '../../../common/external_packages/table_calendar/table_calendar.dart';
 import '../../../common/models/day_log/day_log.dart';
 import '../../../common/models/day_logs/day_logs.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/util/date_time_utility.dart';
 import 'interfaces.dart';
 

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 
 typedef ColorBuilder = List<Color> Function(bool isReversed);
 typedef BorderBuilder = BoxBorder? Function(bool isReversed);

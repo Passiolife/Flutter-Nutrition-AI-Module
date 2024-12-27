@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/models/user_profile/user_profile_model.dart';
 import '../../../../common/models/water_record/water_record.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/util/double_extensions.dart';
 import '../../../../common/util/keyboard_extension.dart';
 import '../../../../common/util/snackbar_extension.dart';

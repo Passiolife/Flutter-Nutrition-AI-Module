@@ -6,8 +6,8 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/models/chart_model/chart_data_model.dart';
 import '../../../../common/models/food_record/food_record.dart';
-import '../../../../common/util/context_extension.dart';
-import '../../../../common/util/string_extensions.dart';
+import '../../../../common/extension/context_extension.dart';
+import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/widgets/nutritional_graph_widget.dart';
 import '../../../../common/widgets/passio_image_widget.dart';
 

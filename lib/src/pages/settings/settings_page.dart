@@ -9,28 +9,27 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../common/constant/app_constants.dart';
 import '../../common/models/food_record/meal_label.dart';
 import '../../common/models/user_profile/user_profile_model.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/router/routes.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/util/permission_manager_utility.dart';
-import '../../common/util/string_extensions.dart';
+import '../../common/extension/string_extensions.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
-import '../dashboard/bloc/dashboard_bloc.dart';
 import 'bloc/settings_bloc.dart';
-import 'widgets/token_tracking_widget.dart';
 import 'widgets/widgets.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-  static Future navigate({required BuildContext context}) {
-    return Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => BlocProvider.value(
-          value: BlocProvider.of<DashboardBloc>(context),
-          child: const SettingsPage(),
-        ),
-      ),
+  static MaterialPageRoute route() {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.settings),
+      builder: (_) => const SettingsPage(),
     );
+  }
+
+  static Future navigate({required BuildContext context}) {
+    // TODO: Need handle Dashboard bloc.
+    return Navigator.pushNamed(context, Routes.settings);
   }
 
   @override
@@ -46,9 +45,6 @@ class _SettingsPageState extends State<SettingsPage> {
   bool _breakfastEnabled = false;
   bool _lunchEnabled = false;
   bool _dinnerEnabled = false;
-
-  // Token Tracking
-  bool _tokenTrackingEnabled = false;
 
   // Listener for app lifecycle changes
   AppLifecycleListener? _lifecycleListener;
@@ -127,12 +123,6 @@ class _SettingsPageState extends State<SettingsPage> {
                 },
               ),
               16.verticalSpace,
-              TokenTrackingWidget(
-                tokenTrackingEnabled: _tokenTrackingEnabled,
-                onChangedTokenTracking: (value) {
-                  _bloc.add(DoUpdateTokenTrackingEvent(enabled: value));
-                },
-              ),
             ],
           ),
         );
@@ -143,7 +133,6 @@ class _SettingsPageState extends State<SettingsPage> {
   void _initialize() {
     _bloc.add(const GetUserProfileEvent());
     _bloc.add(const GetRemindersEvent());
-    _bloc.add(const GetTokenTrackingEvent());
 
     // Create an AppLifecycleListener to listen for changes in the app lifecycle
     _lifecycleListener = AppLifecycleListener(
@@ -182,9 +171,6 @@ class _SettingsPageState extends State<SettingsPage> {
       _breakfastEnabled = state.breakfastEnabled;
       _lunchEnabled = state.lunchEnabled;
       _dinnerEnabled = state.dinnerEnabled;
-    } else if (state is TokenTrackingSuccessState) {
-      _tokenTrackingEnabled = state.enabled;
-      BlocProvider.of<DashboardBloc>(context).add(const RequestTokenTrackingEvent());
     }
   }
 

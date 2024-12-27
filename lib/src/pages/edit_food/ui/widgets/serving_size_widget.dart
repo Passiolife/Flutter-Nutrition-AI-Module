@@ -1,16 +1,17 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/dialogs/ok_button_with_keyboard.dart';
+import '../../../../common/extension/number_extension.dart';
 import '../../../../common/models/food_record/food_record.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/util/double_extensions.dart';
 import '../../../../common/util/keyboard_extension.dart';
-import '../../../../common/util/string_extensions.dart';
+import '../../../../common/extension/string_extensions.dart';
+import '../../../../common/util/text_input_formatter_util.dart';
 import '../../../../common/widgets/app_slider.dart';
 import '../../../../common/widgets/app_text_field.dart';
 import 'interfaces.dart';
@@ -135,7 +136,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
                 keyboardType:
                     const TextInputType.numberWithOptions(decimal: true),
                 inputFormatters: [
-                  FilteringTextInputFormatter.allow(RegExp(r'^\d+\.?\d{0,2}')),
+                  TextInputFormatterUtil.decimalNumber,
                 ],
               ),
               SizedBox(width: AppDimens.w8),
@@ -257,7 +258,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
   void _handleOkButtonTap() {
     context.hideKeyboard();
     if (_quantityController.text.isNotEmpty) {
-      double quantity = double.parse(_quantityController.text);
+      double quantity = _quantityController.text.localeFormatted(places: 2);
       _selectedQuantity = (quantity > 0) ? quantity : FoodRecord.zeroQuantity;
       widget.listener?.onServingQuantityChanged(
         _selectedQuantity,

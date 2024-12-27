@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/string_extensions.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/app_button.dart';
 
 class AddedToDiaryWidget extends StatelessWidget {

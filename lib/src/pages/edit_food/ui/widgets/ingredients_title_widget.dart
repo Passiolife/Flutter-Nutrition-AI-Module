@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/constant/app_padding.dart';
 import '../../../../common/models/food_record/food_record.dart';
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/widgets/app_button.dart';
 import '../../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart'
     as recipe;

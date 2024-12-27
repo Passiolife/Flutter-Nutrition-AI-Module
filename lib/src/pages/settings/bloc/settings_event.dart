@@ -60,19 +60,3 @@ final class DoUpdateMealReminderEvent extends SettingsEvent {
         mealTime,
       ];
 }
-
-final class DoUpdateTokenTrackingEvent extends SettingsEvent {
-  const DoUpdateTokenTrackingEvent({required this.enabled});
-
-  final bool enabled;
-
-  @override
-  List<Object?> get props => [enabled];
-}
-
-final class GetTokenTrackingEvent extends SettingsEvent {
-  const GetTokenTrackingEvent();
-
-  @override
-  List<Object?> get props => [];
-}

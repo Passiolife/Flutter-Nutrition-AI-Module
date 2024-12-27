@@ -7,8 +7,6 @@ import '../../../../common/constant/app_colors.dart';
 import '../../../../common/constant/app_padding.dart';
 import '../../../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../../../common/models/food_record/food_record.dart';
-import '../../../../common/util/context_extension.dart';
-import '../../../../common/util/snackbar_extension.dart';
 import '../../../../common/widgets/food_item_row_widget.dart';
 import '../../../edit_food/ui/edit_food_page.dart';
 import '../bloc/favorites_bloc.dart';
@@ -38,18 +36,11 @@ class FavoritesListSection extends StatelessWidget {
               subtitle: data?.additionalData,
               onTap: () => _onTap(context: context, foodRecord: data),
               onTapAdd: () => _onTapAdd(context: context, foodRecord: data),
-              onTapEdit: () => _onTap(context: context, foodRecord: data),
+              onTapEdit: () => _onTapEdit(context: context, foodRecord: data),
               onTapDelete: (forced) => _onTapDelete(
                   context: context, foodRecord: data, forced: forced),
             ),
           );
-          /* return RowWidget(
-                index: index,
-                iconId: data?.iconId,
-                foodName: data?.name,
-                additionalDetails: data?.additionalData,
-                listener: this,
-              );*/
         },
         separatorBuilder: (BuildContext context, int index) => 8.verticalSpace,
       ),
@@ -64,14 +55,34 @@ class FavoritesListSection extends StatelessWidget {
     required BuildContext context,
     FoodRecord? foodRecord,
   }) async {
+    await EditFoodPage.navigate(
+      context: context,
+      params: EditFoodPageParams(
+        foodRecord: foodRecord,
+        visibleDateView: false,
+        visibleMealTimeView: false,
+        redirectToDiaryOnLog: true,
+      ),
+    );
+  }
+
+  void _onTapEdit({
+    required BuildContext context,
+    FoodRecord? foodRecord,
+  }) async {
     final data = await EditFoodPage.navigate(
       context: context,
-      params: EditFoodPageParams(foodRecord: foodRecord),
+      params: EditFoodPageParams(
+        foodRecord: foodRecord,
+        needsReturn: true,
+        isUpdate: true,
+        visibleDateView: false,
+        visibleMealTimeView: false,
+      ),
     );
-    if (data != null && data is bool && data && context.mounted) {
-      context.showSnackbar(text: context.localization?.addedToLog);
+    if (data != null && data is FoodRecord && context.mounted) {
+      context.read<FavoritesBloc>().add(DoFavoriteUpdateEvent(data: data));
     }
-    context.read<FavoritesBloc>().add(const GetAllFavoritesEvent());
   }
 
   void _onTapDelete(

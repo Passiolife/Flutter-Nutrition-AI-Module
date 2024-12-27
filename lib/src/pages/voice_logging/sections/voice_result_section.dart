@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/models/voice_log/voice_log.dart';
-import '../../../common/util/context_extension.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../food_search/food_search_page.dart';
 import '../bloc/voice_logging_bloc.dart';
 import '../widgets/result_widget.dart';

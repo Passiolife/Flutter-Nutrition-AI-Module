@@ -32,12 +32,46 @@ extension DateTimeExtension on DateTime {
     return isAtSameMomentAs(other) || isBefore(other);
   }
 
-  bool isBetween({required DateTime from, required DateTime to}) {
+  bool isSame({required DateTime from, required DateTime to}) {
     return isAfterOrEqual(from) && isBeforeOrEqual(to);
   }
 
   bool isToday() {
     return isSameDate(DateTime.now());
+  }
+
+  ({DateTime startDate, DateTime endDate}) weekRangeDates(
+      {int weekDay = DateTime.sunday}) {
+    DateTime startDate = DateTime.utc(
+      year,
+      month,
+      day - (weekday - weekDay) % 7,
+      0,
+      0,
+      0,
+      0,
+    );
+    DateTime endDate = startDate.add(const Duration(days: 6));
+    endDate = DateTime.utc(
+      endDate.year,
+      endDate.month,
+      endDate.day,
+      23,
+      59,
+      59,
+      999,
+    );
+    return (startDate: startDate, endDate: endDate);
+  }
+
+  ({DateTime startDate, DateTime endDate}) monthRangeDates(
+      {int weekDay = DateTime.sunday}) {
+    final startDate = DateTime(year, month, 1);
+    final endDate = DateTime(
+      year,
+      month + 1,
+    ).subtract(const Duration(days: 1));
+    return (startDate: startDate, endDate: endDate);
   }
 
   ({DateTime startDate, DateTime endDate}) weekStartEndDates(
@@ -81,7 +115,7 @@ extension DateTimeExtension on DateTime {
     required DateTime endDateTime,
   }) {
     final now = DateTime.now();
-    final isBetweenDifference = now.isBetween(from: this, to: endDateTime);
+    final isBetweenDifference = now.isSame(from: this, to: endDateTime);
 
     return isMonthRange
         ? isBetweenDifference

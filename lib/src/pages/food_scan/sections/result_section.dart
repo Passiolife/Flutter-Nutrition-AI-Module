@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/constant/app_colors.dart';
-import '../../../common/util/context_extension.dart';
-import '../../../common/util/show_widget_util.dart';
+import '../../../../nutrition_ai_module.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/bottom_sheet/base_bottom_sheet.dart';
+import '../../edit_food/ui/edit_food_page.dart';
 import '../bloc/food_scan_bloc.dart';
-import '../widgets/barcode_not_recognized_widget.dart';
+import '../widgets/result_widget.dart';
 import '../widgets/scanning_widget.dart';
 
 class ResultSection extends StatefulWidget {
@@ -17,32 +17,69 @@ class ResultSection extends StatefulWidget {
 }
 
 class _ResultSectionState extends State<ResultSection> {
-  late final double _minHeight = context.height * 0.32;
+  late final double _minHeight = context.height * 0.25;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FoodScanBloc, FoodScanState>(
-      // listenWhen: (_, state) {
-      //   return state is BarcodeNotRecognizedEvent;
-      // },
-      // listener: (context, state) => _handleStateChanges(context, state),
       buildWhen: (_, state) {
-        return state is BarcodeNotRecognizedState;
+        return state is FoodScanInitial ||
+            state is BarcodeNotRecognizedState ||
+            state is ScanningState ||
+            state is ScanResultState ||
+            state is ScanLoadingState ||
+            state is AddedToDiaryVisibilityState;
       },
       builder: (context, state) {
-        // return SizedBox.shrink();
-
-        if(state is BarcodeNotRecognizedState) {
-          return SizedBox.shrink();
+        PassioFoodItem? foodItem;
+        String? iconId;
+        String? title;
+        String? subtitle;
+        if (state is BarcodeNotRecognizedState ||
+            state is AddedToDiaryVisibilityState) {
+          return const SizedBox.shrink();
+        } else if (state is ScanResultState) {
+          foodItem = state.foodItem;
+          iconId = foodItem?.iconId;
+          title = foodItem?.name;
+          subtitle =
+              '${context.localization?.upc ?? ''}: ${foodItem?.ingredients.firstOrNull?.metadata.barcode ?? ''}';
         }
         return Align(
           alignment: Alignment.bottomCenter,
           child: BaseBottomSheet(
             height: _minHeight,
-            child: ScanningWidget(),
+            child: state is ScanResultState
+                ? ResultWidget(
+                    iconId: iconId ?? '',
+                    title: title,
+                    subtitle: subtitle,
+                    onEdit: () => _onEdit(context: context, foodItem: foodItem),
+                    onLog: () => _onLog(context: context, foodItem: foodItem),
+                  )
+                : ScanningWidget(),
           ),
         );
       },
     );
+  }
+
+  void _onEdit({required BuildContext context, PassioFoodItem? foodItem}) {
+    EditFoodPage.navigate(
+      context: context,
+      params: EditFoodPageParams(
+        foodItem: foodItem,
+        redirectToDiaryOnLog: true,
+        visibleFoodCreator: true,
+        visibleRecipeCreator: true,
+      ),
+    );
+  }
+
+  void _onLog({required BuildContext context, PassioFoodItem? foodItem}) {
+    context.read<FoodScanBloc>().add(DoFoodLogEvent(
+          dateTime: DateTime.now(),
+          foodItem: foodItem,
+        ));
   }
 }

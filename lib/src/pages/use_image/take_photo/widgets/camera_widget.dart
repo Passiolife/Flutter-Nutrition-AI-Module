@@ -5,7 +5,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../../common/util/context_extension.dart';
+import '../../../../common/extension/context_extension.dart';
 import '../../../../common/util/permission_manager_utility.dart';
 import '../../../../common/util/snackbar_extension.dart';
 import '../../../../common/widgets/adaptive_loader.dart';

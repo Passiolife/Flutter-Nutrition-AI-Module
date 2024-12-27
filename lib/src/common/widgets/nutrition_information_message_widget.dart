@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../constant/app_constants.dart';
-import '../util/context_extension.dart';
+import '../extension/context_extension.dart';
 
 class NutritionInformationMessageWidget extends StatefulWidget {
   const NutritionInformationMessageWidget({super.key});

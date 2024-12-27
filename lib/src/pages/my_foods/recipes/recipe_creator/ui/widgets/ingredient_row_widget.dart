@@ -1,16 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../../../common/constant/app_constants.dart';
 import '../../../../../../common/constant/app_padding.dart';
 import '../../../../../../common/dialogs/delete_confirmation_dialog.dart';
 import '../../../../../../common/models/food_record/food_record_ingredient.dart';
-import '../../../../../../common/util/context_extension.dart';
+import '../../../../../../common/extension/context_extension.dart';
 import '../../../../../../common/util/double_extensions.dart';
-import '../../../../../../common/util/string_extensions.dart';
+import '../../../../../../common/extension/string_extensions.dart';
 import '../../../../../../common/widgets/food_item_row_widget.dart';
-import '../../../../../../common/widgets/passio_image_widget.dart';
 import '../../../../../edit_food/ui/edit_food_page.dart';
 import '../../bloc/recipe_creator_bloc.dart';
 

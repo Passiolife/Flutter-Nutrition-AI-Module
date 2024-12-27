@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/constant/app_colors.dart';
-import '../../common/util/context_extension.dart';
+import '../../common/router/navigation_route_observer.dart';
+import '../../common/router/routes.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/widgets/app_tab_bar.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
 import 'bloc/my_foods_bloc.dart';
@@ -11,74 +13,47 @@ import 'favorites/favorites_page.dart';
 import 'recipes/ui/recipes_page.dart';
 
 class MyFoodsPage extends StatefulWidget {
-  const MyFoodsPage({required this.index, super.key});
+  const MyFoodsPage({required this.page, super.key});
 
-  final int index;
+  final int page;
+
+  static MaterialPageRoute route({int page = 0}) {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.myFoods),
+      builder: (_) => MyFoodsPage(page: page),
+    );
+  }
 
   static Future navigate({
     required BuildContext context,
     bool isReplace = false,
-    int index = 0,
+    int page = 0,
   }) async {
     if (isReplace) {
-      bool isPageInStack = false;
-
-      // Check if MyFoodsPage is already in the stack
-      Navigator.of(context).popUntil((route) {
-        // Compare the runtimeType of the route's builder with MyFoodsPage
-        if (route is MaterialPageRoute &&
-            route.builder(context).runtimeType ==
-                MyFoodsPage(index: index).runtimeType) {
-          isPageInStack = true;
-          return true; // Stop checking
-        }
-        return false; // Continue checking other routes
-      });
-
-      // If the page is not in the stack, navigate to it and remove previous routes
-      if (!isPageInStack) {
-        return Navigator.pushReplacement(
+      if (NavigationRouteObserver.instance.contains(Routes.myFoods)) {
+        bool isRemoved = false;
+        return await Navigator.pushNamedAndRemoveUntil(
           context,
-          MaterialPageRoute(builder: (_) => MyFoodsPage(index: index)),
+          Routes.myFoods,
+          (route) {
+            final isCurrent = route.settings.name == Routes.myFoods;
+            if (isCurrent && !isRemoved) {
+              isRemoved = true;
+              return false;
+            }
+            return isRemoved;
+          },
+          arguments: page,
+        );
+      } else {
+        return await Navigator.pushReplacementNamed(
+          context,
+          Routes.myFoods,
+          arguments: page,
         );
       }
-
-      bool isCurrentScreen = false;
-      bool isCurrentScreenPopped = false;
-      return Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(
-          builder: (_) => MyFoodsPage(index: index),
-        ),
-        (route) {
-          if (isCurrentScreenPopped) {
-            return true;
-          }
-
-          isCurrentScreen = route is MaterialPageRoute &&
-              route.builder(context).runtimeType ==
-                  MyFoodsPage(index: index).runtimeType;
-          if (isCurrentScreen && !isCurrentScreenPopped) {
-            isCurrentScreenPopped = true;
-            return false;
-          }
-          return isCurrentScreen;
-        },
-      );
-      /*Navigator.pop(context);
-      return await Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (_) => MyFoodsPage(index: index),
-        ),
-      );*/
     }
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (_) => MyFoodsPage(index: index),
-      ),
-    );
+    return await Navigator.pushNamed(context, Routes.myFoods, arguments: page);
   }
 
   @override
@@ -107,11 +82,11 @@ class _MyFoodsPageState extends State<MyFoodsPage>
   @override
   void initState() {
     _tabController = TabController(
-      initialIndex: widget.index,
+      initialIndex: widget.page,
       length: 3,
       vsync: this,
     );
-    _pageController = PageController(initialPage: widget.index);
+    _pageController = PageController(initialPage: widget.page);
     super.initState();
   }
 
