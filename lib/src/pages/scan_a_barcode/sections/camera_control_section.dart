@@ -13,13 +13,13 @@ class CameraControlSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FoodScanBloc, FoodScanState>(
       buildWhen: (_, state) {
-        return state is FoodScanInitial || state is UpdatedCameraZoomState;
+        return state is FoodScanInitial || state is UpdatedCameraZoomStateNew;
       },
       builder: (context, state) {
         double currentZoom = 1;
         double minZoom = 1;
         double maxZoom = 1;
-        if (state is UpdatedCameraZoomState) {
+        if (state is UpdatedCameraZoomStateNew) {
           currentZoom = state.currentZoom;
           minZoom = state.minZoom;
           maxZoom = state.maxZoom;

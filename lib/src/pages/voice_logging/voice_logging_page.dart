@@ -3,13 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../common/constant/app_constants.dart';
-import '../../common/router/routes.dart';
 import '../../common/extension/context_extension.dart';
+import '../../common/router/routes.dart';
 import '../../common/util/show_widget_util.dart';
 import '../../common/util/snackbar_extension.dart';
+import '../../common/util/speech_to_text_utility.dart';
 import '../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
 import '../../common/widgets/custom_app_bar_widget.dart';
-import '../dashboard/bloc/dashboard_bloc.dart';
 import '../dashboard/dashboard_page.dart';
 import '../food_search/food_search_page.dart';
 import 'bloc/voice_logging_bloc.dart';
@@ -38,7 +38,9 @@ class VoiceLoggingPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => VoiceLoggingBloc(),
+      create: (_) => VoiceLoggingBloc(
+        speechToTextUtility: SpeechToTextUtilityImpl(),
+      ),
       child: _VoiceLoggingScreen(),
     );
   }

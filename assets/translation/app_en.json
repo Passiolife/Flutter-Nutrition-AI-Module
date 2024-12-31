@@ -388,6 +388,7 @@
   "startListening": "Start Listening",
   "stopListening": "Stop Listening",
   "microphonePermissionMessage": "App requires microphone access to capture your voice for food recognition.",
-  "speechRecognitionPermissionMessage": "App requires speech recognition access to retrieve a list of recognized foods from your speech queries."
+  "speechRecognitionPermissionMessage": "App requires speech recognition access to retrieve a list of recognized foods from your speech queries.",
+  "yourResults": "Your Results"
 
 }

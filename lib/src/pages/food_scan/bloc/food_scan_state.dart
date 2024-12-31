@@ -58,6 +58,7 @@ class NutritionFactsResultState extends FoodScanState {
 
   @override
   List<Object?> get props => [nutritionFacts];
+
 }
 
 class AddedToDiaryVisibilityState extends FoodScanState {
@@ -69,10 +70,13 @@ class AddedToDiaryVisibilityState extends FoodScanState {
 
 // State representing the visibility of the barcode not recognized UI
 class BarcodeNotRecognizedState extends FoodScanState {
-  const BarcodeNotRecognizedState();
+  // Indicates whether it should be visible or not
+  final bool shouldVisible;
+
+  const BarcodeNotRecognizedState({required this.shouldVisible});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [shouldVisible];
 }
 
 class PackagedFoodNotRecognizedState extends FoodScanState {
@@ -118,18 +122,21 @@ class ConversionFailureState extends FoodScanState {
 }
 
 class UpdatedCameraZoomState extends FoodScanState {
-  const UpdatedCameraZoomState({
-    required this.currentZoom,
-    required this.minZoom,
-    required this.maxZoom,
-  });
+  const UpdatedCameraZoomState({required this.zoomLevel});
 
-  final double currentZoom;
-  final double minZoom;
-  final double maxZoom;
+  final double zoomLevel;
 
   @override
-  List<Object?> get props => [currentZoom, minZoom, maxZoom];
+  List<Object?> get props => [zoomLevel];
+}
+
+class CameraZoomStateLoaded extends FoodScanState {
+  const CameraZoomStateLoaded({required this.cameraZoomLevel});
+
+  final PassioCameraZoomLevel cameraZoomLevel;
+
+  @override
+  List<Object?> get props => [cameraZoomLevel];
 }
 
 final class NutritionFactsLoadingNextState extends FoodScanState {
@@ -141,7 +148,6 @@ final class NutritionFactsLoadingNextState extends FoodScanState {
 
 final class NutritionFactsSuccessState extends FoodScanState {
   const NutritionFactsSuccessState({this.foodRecord});
-
   final FoodRecord? foodRecord;
 
   @override

@@ -12,7 +12,7 @@ class CameraFrameSection extends StatelessWidget {
       top: 150.h,
       left: 24.w,
       right: 24.w,
-      child: const CameraFrameWidget(),
+      child: CameraFrameWidget(height: 380.h),
     );
   }
 }

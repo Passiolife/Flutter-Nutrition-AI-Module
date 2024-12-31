@@ -18,24 +18,28 @@ final class TakePhotoInitialListenerState extends ListenerState {
 
 final class TakePhotoSuccessListenerState extends ListenerState {
   const TakePhotoSuccessListenerState({
-    required this.originalBytes,
-    required this.compressedBytes,
+    required this.images,
+    required this.resizedImages,
   });
 
-  final Uint8List originalBytes;
-  final Uint8List compressedBytes;
+  final List<Uint8List> images;
+  final List<Uint8List> resizedImages;
 
   @override
-  List<Object?> get props => [originalBytes, compressedBytes];
+  List<Object?> get props => [images, resizedImages];
 }
 
 final class RemovePhotoListenerState extends ListenerState {
-  const RemovePhotoListenerState({required this.index});
+  const RemovePhotoListenerState({
+    required this.images,
+    required this.resizedImages,
+  });
 
-  final int index;
+  final List<Uint8List> images;
+  final List<Uint8List> resizedImages;
 
   @override
-  List<Object?> get props => [index];
+  List<Object?> get props => [images, resizedImages];
 }
 
 final class RecognizeImageLoadingListenerState extends ListenerState {

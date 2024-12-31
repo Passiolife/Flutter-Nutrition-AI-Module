@@ -73,7 +73,7 @@ class AddedToDiaryWidget extends StatelessWidget {
                   Expanded(
                     child: AppButton(
                       buttonText: context
-                          .localization?.continueScanning.toUpperCaseWord,
+                          .localization?.continueScanning?.toUpperCaseWord,
                       appButtonModel: AppButtonStyles.primary.copyWith(
                         padding: EdgeInsets.symmetric(vertical: AppDimens.h13),
                       ),

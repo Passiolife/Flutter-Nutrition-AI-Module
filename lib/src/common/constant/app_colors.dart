@@ -21,10 +21,12 @@ class AppColors {
   static const Color black = Colors.black;
 
   // Primary
+  static const Color indigo500Normal = Color(0xFF6366F1);
   static const Color indigo600Main = Color(0xFF4F46E5);
   static const Color indigo600Light = Color(0xFF6366F1);
   static const Color indigo600Dark = Color(0xFF3730A3);
   static const Color indigo700 = Color(0xFF4338CA);
+  static const Color indigo900Dark = Color(0xFF312E81);
 
   // Secondary
   static const Color indigo50 = Color(0xFFEEF2FF);
@@ -54,8 +56,6 @@ class AppColors {
   static const Color green500Normal = Color(0xFF10B981);
   static const Color green900Dark = Color(0xFF064E3B);
 
-  static const Color indigo500Normal = Color(0xFF6366F1);
-  static const Color indigo900Dark = Color(0xFF312E81);
 
   // Opacity
   static const Color white20Opacity = Color.fromRGBO(255, 255, 255, 0.2);

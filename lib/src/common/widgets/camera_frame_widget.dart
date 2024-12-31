@@ -11,7 +11,7 @@ class CameraFrameWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return VectorGraphic(
-      loader: AssetBytesLoader(AppImages.icScanFrame),
+      loader: AssetBytesLoader(AppImages.icScanFrameNew),
       width: double.infinity,
       fit: BoxFit.fill,
       height: height ?? 240.h,

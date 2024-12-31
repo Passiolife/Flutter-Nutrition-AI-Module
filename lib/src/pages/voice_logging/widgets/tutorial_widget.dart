@@ -15,6 +15,7 @@ class TutorialWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Text.rich(
+            textAlign: TextAlign.center,
             TextSpan(
               text: context.localization?.tap,
               style: AppTextStyle.textLg
@@ -22,9 +23,7 @@ class TutorialWidget extends StatelessWidget {
                       color: AppColors.gray900),
               children: [
                 WidgetSpan(
-                  child: SizedBox(
-                    width: 4.w,
-                  ),
+                  child: SizedBox(width: 4.w),
                 ),
                 TextSpan(
                   text: '${context.localization?.startListening},',
@@ -34,9 +33,7 @@ class TutorialWidget extends StatelessWidget {
                   ]).copyWith(color: AppColors.gray900),
                 ),
                 WidgetSpan(
-                  child: SizedBox(
-                    width: 4.w,
-                  ),
+                  child: SizedBox(width: 4.w),
                 ),
                 TextSpan(
                   text: context.localization?.thenSaySomethingLike,

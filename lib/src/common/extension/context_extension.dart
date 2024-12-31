@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../constant/app_theme.dart';
 import '../locale/app_localizations.dart';
 
 extension Util on BuildContext {
@@ -29,4 +30,8 @@ extension Dimension on BuildContext {
   ThemeData get theme => Theme.of(this);
 
   TextTheme get textTheme => theme.textTheme;
+
+  ColorScheme get colorScheme => theme.colorScheme;
+
+  AppThemeColors? get appThemeColors => theme.extension<AppThemeColors>();
 }

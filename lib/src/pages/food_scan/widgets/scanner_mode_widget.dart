@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../common/constant/app_constants.dart';
 import '../../../common/extension/context_extension.dart';
+
 import '../../../common/util/snackbar_extension.dart';
 
 typedef OnModeChanged = Function(int mode);

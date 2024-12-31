@@ -147,7 +147,11 @@ class _DashboardPageState extends State<DashboardPage> {
     //
     // Action for when the text matches the 'scan' localization.
     if (action == context.localization?.scanABarcode) {
-      FoodScanPage.navigate(context);
+      Navigator.pushNamed(
+        context,
+        Routes.foodScan,
+      );
+      // FoodScanPage.navigate(context);
     }
     // Action for when the text matches the 'search' localization.
     else if (action == context.localization?.textSearch) {

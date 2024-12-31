@@ -17,7 +17,7 @@ class BarcodeNotRecognizedDialog {
           alignment: Alignment.bottomCenter,
           child: BarcodeNotRecognizedWidget(
             onTapCancel: () => onTapCancel?.call(context),
-            onTapTakePhoto: () => onTapScanNutrition?.call(context),
+            onTapScanNutritionFacts: () => onTapScanNutrition?.call(context),
           ),
         );
       },

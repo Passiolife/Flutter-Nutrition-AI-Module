@@ -85,7 +85,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
         listener: (context, state) =>
             _handleStateChanges(context: context, state: state),
         buildWhen: (_, state) {
-          return state is FoodScanInitial || state is BarcodeNotRecognizedState;
+          return state is FoodScanInitial || state is BarcodeNotRecognizedStateNew;
         },
         builder: (BuildContext context, FoodScanState state) {
           return Column(
@@ -317,7 +317,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
       {required BuildContext context, required FoodScanState state}) {
     if (state is IntroScreenVisibilityState) {
       _handleIntroVisibilityState(state);
-    } else if (state is BarcodeNotRecognizedState) {
+    } else if (state is BarcodeNotRecognizedStateNew) {
       ShowWidgetUtil.showCustomModalBottomSheet(
         context: context,
         backgroundColor: AppColors.transparent,

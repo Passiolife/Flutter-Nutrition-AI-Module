@@ -14,7 +14,7 @@ export 'src/common/widgets/custom_app_bar_widget.dart';
 
 // Utils
 export 'src/common/util/date_time_utility.dart';
-export 'src/common/util/speech_to_text_util.dart';
+export 'src/common/util/speech_to_text_utility.dart';
 
 // Models
 export 'src/common/models/food_record/food_record.dart';
@@ -27,3 +27,4 @@ export 'src/common/models/voice_log/voice_log.dart';
 
 // Third parties
 export 'package:flutter_slidable/flutter_slidable.dart';
+export 'package:speech_to_text/speech_to_text.dart';

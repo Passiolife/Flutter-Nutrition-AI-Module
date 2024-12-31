@@ -96,6 +96,7 @@ final class ClearNutritionFactsEvent extends FoodScanEvent {
 
   @override
   List<Object?> get props => [];
+
 }
 
 class ScanResultDragEvent extends FoodScanEvent {
@@ -108,10 +109,13 @@ class ScanResultDragEvent extends FoodScanEvent {
 }
 
 class BarcodeNotRecognizedEvent extends FoodScanEvent {
-  const BarcodeNotRecognizedEvent();
+  // Indicates whether it should be visible or not
+  final bool shouldVisible;
+
+  const BarcodeNotRecognizedEvent({required this.shouldVisible});
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [shouldVisible];
 }
 
 class PackagedFoodNotRecognizedEvent extends FoodScanEvent {
@@ -125,11 +129,8 @@ class PackagedFoodNotRecognizedEvent extends FoodScanEvent {
 }
 
 class DoFoodLogEvent extends FoodScanEvent {
-  const DoFoodLogEvent({
-    required this.dateTime,
-    this.foodItem,
-    this.detectedCandidate,
-  });
+  const DoFoodLogEvent(
+      {required this.dateTime, this.foodItem, this.detectedCandidate});
 
   final DateTime dateTime;
   final PassioFoodItem? foodItem;

@@ -6,10 +6,6 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
-import '../../../common/models/food_record/meal_label.dart';
-import '../../../common/models/voice_log/voice_log.dart';
-import '../../../common/util/date_time_utility.dart';
-import '../../../common/util/speech_to_text_util.dart';
 import '../../../common/extension/string_extensions.dart';
 
 part 'voice_logging_event.dart';
@@ -30,7 +26,10 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
   String _recognizedWords = '';
   bool _visibleLoadingForLog = false;
 
-  VoiceLoggingBloc() : super(const VoiceLoggingInitial()) {
+  final SpeechToTextUtility speechToTextUtility;
+
+  VoiceLoggingBloc({required this.speechToTextUtility})
+      : super(const VoiceLoggingInitial()) {
     on<StartListeningEvent>(_handleStartListeningEvent);
     on<ErrorEvent>(_handleErrorEvent);
     on<RecognizeEvent>(_handleRecognizeEvent);
@@ -45,20 +44,20 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
 
   FutureOr<void> _handleStartListeningEvent(
       StartListeningEvent event, Emitter<VoiceLoggingState> emit) async {
-    _isInitialized ??= await SpeechToTextUtil.instance.initialize(
+    _recognizedWords = '';
+    _isInitialized ??= await speechToTextUtility.initialize(
       statusListener: _statusListener,
       errorListener: _errorListener,
     );
     if (_isInitialized ?? false) {
       _recognitionLogs = null;
-      SpeechToTextUtil.instance.startListening(
-        recognizedWords: _recognizeWords,
-        finalResult: false,
+      speechToTextUtility.startListening(
+        listenMode: ListenMode.dictation,
+        recognizeListener: _recognizeWords,
       );
       _recognizedWords = '';
       _isListening = true;
       emit(ListeningUpdateBuilderState(isListening: _isListening));
-
     } else {
       add(const ErrorEvent());
     }
@@ -66,7 +65,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
 
   FutureOr<void> _handleStopListeningEvent(
       StopListeningEvent event, Emitter<VoiceLoggingState> emit) async {
-    SpeechToTextUtil.instance.stopListening();
+    speechToTextUtility.stopListening();
 
     _isListening = false;
     emit(ListeningUpdateBuilderState(isListening: _isListening));
@@ -78,7 +77,7 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
     emit(ErrorListenerState(_errorMessage ?? ''));
   }
 
-  void _errorListener(String? error) {
+  void _errorListener(String? error, bool permanent) {
     if (error == 'error_no_match' || error == 'error_speech_timeout') {
       return;
     }
@@ -121,7 +120,6 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
       }
 
       emit(RecognizeVoiceLogsSuccessState(data: _recognitionLogs));
-
     } on Exception catch (e) {
       log('Exception: $e');
     }
@@ -130,20 +128,25 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
   FutureOr<void> _handleUpdateSelectionEvent(
       UpdateSelectionEvent event, Emitter<VoiceLoggingState> emit) async {
     _recognitionLogs = _recognitionLogs?.toggleSelectionFor(event.index);
-    emit(UpdateRecognizeVoiceLogsState(data: _recognitionLogs, timeStamp: DateTime.now().millisecondsSinceEpoch));
+    emit(UpdateRecognizeVoiceLogsState(
+        data: _recognitionLogs,
+        timeStamp: DateTime.now().millisecondsSinceEpoch));
     // _updateVoiceLogsAndEmit(emit);
   }
 
   FutureOr<void> _handleClearSelectionEvent(
       ClearSelectionEvent event, Emitter<VoiceLoggingState> emit) {
     _recognitionLogs = _recognitionLogs?.clearSelection();
-    emit(UpdateRecognizeVoiceLogsState(data: _recognitionLogs, timeStamp: DateTime.now().millisecondsSinceEpoch));
+    emit(UpdateRecognizeVoiceLogsState(
+        data: _recognitionLogs,
+        timeStamp: DateTime.now().millisecondsSinceEpoch));
   }
 
   Future<void> _handleDoFoodLogEvent(
       DoFoodLogEvent event, Emitter<VoiceLoggingState> emit) async {
     _visibleLoadingForLog = true;
-    emit(FoodLogLoadingBuilderState(isLogLoading: _visibleLoadingForLog, data: _recognitionLogs));
+    emit(FoodLogLoadingBuilderState(
+        isLogLoading: _visibleLoadingForLog, data: _recognitionLogs));
 
     final selectedLogs = _recognitionLogs?.where((e) => e.isSelected).toList();
 
@@ -200,11 +203,11 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
 
   FutureOr<void> _handleDoDisposeEvent(
       DoCancelEvent event, Emitter<VoiceLoggingState> emit) {
-    SpeechToTextUtil.instance.cancel();
+    speechToTextUtility.dispose();
   }
 
-
-  FutureOr<void> _handleTryAgainEvent(TryAgainEvent event, Emitter<VoiceLoggingState> emit) {
+  FutureOr<void> _handleTryAgainEvent(
+      TryAgainEvent event, Emitter<VoiceLoggingState> emit) {
     _reset();
     emit(VoiceLoggingInitial());
   }

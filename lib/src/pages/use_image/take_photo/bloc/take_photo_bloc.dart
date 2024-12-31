@@ -18,6 +18,9 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
 
+  List<Uint8List> _images = [];
+  List<Uint8List> _resizedImages = [];
+
   TakePhotoBloc() : super(const TakePhotoInitialBuilderState()) {
     on<DoCheckIntroScreenEvent>(_handleDoCheckIntroScreenEvent);
     on<DoIntroScreenCompletedEvent>(_handleDoIntroScreenCompletedEvent);
@@ -74,17 +77,22 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
         minHeight: 200,
       );
       if (bytes != null && resizedBytes != null) {
+        _images = List.from(_images)..insert(0, bytes);
+        _resizedImages = List.from(_resizedImages)..insert(0, resizedBytes);
         emit(TakePhotoSuccessListenerState(
-            originalBytes: bytes, compressedBytes: resizedBytes));
-        emit(const TakePhotoSuccessBuilderState());
+            images: _images, resizedImages: _resizedImages));
+        // emit(const TakePhotoSuccessBuilderState());
       }
     }
   }
 
   FutureOr<void> _handleDoRemoveImageEvent(
       DoRemoveImageEvent event, Emitter<TakePhotoState> emit) async {
-    emit(RemovePhotoListenerState(index: event.index));
-    emit(const RemoveImageBuilderState());
+    final index = event.index;
+    _images = List.from(_images)..removeAt(index);
+    _resizedImages = List.from(_resizedImages)..removeAt(index);
+    emit(RemovePhotoListenerState(images: _images, resizedImages: _resizedImages));
+    // emit(const RemoveImageBuilderState());
   }
 
   FutureOr<void> _handleDoRecognizeImageEvent(

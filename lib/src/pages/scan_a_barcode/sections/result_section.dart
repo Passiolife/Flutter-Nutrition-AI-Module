@@ -24,7 +24,7 @@ class _ResultSectionState extends State<ResultSection> {
     return BlocBuilder<FoodScanBloc, FoodScanState>(
       buildWhen: (_, state) {
         return state is FoodScanInitial ||
-            state is BarcodeNotRecognizedState ||
+            state is BarcodeNotRecognizedStateNew ||
             state is ScanningState ||
             state is ScanResultState ||
             state is ScanLoadingState ||
@@ -35,7 +35,7 @@ class _ResultSectionState extends State<ResultSection> {
         String? iconId;
         String? title;
         String? subtitle;
-        if (state is BarcodeNotRecognizedState ||
+        if (state is BarcodeNotRecognizedStateNew ||
             state is AddedToDiaryVisibilityState) {
           return const SizedBox.shrink();
         } else if (state is ScanResultState) {

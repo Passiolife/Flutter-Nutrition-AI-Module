@@ -3,8 +3,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/constant/app_constants.dart';
-import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/app_button.dart';
+import '../../../common/extension/context_extension.dart';
 
 abstract interface class NutritionFactsHandler {
   void onNext();

@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
 import '../nutrition_ai_module.dart';
-import 'common/models/settings/settings.dart';
+import 'common/constant/app_theme.dart';
 import 'common/router/navigation_route_observer.dart';
 import 'common/router/routes.dart';
 import 'pages/advisor/advisor_page.dart';
 import 'pages/dashboard/dashboard_page.dart';
 import 'pages/edit_food/ui/edit_food_page.dart';
-import 'pages/food_scan/food_scan_page.dart';
+import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/food_search/food_search_page.dart';
 import 'pages/my_foods/custom_foods/food_creator/barcode_scanner/barcode_scanner_page.dart';
 import 'pages/my_foods/custom_foods/food_creator/food_creator_page.dart';
@@ -37,11 +37,14 @@ class NavigationAIPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: _navigatorKey,
-      initialRoute: Routes.initialPage,
-      observers: [NavigationRouteObserver.instance],
-      onGenerateRoute: _generateRoute,
+    return Theme(
+      data: AppTheme().lightTheme,
+      child: Navigator(
+        key: _navigatorKey,
+        initialRoute: Routes.initialPage,
+        observers: [NavigationRouteObserver.instance],
+        onGenerateRoute: _generateRoute,
+      ),
     );
   }
 

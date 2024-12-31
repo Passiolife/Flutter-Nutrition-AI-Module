@@ -84,7 +84,10 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
             children: [
               IconButton(
                 onPressed: () {
-                  if(widget.onTapBack != null) widget.onTapBack?.call();
+                  if(widget.onTapBack != null) {
+                    widget.onTapBack?.call();
+                    return;
+                  }
                   if(NavigationRouteObserver.instance.currentRouteName == Routes.dashboard) {
                     Navigator.popUntil(context, (_) => false);
                   }

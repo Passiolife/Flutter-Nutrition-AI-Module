@@ -22,9 +22,11 @@ class AppImages {
   // ic_arrow_left/svg // TODO: test because facing some issue with naming. Asset not found error.
   static const icTest = '${iconsDir}ic_test.svg';
   static const icQuestionMarkCircle = '${iconsDir}ic_question_mark_circle.svg';
-  static const icScanFrame = '${iconsDir}ic_scan_frame.svg';
+  static const icScanFrameNew = '${iconsDir}ic_scan_frame.svg';
   static const icFlashOn = '${iconsDir}ic_flashlight_on.svg';
   static const icFlashOff = '${iconsDir}ic_flashlight_off.svg';
+  static const icCaptureNew = '${iconsDir}ic_capture.svg';
+  static const icTrashNew = '${iconsDir}ic_trash.svg';
 
 
   static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';
@@ -79,7 +81,7 @@ class AppImages {
   static const icProgress = '${imageDir}ic_progress.svg';
   static const icRecipe = '${imageDir}ic_recipe.png';
   static const icScan = '${imageDir}ic_scan.svg';
-  // static const icScanFrame = '${imageDir}ic_scan_frame.svg';
+  static const icScanFrame = '${imageDir}ic_scan_frame.svg';
   static const icSearch = '${imageDir}ic_search.svg';
   static const icSearchFilled = '${imageDir}ic_search_filled.svg';
   static const icSettings = '${imageDir}ic_settings.svg';

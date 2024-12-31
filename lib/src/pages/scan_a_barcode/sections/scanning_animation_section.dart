@@ -11,9 +11,9 @@ class ScanningAnimationSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FoodScanBloc, FoodScanState>(
       buildWhen: (_, state) =>
-          state is FoodScanInitial || state is BarcodeNotRecognizedState || state is ScanningState || state is AddedToDiaryVisibilityState,
+          state is FoodScanInitial || state is BarcodeNotRecognizedStateNew || state is ScanningState || state is AddedToDiaryVisibilityState,
       builder: (context, state) {
-        return state is BarcodeNotRecognizedState || state is AddedToDiaryVisibilityState
+        return state is BarcodeNotRecognizedStateNew || state is AddedToDiaryVisibilityState
             ? const SizedBox.shrink()
             : const ScanningAnimationWidget();
       },

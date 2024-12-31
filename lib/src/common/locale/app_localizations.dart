@@ -689,6 +689,7 @@ class AppLocalizations {
       getLabel('createCustomFoodWithoutBarcode');
 
   String? get api => getLabel('api');
+
   String? get totalUsage => getLabel('totalUsage');
 
   String? get session => getLabel('session');
@@ -788,4 +789,6 @@ class AppLocalizations {
   String? get details => getLabel('details');
 
   String? get upc => getLabel('upc');
+
+  String? get yourResults => getLabel('yourResults');
 }

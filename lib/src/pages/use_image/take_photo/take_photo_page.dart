@@ -1,24 +1,17 @@
-import 'dart:typed_data';
-
-import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
-import '../../../common/constant/app_constants.dart';
-import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
 import '../../../common/router/routes.dart';
-import '../../../common/extension/context_extension.dart';
 import '../../../common/util/show_widget_util.dart';
-import '../../../common/util/snackbar_extension.dart';
-import '../../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
-import '../../../common/widgets/camera_frame_widget.dart';
-import '../../dashboard/dashboard_page.dart';
-import '../../food_search/food_search_page.dart';
 import 'bloc/take_photo_bloc.dart';
-import 'dialogs/intro_dialog.dart';
-import 'widgets/widgets.dart';
+import 'models/take_photo_navigation_data_provider.dart';
+import 'sections/camera_frame_section.dart';
+import 'sections/camera_section.dart';
+import 'sections/captured_images_section.dart';
+import 'sections/result_section.dart';
+
+part 'screen/take_photo_screen.dart';
 
 class TakePhotoPage extends StatefulWidget {
   const TakePhotoPage({
@@ -32,8 +25,10 @@ class TakePhotoPage extends StatefulWidget {
   // Maximum number of images allowed to be stored
   final int maxLimit;
 
-  static MaterialPageRoute route(
-      {required bool returnResult, required int maxLimit}) {
+  static MaterialPageRoute route({
+    required bool returnResult,
+    required int maxLimit,
+  }) {
     return MaterialPageRoute(
       settings: RouteSettings(name: Routes.takePhoto),
       builder: (_) => TakePhotoPage(
@@ -57,189 +52,197 @@ class TakePhotoPage extends StatefulWidget {
 }
 
 class _TakePhotoPageState extends State<TakePhotoPage> {
-  final _bloc = TakePhotoBloc();
-
-  // GlobalKey to uniquely identify the CameraWidget's state and access it
-  final _cameraKey = GlobalKey<CameraWidgetState>();
-
-  // Lists to store the original images and their thumbnails
-  final List<Uint8List> _originalImages = [];
-  final List<Uint8List> _thumbImages = [];
-
-  bool _isNextLoading = false;
-
-  List<AdvisorFoodInfoLog>? _advisorFoodInfoList;
-
-  bool _visibleLoadingForLog = false;
-
-  bool _seenIntroDialog = false;
-
-  @override
-  void initState() {
-    _bloc.add(const DoCheckIntroScreenEvent());
-    super.initState();
-  }
+  // final _bloc = TakePhotoBloc();
+  //
+  // // GlobalKey to uniquely identify the CameraWidget's state and access it
+  // final _cameraKey = GlobalKey<CameraWidgetState>();
+  //
+  // // Lists to store the original images and their thumbnails
+  // final List<Uint8List> _originalImages = [];
+  // final List<Uint8List> _thumbImages = [];
+  //
+  // bool _isNextLoading = false;
+  //
+  // List<AdvisorFoodInfoLog>? _advisorFoodInfoList;
+  //
+  // bool _visibleLoadingForLog = false;
+  //
+  // bool _seenIntroDialog = false;
+  //
+  // @override
+  // void initState() {
+  //   _bloc.add(const DoCheckIntroScreenEvent());
+  //   super.initState();
+  // }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer(
-      bloc: _bloc,
-      listener: (context, state) {
-        _handleStateChanges(context, state);
-      },
-      builder: (context, state) {
-        return Scaffold(
-          backgroundColor: AppColors.gray50,
-          resizeToAvoidBottomInset: false,
-          body: _seenIntroDialog
-              ? Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    CameraWidget(
-                      key: _cameraKey,
-                      resolution: ResolutionPreset.veryHigh,
-                    ),
-                    ActionButtonsWidget(
-                      onNegativeTap: () {
-                        Navigator.pop(context);
-                      },
-                      captureEnabled: _originalImages.length < widget.maxLimit,
-                      onCapture: () {
-                        _takePicture();
-                      },
-                      positiveEnabled: _thumbImages.isNotEmpty,
-                      visibleLoadingForPositiveButton: _isNextLoading,
-                      onPositiveTap: () {
-                        if (widget.returnResult) {
-                          Navigator.pop(context, _originalImages);
-                          return;
-                        }
-                        _bloc.add(DoNextEvent(images: _originalImages));
-                      },
-                    ),
-                    CarouselSliderWidget(
-                      images: _thumbImages,
-                      onDelete: (index) {
-                        _bloc.add(DoRemoveImageEvent(index: index));
-                      },
-                    ),
-                    Positioned(
-                      top: 194.h,
-                      left: 24.w,
-                      right: 24.w,
-                      child: CameraFrameWidget(height: 380.h),
-                    ),
-                    _advisorFoodInfoList?.isNotEmpty ?? false
-                        ? ResultWidget(
-                            title: context.localization?.result ?? '',
-                            subtitle: ((_advisorFoodInfoList?.length ?? 0) > 0)
-                                ? context.localization?.resultDescription ?? ''
-                                : '',
-                            data: _advisorFoodInfoList,
-                            clearVisible:
-                                _advisorFoodInfoList?.hasSelectedItems() ??
-                                    false,
-                            itemBuilder: (BuildContext context, int index) {
-                              final data =
-                                  _advisorFoodInfoList?.elementAt(index);
-
-                              final advisorInfo = data?.advisorFoodInfoModel;
-
-                              final foodDataInfo = advisorInfo?.foodDataInfo;
-                              final iconId = foodDataInfo?.iconID ?? '';
-                              final title = foodDataInfo?.foodName ?? '';
-                              final calories =
-                                  foodDataInfo?.nutritionPreview.calories ?? 0;
-
-                              final servingQuantity = foodDataInfo
-                                      ?.nutritionPreview.servingQuantity ??
-                                  0;
-                              final servingUnit =
-                                  foodDataInfo?.nutritionPreview.servingUnit ??
-                                      '';
-                              final formattedWeight =
-                                  '$servingQuantity $servingUnit';
-
-                              final subtitle =
-                                  '$formattedWeight | $calories ${context.localization?.cal}';
-
-                              final isSelected = data?.isSelected ?? false;
-
-                              return FoodItemRowWidget(
-                                data: FoodItemRowData(
-                                  iconId: iconId,
-                                  title: title,
-                                  subtitle: subtitle,
-                                  isAddVisible: false,
-                                  padding: EdgeInsets.zero,
-                                  decoration: BoxDecoration(
-                                      color: isSelected
-                                          ? AppColors.indigo50
-                                          : null),
-                                  suffix: IconButton(
-                                    onPressed: () {
-                                      if (data != null) {
-                                        _bloc.add(UpdateSelectionEvent(
-                                            data: _advisorFoodInfoList,
-                                            index: index));
-                                      }
-                                    },
-                                    icon: SelectionIndicator(
-                                        isSelected: isSelected),
-                                  ),
-                                  onTap: () {
-                                    if (data != null) {
-                                      _bloc.add(UpdateSelectionEvent(
-                                          data: _advisorFoodInfoList,
-                                          index: index));
-                                    }
-                                  },
-                                  enableSlidable: false,
-                                ),
-                              );
-                            },
-                            emptyBuilder: () {
-                              return Center(
-                                child: Text(
-                                  context.localization?.noResultsFound ?? '',
-                                  style: AppTextStyle.textSm,
-                                ),
-                              );
-                            },
-                            onClear: () {
-                              _bloc.add(ClearSelectionEvent(
-                                  data: _advisorFoodInfoList));
-                            },
-                            neutralButtonText: context.localization?.retake,
-                            onNeutralClick: () {
-                              _bloc.add(const InitialEvent());
-                            },
-                            negativeButtonText: context.localization?.cancel,
-                            onNegativeClick: () {
-                              Navigator.pop(context);
-                            },
-                            positiveButtonText:
-                                context.localization?.logSelected,
-                            positiveButtonEnabled:
-                                _advisorFoodInfoList?.hasSelectedItems() ??
-                                    false,
-                            visibleLoadingForPositiveButton:
-                                _visibleLoadingForLog,
-                            onPositiveClick: () {
-                              _bloc.add(
-                                  DoFoodLogEvent(data: _advisorFoodInfoList));
-                            },
-                          )
-                        : const SizedBox.shrink(),
-                  ],
-                )
-              : const SizedBox.shrink(),
-        );
-      },
+    return TakePhotoNavigationDataProvider(
+      returnResult: widget.returnResult,
+      maxLimit: widget.maxLimit,
+      child: BlocProvider(
+        create: (context) => TakePhotoBloc(),
+        child: _TakePhotoScreen(),
+      ),
     );
+    // return BlocConsumer(
+    //   bloc: _bloc,
+    //   listener: (context, state) {
+    //     _handleStateChanges(context, state);
+    //   },
+    //   builder: (context, state) {
+    //     return Scaffold(
+    //       backgroundColor: AppColors.gray50,
+    //       resizeToAvoidBottomInset: false,
+    //       body: _seenIntroDialog
+    //           ? Stack(
+    //               fit: StackFit.expand,
+    //               children: [
+    //                 CameraWidget(
+    //                   key: _cameraKey,
+    //                   resolution: ResolutionPreset.veryHigh,
+    //                 ),
+    //                 ActionButtonsWidget(
+    //                   onNegativeTap: () {
+    //                     Navigator.pop(context);
+    //                   },
+    //                   captureEnabled: _originalImages.length < widget.maxLimit,
+    //                   onCapture: () {
+    //                     _takePicture();
+    //                   },
+    //                   positiveEnabled: _thumbImages.isNotEmpty,
+    //                   visibleLoadingForPositiveButton: _isNextLoading,
+    //                   onPositiveTap: () {
+    //                     if (widget.returnResult) {
+    //                       Navigator.pop(context, _originalImages);
+    //                       return;
+    //                     }
+    //                     _bloc.add(DoNextEvent(images: _originalImages));
+    //                   },
+    //                 ),
+    //                 CarouselSliderWidget(
+    //                   images: _thumbImages,
+    //                   onDelete: (index) {
+    //                     _bloc.add(DoRemoveImageEvent(index: index));
+    //                   },
+    //                 ),
+    //                 Positioned(
+    //                   top: 194.h,
+    //                   left: 24.w,
+    //                   right: 24.w,
+    //                   child: CameraFrameWidget(height: 380.h),
+    //                 ),
+    //                 _advisorFoodInfoList?.isNotEmpty ?? false
+    //                     ? ResultWidget(
+    //                         title: context.localization?.result ?? '',
+    //                         subtitle: ((_advisorFoodInfoList?.length ?? 0) > 0)
+    //                             ? context.localization?.resultDescription ?? ''
+    //                             : '',
+    //                         data: _advisorFoodInfoList,
+    //                         clearVisible:
+    //                             _advisorFoodInfoList?.hasSelectedItems() ??
+    //                                 false,
+    //                         itemBuilder: (BuildContext context, int index) {
+    //                           final data =
+    //                               _advisorFoodInfoList?.elementAt(index);
+    //
+    //                           final advisorInfo = data?.advisorFoodInfoModel;
+    //
+    //                           final foodDataInfo = advisorInfo?.foodDataInfo;
+    //                           final iconId = foodDataInfo?.iconID ?? '';
+    //                           final title = foodDataInfo?.foodName ?? '';
+    //                           final calories =
+    //                               foodDataInfo?.nutritionPreview.calories ?? 0;
+    //
+    //                           final servingQuantity = foodDataInfo
+    //                                   ?.nutritionPreview.servingQuantity ??
+    //                               0;
+    //                           final servingUnit =
+    //                               foodDataInfo?.nutritionPreview.servingUnit ??
+    //                                   '';
+    //                           final formattedWeight =
+    //                               '$servingQuantity $servingUnit';
+    //
+    //                           final subtitle =
+    //                               '$formattedWeight | $calories ${context.localization?.cal}';
+    //
+    //                           final isSelected = data?.isSelected ?? false;
+    //
+    //                           return FoodItemRowWidget(
+    //                             data: FoodItemRowData(
+    //                               iconId: iconId,
+    //                               title: title,
+    //                               subtitle: subtitle,
+    //                               isAddVisible: false,
+    //                               padding: EdgeInsets.zero,
+    //                               decoration: BoxDecoration(
+    //                                   color: isSelected
+    //                                       ? AppColors.indigo50
+    //                                       : null),
+    //                               suffix: IconButton(
+    //                                 onPressed: () {
+    //                                   if (data != null) {
+    //                                     _bloc.add(UpdateSelectionEvent(
+    //                                         data: _advisorFoodInfoList,
+    //                                         index: index));
+    //                                   }
+    //                                 },
+    //                                 icon: SelectionIndicator(
+    //                                     isSelected: isSelected),
+    //                               ),
+    //                               onTap: () {
+    //                                 if (data != null) {
+    //                                   _bloc.add(UpdateSelectionEvent(
+    //                                       data: _advisorFoodInfoList,
+    //                                       index: index));
+    //                                 }
+    //                               },
+    //                               enableSlidable: false,
+    //                             ),
+    //                           );
+    //                         },
+    //                         emptyBuilder: () {
+    //                           return Center(
+    //                             child: Text(
+    //                               context.localization?.noResultsFound ?? '',
+    //                               style: AppTextStyle.textSm,
+    //                             ),
+    //                           );
+    //                         },
+    //                         onClear: () {
+    //                           _bloc.add(ClearSelectionEvent(
+    //                               data: _advisorFoodInfoList));
+    //                         },
+    //                         neutralButtonText: context.localization?.retake,
+    //                         onNeutralClick: () {
+    //                           _bloc.add(const InitialEvent());
+    //                         },
+    //                         negativeButtonText: context.localization?.cancel,
+    //                         onNegativeClick: () {
+    //                           Navigator.pop(context);
+    //                         },
+    //                         positiveButtonText:
+    //                             context.localization?.logSelected,
+    //                         positiveButtonEnabled:
+    //                             _advisorFoodInfoList?.hasSelectedItems() ??
+    //                                 false,
+    //                         visibleLoadingForPositiveButton:
+    //                             _visibleLoadingForLog,
+    //                         onPositiveClick: () {
+    //                           _bloc.add(
+    //                               DoFoodLogEvent(data: _advisorFoodInfoList));
+    //                         },
+    //                       )
+    //                     : const SizedBox.shrink(),
+    //               ],
+    //             )
+    //           : const SizedBox.shrink(),
+    //     );
+    //   },
+    // );
   }
 
-  @override
+/*@override
   void dispose() {
     _bloc.close();
     _advisorFoodInfoList = null;
@@ -326,5 +329,5 @@ class _TakePhotoPageState extends State<TakePhotoPage> {
   Future<void> _takePicture() async {
     final xFile = await _cameraKey.currentState?.getController()?.takePicture();
     _bloc.add(DoTakeImageEvent(file: xFile));
-  }
+  }*/
 }
