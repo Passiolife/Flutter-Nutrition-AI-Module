@@ -5,6 +5,7 @@ class AppBorderCircular {
   AppBorderCircular._();
 
   /// Border circular all
+  static BorderRadius ba10 = BorderRadius.all(Radius.circular(10.r));
   static BorderRadius ba16 = BorderRadius.all(Radius.circular(16.r));
 
   /// Border circular top only

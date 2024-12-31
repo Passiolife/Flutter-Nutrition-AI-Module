@@ -5,15 +5,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/extension/context_extension.dart';
+import '../../../../common/widgets/percent_indicator/percent_indicator.dart';
 
-class AnalyzingWidget extends StatefulWidget {
-  const AnalyzingWidget({super.key});
+class GeneratingResultWidget extends StatefulWidget {
+  const GeneratingResultWidget({super.key});
 
   @override
-  State<AnalyzingWidget> createState() => _AnalyzingWidgetState();
+  State<GeneratingResultWidget> createState() => _GeneratingResultWidgetState();
 }
 
-class _AnalyzingWidgetState extends State<AnalyzingWidget> {
+class _GeneratingResultWidgetState extends State<GeneratingResultWidget> {
   // Timer for managing the analysis progress updates
   Timer? _analyzeTImer;
 
@@ -31,6 +32,18 @@ class _AnalyzingWidgetState extends State<AnalyzingWidget> {
 
   // Flag to bypass the stopping condition, allowing the analysis to continue past _stopAt
   bool _bypassStop = false;
+
+  @override
+  void didUpdateWidget(covariant GeneratingResultWidget oldWidget) {
+    bool analyze =
+        true; //context.watch<FoodLogCubit>().state.animateAnalyzeProgress;
+    if (analyze) {
+      _startAnalyzeProgress();
+    } else {
+      _finishAnalyzeProgress();
+    }
+    super.didUpdateWidget(oldWidget);
+  }
 
   @override
   void didChangeDependencies() {
@@ -61,40 +74,21 @@ class _AnalyzingWidgetState extends State<AnalyzingWidget> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          LinearProgressIndicator(
-            value: _progress / 100,
-            minHeight: 12.h,
+          PercentIndicator.linear(
+            percentValue: _progress / 100,
+            progressColor: context.theme.primaryColor,
             backgroundColor: context.colorScheme.surface,
-            valueColor:
-                AlwaysStoppedAnimation<Color>(context.theme.primaryColor),
-            borderRadius: BorderRadius.circular(24.r),
+            barRadius: Radius.circular(24.r),
+            progressBorderColor: context.theme.primaryColor,
+            progressBorderSize: 1.r,
+            lineHeight: 12.h,
           ),
           8.verticalSpace,
           Text(
             context.localization?.generatingResults ?? '',
-            style: AppTextStyle.textSm.addAll([AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
+            style: AppTextStyle.textSm
+                .addAll([AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
           ),
-          /*Text(
-            context.translation.analyzing,
-            style: ThemeFonts.labelSmall
-                .merge(ThemeFonts.semiBold)
-                .copyWith(color: ColorConstants.textStrong950),
-          ),
-          Text(
-            '$_progress%',
-            style: ThemeFonts.paragraphMedium
-                .merge(ThemeFonts.regular)
-                .copyWith(color: ColorConstants.textStrong950),
-          ),
-          4.verticalSpace,
-          LinearProgressIndicator(
-            value: _progress / 100,
-            minHeight: 12.h,
-            backgroundColor: ColorConstants.bgSoft100,
-            valueColor:
-                const AlwaysStoppedAnimation<Color>(ColorConstants.primaryBase),
-            borderRadius: BorderRadius.circular(24.r),
-          ),*/
         ],
       ),
     );

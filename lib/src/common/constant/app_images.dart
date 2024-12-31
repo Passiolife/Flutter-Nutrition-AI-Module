@@ -27,6 +27,8 @@ class AppImages {
   static const icFlashOff = '${iconsDir}ic_flashlight_off.svg';
   static const icCaptureNew = '${iconsDir}ic_capture.svg';
   static const icTrashNew = '${iconsDir}ic_trash.svg';
+  static const icChevronDownNew = '${iconsDir}Ic_chevron_down.svg';
+  static const icChevronUpNew = '${iconsDir}Ic_chevron_up.svg';
 
 
   static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';

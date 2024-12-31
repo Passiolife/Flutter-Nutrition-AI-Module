@@ -13,4 +13,8 @@ abstract class RegExps {
   // Allows only numeric values, including decimals.
   static final RegExp decimalNumber = RegExp(r'^\d+,?\.?\d*');
   // static final RegExp decimalNumber = RegExp(r'^\d+[,.]*\d*$');
+
+  // RegEx for prevent injection attack
+  static String sanitationFormat = r'[<>]';
+
 }

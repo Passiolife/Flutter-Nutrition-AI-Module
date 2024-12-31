@@ -7,7 +7,6 @@ import 'common/router/routes.dart';
 import 'pages/advisor/advisor_page.dart';
 import 'pages/dashboard/dashboard_page.dart';
 import 'pages/edit_food/ui/edit_food_page.dart';
-import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/food_search/food_search_page.dart';
 import 'pages/my_foods/custom_foods/food_creator/barcode_scanner/barcode_scanner_page.dart';
 import 'pages/my_foods/custom_foods/food_creator/food_creator_page.dart';
@@ -15,8 +14,10 @@ import 'pages/my_foods/my_foods_page.dart';
 import 'pages/my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
 import 'pages/my_foods/recipes/recipe_creator/ui/recipe_creator_page.dart';
 import 'pages/my_profile/my_profile_page.dart';
+import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/use_image/select_photo/select_photo_page.dart';
+import 'pages/use_image/take_photo/result/result_screen.dart';
 import 'pages/use_image/take_photo/take_photo_page.dart';
 import 'pages/voice_logging/voice_logging_page.dart';
 
@@ -130,6 +131,8 @@ class NavigationAIPage extends StatelessWidget {
       }
       return TakePhotoPage.route(
           returnResult: returnResult, maxLimit: maxLimit);
+    } else if (settings.name == Routes.takePhotoResult) {
+      return ResultScreen.route();
     } else if (settings.name == Routes.selectPhoto) {
       bool returnResult = false;
       int maxLimit = 7;
@@ -145,14 +148,12 @@ class NavigationAIPage extends StatelessWidget {
           returnResult: returnResult, maxLimit: maxLimit);
     } else if (settings.name == Routes.voiceLogging) {
       return VoiceLoggingPage.route();
-    }  else if (settings.name == Routes.settings) {
+    } else if (settings.name == Routes.settings) {
       return SettingsPage.route();
     } else {
-      return MaterialPageRoute(
-        builder: (context) {
-          return SizedBox.shrink();
-        }
-      );
+      return MaterialPageRoute(builder: (context) {
+        return SizedBox.shrink();
+      });
     }
   }
 }

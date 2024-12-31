@@ -98,6 +98,10 @@ dependencies:
   # A Flutter plugin for finding commonly used locations on the filesystem.
   path_provider: ^2.1.3
 
+  # https://pub.dev/packages/percent_indicator
+  # Circular and Linear percent indicators
+  percent_indicator: ^4.2.4
+
   # https://pub.dev/packages/permission_handler
   # This plugin provides a cross-platform (iOS, Android) API to request permissions and check their status.
   permission_handler: ^11.3.1

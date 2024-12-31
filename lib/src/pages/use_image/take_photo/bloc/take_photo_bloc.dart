@@ -49,7 +49,7 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
     if (event.fromDialog) {
       Settings.instance.setTakePictureIntroSeen(true);
     }
-    emit(const IntroDialogSeenListenerState());
+    // emit(const IntroDialogSeenListenerState());
     emit(const IntroDialogSeenBuilderState());
   }
 

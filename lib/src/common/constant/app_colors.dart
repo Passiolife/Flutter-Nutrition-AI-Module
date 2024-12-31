@@ -56,7 +56,6 @@ class AppColors {
   static const Color green500Normal = Color(0xFF10B981);
   static const Color green900Dark = Color(0xFF064E3B);
 
-
   // Opacity
   static const Color white20Opacity = Color.fromRGBO(255, 255, 255, 0.2);
   static const Color black75Opacity = Color.fromRGBO(0, 0, 0, 0.75);
@@ -93,4 +92,14 @@ class AppColors {
   static const speechRecognizedTextColor = Color(0xFF484848);
 
   static const tutorialBackgroundColor = Color.fromRGBO(107, 114, 128, 0.75);
+
+  //
+  static const Color brandTextLight = Color(0xFF6B7280);
+  static const Color brandTextDark = Color(0xFF111827);
+
+  // Borders
+  static const Color brandBorders = Color(0xFFE5E7EB);
+
+  static const Color brandPrimaryLight = Color(0xFFEEF2FF);
+  static const Color brandBackground = Color(0xFFF9FAFB);
 }

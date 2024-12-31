@@ -26,12 +26,16 @@ extension Dimension on BuildContext {
 
   /// [localization] is use to get the locale string.
   AppLocalizations? get localization => AppLocalizations.instance;
+}
 
+extension ThemeExtension on BuildContext {
   ThemeData get theme => Theme.of(this);
 
   TextTheme get textTheme => theme.textTheme;
 
   ColorScheme get colorScheme => theme.colorScheme;
 
-  AppThemeColors? get appThemeColors => theme.extension<AppThemeColors>();
+  AppThemeColors get themeColors => theme.extension<AppThemeColors>()!;
+
+  AppTextThemeColors get textThemeColors => theme.extension<AppTextThemeColors>()!;
 }

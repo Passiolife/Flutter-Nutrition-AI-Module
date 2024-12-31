@@ -32,7 +32,47 @@ class AppTheme {
         AppThemeColors(
           feedbackErrorColor: AppColors.red600Error,
         ),
+        AppTextThemeColors(
+          brandTextLight: AppColors.brandTextLight,
+          brandTextDark: AppColors.brandTextDark,
+          errorColor: AppColors.red600Error,
+        ),
       ],
+    );
+  }
+}
+
+/// [AppTextThemeColors] is used to declare color which is random use in app.
+class AppTextThemeColors extends ThemeExtension<AppTextThemeColors> {
+  final Color? brandTextLight;
+  final Color? brandTextDark;
+  final Color? errorColor;
+
+  AppTextThemeColors({
+    this.brandTextLight,
+    this.brandTextDark,
+    this.errorColor,
+  });
+
+  @override
+  ThemeExtension<AppTextThemeColors> copyWith() {
+    return AppTextThemeColors(
+      brandTextLight: brandTextLight,
+      brandTextDark: brandTextDark,
+      errorColor: errorColor,
+    );
+  }
+
+  @override
+  ThemeExtension<AppTextThemeColors> lerp(
+      covariant ThemeExtension<AppTextThemeColors>? other, double t) {
+    if (other is! AppTextThemeColors) {
+      return this;
+    }
+    return AppTextThemeColors(
+      brandTextLight: Color.lerp(brandTextLight, other.brandTextLight, t),
+      brandTextDark: Color.lerp(brandTextDark, other.brandTextDark, t),
+      errorColor: Color.lerp(errorColor, other.errorColor, t),
     );
   }
 }
