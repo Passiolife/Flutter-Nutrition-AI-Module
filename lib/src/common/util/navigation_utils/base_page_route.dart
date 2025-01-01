@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class BasePageRoute<T> extends PageRouteBuilder<T> {
-
   final Widget child;
   final Curve curve;
 
@@ -11,11 +10,18 @@ class BasePageRoute<T> extends PageRouteBuilder<T> {
     Duration transitionDuration = const Duration(milliseconds: 300),
     Duration reverseTransitionDuration = const Duration(milliseconds: 300),
     RouteSettings? settings,
+    bool opaque = true,
+    bool barrierDismissible = false,
+    Color? barrierColor,
   }) : super(
           pageBuilder: (context, animation, secondaryAnimation) => child,
           transitionDuration: transitionDuration,
           reverseTransitionDuration: reverseTransitionDuration,
           settings: settings,
+          opaque: opaque,
+          // barrierDismissible: barrierDismissible,
+          // barrierColor: barrierColor,
+          // fullscreenDialog: true,
         );
 
   @override

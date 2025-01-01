@@ -24,8 +24,8 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
           return ResultSection();
         },
       );*/
-      Navigator.pushNamed(context, Routes.takePhotoResult);
-      // _bloc?.add(const DoCheckIntroScreenEvent());
+      // Navigator.pushNamed(context, Routes.takePhotoResult);
+      _bloc?.add(const DoCheckIntroScreenEvent());
     });
     super.initState();
   }
@@ -39,11 +39,18 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: _seenIntroDialog
-            ? Stack(
+            ? Column(
                 children: [
-                  const CameraSection(),
-                  const CameraFrameSection(),
-                  const CapturedImagesSection(),
+                  TakePhotoHeaderSection(),
+                  Expanded(
+                    child: Stack(
+                      children: [
+                        const CameraSection(),
+                        const CameraFrameSection(),
+                        const CapturedImagesSection(),
+                      ],
+                    ),
+                  ),
                 ],
               )
             : const SizedBox.shrink(),
@@ -53,17 +60,17 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
 
   void _handleStateChanges(BuildContext context, TakePhotoState state) {
     if (state is ShowIntroDialogListenerState) {
-      // ShowWidgetUtil.showCustomGeneralDialog(
-      //   context: context,
-      //   pageBuilder: (dContext, anim1, anim2) {
-      //     return IntroWidget(
-      //       onTap: () {
-      //         Navigator.pop(context);
-      //         _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-      //       },
-      //     );
-      //   },
-      // );
+      ShowWidgetUtil.showCustomGeneralDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return IntroWidget(
+            onTap: () {
+              Navigator.pop(context);
+              _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
+            },
+          );
+      },
+      );
     }
     // if (state is ListenerState) {
     //   switch (state) {

@@ -17,6 +17,9 @@ class AppTheme {
       primaryColor: AppColors.indigo600Main,
       primaryColorDark: AppColors.indigo600Dark,
       primaryColorLight: AppColors.indigo600Light,
+      appBarTheme: AppBarTheme(
+        surfaceTintColor: AppColors.transparent,
+      ),
       colorScheme: ColorScheme(
         brightness: Brightness.light,
         primary: AppColors.indigo600Main,
@@ -37,12 +40,40 @@ class AppTheme {
           brandTextDark: AppColors.brandTextDark,
           errorColor: AppColors.red600Error,
         ),
+        AppIconThemeColors(
+          brandIconLight: AppColors.brandIconLight,
+        ),
       ],
     );
   }
 }
 
-/// [AppTextThemeColors] is used to declare color which is random use in app.
+class AppIconThemeColors extends ThemeExtension<AppIconThemeColors> {
+  final Color? brandIconLight;
+
+  AppIconThemeColors({
+    this.brandIconLight,
+  });
+
+  @override
+  ThemeExtension<AppIconThemeColors> copyWith() {
+    return AppIconThemeColors(
+      brandIconLight: brandIconLight,
+    );
+  }
+
+  @override
+  ThemeExtension<AppIconThemeColors> lerp(
+      covariant ThemeExtension<AppIconThemeColors>? other, double t) {
+    if (other is! AppIconThemeColors) {
+      return this;
+    }
+    return AppIconThemeColors(
+      brandIconLight: Color.lerp(brandIconLight, other.brandIconLight, t),
+    );
+  }
+}
+
 class AppTextThemeColors extends ThemeExtension<AppTextThemeColors> {
   final Color? brandTextLight;
   final Color? brandTextDark;
@@ -77,7 +108,6 @@ class AppTextThemeColors extends ThemeExtension<AppTextThemeColors> {
   }
 }
 
-/// [AppThemeColors] is used to declare color which is random use in app.
 class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color? feedbackErrorColor;
 

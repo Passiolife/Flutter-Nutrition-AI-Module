@@ -376,6 +376,9 @@
   "result": "Results",
   "resultDescription": "Select the foods you would like to log",
   "permission": "Permission",
+  "done": "Done",
+  "error": "Error",
+  "timestamp": "Timestamp",
 
 
   "@voiceLoggingPage": {
@@ -389,6 +392,20 @@
   "stopListening": "Stop Listening",
   "microphonePermissionMessage": "App requires microphone access to capture your voice for food recognition.",
   "speechRecognitionPermissionMessage": "App requires speech recognition access to retrieve a list of recognized foods from your speech queries.",
-  "yourResults": "Your Results"
+  "yourResults": "Your Results",
 
+  "@TakePhotoResultPage": {
+    "description": "Used within the Take Photo Result Page for all subsequent translations."
+  },
+  "adjustServingSize": "Adjust Serving Size",
+  "editNutritionFacts": "Edit Nutrition Facts",
+  "portions": "Portions",
+  "unit": "Unit",
+  "youHaveDeniedCameraAccess": "You have denied camera access.",
+  "pleaseGoToSettingsAppToEnableCameraAccess": "Please go to Settings app to enable camera access.",
+  "cameraAccessIsRestricted": "Camera access is restricted.",
+  "youHaveDeniedAudioAccess": "You have denied audio access.",
+  "pleaseGoToSettingsAppToEnableAudioAccess": "Please go to Settings app to enable audio access.",
+  "audioAccessIsRestricted": "Audio access is restricted.",
+  "frontCameraFlashlightIsNotSupportedOnThisDevice": "Front camera flashlight is not supported on this device."
 }

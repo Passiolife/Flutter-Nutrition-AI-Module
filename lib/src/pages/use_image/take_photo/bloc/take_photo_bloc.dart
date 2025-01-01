@@ -23,6 +23,7 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
 
   TakePhotoBloc() : super(const TakePhotoInitialBuilderState()) {
     on<DoCheckIntroScreenEvent>(_handleDoCheckIntroScreenEvent);
+    on<ShowIntroScreenEvent>(_handleShowIntroScreenEvent);
     on<DoIntroScreenCompletedEvent>(_handleDoIntroScreenCompletedEvent);
     on<InitialEvent>(_handleInitialEvent);
     on<DoNextEvent>(_handleDoNextEvent);
@@ -44,18 +45,24 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
     }
   }
 
+  FutureOr<void> _handleShowIntroScreenEvent(
+      ShowIntroScreenEvent event, Emitter<TakePhotoState> emit) {
+    emit(const ShowIntroDialogListenerState());
+  }
+
   FutureOr<void> _handleDoIntroScreenCompletedEvent(
       DoIntroScreenCompletedEvent event, Emitter<TakePhotoState> emit) {
     if (event.fromDialog) {
       Settings.instance.setTakePictureIntroSeen(true);
     }
-    // emit(const IntroDialogSeenListenerState());
     emit(const IntroDialogSeenBuilderState());
   }
 
   FutureOr<void> _handleInitialEvent(
       InitialEvent event, Emitter<TakePhotoState> emit) {
-    emit(const TakePhotoInitialListenerState());
+    _images = [];
+    _resizedImages = [];
+    // emit(const TakePhotoInitialListenerState());
     emit(const TakePhotoInitialBuilderState());
   }
 

@@ -41,5 +41,6 @@ class AppPadding {
   static EdgeInsets ph8 = EdgeInsets.symmetric(horizontal: 8.w);
   static EdgeInsets ph12 = EdgeInsets.symmetric(horizontal: 12.w);
   static EdgeInsets ph16 = EdgeInsets.symmetric(horizontal: 16.w);
+  static EdgeInsets ph24 = EdgeInsets.symmetric(horizontal: 24.w);
   static EdgeInsets ph40 = EdgeInsets.symmetric(horizontal: 40.w);
 }

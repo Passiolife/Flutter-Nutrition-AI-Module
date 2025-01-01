@@ -32,7 +32,7 @@ class IntroWidget extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                context.localization?.takePictureIntroTitle ?? '',
+                context.localization.takePictureIntroTitle ?? '',
                 style: AppTextStyle.textXl.addAll([
                   AppTextStyle.textXl.leading6,
                   AppTextStyle.bold
@@ -46,7 +46,7 @@ class IntroWidget extends StatelessWidget {
               ),
               24.verticalSpace,
               Text(
-                context.localization?.takePictureIntroSubtitle ?? '',
+                context.localization.takePictureIntroSubtitle ?? '',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.textLg
                     .addAll([]).copyWith(color: AppColors.black),
@@ -55,7 +55,7 @@ class IntroWidget extends StatelessWidget {
               IntrinsicWidth(
                 child: AppButton(
                   onTap: onTap,
-                  buttonText: context.localization?.ok,
+                  buttonText: context.localization.ok,
                   appButtonModel: AppButtonStyles.primary.copyWith(
                     decoration: BoxDecoration(
                       color: AppButtonStyles.primary.decoration?.color,

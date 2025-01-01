@@ -14,7 +14,7 @@ class AppTextStyle {
         fontSize: fontSize,
         fontWeight: FontWeight.w400,
         height: lineHeight,
-        color: AppColors.black
+        color: AppColors.brandTextDark
         // package: AppConstants.packageName,
         );
   }
@@ -26,9 +26,9 @@ class AppTextStyle {
 
   // Text styles for different sizes using the getTextStyle function
   static TextStyle text3xs =
-  _getTextStyle(8.sp, calculateLineHeight(9.68, 8.sp));
+      _getTextStyle(8.sp, calculateLineHeight(9.68, 8.sp));
   static TextStyle text2xs =
-  _getTextStyle(10.sp, calculateLineHeight(12.1, 10.sp));
+      _getTextStyle(10.sp, calculateLineHeight(12.1, 10.sp));
   static TextStyle textXs =
       _getTextStyle(12.sp, calculateLineHeight(14.52, 12.sp)); // text-xs
   static TextStyle textSm =

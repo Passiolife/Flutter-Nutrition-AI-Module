@@ -791,4 +791,36 @@ class AppLocalizations {
   String? get upc => getLabel('upc');
 
   String? get yourResults => getLabel('yourResults');
+
+  String? get adjustServingSize => getLabel('adjustServingSize');
+
+  String? get done => getLabel('done');
+
+  String? get editNutritionFacts => getLabel('editNutritionFacts');
+
+  String? get portions => getLabel('portions');
+
+  String? get unit => getLabel('unit');
+
+  String? get youHaveDeniedCameraAccess =>
+      getLabel('youHaveDeniedCameraAccess');
+
+  String? get pleaseGoToSettingsAppToEnableCameraAccess =>
+      getLabel('pleaseGoToSettingsAppToEnableCameraAccess');
+
+  String? get cameraAccessIsRestricted => getLabel('cameraAccessIsRestricted');
+
+  String? get youHaveDeniedAudioAccess => getLabel('youHaveDeniedAudioAccess');
+
+  String? get pleaseGoToSettingsAppToEnableAudioAccess =>
+      getLabel('pleaseGoToSettingsAppToEnableAudioAccess');
+
+  String? get audioAccessIsRestricted => getLabel('audioAccessIsRestricted');
+
+  String? get frontCameraFlashlightIsNotSupportedOnThisDevice =>
+      getLabel('frontCameraFlashlightIsNotSupportedOnThisDevice');
+
+  String? get error => getLabel('error');
+
+  String? get timestamp => getLabel('timestamp');
 }

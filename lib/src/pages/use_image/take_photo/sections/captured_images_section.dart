@@ -43,10 +43,13 @@ class _CapturedImagesSectionState extends State<CapturedImagesSection> {
   Widget build(BuildContext context) {
     return BlocBuilder<TakePhotoBloc, TakePhotoState>(
       buildWhen: (_, state) {
-        return state is TakePhotoSuccessListenerState || state is RemovePhotoListenerState;
+        return state is TakePhotoInitialBuilderState || state is TakePhotoSuccessListenerState || state is RemovePhotoListenerState;
       },
       builder: (context, state) {
-        if(state is TakePhotoSuccessListenerState) {
+        if (state is TakePhotoInitialBuilderState) {
+          _images = [];
+        }
+        else if(state is TakePhotoSuccessListenerState) {
           _images = state.resizedImages;
           if (_controller.page?.toInt() != 0) {
             _controller.animateToPage(0,

@@ -25,7 +25,7 @@ extension Dimension on BuildContext {
   double get safeAreaPadding => topPadding + bottomPadding;
 
   /// [localization] is use to get the locale string.
-  AppLocalizations? get localization => AppLocalizations.instance;
+  AppLocalizations get localization => AppLocalizations.instance;
 }
 
 extension ThemeExtension on BuildContext {
@@ -37,5 +37,9 @@ extension ThemeExtension on BuildContext {
 
   AppThemeColors get themeColors => theme.extension<AppThemeColors>()!;
 
-  AppTextThemeColors get textThemeColors => theme.extension<AppTextThemeColors>()!;
+  AppTextThemeColors get textThemeColors =>
+      theme.extension<AppTextThemeColors>()!;
+
+  AppIconThemeColors get iconThemeColors =>
+      theme.extension<AppIconThemeColors>()!;
 }

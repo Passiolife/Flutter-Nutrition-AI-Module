@@ -2,6 +2,7 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../common/router/routes.dart';
 import '../bloc/take_photo_bloc.dart';
 import '../models/take_photo_navigation_data_provider.dart';
 import '../widgets/camera_control_widget.dart';
@@ -35,11 +36,12 @@ class _CameraSectionState extends State<CameraSection> {
                 state is RemovePhotoListenerState;
           },
           builder: (context, state) {
-            int length = (state is TakePhotoSuccessListenerState)
-                ? state.images.length
+            final images = (state is TakePhotoSuccessListenerState)
+                ? state.images
                 : (state is RemovePhotoListenerState)
-                    ? state.images.length
-                    : 0;
+                    ? state.images
+                    : [];
+            int length = images.length;
             return CameraControlWidget(
               onNegativeTap: () {
                 Navigator.pop(context);
@@ -49,6 +51,10 @@ class _CameraSectionState extends State<CameraSection> {
               },
               captureEnabled: length < navigationData.maxLimit,
               positiveEnabled: length > 0,
+              onPositiveTap: () {
+                Navigator.pushNamed(context, Routes.takePhotoResult, arguments: images);
+                _bloc?.add(const InitialEvent());
+              },
             );
           },
         ),

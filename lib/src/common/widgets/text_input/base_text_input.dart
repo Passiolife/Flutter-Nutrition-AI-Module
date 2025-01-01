@@ -131,6 +131,7 @@ class BaseTextInput extends StatelessWidget {
             excludeSemantics: true,
             label: 'text-input-$accessibilityLabel',
             child: TextFormField(
+
               controller: controller,
               validator: validator,
               inputFormatters: [

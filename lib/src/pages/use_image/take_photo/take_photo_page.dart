@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../common/extension/context_extension.dart';
 import '../../../common/router/routes.dart';
 import '../../../common/util/show_widget_util.dart';
 import 'bloc/take_photo_bloc.dart';
@@ -10,7 +9,7 @@ import 'models/take_photo_navigation_data_provider.dart';
 import 'sections/camera_frame_section.dart';
 import 'sections/camera_section.dart';
 import 'sections/captured_images_section.dart';
-import 'sections/result_section.dart';
+import 'sections/take_photo_header_section.dart';
 import 'widgets/intro_widget.dart';
 
 part 'screen/take_photo_screen.dart';

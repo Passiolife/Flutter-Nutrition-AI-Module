@@ -3,19 +3,19 @@ import 'dart:developer';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
-import 'package:permission_handler/permission_handler.dart';
+import 'package:flutter/scheduler.dart';
 
 import '../../../../common/extension/context_extension.dart';
-import '../../../../common/util/permission_manager_utility.dart';
 import '../../../../common/util/snackbar_extension.dart';
-import '../../../../common/widgets/adaptive_loader.dart';
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({
+    this.lensDirection = CameraLensDirection.back,
     this.resolution = ResolutionPreset.max,
     super.key,
   });
 
+  final CameraLensDirection lensDirection;
   final ResolutionPreset resolution;
 
   @override
@@ -29,9 +29,9 @@ class CameraWidgetState extends State<CameraWidget> {
   CameraController? _controller;
   String _error = '';
 
-  // Instance of PermissionManagerUtility to handle permissions
-  final PermissionManagerUtility _permissionManager =
-      PermissionManagerUtility();
+  List<CameraDescription> _cameras = [];
+
+  CameraLensDirection? _lensDirection;
 
   @override
   void initState() {
@@ -55,47 +55,36 @@ class CameraWidgetState extends State<CameraWidget> {
       );
     } else {
       if (_controller != null) {
-        return Positioned.fill(
-          child: CameraPreview(_controller!),
+        return SizedBox(
+          width: context.width, // Full screen width
+          height: context.height, // Full screen height
+          child: FittedBox(
+            fit: BoxFit
+                .cover, // Scales CameraPreview to cover the entire container
+            child: SizedBox(
+              width: context
+                  .width, // Ensures CameraPreview has a defined width for scaling
+              child: CameraPreview(_controller!), // Displays the camera preview
+            ),
+          ),
         );
       } else {
-        return const Align(
-          alignment: Alignment.center,
-          child: AdaptiveLoader(),
-        );
+        return const SizedBox.shrink();
       }
     }
   }
 
   void _initialize() {
+    _lensDirection = widget.lensDirection;
     _lifecycleListener = AppLifecycleListener(
       // Callback function triggered on app lifecycle state change
       onStateChange: (state) {
-        // Call permission manager to handle app lifecycle state change
-        _permissionManager.didChangeAppLifecycleState(state);
         _handleAppLifecycleState(state);
       },
     );
-    _checkPermission();
-  }
-
-  // Check camera permission
-  Future _checkPermission() async {
-    await PermissionManagerUtility().request(
-      context,
-      Permission.camera,
-      title: context.localization?.permission,
-      message: context.localization?.cameraPermissionMessage,
-      onTapCancelForSettings: (contextPermission) {
-        Navigator.pop(contextPermission);
-        Navigator.pop(context);
-      },
-      onUpdateStatus: (Permission? permission) async {
-        if ((await permission?.isGranted) ?? false) {
-          _initializeCamera();
-        }
-      },
-    );
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _initializeCamera();
+    });
   }
 
   void _handleAppLifecycleState(AppLifecycleState state) {
@@ -107,7 +96,7 @@ class CameraWidgetState extends State<CameraWidget> {
     }
 
     if (state == AppLifecycleState.inactive) {
-      cameraController.dispose();
+      // cameraController.dispose();
     } else if (state == AppLifecycleState.resumed) {
       _initializeCameraController(cameraController.description);
     }
@@ -115,9 +104,12 @@ class CameraWidgetState extends State<CameraWidget> {
 
   Future<void> _initializeCamera() async {
     try {
-      final cameras = await getAvailableCameras();
-      if (cameras.isNotEmpty) {
-        _initializeCameraController(cameras.first);
+      _cameras = await getAvailableCameras();
+      if (_cameras.isNotEmpty) {
+        final description = _cameras.firstWhere(
+            (e) => e.lensDirection == _lensDirection,
+            orElse: () => _cameras.first);
+        _initializeCameraController(description);
       }
     } catch (e) {
       setState(() {
@@ -144,7 +136,8 @@ class CameraWidgetState extends State<CameraWidget> {
       }
       if (cameraController.value.hasError) {
         context.showSnackbar(
-            text: 'Camera error ${cameraController.value.errorDescription}');
+            text:
+            '${context.localization.error} ${cameraController.value.errorDescription}');
       }
     });
 
@@ -164,23 +157,27 @@ class CameraWidgetState extends State<CameraWidget> {
   void _handleCameraException(CameraException e) {
     switch (e.code) {
       case 'CameraAccessDenied':
-        context.showSnackbar(text: 'You have denied camera access.');
+        context.showSnackbar(
+            text: context.localization.youHaveDeniedCameraAccess);
       case 'CameraAccessDeniedWithoutPrompt':
         // iOS only
         context.showSnackbar(
-            text: 'Please go to Settings app to enable camera access.');
+            text:
+                context.localization.pleaseGoToSettingsAppToEnableCameraAccess);
       case 'CameraAccessRestricted':
         // iOS only
-        context.showSnackbar(text: 'Camera access is restricted.');
+        context.showSnackbar(
+            text: context.localization.cameraAccessIsRestricted);
       case 'AudioAccessDenied':
-        context.showSnackbar(text: 'You have denied audio access.');
+        context.showSnackbar(
+            text: context.localization.youHaveDeniedAudioAccess);
       case 'AudioAccessDeniedWithoutPrompt':
         // iOS only
         context.showSnackbar(
-            text: 'Please go to Settings app to enable audio access.');
+            text: context.localization.pleaseGoToSettingsAppToEnableAudioAccess);
       case 'AudioAccessRestricted':
         // iOS only
-        context.showSnackbar(text: 'Audio access is restricted.');
+        context.showSnackbar(text: context.localization.audioAccessIsRestricted);
       default:
         _showCameraException(e);
         break;
@@ -189,7 +186,8 @@ class CameraWidgetState extends State<CameraWidget> {
 
   void _showCameraException(CameraException e) {
     log('${e.code}, ${e.description}');
-    context.showSnackbar(text: 'Error: ${e.code}\n${e.description}');
+    context.showSnackbar(
+        text: '${context.localization.error}: ${e.code}\n${e.description}');
   }
 
   CameraController? getController() {
@@ -198,5 +196,28 @@ class CameraWidgetState extends State<CameraWidget> {
 
   Future<List<CameraDescription>> getAvailableCameras() async {
     return await availableCameras();
+  }
+
+  Future<XFile?> takePicture() async {
+    return _controller?.takePicture();
+  }
+
+  Future<void> enableFlashlight({required FlashMode mode}) async {
+    try {
+      return await _controller?.setFlashMode(mode);
+    } on CameraException catch (e) {
+      if (e.code == 'setFlashModeFailed') {
+        if (_lensDirection == CameraLensDirection.front) {
+          context.showSnackbar(
+              text: context
+                  .localization.frontCameraFlashlightIsNotSupportedOnThisDevice);
+        }
+      }
+    }
+  }
+
+  Future<void> changeCameraLens(CameraLensDirection lensDirection) async {
+    _lensDirection = lensDirection;
+    await _initializeCamera();
   }
 }

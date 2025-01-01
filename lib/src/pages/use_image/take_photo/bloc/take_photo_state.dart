@@ -86,12 +86,6 @@ final class ShowIntroDialogListenerState extends ListenerState {
   List<Object?> get props => [];
 }
 
-final class IntroDialogSeenListenerState extends ListenerState {
-  const IntroDialogSeenListenerState();
-
-  @override
-  List<Object?> get props => [];
-}
 
 // Builders
 sealed class BuilderState extends TakePhotoState {

@@ -1,0 +1,30 @@
+import 'package:flutter/material.dart';
+
+import '../../constant/app_button_styles.dart';
+import '../../constant/app_padding.dart';
+import '../app_button.dart';
+
+class PrimaryButton extends StatelessWidget {
+  const PrimaryButton({
+    this.text,
+    this.padding,
+    this.onTap,
+    super.key,
+  });
+
+  final String? text;
+  final EdgeInsets? padding;
+  final VoidCallback? onTap;
+
+  EdgeInsets get _defaultPadding => AppPadding.ph40 + AppPadding.pv12;
+
+  @override
+  Widget build(BuildContext context) {
+    return AppButton(
+      buttonText: text,
+      appButtonModel:
+          AppButtonStyles.primary.copyWith(padding: padding ?? _defaultPadding),
+      onTap: onTap,
+    );
+  }
+}

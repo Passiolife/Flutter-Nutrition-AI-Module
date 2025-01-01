@@ -102,4 +102,8 @@ class AppColors {
 
   static const Color brandPrimaryLight = Color(0xFFEEF2FF);
   static const Color brandBackground = Color(0xFFF9FAFB);
+
+  // Icons
+  static const Color brandIconLight = Color(0xFF9CA3AF);
+
 }

@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../nutrition_ai_module.dart';
@@ -17,8 +19,8 @@ import 'pages/my_profile/my_profile_page.dart';
 import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/use_image/select_photo/select_photo_page.dart';
-import 'pages/use_image/take_photo/result/result_screen.dart';
 import 'pages/use_image/take_photo/take_photo_page.dart';
+import 'pages/use_image/take_photo/take_photo_result/take_photo_result_page.dart';
 import 'pages/voice_logging/voice_logging_page.dart';
 
 final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
@@ -132,7 +134,11 @@ class NavigationAIPage extends StatelessWidget {
       return TakePhotoPage.route(
           returnResult: returnResult, maxLimit: maxLimit);
     } else if (settings.name == Routes.takePhotoResult) {
-      return ResultScreen.route();
+      List<Uint8List>? capturedImages = [];
+      if(arguments is List<Uint8List>) {
+        capturedImages = arguments;
+      }
+      return TakePhotoResultPage.route(capturedImages: capturedImages);
     } else if (settings.name == Routes.selectPhoto) {
       bool returnResult = false;
       int maxLimit = 7;

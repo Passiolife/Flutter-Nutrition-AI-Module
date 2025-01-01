@@ -75,6 +75,13 @@ final class DoFoodLogEvent extends TakePhotoEvent {
   List<Object?> get props => [data];
 }
 
+final class ShowIntroScreenEvent extends TakePhotoEvent {
+  const ShowIntroScreenEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class DoCheckIntroScreenEvent extends TakePhotoEvent {
   const DoCheckIntroScreenEvent();
 

@@ -1,14 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../common/constant/app_constants.dart';
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/widgets/percent_indicator/percent_indicator.dart';
+import '../../../../../common/constant/app_constants.dart';
+import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/widgets/percent_indicator/percent_indicator.dart';
 
 class GeneratingResultWidget extends StatefulWidget {
-  const GeneratingResultWidget({super.key});
+  const GeneratingResultWidget({this.shouldFinish = false, super.key});
+  final bool shouldFinish;
 
   @override
   State<GeneratingResultWidget> createState() => _GeneratingResultWidgetState();
@@ -35,26 +37,25 @@ class _GeneratingResultWidgetState extends State<GeneratingResultWidget> {
 
   @override
   void didUpdateWidget(covariant GeneratingResultWidget oldWidget) {
-    bool analyze =
-        true; //context.watch<FoodLogCubit>().state.animateAnalyzeProgress;
-    if (analyze) {
-      _startAnalyzeProgress();
-    } else {
+    if(widget.shouldFinish) {
       _finishAnalyzeProgress();
     }
+    // bool analyze =
+    //     true; //context.watch<FoodLogCubit>().state.animateAnalyzeProgress;
+    // if (analyze) {
+    //   _startAnalyzeProgress();
+    // } else {
+    //   _finishAnalyzeProgress();
+    // }
     super.didUpdateWidget(oldWidget);
   }
 
   @override
-  void didChangeDependencies() {
-    bool analyze =
-        true; //context.watch<FoodLogCubit>().state.animateAnalyzeProgress;
-    if (analyze) {
+  void initState() {
+    SchedulerBinding.instance.addPostFrameCallback((_) {
       _startAnalyzeProgress();
-    } else {
-      _finishAnalyzeProgress();
-    }
-    super.didChangeDependencies();
+    });
+    super.initState();
   }
 
   @override
