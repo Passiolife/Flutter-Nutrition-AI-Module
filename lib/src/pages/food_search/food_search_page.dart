@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../nutrition_ai_module.dart';
 import '../../common/constant/app_constants.dart';
 import '../../common/constant/app_padding.dart';
-import '../../common/domain/use_cases/food_logs/add_food_log_use_case.dart';
-import '../../common/router/routes.dart';
+import '../../common/data/repository/food_log_repositoy_impl.dart';
 import '../../common/extension/context_extension.dart';
+import '../../common/router/routes.dart';
 import '../../common/util/snackbar_extension.dart';
 import 'bloc/food_search_bloc.dart';
 import 'models/navigation_data_provider.dart';
@@ -40,10 +41,13 @@ class FoodSearchPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final connector = NutritionAIModule.instance.configuration.connector;
+    final foodRepository = FoodLogRepositoryImpl(connector: connector);
+
     return SearchNavigationDataProvider(
       needsReturn: needsReturn,
       child: BlocProvider<FoodSearchBloc>(
-        create: (_) => FoodSearchBloc(addFoodLogUseCase: AddFoodLogUseCase()),
+        create: (_) => FoodSearchBloc(foodLogRepository: foodRepository),
         child: FoodSearchScreen(),
       ),
     );

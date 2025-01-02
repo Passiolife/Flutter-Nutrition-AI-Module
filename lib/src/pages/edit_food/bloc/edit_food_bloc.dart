@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/constant/app_constants.dart';
-import '../../../common/models/food_record/meal_label.dart';
 import '../ui/widgets/typedefs.dart';
 
 part 'edit_food_event.dart';

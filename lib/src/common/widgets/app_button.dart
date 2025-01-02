@@ -57,27 +57,29 @@ class _AppButtonState extends State<AppButton> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: widget.isEnable ? _handleTap : null,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 250),
-        decoration: widget.appButtonModel.decoration?.copyWith(
-          color: widget.isEnable
-              ? widget.appButtonModel.decoration?.color
-              : widget.appButtonModel.decoration?.color?.withOpacity(0.5),
-        ),
-        padding: widget.appButtonModel.padding,
-        child: Center(
-          child: !widget.isLoading
-              ? Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    widget.prefix ?? const SizedBox.shrink(),
-                    Text(
-                      widget.buttonText ?? '',
-                      style: widget.appButtonModel.textStyle,
-                    ),
-                  ],
-                )
-              : widget.loadingWidget ?? AppLoadingButtonWidget.primary(),
+      child: AnimatedOpacity(
+        opacity: widget.isEnable ? 1.0 : 0.5,
+        duration: Duration(milliseconds: 250),
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 250),
+          decoration: widget.appButtonModel.decoration?.copyWith(
+            color: widget.appButtonModel.decoration?.color,
+          ),
+          padding: widget.appButtonModel.padding,
+          child: Center(
+            child: !widget.isLoading
+                ? Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      widget.prefix ?? const SizedBox.shrink(),
+                      Text(
+                        widget.buttonText ?? '',
+                        style: widget.appButtonModel.textStyle,
+                      ),
+                    ],
+                  )
+                : widget.loadingWidget ?? AppLoadingButtonWidget.primary(),
+          ),
         ),
       ),
     );

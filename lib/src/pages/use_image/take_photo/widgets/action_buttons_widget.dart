@@ -42,7 +42,7 @@ class ActionButtonsWidget extends StatelessWidget {
               duration: const Duration(milliseconds: 250),
               opacity: negativeEnabled ? 1 : 0.4,
               child: AppButton(
-                buttonText: context.localization?.cancel,
+                buttonText: context.localization.cancel,
                 appButtonModel: AppButtonStyles.primaryBordered,
                 onTap: negativeEnabled ? onNegativeTap : null,
               ),
@@ -72,7 +72,7 @@ class ActionButtonsWidget extends StatelessWidget {
                     : null,
                 buttonText: visibleLoadingForPositiveButton
                     ? ''
-                    : context.localization?.next,
+                    : context.localization.next,
                 appButtonModel: positiveEnabled
                     ? AppButtonStyles.primary
                     : AppButtonStyles.primary.copyWith(

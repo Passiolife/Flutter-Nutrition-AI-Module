@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DailyNutritionModel {
   final String title;
-  final String subtitle;
+  final String? subtitle;
   final String footer;
 
   final double value;
@@ -12,7 +12,7 @@ class DailyNutritionModel {
 
   DailyNutritionModel({
     required this.title,
-    required this.subtitle,
+    this.subtitle,
     required this.footer,
     required this.value,
     required this.progressColor,

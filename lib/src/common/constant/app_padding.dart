@@ -11,8 +11,10 @@ class AppPadding {
 
   /// Padding Left
   static EdgeInsets pl8 = EdgeInsets.only(left: 8.w);
+  static EdgeInsets pl16 = EdgeInsets.only(left: 16.w);
 
   /// Padding Right
+  static EdgeInsets pr8 = EdgeInsets.only(right: 8.w);
   static EdgeInsets pr16 = EdgeInsets.only(right: 16.w);
 
   /// Padding Top

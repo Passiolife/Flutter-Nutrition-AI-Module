@@ -44,3 +44,40 @@ final class DoProcessEvent extends TakePhotoResultEvent {
   @override
   List<Object?> get props => [images];
 }
+
+final class SelectFoodItemEvent extends TakePhotoResultEvent {
+  const SelectFoodItemEvent({
+    required this.index,
+    required this.isSelected,
+  });
+
+  final int index;
+  final bool isSelected;
+
+  @override
+  List<Object?> get props => [index, isSelected];
+}
+
+final class UpdateMacroNutrientEvent extends TakePhotoResultEvent {
+  const UpdateMacroNutrientEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class UpdateActionButtonsEvent extends TakePhotoResultEvent {
+  const UpdateActionButtonsEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class UpdateServingSizeEvent extends TakePhotoResultEvent {
+  const UpdateServingSizeEvent({required this.index, required this.foodRecord});
+
+  final int index;
+  final FoodRecord foodRecord;
+
+  @override
+  List<Object?> get props => [foodRecord];
+}

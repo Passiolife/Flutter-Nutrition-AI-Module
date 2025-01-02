@@ -105,7 +105,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
         children: [
           RichText(
             text: TextSpan(
-              text: context.localization?.servingSize,
+              text: context.localization.servingSize,
               style: AppTextStyle.textBase.addAll([
                 AppTextStyle.textBase.leading6,
                 AppTextStyle.semiBold

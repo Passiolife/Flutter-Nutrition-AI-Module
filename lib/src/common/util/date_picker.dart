@@ -4,12 +4,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../constant/app_constants.dart';
-import '../widgets/app_button.dart';
 import '../extension/context_extension.dart';
+import '../widgets/app_button.dart';
 
 typedef OnDateTimeChanged = Function(DateTime dateTime);
 
 class DatePicker {
+  const DatePicker._();
+
   static Future showAdaptive({
     required BuildContext context,
     DateTime? selectedDate,

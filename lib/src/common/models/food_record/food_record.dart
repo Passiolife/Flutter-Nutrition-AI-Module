@@ -411,6 +411,23 @@ class FoodRecord {
     return true;
   }
 
+  bool setUnitWithQuantityAdjustment(String unit) {
+    if (_selectedUnit == unit) return true;
+    if (servingUnits.cast<PassioServingUnit?>().firstWhere(
+            (element) => element?.unitName == unit,
+        orElse: () => null) ==
+        null) {
+      return false;
+    }
+
+    _selectedUnit = unit;
+    _selectedQuantity = (_selectedUnit == 'gram')
+        ? 100
+        : 1;
+    _calculateQuantityForIngredients();
+    return true;
+  }
+
   bool setSelectedServingSize(String unit) {
     if (_selectedUnit == unit) return true;
     final servingSize = servingSizes

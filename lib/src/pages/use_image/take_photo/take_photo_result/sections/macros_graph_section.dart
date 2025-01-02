@@ -15,46 +15,45 @@ class MacrosGraphSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TakePhotoResultBloc, TakePhotoResultState>(
       buildWhen: (_, state) {
-        return state is TakePhotoResultInitial || state is ResultsSuccessState;
+        return state is TakePhotoResultInitial || state is UpdateMacroNutrientState;
       },
       builder: (context, state) {
-        if (state is! ResultsSuccessState) return const SizedBox.shrink();
+        if (state is! UpdateMacroNutrientState) return const SizedBox.shrink();
 
-        final foodItems = state.foodItems;
-        double calories = foodItems.fold(0.0, (previousValue, element) => previousValue + element.calories);
-        double carbs = foodItems.fold(0.0, (previousValue, element) => previousValue + element.carbs);
-        double protein = foodItems.fold(0.0, (previousValue, element) => previousValue + element.protein);
-        double fat = foodItems.fold(0.0, (previousValue, element) => previousValue + element.fat);
+        double calories = state.calories;
+        double carbs = state.carbs;
+        double protein = state.protein;
+        double fat = state.fat;
         List<DailyNutritionModel> listNutrition = [
           DailyNutritionModel(
             title: '${calories.toInt()}',
-            subtitle: '1,512',
+            // subtitle: '1,512',
             footer: context.localization.calories!,
-            value: 0.5,
+            value: calories > 0 ? 1 : 0,
             progressColor: AppColors.yellow500,
             backgroundColor: AppColors.brandPrimaryLight,
           ),
           DailyNutritionModel(
             title: '${carbs.format(places: 1)} g',
-            subtitle: '170 g',
+            // subtitle: '170 g',
             footer: context.localization.carbs!,
-            value: 0.5,
+            value: carbs > 0 ? 1 : 0,
             progressColor: AppColors.lBlue500Normal,
             backgroundColor: AppColors.brandPrimaryLight,
           ),
           DailyNutritionModel(
             title: '${protein.format(places: 1)} g',
-            subtitle: '113 g',
+            // subtitle: '113 g',
             footer: context.localization.protein!,
-            value: 0.5,
+            value: protein > 0 ? 1 : 0,
             progressColor: AppColors.green500Success,
             backgroundColor: AppColors.brandPrimaryLight,
           ),
           DailyNutritionModel(
             title: '${fat.format(places: 1)} g',
-            subtitle: '42 g',
+            // subtitle: '42 g',
             footer: context.localization.fat!,
-            value: 0.5,
+            value: fat > 0 ? 1 : 0,
             progressColor: AppColors.purple500,
             backgroundColor: AppColors.brandPrimaryLight,
           ),

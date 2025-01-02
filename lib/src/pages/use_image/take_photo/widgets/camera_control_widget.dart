@@ -42,7 +42,7 @@ class CameraControlWidget extends StatelessWidget {
               duration: const Duration(milliseconds: 250),
               opacity: negativeEnabled ? 1 : 0.4,
               child: AppButton(
-                buttonText: context.localization?.cancel,
+                buttonText: context.localization.cancel,
                 appButtonModel: AppButtonStyles.primaryBordered,
                 onTap: negativeEnabled ? onNegativeTap : null,
               ),
@@ -68,7 +68,7 @@ class CameraControlWidget extends StatelessWidget {
               opacity: positiveEnabled ? 1 : 0.4,
               child: AppButton(
                 isLoading: loadingPositiveButton,
-                buttonText: context.localization?.next,
+                buttonText: context.localization.next,
                 appButtonModel: positiveEnabled
                     ? AppButtonStyles.primary
                     : AppButtonStyles.primary.copyWith(
@@ -77,7 +77,7 @@ class CameraControlWidget extends StatelessWidget {
                                 color: AppButtonStyles.primary.decoration?.color
                                     ?.withOpacity(0.4)),
                       ),
-                onTap: onPositiveTap,
+                onTap: positiveEnabled ? onPositiveTap : null,
               ),
             ),
           ),

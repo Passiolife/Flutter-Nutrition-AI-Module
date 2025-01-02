@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/util/date_picker.dart';
 import '../../../../../common/util/date_time_utility.dart';
 import '../../../../../common/widgets/text_input/primary_text_input.dart';
 
@@ -46,9 +47,11 @@ class _TimeStampWidgetState extends State<TimeStampWidget> {
       isDense: true,
       readOnly: true,
       onTap: () {
-        setState(() {
-          _selectedDate = DateTime.now();
-          widget.onSelected?.call(_selectedDate!);
+        DatePicker.showAdaptive(context: context, selectedDate: _selectedDate, onDateTimeChanged: (dateTime) {
+          setState(() {
+            _selectedDate = dateTime;
+            widget.onSelected?.call(_selectedDate!);
+          });
         });
       },
     );

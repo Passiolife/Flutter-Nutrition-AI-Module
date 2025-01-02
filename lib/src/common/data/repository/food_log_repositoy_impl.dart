@@ -1,12 +1,19 @@
 import '../../../../nutrition_ai_module.dart';
 
-class FoodLogRepositoryImpl {
-  PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
+abstract interface class FoodLogRepository {
+  Future<void> addFoodLog({required FoodRecord foodRecord, required bool isNew});
+}
 
-  const FoodLogRepositoryImpl();
+class FoodLogRepositoryImpl extends FoodLogRepository {
+  // PassioConnector get _connector => NutritionAIModule.instance.configuration.connector;
 
-  Future<void> addFoodLog(FoodRecord foodRecord, bool isNew) async {
-    await _connector.updateRecord(foodRecord: foodRecord, isNew: isNew);
+  final PassioConnector connector;
+
+  FoodLogRepositoryImpl({required this.connector});
+
+  @override
+  Future<void> addFoodLog({required FoodRecord foodRecord, required bool isNew}) async {
+    await connector.updateRecord(foodRecord: foodRecord, isNew: isNew);
   }
 
 }

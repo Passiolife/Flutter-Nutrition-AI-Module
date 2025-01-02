@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/constant/app_common_constants.dart';
+import '../../../common/data/repository/food_log_repositoy_impl.dart';
 import '../../../common/domain/use_cases/food_logs/add_food_log_use_case.dart';
 import '../../../common/util/preference_store.dart';
 import '../../../nutrition_ai_module_configuration.dart';
@@ -28,9 +29,9 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
 
   String searchTerm = '';
 
-  final AddFoodLogUseCase addFoodLogUseCase;
+  final FoodLogRepository foodLogRepository;
 
-  FoodSearchBloc({required this.addFoodLogUseCase})
+  FoodSearchBloc({required this.foodLogRepository})
       : super(const FoodSearchInitial()) {
     on<DoUpdateSearchEvent>(_handleDoUpdateSearchEvent);
     on<DoFoodSearchEvent>(_handleDoFoodSearchEvent);
@@ -110,7 +111,7 @@ class FoodSearchBloc extends Bloc<FoodSearchEvent, FoodSearchState> {
 
     foodRecord.logMeal();
 
-    addFoodLogUseCase(foodRecord: foodRecord, isNew: true);
+    await foodLogRepository.addFoodLog(foodRecord: foodRecord, isNew: true);
 
     emit(FoodLogSuccessState(DateTime.now().millisecondsSinceEpoch));
   }

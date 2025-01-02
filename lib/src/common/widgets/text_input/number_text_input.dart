@@ -6,6 +6,8 @@ import '../../constant/app_border.dart';
 import '../../constant/app_constants.dart';
 import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
+import '../keyboard/done_keyboard_button_widget.dart';
+import '../overlay/overlay_manager.dart';
 import 'base_text_input.dart';
 
 class NumberTextInput extends StatefulWidget {
@@ -13,6 +15,7 @@ class NumberTextInput extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ValueChanged<String>? onChanged;
   final TextInputValidator? validator;
+  final VoidCallback? onDone;
   final TextCapitalization textCapitalization;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
@@ -71,6 +74,7 @@ class NumberTextInput extends StatefulWidget {
     this.inputFormatters,
     this.validator,
     this.onChanged,
+    this.onDone,
     this.initialValue,
     this.enabled = true,
     this.maxLength,
@@ -119,6 +123,26 @@ class NumberTextInput extends StatefulWidget {
 class _NumberTextInputState extends State<NumberTextInput> {
   bool _isVisibility = false;
 
+  FocusNode? _focusNode;
+  late OverlayManager _overlayManager;
+
+  @override
+  void initState() {
+    _overlayManager = OverlayManager();
+    _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode!.addListener(_handleFocusChange);
+    super.initState();
+  }
+
+  void _handleFocusChange() {
+    if (_focusNode!.hasFocus) {
+      _overlayManager.showOverlay(
+          context, DoneKeyboardButtonWidget(onDone: widget.onDone));
+    } else {
+      _overlayManager.removeOverlay();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -131,10 +155,11 @@ class _NumberTextInputState extends State<NumberTextInput> {
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
                 color: context.textThemeColors.brandTextDark,
               ),
+          onTapOutside: (_) {},
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
           readOnly: widget.readOnly,
-          focusNode: widget.focusNode,
+          focusNode: _focusNode,
           labelText: widget.labelText,
           hintText: widget.hintText,
           controller: widget.controller,
@@ -142,7 +167,8 @@ class _NumberTextInputState extends State<NumberTextInput> {
           initialValue: widget.initialValue,
           enabled: widget.enabled,
           maxLength: widget.maxLength,
-          keyboardType: widget.keyboardType ?? TextInputType.numberWithOptions(signed: true),
+          keyboardType: widget.keyboardType ??
+              TextInputType.numberWithOptions(decimal: true),
           obscureText: widget.isPassword && !_isVisibility,
           prefix: widget.prefix,
           suffix: widget.isPassword
@@ -173,8 +199,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
               AppTextStyle.textXs.copyWith(
                 color: context.textThemeColors.errorColor,
               ),
-          labelStyle: widget.labelStyle ??
-              AppTextStyle.textXs,
+          labelStyle: widget.labelStyle ?? AppTextStyle.textXs,
           hintStyle: widget.hintStyle ??
               AppTextStyle.textBase
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -188,8 +213,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
           enabledBorder: widget.enabledBorder ??
               OutlineInputBorder(
                 borderSide: BorderSide(
-                  color:
-                      widget.enabledBorderColor ?? AppColors.brandBorders,
+                  color: widget.enabledBorderColor ?? AppColors.brandBorders,
                   width: 1,
                 ),
                 borderRadius: widget.borderRadius ?? AppBorderCircular.ba10,

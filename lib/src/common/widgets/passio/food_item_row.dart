@@ -10,12 +10,14 @@ class FoodItemRow extends StatelessWidget {
     required this.iconId,
     required this.title,
     required this.subtitle,
+    this.index,
     super.key,
   });
 
   final String iconId;
   final String title;
   final String subtitle;
+  final int? index;
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +25,7 @@ class FoodItemRow extends StatelessWidget {
       children: [
         PassioImageWidget(
           iconId: iconId,
+          heroTag: '$iconId $index',
           radius: 20.r,
         ),
         8.horizontalSpace,
@@ -30,16 +33,22 @@ class FoodItemRow extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                title,
-                style: AppTextStyle.textSm.addAll(
-                    [AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
+              Hero(
+                tag: '$title $index',
+                child: Text(
+                  title,
+                  style: AppTextStyle.textSm.addAll(
+                      [AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
+                ),
               ),
-              Text(
-                subtitle,
-                style: AppTextStyle.textSm
-                    .addAll([AppTextStyle.textSm.leading5]).copyWith(
-                        color: context.textThemeColors.brandTextLight),
+              Hero(
+                tag: '$subtitle $index',
+                child: Text(
+                  subtitle,
+                  style: AppTextStyle.textSm
+                      .addAll([AppTextStyle.textSm.leading5]).copyWith(
+                          color: context.textThemeColors.brandTextLight),
+                ),
               ),
             ],
           ),

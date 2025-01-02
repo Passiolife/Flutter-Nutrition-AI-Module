@@ -33,7 +33,7 @@ class _CameraSectionState extends State<CameraSection> {
         BlocBuilder<TakePhotoBloc, TakePhotoState>(
           buildWhen: (_, state) {
             return state is TakePhotoSuccessListenerState ||
-                state is RemovePhotoListenerState;
+                state is RemovePhotoListenerState || state is TakePhotoInitialBuilderState;
           },
           builder: (context, state) {
             final images = (state is TakePhotoSuccessListenerState)

@@ -9,12 +9,14 @@ class SecondaryButton extends StatelessWidget {
     this.text,
     this.padding,
     this.onTap,
+    this.enabled = true,
     super.key,
   });
 
   final String? text;
   final EdgeInsets? padding;
   final VoidCallback? onTap;
+  final bool enabled;
 
   EdgeInsets get _defaultPadding => AppPadding.ph40 + AppPadding.pv12;
 
@@ -22,9 +24,10 @@ class SecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AppButton(
       buttonText: text,
-      appButtonModel:
-          AppButtonStyles.primaryBordered.copyWith(padding: padding ?? _defaultPadding),
+      appButtonModel: AppButtonStyles.primaryBordered
+          .copyWith(padding: padding ?? _defaultPadding),
       onTap: onTap,
+      isEnable: enabled,
     );
   }
 }

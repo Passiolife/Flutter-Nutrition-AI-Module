@@ -56,6 +56,7 @@ class BaseTextInput extends StatelessWidget {
   final InputBorder? disabledBorder;
   final InputBorder? focusedErrorBorder;
   final InputBorder? errorBorder;
+  final TapRegionCallback? onTapOutside;
 
   const BaseTextInput({
     super.key,
@@ -98,6 +99,7 @@ class BaseTextInput extends StatelessWidget {
     this.isFilled,
     this.labelIcon,
     this.autoValidateMode,
+    this.onTapOutside,
   });
 
   @override
@@ -121,75 +123,73 @@ class BaseTextInput extends StatelessWidget {
               ],
             ),
           ),
-        TapRegion(
-          onTapOutside: (_) {
-            // Close the keyboard when user click outside the text field
-            // FocusManager.instance.primaryFocus?.unfocus();
-          },
-          child: Semantics(
-            onSetText: (value) => controller?.text = value,
-            excludeSemantics: true,
-            label: 'text-input-$accessibilityLabel',
-            child: TextFormField(
+        Semantics(
+          onSetText: (value) => controller?.text = value,
+          excludeSemantics: true,
+          label: 'text-input-$accessibilityLabel',
+          child: TextFormField(
 
-              controller: controller,
-              validator: validator,
-              inputFormatters: [
-                /// Default regex for prevent injection attack
-                FilteringTextInputFormatter.deny(
-                  RegExp(RegExps.sanitationFormat),
-                ),
-
-                ...?inputFormatters,
-              ],
-              showCursor: showCursor,
-              onTap: onTap,
-              enableInteractiveSelection: enableInteractiveSelection,
-              textCapitalization: textCapitalization,
-              initialValue: initialValue,
-              focusNode: focusNode,
-              enabled: enabled,
-              maxLines: maxLines,
-              maxLength: maxLength,
-              style: textStyle,
-              obscureText: obscureText,
-              onChanged: onChanged,
-              keyboardType: keyboardType,
-              textAlign: textAlign,
-              readOnly: readOnly,
-              autovalidateMode: autoValidateMode,
-              cursorColor: context.theme.primaryColor,
-              buildCounter: (
-                context, {
-                required currentLength,
-                required isFocused,
-                maxLength,
-              }) {
-                return Transform.translate(
-                  offset: const Offset(0, -30),
-                  child: Text(
-                    '$currentLength/$maxLength',
-                  ),
-                );
-              },
-              decoration: InputDecoration(
-                errorStyle: errorStyle,
-                focusColor: focusColor,
-                contentPadding: contentPadding,
-                hintText: hintText,
-                hintStyle: hintStyle,
-                isDense: isDense,
-                counterText: enableCounterText ? null : '',
-                disabledBorder: disabledBorder,
-                enabledBorder: enabledBorder,
-                focusedBorder: focusedBorder,
-                errorBorder: errorBorder,
-                focusedErrorBorder: focusedErrorBorder,
-                filled: isFilled,
-                fillColor: fillColor,
-                prefixIcon: prefix,
-                suffixIcon: suffix,
+            controller: controller,
+            validator: validator,
+            inputFormatters: [
+              /// Default regex for prevent injection attack
+              FilteringTextInputFormatter.deny(
+                RegExp(RegExps.sanitationFormat),
               ),
+
+              ...?inputFormatters,
+            ],
+            showCursor: showCursor,
+            onTap: onTap,
+            enableInteractiveSelection: enableInteractiveSelection,
+            textCapitalization: textCapitalization,
+            initialValue: initialValue,
+            focusNode: focusNode,
+            enabled: enabled,
+            maxLines: maxLines,
+            maxLength: maxLength,
+            style: textStyle,
+            obscureText: obscureText,
+            onChanged: onChanged,
+            keyboardType: keyboardType,
+            textAlign: textAlign,
+            readOnly: readOnly,
+            autovalidateMode: autoValidateMode,
+            cursorColor: context.theme.primaryColor,
+            onTapOutside: onTapOutside ?? (_) {
+              // Close the keyboard when user click outside the text field
+              FocusManager.instance.primaryFocus?.unfocus();
+            },
+            buildCounter: (
+              context, {
+              required currentLength,
+              required isFocused,
+              maxLength,
+            }) {
+              return Transform.translate(
+                offset: const Offset(0, -30),
+                child: Text(
+                  '$currentLength/$maxLength',
+                ),
+              );
+            },
+            decoration: InputDecoration(
+              errorStyle: errorStyle,
+              focusColor: focusColor,
+              contentPadding: contentPadding,
+              hintText: hintText,
+              hintStyle: hintStyle,
+              isDense: isDense,
+              counterText: enableCounterText ? null : '',
+              disabledBorder: disabledBorder,
+              enabledBorder: enabledBorder,
+              focusedBorder: focusedBorder,
+              errorBorder: errorBorder,
+              focusedErrorBorder: focusedErrorBorder,
+              filled: isFilled,
+              fillColor: fillColor,
+              prefixIcon: prefix,
+              suffixIcon: suffix,
             ),
           ),
         ),

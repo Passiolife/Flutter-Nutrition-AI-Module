@@ -35,6 +35,26 @@ class _BaseCheckBoxState extends State<BaseCheckBox> {
 
   @override
   Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          _isSelected = !_isSelected;
+        });
+        widget.onChanged?.call(_isSelected);
+      },
+      icon: AnimatedContainer(
+        key: ValueKey<bool>(_isSelected),
+        duration: widget.duration,
+        width: widget.size,
+        height: widget.size,
+        decoration: BoxDecoration(
+          color: _isSelected ? widget.selectedColor : widget.unselectedColor,
+          shape: BoxShape.circle,
+          border:
+          _isSelected ? null : Border.all(color: AppColors.brandBorders),
+        ),
+      ),
+    );
     return GestureDetector(
       onTap: () {
         setState(() {
