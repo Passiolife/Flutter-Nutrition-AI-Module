@@ -4,8 +4,8 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/extension/number_extension.dart';
 import '../../../../../common/models/macro_item_model.dart';
-import '../../../../../common/util/double_extensions.dart';
 
 class MacrosValuesWidget extends StatelessWidget {
   const MacrosValuesWidget({required this.macros, super.key});
@@ -27,7 +27,7 @@ class MacrosValuesWidget extends StatelessWidget {
 }
 
 class _MacrosItemWidget extends StatelessWidget {
-  const _MacrosItemWidget({required this.macro, super.key});
+  const _MacrosItemWidget({required this.macro});
 
   final MacroItemModel macro;
 

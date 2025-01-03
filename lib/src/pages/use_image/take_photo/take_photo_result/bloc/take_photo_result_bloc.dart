@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../common/data/repository/food_recpository.dart';
+import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/models/food_record/meal_label.dart';
 import '../../models/take_photo_result_view_model.dart';
@@ -14,14 +14,11 @@ part 'take_photo_result_state.dart';
 class TakePhotoResultBloc
     extends Bloc<TakePhotoResultEvent, TakePhotoResultState> {
   // Views Properties
-  TakePhotoResultViewModel? _viewModel;
-  // List<TakePhotoResultViewModel> _foodItems = [];
-  // MealLabel? _mealLabel;
-  // DateTime? _timeStamp;
+  TakePhotoResultViewModel _viewModel = TakePhotoResultViewModel.init();
 
-  final FoodRepository foodRepository;
+  final GetFoodRecordsByImageRecognition foodRecordsByImageRecognition;
 
-  TakePhotoResultBloc({required this.foodRepository})
+  TakePhotoResultBloc({required this.foodRecordsByImageRecognition})
       : super(const TakePhotoResultInitial()) {
     on<InitializeEvent>(_handleInitializeEvent);
     on<SetDefaultHeaderEvent>(_handleSetDefaultMealLabelEvent);
@@ -36,66 +33,45 @@ class TakePhotoResultBloc
 
   Future<void> _handleInitializeEvent(
       InitializeEvent event, Emitter<TakePhotoResultState> emit) async {
-    _viewModel = null;
+    _viewModel = TakePhotoResultViewModel.init();
     emit(const TakePhotoResultInitial());
   }
 
   Future<void> _handleSetDefaultMealLabelEvent(
       SetDefaultHeaderEvent event, Emitter<TakePhotoResultState> emit) async {
-    emit(UpdateHeaderState(viewModel: _viewModel!));
+    emit(UpdateHeaderState(viewModel: _viewModel));
   }
 
   Future<void> _handleUpdateMealLabelEvent(
       UpdateMealLabelEvent event, Emitter<TakePhotoResultState> emit) async {
-    _viewModel = _viewModel?.updateMealLabel(event.mealLabel);
+    _viewModel = _viewModel.updateMealLabel(event.mealLabel);
   }
 
   Future<void> _handleUpdateTimeStampEvent(
       UpdateTimeStampEvent event, Emitter<TakePhotoResultState> emit) async {
     final dateTime = event.timeStamp;
-    if(dateTime == null) return;
-    _viewModel = _viewModel?.updateDateTime(dateTime);
-
+    if (dateTime == null) return;
+    _viewModel = _viewModel.updateDateTime(dateTime);
   }
 
   Future<void> _handleSelectFoodItemEvent(
       SelectFoodItemEvent event, Emitter<TakePhotoResultState> emit) async {
     final index = event.index;
     final isSelected = event.isSelected;
-    _viewModel = _viewModel?.updateIsSelected(index, isSelected);
+    _viewModel = _viewModel.updateIsSelected(index, isSelected);
     add(UpdateMacroNutrientEvent());
     add(UpdateActionButtonsEvent());
   }
 
   Future<void> _handleUpdateMacroNutrientEvent(UpdateMacroNutrientEvent event,
       Emitter<TakePhotoResultState> emit) async {
-    final selectedFoods = _viewModel?.foodRecords.where((e) => e.isSelected);
-
-    double calories = 0;
-    double carbs = 0;
-    double protein = 0;
-    double fat = 0;
-
-    for (var element in selectedFoods) {
-      calories += element.foodRecord.totalCalories;
-      carbs += element.foodRecord.totalCarbs;
-      protein += element.foodRecord.totalProteins;
-      fat += element.foodRecord.totalFat;
-    }
-
-    emit(UpdateMacroNutrientState(
-      calories: calories,
-      carbs: carbs,
-      protein: protein,
-      fat: fat,
-    ));
+    _viewModel = _viewModel.updateMacroNutrients();
+    emit(UpdateMacroNutrientState(viewModel: _viewModel));
   }
 
   Future<void> _handleUpdateActionButtonsEvent(UpdateActionButtonsEvent event,
       Emitter<TakePhotoResultState> emit) async {
-    final bool enabled = _foodItems.any((e) => e.isSelected);
-    emit(UpdateActionButtonsState(
-        logEnabled: enabled, createRecipeEnabled: enabled));
+    emit(UpdateActionButtonsState(viewModel: _viewModel));
   }
 
   Future<void> _handleDoProcessEvent(
@@ -103,15 +79,12 @@ class TakePhotoResultBloc
     add(SetDefaultHeaderEvent());
     final capturedImages = event.images;
     if (capturedImages != null) {
-      final foodRecords = (await foodRepository
+      final response = await foodRecordsByImageRecognition.call(capturedImages);
+      /*final foodRecords = (await foodRepository
               .getFoodRecordsByImageRecognition(capturedImages))
           .whereType<FoodRecord>()
-          .toList();
-      _viewModel = TakePhotoResultViewModel.fromFoodRecords(foodRecords);
-      /*_foodItems = foodRecords
-          .expand<TakePhotoResultViewModel>(
-              (e) => [TakePhotoResultViewModel.fromFoodRecord(e)])
           .toList();*/
+      _viewModel = _viewModel.fromFoodRecords(response.response);
 
       emit(const FinishGeneratingResultsState());
 
@@ -119,7 +92,7 @@ class TakePhotoResultBloc
 
       add(UpdateMacroNutrientEvent());
       add(UpdateActionButtonsEvent());
-      emit(ResultsSuccessState(foodRecordsViewModel: _viewModel?.foodRecords ?? []));
+      emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
       return;
     }
   }
@@ -128,9 +101,9 @@ class TakePhotoResultBloc
       UpdateServingSizeEvent event, Emitter<TakePhotoResultState> emit) async {
     final index = event.index;
     final foodRecord = event.foodRecord;
-    _foodItems[index] = _foodItems[index].updateFoodRecord(foodRecord);
+    _viewModel = _viewModel.updateFoodRecord(index, foodRecord);
     add(UpdateMacroNutrientEvent());
     add(UpdateActionButtonsEvent());
-    emit(ResultsSuccessState(foodRecordsViewModel: _foodItems));
+    emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
   }
 }

@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 class MacroItemModel {
-  final double value;
+  final num value;
   final String label;
   final Color color;
 

@@ -105,11 +105,12 @@ class PercentIndicator extends StatelessWidget {
     if (isLinearIndicator) {
       return Container(
         decoration: BoxDecoration(
-          borderRadius: barRadius != null ? BorderRadius.all(barRadius!) : null,
-          color: progressColor
-        ),
-        padding: progressBorderSize!=null ? EdgeInsets.all(
-            progressBorderSize!) : null,
+            borderRadius:
+                barRadius != null ? BorderRadius.all(barRadius!) : null,
+            color: progressColor),
+        padding: progressBorderSize != null
+            ? EdgeInsets.all(progressBorderSize!)
+            : null,
         child: LinearPercentIndicator(
           width: width,
           lineHeight: lineHeight ?? _calculateLineHeight(),
@@ -151,16 +152,14 @@ class PercentIndicator extends StatelessWidget {
                   AppTextStyle.bold
                 ]).copyWith(color: context.textThemeColors.brandTextDark),
           ),
-          ColoredBox(
-            color: AppColors.brandBorders,
-            child: SizedBox(
-              width: 40.w,
-              height: 1.h,
+          if (subtitle != null) ...[
+            ColoredBox(
+              color: AppColors.brandBorders,
+              child: SizedBox(
+                width: 40.w,
+                height: 1.h,
+              ),
             ),
-          ),
-          // text-sm/leading-5/font-normal
-
-          if (subtitle != null)
             Text(
               subtitle!,
               style: subtitleTextStyle ??
@@ -169,6 +168,7 @@ class PercentIndicator extends StatelessWidget {
                     color: context.textThemeColors.brandTextDark,
                   ),
             ),
+          ],
         ],
       ),
       footer: footer != null

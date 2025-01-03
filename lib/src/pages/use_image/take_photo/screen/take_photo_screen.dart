@@ -60,14 +60,14 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
 
   void _handleStateChanges(BuildContext context, TakePhotoState state) {
     if (state is ShowIntroDialogListenerState) {
-      ShowWidgetUtil.showCustomGeneralDialog(
+      ShowWidgetUtil.showCustomGeneralDialogNew(
         context: context,
         builder: (BuildContext context) {
-          return IntroWidget(
-            onTap: () {
+          return NoNutritionFactsLabelFoundWidget(
+            /*onTap: () {
               Navigator.pop(context);
               _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-            },
+            },*/
           );
       },
       );

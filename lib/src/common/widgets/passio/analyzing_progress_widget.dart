@@ -4,19 +4,26 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../common/constant/app_constants.dart';
-import '../../../../../common/extension/context_extension.dart';
-import '../../../../../common/widgets/percent_indicator/percent_indicator.dart';
+import '../../constant/app_text_styles.dart';
+import '../../extension/context_extension.dart';
+import '../percent_indicator/percent_indicator.dart';
 
-class GeneratingResultWidget extends StatefulWidget {
-  const GeneratingResultWidget({this.shouldFinish = false, super.key});
+class AnalyzingProgressWidget extends StatefulWidget {
+  const AnalyzingProgressWidget({
+    this.text,
+    this.shouldFinish = false,
+    super.key,
+  });
+
   final bool shouldFinish;
+  final String? text;
 
   @override
-  State<GeneratingResultWidget> createState() => _GeneratingResultWidgetState();
+  State<AnalyzingProgressWidget> createState() =>
+      _AnalyzingProgressWidgetState();
 }
 
-class _GeneratingResultWidgetState extends State<GeneratingResultWidget> {
+class _AnalyzingProgressWidgetState extends State<AnalyzingProgressWidget> {
   // Timer for managing the analysis progress updates
   Timer? _analyzeTImer;
 
@@ -36,8 +43,8 @@ class _GeneratingResultWidgetState extends State<GeneratingResultWidget> {
   bool _bypassStop = false;
 
   @override
-  void didUpdateWidget(covariant GeneratingResultWidget oldWidget) {
-    if(widget.shouldFinish) {
+  void didUpdateWidget(covariant AnalyzingProgressWidget oldWidget) {
+    if (widget.shouldFinish) {
       _finishAnalyzeProgress();
     }
     super.didUpdateWidget(oldWidget);
@@ -77,12 +84,14 @@ class _GeneratingResultWidgetState extends State<GeneratingResultWidget> {
             progressBorderSize: 1.r,
             lineHeight: 12.h,
           ),
-          8.verticalSpace,
-          Text(
-            context.localization.generatingResults ?? '',
-            style: AppTextStyle.textSm
-                .addAll([AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
-          ),
+          if (widget.text != null) ...[
+            8.verticalSpace,
+            Text(
+              widget.text ?? '',
+              style: AppTextStyle.textSm.addAll(
+                  [AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
+            ),
+          ],
         ],
       ),
     );

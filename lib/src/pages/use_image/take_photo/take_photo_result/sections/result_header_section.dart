@@ -28,8 +28,8 @@ class _ResultHeaderSectionState extends State<ResultHeaderSection> {
       },
       builder: (context, state) {
         if (state is UpdateHeaderState) {
-          _mealLabel = state.mealLabel;
-          _timeStamp = state.timeStamp;
+          _mealLabel = state.viewModel.mealLabel;
+          _timeStamp = state.viewModel.timestamp;
         }
         return Column(
           mainAxisSize: MainAxisSize.min,

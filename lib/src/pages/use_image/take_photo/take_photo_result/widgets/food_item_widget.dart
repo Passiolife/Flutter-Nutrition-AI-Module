@@ -4,16 +4,20 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/extension/context_extension.dart';
-import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/models/macro_item_model.dart';
 import '../../../../../common/widgets/checkbox/primary_check_box.dart';
-import '../../models/take_photo_result_view_model.dart';
 import 'macros_values_widget.dart';
 import '../../../../../common/widgets/passio/food_item_row.dart';
 
 class FoodItemWidget extends StatelessWidget {
   const FoodItemWidget({
-    required this.viewModel,
+    required this.iconId,
+    required this.title,
+    required this.subtitle,
+    required this.calories,
+    required this.carbs,
+    required this.protein,
+    required this.fat,
     this.initialSelection = false,
     this.onChangeSelection,
     this.onTap,
@@ -21,7 +25,8 @@ class FoodItemWidget extends StatelessWidget {
     super.key,
   });
 
-  final TakePhotoResultViewModel viewModel;
+  final String iconId, title, subtitle;
+  final double calories, carbs, protein, fat;
   final bool initialSelection;
   final ValueChanged<bool>? onChangeSelection;
   final VoidCallback? onTap;
@@ -29,22 +34,22 @@ class FoodItemWidget extends StatelessWidget {
 
   List<MacroItemModel> _getMacros(BuildContext context) => [
         MacroItemModel(
-          value: viewModel.foodRecord.totalCalories,
+          value: calories.toInt(),
           label: context.localization.cal ?? '',
           color: AppColors.yellow500,
         ),
         MacroItemModel(
-          value: viewModel.foodRecord.totalCarbs,
+          value: carbs,
           label: context.localization.g ?? '',
           color: AppColors.lBlue500Normal,
         ),
         MacroItemModel(
-          value: viewModel.foodRecord.totalProteins,
+          value: protein,
           label: context.localization.g ?? '',
           color: AppColors.green500Success,
         ),
         MacroItemModel(
-          value: viewModel.foodRecord.totalFat,
+          value: fat,
           label: context.localization.g ?? '',
           color: AppColors.purple500,
         ),
@@ -67,10 +72,10 @@ class FoodItemWidget extends StatelessWidget {
                 spacing: 8.h,
                 children: [
                   FoodItemRow(
-                    iconId: viewModel.foodRecord.iconId,
+                    iconId: iconId,
                     index: index,
-                    title: viewModel.title,
-                    subtitle: viewModel.subtitle,
+                    title: title,
+                    subtitle: subtitle,
                   ),
                   MacrosValuesWidget(
                     macros: _getMacros(context),

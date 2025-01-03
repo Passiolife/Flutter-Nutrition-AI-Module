@@ -39,6 +39,7 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
             ),
           ),
           const GeneratingResultsSection(),
+          const BarcodeMissingDataWidget(),
           const FoodItemsListSection(),
           const ActionButtonsSection(),
           context.bottomPadding.verticalSpace,

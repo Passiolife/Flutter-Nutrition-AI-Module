@@ -407,5 +407,19 @@
   "youHaveDeniedAudioAccess": "You have denied audio access.",
   "pleaseGoToSettingsAppToEnableAudioAccess": "Please go to Settings app to enable audio access.",
   "audioAccessIsRestricted": "Audio access is restricted.",
-  "frontCameraFlashlightIsNotSupportedOnThisDevice": "Front camera flashlight is not supported on this device."
+  "frontCameraFlashlightIsNotSupportedOnThisDevice": "Front camera flashlight is not supported on this device.",
+  "enterBarcode": "Enter Barcode",
+  "barcodeMissingData": "Barcode Missing Data",
+  "barcodeMissingDataDescription": "This item will not log",
+  "addImage": "Add Image",
+  "photoPreview": "Photo Preview",
+  "analyzingPhoto": "Analyzing Photo...",
+  "captureNutritionFactsLabel": "Capture Nutrition Facts Label",
+  "captureNutritionFactsLabelDescription": "Capture a photo of the entire Nutrition Facts Label",
+  "failedToAnalyzeImage": "Failed To Analyze Image",
+  "failedToAnalyzeImageDescription": "Take another photo and try again",
+  "noIngredientsLabelFound": "No Ingredients Label Found",
+  "noIngredientsLabelFoundDescription": "Take a picture of just the Ingredients",
+  "noNutritionFactsLabelFound": "No Nutrition Facts Label Found",
+  "noNutritionFactsLabelFoundDescription": "Take a photo of just the Nutrition Facts"
 }

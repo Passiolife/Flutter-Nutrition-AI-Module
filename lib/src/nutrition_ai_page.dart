@@ -19,6 +19,7 @@ import 'pages/my_profile/my_profile_page.dart';
 import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/use_image/select_photo/select_photo_page.dart';
+import 'pages/use_image/take_photo/photo_preview/photo_preview_page.dart';
 import 'pages/use_image/take_photo/take_photo_page.dart';
 import 'pages/use_image/take_photo/take_photo_result/take_photo_result_page.dart';
 import 'pages/voice_logging/voice_logging_page.dart';
@@ -156,6 +157,12 @@ class NavigationAIPage extends StatelessWidget {
       return VoiceLoggingPage.route();
     } else if (settings.name == Routes.settings) {
       return SettingsPage.route();
+    }  else if (settings.name == Routes.photoPreview) {
+      List<Uint8List>? capturedImages = [];
+      if(arguments is List<Uint8List>) {
+        capturedImages = arguments;
+      }
+      return PhotoPreviewPage.route(image: capturedImages.first);
     } else {
       return MaterialPageRoute(builder: (context) {
         return SizedBox.shrink();

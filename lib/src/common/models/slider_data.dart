@@ -6,17 +6,16 @@ class SliderData {
   final double minSlider;
   final double maxSlider;
   final int divisions;
+  ({String? unit, double value}) _cachedMaxForSlider;
 
   static double get _sliderMultiplier => 5.0;
 
-  static ({String? unit, double value}) _cachedMaxForSlider =
-      (unit: null, value: 0);
-
-  const SliderData({
+  SliderData({
     this.minSlider = FoodRecord.zeroQuantity,
     this.maxSlider = 5,
     this.divisions = 10,
-  });
+    ({String? unit, double value})? cachedMaxForSlider,
+  }) : _cachedMaxForSlider = cachedMaxForSlider ?? const (unit: null, value: 0);
 
   SliderData updateSliderData(
     String unit,
@@ -55,6 +54,7 @@ class SliderData {
         < 500 => (maxSlider / 1).round(),
         _ => (maxSlider / 10).round(),
       },
+      cachedMaxForSlider: _cachedMaxForSlider,
     );
   }
 }

@@ -92,8 +92,8 @@ class ServingSizeWidgetState extends State<ServingSizeWidget> {
                 hintText: '',
                 isDense: true,
                 textAlign: TextAlign.center,
-                onDone: () {
-                  final newQuantity = double.tryParse(_quantityController.text);
+                onFieldSubmitted: (value) {
+                  final newQuantity = double.tryParse(value);
                   if (newQuantity != null) {
                     _quantity = newQuantity;
                     widget.onServingSizeChanged(

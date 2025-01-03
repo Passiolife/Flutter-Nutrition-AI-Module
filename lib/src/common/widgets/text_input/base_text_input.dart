@@ -57,6 +57,7 @@ class BaseTextInput extends StatelessWidget {
   final InputBorder? focusedErrorBorder;
   final InputBorder? errorBorder;
   final TapRegionCallback? onTapOutside;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const BaseTextInput({
     super.key,
@@ -100,6 +101,7 @@ class BaseTextInput extends StatelessWidget {
     this.labelIcon,
     this.autoValidateMode,
     this.onTapOutside,
+    this.onFieldSubmitted,
   });
 
   @override
@@ -128,7 +130,7 @@ class BaseTextInput extends StatelessWidget {
           excludeSemantics: true,
           label: 'text-input-$accessibilityLabel',
           child: TextFormField(
-
+            onFieldSubmitted: onFieldSubmitted,
             controller: controller,
             validator: validator,
             inputFormatters: [

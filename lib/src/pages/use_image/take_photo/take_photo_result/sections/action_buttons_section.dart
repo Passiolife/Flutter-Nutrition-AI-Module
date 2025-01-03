@@ -16,12 +16,10 @@ class ActionButtonsSection extends StatelessWidget {
       },
       builder: (context, state) {
         if (state is! UpdateActionButtonsState) return const SizedBox.shrink();
-        final logEnabled = state.logEnabled;
-        final createRecipeEnabled = state.createRecipeEnabled;
         return ActionButtonsWidget(
           onTapCreateRecipe: () {},
-          createRecipeEnabled: createRecipeEnabled,
-          logEnabled: logEnabled,
+          createRecipeEnabled: state.viewModel.isCreateRecipeEnabled,
+          logEnabled: state.viewModel.isLogEnabled,
           onTapLogSelected: () {},
         );
       },

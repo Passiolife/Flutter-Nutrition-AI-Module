@@ -22,6 +22,7 @@ class PrimaryDropdown<T> extends StatefulWidget {
   final double? height;
   final EdgeInsets? paddingLabel;
   final bool showIcon;
+  final TextStyle? textStyle;
 
   const PrimaryDropdown({
     super.key,
@@ -37,6 +38,7 @@ class PrimaryDropdown<T> extends StatefulWidget {
     this.radius,
     this.height,
     this.paddingLabel,
+    this.textStyle,
     this.showIcon = false,
   });
 
@@ -71,6 +73,9 @@ class _PrimaryDropdownState<T> extends State<PrimaryDropdown<T>> {
                 width: context.width,
                 initialSelection: widget.value,
                 hintText: widget.hint,
+                textStyle: widget.textStyle ?? AppTextStyle.textBase
+                    .addAll([AppTextStyle.textBase.leading6]).copyWith(
+                    color: context.textThemeColors.brandTextDark),
                 errorText: errorText,
                 leadingIcon: widget.showIcon
                     ? widget.value != null
@@ -127,7 +132,12 @@ class _PrimaryDropdownState<T> extends State<PrimaryDropdown<T>> {
                     label: item.text,
                     labelWidget: Padding(
                       padding: widget.paddingLabel ?? AppPadding.pt4,
-                      child: Text(item.text),
+                      child: Text(
+                        item.text,
+                        style: AppTextStyle.textBase
+                            .addAll([AppTextStyle.textBase.leading6]).copyWith(
+                                color: context.textThemeColors.brandTextDark),
+                      ),
                     ),
                     style: ButtonStyle(
                       textStyle: WidgetStateProperty.all<TextStyle>(

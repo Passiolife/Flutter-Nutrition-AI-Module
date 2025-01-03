@@ -15,7 +15,8 @@ class NumberTextInput extends StatefulWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ValueChanged<String>? onChanged;
   final TextInputValidator? validator;
-  final VoidCallback? onDone;
+
+  // final VoidCallback? onDone;
   final TextCapitalization textCapitalization;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
@@ -65,6 +66,7 @@ class NumberTextInput extends StatefulWidget {
   final InputBorder? errorBorder;
 
   final BorderRadius? borderRadius;
+  final ValueChanged<String>? onFieldSubmitted;
 
   const NumberTextInput({
     super.key,
@@ -74,7 +76,7 @@ class NumberTextInput extends StatefulWidget {
     this.inputFormatters,
     this.validator,
     this.onChanged,
-    this.onDone,
+    // this.onDone,
     this.initialValue,
     this.enabled = true,
     this.maxLength,
@@ -113,6 +115,7 @@ class NumberTextInput extends StatefulWidget {
     this.autoValidateMode,
     this.enabledBorderColor,
     this.focusedBorderColor,
+    this.onFieldSubmitted,
     this.maxLines = 1,
   });
 
@@ -125,10 +128,12 @@ class _NumberTextInputState extends State<NumberTextInput> {
 
   FocusNode? _focusNode;
   late OverlayManager _overlayManager;
+  late TextEditingController _controller;
 
   @override
   void initState() {
     _overlayManager = OverlayManager();
+    _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
     _focusNode!.addListener(_handleFocusChange);
     super.initState();
@@ -137,7 +142,12 @@ class _NumberTextInputState extends State<NumberTextInput> {
   void _handleFocusChange() {
     if (_focusNode!.hasFocus) {
       _overlayManager.showOverlay(
-          context, DoneKeyboardButtonWidget(onDone: widget.onDone));
+          context,
+          DoneKeyboardButtonWidget(
+            onDone: () {
+              widget.onFieldSubmitted?.call(_controller.text);
+            },
+          ));
     } else {
       _overlayManager.removeOverlay();
     }
@@ -155,6 +165,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
                 color: context.textThemeColors.brandTextDark,
               ),
+          onFieldSubmitted: widget.onFieldSubmitted,
           onTapOutside: (_) {},
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
@@ -162,7 +173,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
           focusNode: _focusNode,
           labelText: widget.labelText,
           hintText: widget.hintText,
-          controller: widget.controller,
+          controller: _controller,
           inputFormatters: widget.inputFormatters,
           initialValue: widget.initialValue,
           enabled: widget.enabled,

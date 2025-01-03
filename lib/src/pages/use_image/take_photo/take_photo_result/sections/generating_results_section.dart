@@ -3,8 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/widgets/button/primary_button.dart';
+import '../../../../../common/widgets/passio/analyzing_progress_widget.dart';
 import '../bloc/take_photo_result_bloc.dart';
-import '../widgets/generating_result_widget.dart';
 
 class GeneratingResultsSection extends StatelessWidget {
   const GeneratingResultsSection({super.key});
@@ -13,18 +13,23 @@ class GeneratingResultsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<TakePhotoResultBloc, TakePhotoResultState>(
       buildWhen: (_, state) {
-        return state is TakePhotoResultInitial || state is FinishGeneratingResultsState || state is ResultsSuccessState;
+        return state is TakePhotoResultInitial ||
+            state is FinishGeneratingResultsState ||
+            state is ResultsSuccessState;
       },
       builder: (context, state) {
-        if(state is! FinishGeneratingResultsState && state is! TakePhotoResultInitial) return const SizedBox.shrink();
+        if (state is! FinishGeneratingResultsState &&
+            state is! TakePhotoResultInitial) return const SizedBox.shrink();
         bool finishGeneratingResults = state is FinishGeneratingResultsState;
         return Expanded(
           child: Column(
             children: [
               Expanded(
                 child: Center(
-                  child: GeneratingResultWidget(
-                      shouldFinish: finishGeneratingResults),
+                  child: AnalyzingProgressWidget(
+                    text: context.localization.generatingResults,
+                    shouldFinish: finishGeneratingResults,
+                  ),
                 ),
               ),
               Row(

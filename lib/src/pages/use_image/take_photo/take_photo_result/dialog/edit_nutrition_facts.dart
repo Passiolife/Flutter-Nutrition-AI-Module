@@ -12,16 +12,39 @@ import '../../../../../common/widgets/button/secondary_button.dart';
 import '../../../../../common/widgets/text_input/number_text_input.dart';
 import '../../../../../common/widgets/text_input/primary_text_input.dart';
 
-class EditNutritionFacts extends StatelessWidget {
-  const EditNutritionFacts({super.key});
+class EditNutritionFacts extends StatefulWidget {
+  const EditNutritionFacts({required this.foodRecord, this.index, super.key});
 
-  static void navigate({required BuildContext context}) {
-    Navigator.push(
+  final FoodRecord foodRecord;
+  final int? index;
+
+  static Future<FoodRecord?> navigate({
+    required BuildContext context,
+    required FoodRecord foodRecord,
+    int? index,
+  }) {
+    return Navigator.push(
       context,
       HeroDialogRoute(
-        child: EditNutritionFacts(),
+        child: EditNutritionFacts(
+          foodRecord: foodRecord,
+          index: index,
+        ),
       ),
     );
+  }
+
+  @override
+  State<EditNutritionFacts> createState() => _EditNutritionFactsState();
+}
+
+class _EditNutritionFactsState extends State<EditNutritionFacts> {
+  late FoodRecord _foodRecord;
+
+  @override
+  void initState() {
+    super.initState();
+    _foodRecord = widget.foodRecord.clone();
   }
 
   @override
@@ -45,8 +68,14 @@ class EditNutritionFacts extends StatelessWidget {
                       AppTextStyle.bold,
                     ]),
                   ),
-                  _DetailsWidget(),
-                  _NutritionFactsWidget(),
+                  _DetailsWidget(
+                    index: widget.index,
+                    foodRecord: _foodRecord,
+                  ),
+                  _NutritionFactsWidget(
+                    index: widget.index,
+                    foodRecord: _foodRecord,
+                  ),
                   _PortionsWidget(),
                   _ActionButtons(
                     onCancel: () {
@@ -67,15 +96,22 @@ class EditNutritionFacts extends StatelessWidget {
 }
 
 class _DetailsWidget extends StatelessWidget {
-  const _DetailsWidget();
+  const _DetailsWidget({
+    required this.index,
+    required this.foodRecord,
+  });
+
+  final int? index;
+  final FoodRecord foodRecord;
 
   @override
   Widget build(BuildContext context) {
     return Row(
       children: [
         PassioImageWidget(
-          iconId: '',
+          iconId: foodRecord.iconId,
           radius: 20.r,
+          heroTag: '${foodRecord.iconId} $index',
         ),
         8.horizontalSpace,
         Expanded(
@@ -83,8 +119,19 @@ class _DetailsWidget extends StatelessWidget {
             spacing: 8.h,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              PrimaryTextInput(hintText: ''),
-              PrimaryTextInput(hintText: ''),
+              PrimaryTextInput(
+                isDense: true,
+                hintText: context.localization.enterName.toUpperCaseWord ?? '',
+                initialValue: foodRecord.name,
+              ),
+              PrimaryTextInput(
+                isDense: true,
+                hintText:
+                    context.localization.enterBarcode.toUpperCaseWord ?? '',
+                initialValue: foodRecord.barcode,
+                readOnly: true,
+                onTap: () {},
+              ),
             ],
           ),
         ),
@@ -94,7 +141,13 @@ class _DetailsWidget extends StatelessWidget {
 }
 
 class _NutritionFactsWidget extends StatelessWidget {
-  const _NutritionFactsWidget();
+  const _NutritionFactsWidget({
+    required this.index,
+    required this.foodRecord,
+  });
+
+  final int? index;
+  final FoodRecord foodRecord;
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +167,7 @@ class _NutritionFactsWidget extends StatelessWidget {
             _buildField(
               context: context,
               title: context.localization.calories ?? '',
-              // unit: context.localization.cal
+              unit: context.localization.cal
             ),
             _buildField(
               context: context,
@@ -151,8 +204,8 @@ class _NutritionFactsWidget extends StatelessWidget {
             ),
           ),
           NumberTextInput(
+            isDense: true,
             hintText: '',
-            contentPadding: AppPadding.pv10,
             suffix: Text(
               unit ?? '',
               style: AppTextStyle.textSm.addAll(
@@ -197,7 +250,7 @@ class _PortionsWidget extends StatelessWidget {
             _buildField(
               context: context,
               title: context.localization.unit ?? '',
-              flex: 3
+              flex: 3,
             ),
           ],
         ),

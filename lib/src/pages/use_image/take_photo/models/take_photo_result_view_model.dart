@@ -10,44 +10,34 @@ class TakePhotoResultViewModel {
   final double protein;
   final double fat;
 
-  const TakePhotoResultViewModel({
+  bool get isLogEnabled => foodRecords.any((e) => e.isSelected);
+
+  bool get isCreateRecipeEnabled => foodRecords.any((e) => e.isSelected);
+
+  const TakePhotoResultViewModel._({
     required this.mealLabel,
     required this.timestamp,
-    required this.foodRecords,
-    required this.calories,
-    required this.carbs,
-    required this.protein,
-    required this.fat,
+    this.foodRecords = const [],
+    this.calories = 0,
+    this.carbs = 0,
+    this.protein = 0,
+    this.fat = 0,
   });
 
-  factory TakePhotoResultViewModel.fromFoodRecords(
-      List<FoodRecord> foodRecords) {
+  factory TakePhotoResultViewModel.init() {
     final timeStamp = DateTime.now().toUtc();
     final mealLabel = MealLabel.dateToMealLabel(timeStamp);
+    return TakePhotoResultViewModel._(
+      mealLabel: mealLabel,
+      timestamp: timeStamp,
+    );
+  }
+
+  TakePhotoResultViewModel fromFoodRecords(List<FoodRecord> foodRecords) {
     final foodRecordsViewModel = foodRecords
         .expand((e) => [FoodRecordViewModel(foodRecord: e)])
         .toList();
-
-    final selectedFoodRecords = foodRecordsViewModel.where((e) => e.isSelected);
-
-    double calories = 0, carbs = 0, protein = 0, fat = 0;
-
-    for (var element in selectedFoodRecords) {
-      calories += element.foodRecord.totalCalories;
-      carbs += element.foodRecord.totalCarbs;
-      protein += element.foodRecord.totalProteins;
-      fat += element.foodRecord.totalFat;
-    }
-
-    return TakePhotoResultViewModel(
-      mealLabel: mealLabel,
-      timestamp: timeStamp,
-      foodRecords: foodRecordsViewModel,
-      calories: calories,
-      carbs: carbs,
-      protein: protein,
-      fat: fat,
-    );
+    return copyWith(foodRecords: foodRecordsViewModel).updateMacroNutrients();
   }
 
   TakePhotoResultViewModel copyWith({
@@ -59,7 +49,7 @@ class TakePhotoResultViewModel {
     double? protein,
     double? fat,
   }) {
-    return TakePhotoResultViewModel(
+    return TakePhotoResultViewModel._(
       mealLabel: mealLabel ?? this.mealLabel,
       timestamp: timestamp ?? this.timestamp,
       foodRecords: foodRecords ?? this.foodRecords,
@@ -90,6 +80,21 @@ class TakePhotoResultViewModel {
         foodRecords.elementAt(index).updateFoodRecord(foodRecord);
     foodRecords[index] = updatedFoodRecordViewModel;
     return copyWith(foodRecords: foodRecords);
+  }
+
+  TakePhotoResultViewModel updateMacroNutrients() {
+    final selectedFoodRecords = foodRecords.where((e) => e.isSelected);
+
+    double calories = 0, carbs = 0, protein = 0, fat = 0;
+
+    for (var element in selectedFoodRecords) {
+      calories += element.foodRecord.totalCalories;
+      carbs += element.foodRecord.totalCarbs;
+      protein += element.foodRecord.totalProteins;
+      fat += element.foodRecord.totalFat;
+    }
+    return copyWith(
+        calories: calories, carbs: carbs, protein: protein, fat: fat);
   }
 }
 

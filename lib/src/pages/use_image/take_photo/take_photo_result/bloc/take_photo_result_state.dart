@@ -37,28 +37,19 @@ final class UpdateHeaderState extends TakePhotoResultState {
 }
 
 final class UpdateMacroNutrientState extends TakePhotoResultState {
-  const UpdateMacroNutrientState({
-    required this.calories,
-    required this.carbs,
-    required this.protein,
-    required this.fat,
-  });
+  const UpdateMacroNutrientState({required this.viewModel});
 
-  final double calories;
-  final double carbs;
-  final double protein;
-  final double fat;
+  final TakePhotoResultViewModel viewModel;
 
   @override
-  List<Object?> get props => [calories, carbs, protein, fat];
+  List<Object?> get props => [viewModel];
 }
 
 final class UpdateActionButtonsState extends TakePhotoResultState {
-  const UpdateActionButtonsState({required this.logEnabled, required this.createRecipeEnabled});
+  const UpdateActionButtonsState({required this.viewModel});
 
-  final bool createRecipeEnabled;
-  final bool logEnabled;
+  final TakePhotoResultViewModel viewModel;
 
   @override
-  List<Object> get props => [logEnabled, createRecipeEnabled];
+  List<Object> get props => [viewModel];
 }

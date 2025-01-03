@@ -31,6 +31,9 @@ class AppImages {
   static const icChevronUpNew = '${iconsDir}ic_chevron_up.svg';
   static const icHelp = '${iconsDir}Ic_chevron_up.svg';
   static const icQuestionMark = '${iconsDir}Ic_question_mark_new.svg';
+  static const icNutritionFactsLabel = '${iconsDir}ic_nutrition_facts_label.svg';
+  static const icNoNutritionFactsLabelFound = '${iconsDir}ic_no_nutrition_facts_label_found.svg';
+  static const icNoIngredientsLabelFound = '${iconsDir}ic_no_ingredients_label_found.svg';
 
 
   static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';

@@ -88,6 +88,9 @@ class AppColors {
   static const bmiGraphColor4 = Color(0xFFF18300);
   static const bmiGraphColor5 = Color(0xFFE7221A);
 
+
+  static const rose50 = Color(0xFFFFF1F2);
+
   // Speech Recognition Text Color
   static const speechRecognizedTextColor = Color(0xFF484848);
 

@@ -10,7 +10,7 @@ class CustomAppBar extends StatelessWidget {
   const CustomAppBar({
     this.centerTitle = true,
     this.title,
-    this.backgroundColor = AppColors.transparent,
+    this.backgroundColor = AppColors.white,
     this.actions,
     super.key,
   });

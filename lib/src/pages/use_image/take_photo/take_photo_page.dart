@@ -5,12 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/router/routes.dart';
 import '../../../common/util/show_widget_util.dart';
 import 'bloc/take_photo_bloc.dart';
+import 'dialogs/no_nutrition_facts_label_found_widget.dart';
 import 'models/take_photo_navigation_data_provider.dart';
 import 'sections/camera_frame_section.dart';
 import 'sections/camera_section.dart';
 import 'sections/captured_images_section.dart';
 import 'sections/take_photo_header_section.dart';
-import 'widgets/intro_widget.dart';
 
 part 'screen/take_photo_screen.dart';
 

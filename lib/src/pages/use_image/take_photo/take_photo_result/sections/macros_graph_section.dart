@@ -6,7 +6,7 @@ import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/models/daily_nutrition_model.dart';
 import '../../../../../common/util/double_extensions.dart';
 import '../bloc/take_photo_result_bloc.dart';
-import '../widgets/macros_graph_widget.dart';
+import '../../../../../common/widgets/passio/macros_graph_widget.dart';
 
 class MacrosGraphSection extends StatelessWidget {
   const MacrosGraphSection({super.key});
@@ -20,13 +20,13 @@ class MacrosGraphSection extends StatelessWidget {
       builder: (context, state) {
         if (state is! UpdateMacroNutrientState) return const SizedBox.shrink();
 
-        double calories = state.calories;
-        double carbs = state.carbs;
-        double protein = state.protein;
-        double fat = state.fat;
+        int calories = state.viewModel.calories.toInt();
+        double carbs = state.viewModel.carbs;
+        double protein = state.viewModel.protein;
+        double fat = state.viewModel.fat;
         List<DailyNutritionModel> listNutrition = [
           DailyNutritionModel(
-            title: '${calories.toInt()}',
+            title: '$calories',
             // subtitle: '1,512',
             footer: context.localization.calories!,
             value: calories > 0 ? 1 : 0,

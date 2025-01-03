@@ -118,7 +118,12 @@ class _SecondaryDropdownState<T> extends State<SecondaryDropdown<T>> {
                     label: item.text,
                     labelWidget: Padding(
                       padding: widget.paddingLabel ?? AppPadding.pt4,
-                      child: Text(item.text),
+                      child: Text(
+                        item.text,
+                        style: AppTextStyle.textBase
+                            .addAll([AppTextStyle.textBase.leading6]).copyWith(
+                                color: context.textThemeColors.brandTextDark),
+                      ),
                     ),
                     style: ButtonStyle(
                       textStyle: WidgetStateProperty.all<TextStyle>(

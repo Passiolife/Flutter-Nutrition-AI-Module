@@ -52,7 +52,7 @@ class _CameraSectionState extends State<CameraSection> {
               captureEnabled: length < navigationData.maxLimit,
               positiveEnabled: length > 0,
               onPositiveTap: () {
-                Navigator.pushNamed(context, Routes.takePhotoResult, arguments: images);
+                Navigator.pushNamed(context, Routes.photoPreview, arguments: images);
                 _bloc?.add(const InitialEvent());
               },
             );

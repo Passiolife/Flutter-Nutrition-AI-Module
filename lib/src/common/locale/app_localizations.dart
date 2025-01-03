@@ -823,4 +823,39 @@ class AppLocalizations {
   String? get error => getLabel('error');
 
   String? get timestamp => getLabel('timestamp');
+
+  String? get enterBarcode => getLabel('enterBarcode');
+
+  String? get barcodeMissingData => getLabel('barcodeMissingData');
+
+  String? get barcodeMissingDataDescription =>
+      getLabel('barcodeMissingDataDescription');
+
+  String? get addImage => getLabel('addImage');
+
+  String? get photoPreview => getLabel('photoPreview');
+
+  String? get analyzingPhoto => getLabel('analyzingPhoto');
+
+  String? get captureNutritionFactsLabel =>
+      getLabel('captureNutritionFactsLabel');
+
+  String? get captureNutritionFactsLabelDescription =>
+      getLabel('captureNutritionFactsLabelDescription');
+
+  String? get failedToAnalyzeImage => getLabel('failedToAnalyzeImage');
+
+  String? get failedToAnalyzeImageDescription =>
+      getLabel('failedToAnalyzeImageDescription');
+
+  String? get noIngredientsLabelFound => getLabel('noIngredientsLabelFound');
+
+  String? get noIngredientsLabelFoundDescription =>
+      getLabel('noIngredientsLabelFoundDescription');
+
+  String? get noNutritionFactsLabelFound =>
+      getLabel('noNutritionFactsLabelFound');
+
+  String? get noNutritionFactsLabelFoundDescription =>
+      getLabel('noNutritionFactsLabelFoundDescription');
 }

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../common/constant/app_padding.dart';
-import '../../../../../common/models/daily_nutrition_model.dart';
-import '../../../../../common/widgets/percent_indicator/percent_indicator.dart';
+import '../../constant/app_padding.dart';
+import '../../models/daily_nutrition_model.dart';
+import '../percent_indicator/percent_indicator.dart';
 
 class MacrosGraphWidget extends StatelessWidget {
   const MacrosGraphWidget({

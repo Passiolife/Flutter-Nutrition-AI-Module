@@ -7,6 +7,7 @@ import '../../../../../common/models/food_record/food_record.dart';
 import '../../models/take_photo_result_view_model.dart';
 import '../bloc/take_photo_result_bloc.dart';
 import '../dialog/adjust_serving_size.dart';
+import '../dialog/edit_nutrition_facts.dart';
 import '../widgets/food_item_widget.dart';
 
 class FoodItemsListSection extends StatelessWidget {
@@ -30,7 +31,13 @@ class FoodItemsListSection extends StatelessWidget {
             itemBuilder: (context, index) {
               final foodItemModel = foodItems.elementAt(index);
               return FoodItemWidget(
-                viewModel: foodItemModel,
+                iconId: foodItemModel.foodRecord.iconId,
+                title: foodItemModel.title,
+                subtitle: foodItemModel.subtitle,
+                calories: foodItemModel.foodRecord.totalCalories,
+                carbs: foodItemModel.foodRecord.totalCarbs,
+                protein: foodItemModel.foodRecord.totalProteins,
+                fat: foodItemModel.foodRecord.totalFat,
                 index: index,
                 initialSelection: foodItemModel.isSelected,
                 onChangeSelection: (isSelected) => _onChangeSelection(
@@ -56,10 +63,11 @@ class FoodItemsListSection extends StatelessWidget {
 
   Future<void> _onTap({
     required BuildContext context,
-    required TakePhotoResultViewModel viewModel,
+    required FoodRecordViewModel viewModel,
     required int index,
   }) async {
-    FoodRecord? updatedFoodRecord = await AdjustServingSize.navigate(
+    // Adjust serving size:
+    /*FoodRecord? updatedFoodRecord = await AdjustServingSize.navigate(
       context: context,
       foodRecord: viewModel.foodRecord,
       index: index,
@@ -67,7 +75,15 @@ class FoodItemsListSection extends StatelessWidget {
     if (updatedFoodRecord != null && context.mounted) {
       context.read<TakePhotoResultBloc>().add(
           UpdateServingSizeEvent(index: index, foodRecord: updatedFoodRecord));
-    }
+    }*/
+
+
+    // Edit Nutrition Facts:
+    await EditNutritionFacts.navigate(
+      context: context,
+      foodRecord: viewModel.foodRecord,
+      index: index,
+    );
   }
 
   void _onChangeSelection({
