@@ -140,8 +140,11 @@ class FoodRecord {
   }
 
   /// Factory constructor to create a FoodRecord from a PassioFoodItem instance.
-  factory FoodRecord.fromPassioFoodItem(PassioFoodItem foodItem,
-      {PassioIDEntityType entityType = PassioIDEntityType.item}) {
+  factory FoodRecord.fromPassioFoodItem(
+    PassioFoodItem foodItem, {
+    PassioIDEntityType entityType = PassioIDEntityType.item,
+    PassioFoodResultType resultType = PassioFoodResultType.foodItem,
+  }) {
     final foodRecord = FoodRecord._(
       '',
       foodItem.id,
@@ -415,15 +418,13 @@ class FoodRecord {
     if (_selectedUnit == unit) return true;
     if (servingUnits.cast<PassioServingUnit?>().firstWhere(
             (element) => element?.unitName == unit,
-        orElse: () => null) ==
+            orElse: () => null) ==
         null) {
       return false;
     }
 
     _selectedUnit = unit;
-    _selectedQuantity = (_selectedUnit == 'gram')
-        ? 100
-        : 1;
+    _selectedQuantity = (_selectedUnit == 'gram') ? 100 : 1;
     _calculateQuantityForIngredients();
     return true;
   }

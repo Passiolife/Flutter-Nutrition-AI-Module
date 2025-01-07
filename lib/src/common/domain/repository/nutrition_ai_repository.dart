@@ -19,4 +19,8 @@ abstract class NutritionAIRepository {
   Future<List<PassioFoodItem>> fetchFoodItemForDataInfos(
       List<PassioFoodDataInfo?> foodDataInfo,
       {List<({double? servingQuantity, String? servingUnit})>? servingSizes});
+
+  Future<PassioFoodItem?> recognizeNutritionFacts(Uint8List bytes,
+      {PassioImageResolution resolution =
+          PassioImageResolution.res_1080});
 }

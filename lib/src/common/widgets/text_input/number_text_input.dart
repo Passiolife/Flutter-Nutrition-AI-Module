@@ -6,6 +6,7 @@ import '../../constant/app_border.dart';
 import '../../constant/app_constants.dart';
 import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
+import '../../extension/number_extension.dart';
 import '../keyboard/done_keyboard_button_widget.dart';
 import '../overlay/overlay_manager.dart';
 import 'base_text_input.dart';
@@ -16,7 +17,6 @@ class NumberTextInput extends StatefulWidget {
   final ValueChanged<String>? onChanged;
   final TextInputValidator? validator;
 
-  // final VoidCallback? onDone;
   final TextCapitalization textCapitalization;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
@@ -76,7 +76,6 @@ class NumberTextInput extends StatefulWidget {
     this.inputFormatters,
     this.validator,
     this.onChanged,
-    // this.onDone,
     this.initialValue,
     this.enabled = true,
     this.maxLength,
@@ -145,7 +144,10 @@ class _NumberTextInputState extends State<NumberTextInput> {
           context,
           DoneKeyboardButtonWidget(
             onDone: () {
-              widget.onFieldSubmitted?.call(_controller.text);
+              final formatted = _controller.text.localeFormatted<double?>();
+              if(formatted == null) return;
+              _controller.text = formatted.format();
+              widget.onFieldSubmitted?.call(formatted.format());
             },
           ));
     } else {
@@ -166,7 +168,9 @@ class _NumberTextInputState extends State<NumberTextInput> {
                 color: context.textThemeColors.brandTextDark,
               ),
           onFieldSubmitted: widget.onFieldSubmitted,
-          onTapOutside: (_) {},
+          onTapOutside: (_) {
+
+          },
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
           readOnly: widget.readOnly,

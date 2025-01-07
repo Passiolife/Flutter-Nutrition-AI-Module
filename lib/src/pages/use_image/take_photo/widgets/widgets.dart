@@ -1,4 +1,4 @@
-export 'camera_widget.dart';
+export '../../../../common/widgets/camera/camera_widget.dart';
 export 'action_buttons_widget.dart';
 export 'carousel_slider_widget.dart';
 export '../../../../common/widgets/result_widget.dart';

@@ -421,5 +421,8 @@
   "noIngredientsLabelFound": "No Ingredients Label Found",
   "noIngredientsLabelFoundDescription": "Take a picture of just the Ingredients",
   "noNutritionFactsLabelFound": "No Nutrition Facts Label Found",
-  "noNutritionFactsLabelFoundDescription": "Take a photo of just the Nutrition Facts"
+  "noNutritionFactsLabelFoundDescription": "Take a photo of just the Nutrition Facts",
+  "nutritionFactsIncomplete": "Nutrition Facts Incomplete",
+  "nutritionFactsIncompleteDescription": "This item will not log",
+  "editNutrition": "Edit Nutrition"
 }

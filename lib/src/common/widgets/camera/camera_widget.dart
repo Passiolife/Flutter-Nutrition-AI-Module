@@ -5,8 +5,8 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/util/snackbar_extension.dart';
+import '../../extension/context_extension.dart';
+import '../../util/snackbar_extension.dart';
 
 class CameraWidget extends StatefulWidget {
   const CameraWidget({

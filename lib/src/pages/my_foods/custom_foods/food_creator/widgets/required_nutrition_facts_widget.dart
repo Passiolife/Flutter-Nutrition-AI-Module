@@ -65,7 +65,7 @@ class _RequiredNutritionFactsWidgetState
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.localization?.requiredNutritionFacts ?? '',
+            context.localization.requiredNutritionFacts ?? '',
             style: AppTextStyle.textBase.addAll([
               AppTextStyle.textBase.leading6,
               AppTextStyle.semiBold,
@@ -123,76 +123,76 @@ class _FormWidgetState extends State<_FormWidget> {
           BuildContext context) =>
       [
         DropdownMenuEntry(
-          value: context.localization?.serving ?? '',
-          label: context.localization?.serving?.toUpperCaseWord ?? '',
+          value: context.localization.serving ?? '',
+          label: context.localization.serving?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.piece ?? '',
-          label: context.localization?.piece?.toUpperCaseWord ?? '',
+          value: context.localization.piece ?? '',
+          label: context.localization.piece?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.cup ?? '',
-          label: context.localization?.cup?.toUpperCaseWord ?? '',
+          value: context.localization.cup ?? '',
+          label: context.localization.cup?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.oz ?? '',
-          label: context.localization?.oz?.toUpperCaseWord ?? '',
+          value: context.localization.oz ?? '',
+          label: context.localization.oz?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.gram ?? '',
-          label: context.localization?.gram ?? '',
+          value: context.localization.gram ?? '',
+          label: context.localization.gram ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.ml ?? '',
-          label: context.localization?.ml ?? '',
+          value: context.localization.ml ?? '',
+          label: context.localization.ml ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.handful ?? '',
-          label: context.localization?.handful?.toUpperCaseWord ?? '',
+          value: context.localization.handful ?? '',
+          label: context.localization.handful?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.scoop ?? '',
-          label: context.localization?.scoop?.toUpperCaseWord ?? '',
+          value: context.localization.scoop ?? '',
+          label: context.localization.scoop?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.tbsp ?? '',
-          label: context.localization?.tbsp?.toUpperCaseWord ?? '',
+          value: context.localization.tbsp ?? '',
+          label: context.localization.tbsp?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.tsp ?? '',
-          label: context.localization?.tsp?.toUpperCaseWord ?? '',
+          value: context.localization.tsp ?? '',
+          label: context.localization.tsp?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.slice ?? '',
-          label: context.localization?.slice?.toUpperCaseWord ?? '',
+          value: context.localization.slice ?? '',
+          label: context.localization.slice?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.can ?? '',
-          label: context.localization?.can?.toUpperCaseWord ?? '',
+          value: context.localization.can ?? '',
+          label: context.localization.can?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.bottle ?? '',
-          label: context.localization?.bottle?.toUpperCaseWord ?? '',
+          value: context.localization.bottle ?? '',
+          label: context.localization.bottle?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.bar ?? '',
-          label: context.localization?.bar?.toUpperCaseWord ?? '',
+          value: context.localization.bar ?? '',
+          label: context.localization.bar?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.packet ?? '',
-          label: context.localization?.packet?.toUpperCaseWord ?? '',
+          value: context.localization.packet ?? '',
+          label: context.localization.packet?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.small ?? '',
-          label: context.localization?.small?.toUpperCaseWord ?? '',
+          value: context.localization.small ?? '',
+          label: context.localization.small?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.medium ?? '',
-          label: context.localization?.medium?.toUpperCaseWord ?? '',
+          value: context.localization.medium ?? '',
+          label: context.localization.medium?.toUpperCaseWord ?? '',
         ),
         DropdownMenuEntry(
-          value: context.localization?.large ?? '',
-          label: context.localization?.large?.toUpperCaseWord ?? '',
+          value: context.localization.large ?? '',
+          label: context.localization.large?.toUpperCaseWord ?? '',
         ),
       ];
 
@@ -214,12 +214,12 @@ class _FormWidgetState extends State<_FormWidget> {
           BuildContext context) =>
       [
         DropdownMenuItem(
-          value: context.localization?.ml ?? '',
-          child: Text(context.localization?.ml ?? ''),
+          value: context.localization.ml ?? '',
+          child: Text(context.localization.ml ?? ''),
         ),
         DropdownMenuItem(
-          value: context.localization?.g ?? '',
-          child: Text(context.localization?.g ?? ''),
+          value: context.localization.g ?? '',
+          child: Text(context.localization.g ?? ''),
         ),
       ];
 
@@ -367,7 +367,7 @@ class _FormWidgetState extends State<_FormWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _NutritionFactField(
-          title: context.localization?.servingQuantity ?? '',
+          title: context.localization.servingQuantity ?? '',
           inputType: const TextInputType.numberWithOptions(decimal: true),
           focusNode: _servingQuantityFocusNode,
           inputFormatters: <TextInputFormatter>[
@@ -377,7 +377,7 @@ class _FormWidgetState extends State<_FormWidget> {
           isMandatory: true,
         ),
         _NutritionFactDropDown(
-          title: context.localization?.servingUnit.toUpperCaseWord ?? '',
+          title: context.localization.servingUnit.toUpperCaseWord ?? '',
           initial: _selectedUnit,
           menuEntries: _unitDropdownEntries,
           onSelected: _setServingUnit,
@@ -391,7 +391,7 @@ class _FormWidgetState extends State<_FormWidget> {
                       valueListenable: _selectedWeightSymbol,
                       builder: (context, value, child) {
                         return _NutritionFactField(
-                          title: context.localization?.weight.toUpperCaseWord ??
+                          title: context.localization.weight.toUpperCaseWord ??
                               '',
                           inputType: const TextInputType.numberWithOptions(
                               decimal: true),
@@ -427,7 +427,7 @@ class _FormWidgetState extends State<_FormWidget> {
                   : const SizedBox.shrink();
             }),
         _NutritionFactField(
-          title: context.localization?.calories ?? '',
+          title: context.localization.calories ?? '',
           inputType: TextInputType.number,
           focusNode: _caloriesFocusNode,
           inputFormatters: <TextInputFormatter>[
@@ -439,7 +439,7 @@ class _FormWidgetState extends State<_FormWidget> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                context.localization?.kcal ?? '',
+                context.localization.kcal ?? '',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.textBase
                     .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -450,7 +450,7 @@ class _FormWidgetState extends State<_FormWidget> {
           isMandatory: true,
         ),
         _NutritionFactField(
-          title: context.localization?.fat ?? '',
+          title: context.localization.fat ?? '',
           inputType: const TextInputType.numberWithOptions(decimal: true),
           focusNode: _fatFocusNode,
           inputFormatters: <TextInputFormatter>[
@@ -462,7 +462,7 @@ class _FormWidgetState extends State<_FormWidget> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                context.localization?.g ?? '',
+                context.localization.g ?? '',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.textBase
                     .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -473,7 +473,7 @@ class _FormWidgetState extends State<_FormWidget> {
           isMandatory: true,
         ),
         _NutritionFactField(
-          title: context.localization?.carbs ?? '',
+          title: context.localization.carbs ?? '',
           inputType: const TextInputType.numberWithOptions(decimal: true),
           focusNode: _carbsFocusNode,
           inputFormatters: <TextInputFormatter>[
@@ -485,7 +485,7 @@ class _FormWidgetState extends State<_FormWidget> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                context.localization?.g ?? '',
+                context.localization.g ?? '',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.textBase
                     .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -496,7 +496,7 @@ class _FormWidgetState extends State<_FormWidget> {
           isMandatory: true,
         ),
         _NutritionFactField(
-          title: context.localization?.protein ?? '',
+          title: context.localization.protein ?? '',
           inputType: const TextInputType.numberWithOptions(decimal: true),
           focusNode: _proteinFocusNode,
           inputFormatters: <TextInputFormatter>[
@@ -508,7 +508,7 @@ class _FormWidgetState extends State<_FormWidget> {
             child: Align(
               alignment: Alignment.center,
               child: Text(
-                context.localization?.g ?? '',
+                context.localization.g ?? '',
                 textAlign: TextAlign.center,
                 style: AppTextStyle.textBase
                     .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -526,8 +526,8 @@ class _FormWidgetState extends State<_FormWidget> {
     _selectedUnit = value?.toLowerCase();
 
     _visibleWeight.value =
-        (_selectedUnit != context.localization?.gram?.toLowerCase()) &&
-            (_selectedUnit != context.localization?.ml);
+        (_selectedUnit != context.localization.gram?.toLowerCase()) &&
+            (_selectedUnit != context.localization.ml);
 
     _weightController.text = _visibleWeight.value ? _weightController.text : '';
 
@@ -595,7 +595,7 @@ class _NutritionFactField extends StatelessWidget {
           ),
           Expanded(
             child: AppTextField(
-              hintText: context.localization?.value?.toUpperCaseWord ?? '',
+              hintText: context.localization.value?.toUpperCaseWord ?? '',
               hintStyle: AppTextStyle.textBase
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
                       color: AppColors.gray500),
@@ -663,7 +663,7 @@ class _NutritionFactDropDown extends StatelessWidget {
           ),
           Expanded(
             child: AppDropDownMenu(
-              hintText: context.localization?.value.toUpperCaseWord ?? '',
+              hintText: context.localization.value.toUpperCaseWord ?? '',
               initialSelection: initial,
               dropdownMenuEntries: menuEntries,
               onSelected: onSelected,

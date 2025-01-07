@@ -21,6 +21,7 @@ class SecondaryDropdown<T> extends StatefulWidget {
   final double? height;
   final EdgeInsets? paddingLabel;
   final bool showIcon;
+  final TextStyle? textStyle;
 
   const SecondaryDropdown({
     super.key,
@@ -35,6 +36,7 @@ class SecondaryDropdown<T> extends StatefulWidget {
     this.radius,
     this.height,
     this.paddingLabel,
+    this.textStyle,
     this.showIcon = false,
   });
 
@@ -63,6 +65,9 @@ class _SecondaryDropdownState<T> extends State<SecondaryDropdown<T>> {
                 initialSelection: widget.value,
                 hintText: widget.hint,
                 errorText: errorText,
+                textStyle: widget.textStyle ?? AppTextStyle.textBase
+                    .addAll([AppTextStyle.textBase.leading6]).copyWith(
+                    color: context.textThemeColors.brandTextDark),
                 leadingIcon: widget.showIcon
                     ? widget.value != null
                         ? Padding(

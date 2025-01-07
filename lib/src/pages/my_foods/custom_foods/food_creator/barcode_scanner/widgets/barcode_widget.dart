@@ -65,9 +65,9 @@ class BarcodeWidget extends StatelessWidget {
               16.verticalSpace,
               Flexible(
                 child: ActionButtonsWidget(
-                  negativeButtonText: context.localization?.cancel,
+                  negativeButtonText: context.localization.cancel,
                   onNegativeButtonTap: onTapCancel,
-                  positiveButtonText: context.localization?.viewExistingItem,
+                  positiveButtonText: context.localization.viewExistingItem,
                   onPositiveButtonTap: onViewExistingItem,
                   neutralButtonText: customFoodButtonText,
                   onNeutralButtonTap: onCreateCustomFood,

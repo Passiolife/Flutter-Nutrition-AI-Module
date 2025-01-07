@@ -17,4 +17,6 @@ abstract class RegExps {
   // RegEx for prevent injection attack
   static String sanitationFormat = r'[<>]';
 
+  // The regex pattern is designed to permit digits optionally interspersed with a single period or comma as a decimal separator.
+  static RegExp singleDecimalNumericInput = RegExp(r'^\d*([.,])?\d*$');
 }

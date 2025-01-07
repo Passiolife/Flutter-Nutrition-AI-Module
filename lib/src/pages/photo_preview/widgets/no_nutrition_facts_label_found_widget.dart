@@ -2,15 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '../../../../common/constant/app_border.dart';
-import '../../../../common/constant/app_constants.dart';
-import '../../../../common/constant/app_padding.dart';
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/widgets/button/primary_button.dart';
-import '../../../../common/widgets/button/secondary_button.dart';
+import '../../../common/constant/app_border.dart';
+import '../../../common/constant/app_constants.dart';
+import '../../../common/constant/app_padding.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/widgets/button/primary_button.dart';
+import '../../../common/widgets/button/secondary_button.dart';
 
-class FailedToAnalyzeImageWidget extends StatelessWidget {
-  const FailedToAnalyzeImageWidget({super.key});
+class NoNutritionFactsLabelFoundWidget extends StatelessWidget {
+  const NoNutritionFactsLabelFoundWidget({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -24,17 +24,17 @@ class FailedToAnalyzeImageWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            context.localization.failedToAnalyzeImage ?? '',
+            context.localization.noNutritionFactsLabelFound ?? '',
             style: AppTextStyle.textXl
                 .addAll([AppTextStyle.textXl.leading7, AppTextStyle.bold]),
           ),
           Text(
-            context.localization.failedToAnalyzeImageDescription ?? '',
+            context.localization.noNutritionFactsLabelFoundDescription ?? '',
             style: AppTextStyle.textSm.addAll([AppTextStyle.textSm]),
           ),
           16.verticalSpace,
           VectorGraphic(
-            loader: AssetBytesLoader(AppImages.icNutritionFactsLabel),
+            loader: AssetBytesLoader(AppImages.icNoNutritionFactsLabelFound),
             width: 200.r,
             height: 200.r,
           ),
@@ -54,7 +54,7 @@ class FailedToAnalyzeImageWidget extends StatelessWidget {
               ),
               Expanded(
                 child: PrimaryButton(
-                  text: context.localization.tryAgain,
+                  text: context.localization.takePhoto,
                   padding: AppPadding.pv12,
                   onTap: () {
                     Navigator.pop(context);

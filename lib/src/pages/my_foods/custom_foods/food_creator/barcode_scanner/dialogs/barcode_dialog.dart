@@ -11,21 +11,21 @@ class BarcodeDialog {
     Function(BuildContext context)? onTapCancel,
     Function(BuildContext context)? onViewExistingItem,
     String? customFoodButtonText,
-    Function(BuildContext context)? onCreateCustomFood,
+    Function(BuildContext dContext)? onCreateCustomFood,
   }) {
     showGeneralDialog(
       context: context,
       barrierColor: AppColors.transparent,
-      pageBuilder: (context, animation1, animation2) {
+      pageBuilder: (dContext, animation1, animation2) {
         return Align(
           alignment: Alignment.center,
           child: BarcodeWidget(
             title: title,
             description: description,
-            onTapCancel: () => onTapCancel?.call(context),
-            onViewExistingItem: () => onViewExistingItem?.call(context),
+            onTapCancel: () => onTapCancel?.call(dContext),
+            onViewExistingItem: () => onViewExistingItem?.call(dContext),
             customFoodButtonText: customFoodButtonText,
-            onCreateCustomFood: () => onCreateCustomFood?.call(context),
+            onCreateCustomFood: () => onCreateCustomFood?.call(dContext),
           ),
         );
       },

@@ -6,7 +6,7 @@ import '../../../../common/constant/app_padding.dart';
 import '../../../../common/extension/context_extension.dart';
 import '../../../../common/models/daily_nutrition_model.dart';
 import '../take_photo_result/widgets/meal_time_widget.dart';
-import '../take_photo_result/widgets/time_stamp_widget.dart';
+import '../take_photo_result/widgets/date_widget.dart';
 import 'result_macro_widget.dart';
 
 // class ResultTopWidget extends StatelessWidget {

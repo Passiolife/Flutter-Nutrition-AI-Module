@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '../../../../common/constant/app_border.dart';
-import '../../../../common/constant/app_constants.dart';
-import '../../../../common/constant/app_padding.dart';
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/widgets/button/primary_button.dart';
-import '../../../../common/widgets/button/secondary_button.dart';
+import '../../../common/constant/app_border.dart';
+import '../../../common/constant/app_constants.dart';
+import '../../../common/constant/app_padding.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/widgets/button/primary_button.dart';
+import '../../../common/widgets/button/secondary_button.dart';
 
 class NoIngredientsLabelFoundWidget extends StatelessWidget {
   const NoIngredientsLabelFoundWidget({super.key});

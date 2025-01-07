@@ -7,7 +7,7 @@ import '../../../../../common/models/food_record/meal_label.dart';
 import '../bloc/take_photo_result_bloc.dart';
 import '../widgets/meal_time_widget.dart';
 import '../widgets/take_photo_app_bar.dart';
-import '../widgets/time_stamp_widget.dart';
+import '../widgets/date_widget.dart';
 
 class ResultHeaderSection extends StatefulWidget {
   const ResultHeaderSection({super.key});

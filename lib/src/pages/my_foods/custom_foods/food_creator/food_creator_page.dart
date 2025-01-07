@@ -111,7 +111,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
           body: Column(
             children: [
               CustomAppBarWidget(
-                title: context.localization?.myFoods,
+                title: context.localization.myFoods,
                 isMenuVisible: false,
               ),
               Expanded(
@@ -201,34 +201,34 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
 
   void _handleChangedOtherNutrients(List<NutrientViewModel> nutrients) {
     final satFatNutrient =
-        _getNutrient(nutrients, context.localization?.saturatedFat);
+        _getNutrient(nutrients, context.localization.saturatedFat);
 
     final transFatNutrient =
-        _getNutrient(nutrients, context.localization?.transFat);
+        _getNutrient(nutrients, context.localization.transFat);
 
     final cholesterolNutrient =
-        _getNutrient(nutrients, context.localization?.cholesterol);
+        _getNutrient(nutrients, context.localization.cholesterol);
 
     final sodiumNutrient =
-        _getNutrient(nutrients, context.localization?.sodium);
+        _getNutrient(nutrients, context.localization.sodium);
 
     final dietaryFiberNutrient =
-        _getNutrient(nutrients, context.localization?.dietaryFiber);
+        _getNutrient(nutrients, context.localization.dietaryFiber);
 
     final totalSugarsNutrient =
-        _getNutrient(nutrients, context.localization?.totalSugars);
+        _getNutrient(nutrients, context.localization.totalSugars);
 
     final addedSugarNutrient =
-        _getNutrient(nutrients, context.localization?.addedSugar);
+        _getNutrient(nutrients, context.localization.addedSugar);
 
     final vitaminDNutrient =
-        _getNutrient(nutrients, context.localization?.vitaminD);
+        _getNutrient(nutrients, context.localization.vitaminD);
 
     final calciumNutrient =
-        _getNutrient(nutrients, context.localization?.calcium);
+        _getNutrient(nutrients, context.localization.calcium);
 
     final potassiumNutrient =
-        _getNutrient(nutrients, context.localization?.potassium);
+        _getNutrient(nutrients, context.localization.potassium);
 
     _bloc.add(DoUpdateOtherNutritionFactsEvent(
       satFat: satFatNutrient,
@@ -263,8 +263,8 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
           if (widget.logUponCreate) {
             context.showSnackbar(
                 text: widget.userFoodRecord == null
-                    ? context.localization?.customFoodCreatedWithUpdateSuccess
-                    : context.localization?.customFoodUpdatedWithUpdateSuccess);
+                    ? context.localization.customFoodCreatedWithUpdateSuccess
+                    : context.localization.customFoodUpdatedWithUpdateSuccess);
             DashboardPage.navigate(
               context,
               page: 1,
@@ -273,8 +273,8 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
           } else {
             context.showSnackbar(
                 text: widget.userFoodRecord == null
-                    ? context.localization?.customFoodCreatedWithSuccess
-                    : context.localization?.customFoodUpdatedWithSuccess);
+                    ? context.localization.customFoodCreatedWithSuccess
+                    : context.localization.customFoodUpdatedWithSuccess);
             MyFoodsPage.navigate(context: context, isReplace: true);
           }
           break;

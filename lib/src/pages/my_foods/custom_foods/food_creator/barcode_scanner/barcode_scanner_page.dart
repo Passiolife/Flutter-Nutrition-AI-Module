@@ -88,7 +88,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           body: Column(
             children: [
               CustomAppBarWidget(
-                title: context.localization?.barcodeScanner,
+                title: context.localization.barcodeScanner,
                 isMenuVisible: false,
               ),
               Expanded(
@@ -130,8 +130,8 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
     await PermissionManagerUtility().request(
       context,
       Permission.camera,
-      title: context.localization?.permission,
-      message: context.localization?.cameraPermissionMessage,
+      title: context.localization.permission,
+      message: context.localization.cameraPermissionMessage,
       onTapCancelForSettings: (contextPermission) {
         Navigator.pop(contextPermission);
         Navigator.pop(context);
@@ -158,12 +158,12 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           _visibleDialog = true;
           _showBarcodeDialog(
             context: context,
-            title: context.localization?.customFoodAlreadyExists,
+            title: context.localization.customFoodAlreadyExists,
             description:
-                context.localization?.customFoodAlreadyExistsDescription,
+                context.localization.customFoodAlreadyExistsDescription,
             foodRecord: state.foodRecord,
             customFoodButtonText:
-                context.localization?.createCustomFoodWithoutBarcode,
+                context.localization.createCustomFoodWithoutBarcode,
             fromCustomFood: true,
           );
           break;
@@ -172,9 +172,9 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
           _showBarcodeDialog(
             context: context,
             foodRecord: state.foodRecord,
-            title: context.localization?.barcodeInSystem,
-            description: context.localization?.barcodeInSystemDescription,
-            customFoodButtonText: context.localization?.createCustomFoodAnyway,
+            title: context.localization.barcodeInSystem,
+            description: context.localization.barcodeInSystemDescription,
+            customFoodButtonText: context.localization.createCustomFoodAnyway,
             barcode: state.barcode,
           );
           break;
@@ -222,12 +222,13 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
       context: context,
       title: title,
       description: description,
-      onTapCancel: (context) {
+      onTapCancel: (dContext) {
         _visibleDialog = false;
-        Navigator.pop(context);
+        Navigator.pop(dContext);
         _startScanning();
       },
-      onViewExistingItem: (context) {
+      onViewExistingItem: (dContext) {
+        Navigator.pop(dContext);
         EditFoodPage.navigate(
           context: context,
           params: EditFoodPageParams(
@@ -238,15 +239,15 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
         );
       },
       customFoodButtonText: customFoodButtonText,
-      onCreateCustomFood: (context) {
+      onCreateCustomFood: (dContext) {
         if (fromCustomFood) {
           foodRecord?.barcode = null;
         } else {
-          Navigator.pop(context);
+          Navigator.pop(dContext);
           Navigator.pop(context, barcode);
           return;
         }
-        Navigator.pop(context);
+        Navigator.pop(dContext);
         Navigator.pop(context);
         Navigator.pop(context);
         FoodCreatorPage.navigate(

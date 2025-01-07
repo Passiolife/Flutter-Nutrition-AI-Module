@@ -6,7 +6,6 @@ import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../models/take_photo_result_view_model.dart';
 import '../bloc/take_photo_result_bloc.dart';
-import '../dialog/adjust_serving_size.dart';
 import '../dialog/edit_nutrition_facts.dart';
 import '../widgets/food_item_widget.dart';
 
@@ -75,15 +74,19 @@ class FoodItemsListSection extends StatelessWidget {
     if (updatedFoodRecord != null && context.mounted) {
       context.read<TakePhotoResultBloc>().add(
           UpdateServingSizeEvent(index: index, foodRecord: updatedFoodRecord));
-    }*/
+    }
 
-
+return;*/
     // Edit Nutrition Facts:
-    await EditNutritionFacts.navigate(
+    final updatedFoodRecord = await EditNutritionFacts.navigate(
       context: context,
       foodRecord: viewModel.foodRecord,
       index: index,
     );
+    if (updatedFoodRecord != null && context.mounted) {
+      context.read<TakePhotoResultBloc>().add(
+          UpdateServingSizeEvent(index: index, foodRecord: updatedFoodRecord));
+    }
   }
 
   void _onChangeSelection({

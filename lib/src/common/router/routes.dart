@@ -17,4 +17,5 @@ abstract class Routes {
   static const String voiceLogging = '/voiceLogging';
   static const String takePhotoResult = '/takePhotoResult';
   static const String photoPreview = '/photoPreview';
+  static const String nutritionFacts = '/nutritionFacts';
 }

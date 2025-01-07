@@ -1,0 +1,46 @@
+import 'dart:io';
+
+import 'package:equatable/equatable.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrition_ai/nutrition_ai.dart';
+
+import '../../../common/domain/repository/nutrition_ai_repository.dart';
+
+part 'photo_preview_event.dart';
+part 'photo_preview_state.dart';
+
+class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
+  final NutritionAIRepository nutritionAIRepository;
+
+  PassioFoodItem? _nutritionFacts;
+  PassioFoodItem? _ingredients;
+
+  PhotoPreviewBloc({required this.nutritionAIRepository})
+      : super(PhotoPreviewInitial()) {
+    on<DoProcessEvent>(_handleDoProcessEvent);
+  }
+
+  Future<void> _handleDoProcessEvent(
+      DoProcessEvent event, Emitter<PhotoPreviewState> emit) async {
+    final file = event.file;
+    final image = await file.readAsBytes();
+    final foodItem = await nutritionAIRepository.recognizeNutritionFacts(image);
+    // emit(AnalyzeCompletedState(timestamp: DateTime.now().millisecond));
+    emit(FailedToAnalyzedState(timestamp: DateTime.now().millisecond));
+    return;
+    if (foodItem != null) {
+      _nutritionFacts = foodItem;
+    }
+    if (foodItem?.ingredients.isNotEmpty ?? false) {
+      _ingredients = foodItem;
+    }
+    if (_nutritionFacts == null && _ingredients == null) {
+      emit(BothNotFoundState(timestamp: DateTime.now().millisecond));
+    } else if (_nutritionFacts == null) {
+      emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond));
+    } else if (_ingredients == null) {
+      emit(IngredientsNotFoundState(timestamp: DateTime.now().millisecond));
+    }
+    emit(FailedToAnalyzedState(timestamp: DateTime.now().millisecond));
+  }
+}

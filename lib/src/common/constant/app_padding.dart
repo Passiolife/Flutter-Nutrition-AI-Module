@@ -5,6 +5,7 @@ class AppPadding {
   AppPadding._();
 
   /// Padding All
+  static EdgeInsets pa4 = EdgeInsets.all(4.r);
   static EdgeInsets pa8 = EdgeInsets.all(8.r);
   static EdgeInsets pa10 = EdgeInsets.all(10.r);
   static EdgeInsets pa16 = EdgeInsets.all(16.r);

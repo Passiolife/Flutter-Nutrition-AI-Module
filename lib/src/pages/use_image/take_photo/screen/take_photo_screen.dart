@@ -41,7 +41,7 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
         body: _seenIntroDialog
             ? Column(
                 children: [
-                  TakePhotoHeaderSection(),
+                  const TakePhotoHeaderSection(),
                   Expanded(
                     child: Stack(
                       children: [
@@ -63,13 +63,13 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
       ShowWidgetUtil.showCustomGeneralDialogNew(
         context: context,
         builder: (BuildContext context) {
-          return NoNutritionFactsLabelFoundWidget(
-            /*onTap: () {
+          return IntroWidget(
+            onTap: () {
               Navigator.pop(context);
               _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-            },*/
+            },
           );
-      },
+        },
       );
     }
     // if (state is ListenerState) {

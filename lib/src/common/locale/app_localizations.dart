@@ -858,4 +858,11 @@ class AppLocalizations {
 
   String? get noNutritionFactsLabelFoundDescription =>
       getLabel('noNutritionFactsLabelFoundDescription');
+
+  String? get nutritionFactsIncomplete => getLabel('nutritionFactsIncomplete');
+
+  String? get nutritionFactsIncompleteDescription =>
+      getLabel('nutritionFactsIncompleteDescription');
+
+  String? get editNutrition => getLabel('editNutrition');
 }

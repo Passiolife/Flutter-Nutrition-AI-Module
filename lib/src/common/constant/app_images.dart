@@ -17,6 +17,7 @@ class AppImages {
   static const imgMyFoodsThumbnail = '${imageDir}img_my_foods_thumbnail.png';
 
   // Icons
+  static const icBarcodeScan = '${iconsDir}ic_scan_barcode.svg';
   static const icClose = '${iconsDir}ic_close.svg';
   static const icPlus = '${iconsDir}ic_plus.svg';
   // ic_arrow_left/svg // TODO: test because facing some issue with naming. Asset not found error.

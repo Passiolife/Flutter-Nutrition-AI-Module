@@ -6,7 +6,7 @@ import '../../../../common/router/routes.dart';
 import '../bloc/take_photo_bloc.dart';
 import '../models/take_photo_navigation_data_provider.dart';
 import '../widgets/camera_control_widget.dart';
-import '../widgets/camera_widget.dart';
+import '../../../../common/widgets/camera/camera_widget.dart';
 
 class CameraSection extends StatefulWidget {
   const CameraSection({super.key});
@@ -52,7 +52,7 @@ class _CameraSectionState extends State<CameraSection> {
               captureEnabled: length < navigationData.maxLimit,
               positiveEnabled: length > 0,
               onPositiveTap: () {
-                Navigator.pushNamed(context, Routes.photoPreview, arguments: images);
+                Navigator.pushNamed(context, Routes.takePhotoResult, arguments: images);
                 _bloc?.add(const InitialEvent());
               },
             );

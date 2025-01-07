@@ -1,5 +1,6 @@
 import 'dart:typed_data';
 
+import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../nutrition_ai_module.dart';
@@ -16,10 +17,11 @@ import 'pages/my_foods/my_foods_page.dart';
 import 'pages/my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
 import 'pages/my_foods/recipes/recipe_creator/ui/recipe_creator_page.dart';
 import 'pages/my_profile/my_profile_page.dart';
+import 'pages/nutrition_facts/nutrition_facts_page.dart';
+import 'pages/photo_preview/photo_preview_page.dart';
 import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/use_image/select_photo/select_photo_page.dart';
-import 'pages/use_image/take_photo/photo_preview/photo_preview_page.dart';
 import 'pages/use_image/take_photo/take_photo_page.dart';
 import 'pages/use_image/take_photo/take_photo_result/take_photo_result_page.dart';
 import 'pages/voice_logging/voice_logging_page.dart';
@@ -136,7 +138,7 @@ class NavigationAIPage extends StatelessWidget {
           returnResult: returnResult, maxLimit: maxLimit);
     } else if (settings.name == Routes.takePhotoResult) {
       List<Uint8List>? capturedImages = [];
-      if(arguments is List<Uint8List>) {
+      if (arguments is List<Uint8List>) {
         capturedImages = arguments;
       }
       return TakePhotoResultPage.route(capturedImages: capturedImages);
@@ -157,12 +159,11 @@ class NavigationAIPage extends StatelessWidget {
       return VoiceLoggingPage.route();
     } else if (settings.name == Routes.settings) {
       return SettingsPage.route();
-    }  else if (settings.name == Routes.photoPreview) {
-      List<Uint8List>? capturedImages = [];
-      if(arguments is List<Uint8List>) {
-        capturedImages = arguments;
-      }
-      return PhotoPreviewPage.route(image: capturedImages.first);
+    } else if (settings.name == Routes.photoPreview) {
+      XFile? file = arguments as XFile?;
+      return PhotoPreviewPage.route(file: file);
+    } else if (settings.name == Routes.nutritionFacts) {
+      return NutritionFactsPage.route();
     } else {
       return MaterialPageRoute(builder: (context) {
         return SizedBox.shrink();

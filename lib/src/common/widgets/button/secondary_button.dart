@@ -22,12 +22,16 @@ class SecondaryButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AppButton(
-      buttonText: text,
-      appButtonModel: AppButtonStyles.primaryBordered
-          .copyWith(padding: padding ?? _defaultPadding),
-      onTap: onTap,
-      isEnable: enabled,
+    return AnimatedOpacity(
+      duration: const Duration(milliseconds: 250),
+      opacity: enabled ? 1 : 0.4,
+      child: AppButton(
+        buttonText: text,
+        appButtonModel: AppButtonStyles.primaryBordered
+            .copyWith(padding: padding ?? _defaultPadding),
+        onTap: enabled ? onTap : null,
+        isEnable: enabled,
+      ),
     );
   }
 }

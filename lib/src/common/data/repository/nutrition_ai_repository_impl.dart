@@ -52,4 +52,9 @@ class NutritionAIRepositoryImpl extends NutritionAIRepository {
         .whereType<PassioFoodItem>()
         .toList();
   }
+
+  @override
+  Future<PassioFoodItem?> recognizeNutritionFacts(Uint8List bytes, {PassioImageResolution resolution = PassioImageResolution.res_1080}) {
+    return NutritionAI.instance.recognizeNutritionFactsRemote(bytes, resolution: resolution);
+  }
 }

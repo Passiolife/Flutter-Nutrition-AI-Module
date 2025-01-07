@@ -41,7 +41,7 @@ class _TimeStampWidgetState extends State<TimeStampWidget> {
   Widget build(BuildContext context) {
     return PrimaryTextInput(
       key: ValueKey(_formattedDate),
-      labelText: context.localization.timestamp,
+      labelText: context.localization.date,
       initialValue: _formattedDate,
       hintText: '',
       isDense: true,
