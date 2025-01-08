@@ -18,6 +18,14 @@ final class FinishGeneratingResultsState extends TakePhotoResultState {
   List<Object> get props => [];
 }
 
+final class ResultFailureState extends TakePhotoResultState {
+  const ResultFailureState();
+
+  @override
+  List<Object?> get props => [];
+
+}
+
 final class ResultsSuccessState extends TakePhotoResultState {
   const ResultsSuccessState({required this.foodRecordsViewModel});
 

@@ -424,5 +424,6 @@
   "noNutritionFactsLabelFoundDescription": "Take a photo of just the Nutrition Facts",
   "nutritionFactsIncomplete": "Nutrition Facts Incomplete",
   "nutritionFactsIncompleteDescription": "This item will not log",
-  "editNutrition": "Edit Nutrition"
+  "editNutrition": "Edit Nutrition",
+  "noResultsFoundDescription": "Sorry, we could not find any matches. Please try again, scan the nutrition facts, or "
 }

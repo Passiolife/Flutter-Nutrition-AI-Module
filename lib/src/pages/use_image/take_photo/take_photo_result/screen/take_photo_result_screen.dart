@@ -16,6 +16,7 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final navigationData = TakePhotoResultNavigationDataProvider.of(context);
       final capturedImages = navigationData.capturedImages;
+      _bloc?.add(InitializeEvent());
       _bloc?.add(DoProcessEvent(images: capturedImages));
     });
     super.initState();
@@ -41,6 +42,7 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
           const GeneratingResultsSection(),
           // const BarcodeMissingDataWidget(),
           const FoodItemsListSection(),
+          const NoResultsFoundSection(),
           const ActionButtonsSection(),
           context.bottomPadding.verticalSpace,
         ],

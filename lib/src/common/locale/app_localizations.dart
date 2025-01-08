@@ -20,10 +20,10 @@ class AppLocalizations {
 
   /// Retrieve the language translation
   /// name: Component name
-  String? getLabel(String name) {
+  String getLabel(String name) {
     return (_localeData?.containsKey(name) ?? false)
         ? _localeData![name]
-        : null;
+        : '';
   }
 
   String? get scanningForFood => getLabel('scanningForFood');
@@ -553,7 +553,7 @@ class AppLocalizations {
 
   String? get photosPermissionMessage => getLabel('photosPermissionMessage');
 
-  String? get noResultsFound => getLabel('noResultsFound');
+  String get noResultsFound => getLabel('noResultsFound') ?? '';
 
   String? get reselect => getLabel('reselect');
 
@@ -865,4 +865,6 @@ class AppLocalizations {
       getLabel('nutritionFactsIncompleteDescription');
 
   String? get editNutrition => getLabel('editNutrition');
+
+  String get noResultsFoundDescription => getLabel('noResultsFoundDescription');
 }

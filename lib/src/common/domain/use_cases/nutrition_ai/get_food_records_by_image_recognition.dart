@@ -22,16 +22,7 @@ class GetFoodRecordsByImageRecognition
 
     final recognizedData = await repository.recognizeImages(params);
 
-    // final foodItemsData =
-    //     recognizedData.where((e) => e.foodDataInfo != null).toList();
-    // List<FoodRecord> foodFoodRecords = foodItemsData.map((e) {
-    //   final packageData = e;
-    //   final foodItem = e.packagedFoodItem!;
-    //   return FoodRecord.fromPassioFoodItem(foodItem,
-    //       resultType: packageData.resultType);
-    // }).toList();
-
-    List<FoodRecord> itemRecords =
+    var futuresItemRecords =
         recognizedData.where((e) => e.foodDataInfo != null).map((e) async {
           final foodData = e.foodDataInfo;
           if(foodData == null) return null;
@@ -41,7 +32,10 @@ class GetFoodRecordsByImageRecognition
             foodItem,
             resultType: e.resultType,
           );
-        }).whereType<FoodRecord>().toList();
+        }).toList();
+
+    // Use Future.wait to resolve all futures and filter out nulls
+    List<FoodRecord> itemRecords = (await Future.wait(futuresItemRecords)).whereType<FoodRecord>().toList();
 
     List<FoodRecord> packagedFoodRecords = recognizedData
         .where((e) => e.packagedFoodItem != null)
@@ -50,22 +44,6 @@ class GetFoodRecordsByImageRecognition
               resultType: e.resultType,
             ))
         .toList();
-
-    // final packagedFoods = recognizedData
-    //     .map((e) => e.packagedFoodItem)
-    //     .toList()
-    //     .whereType<PassioFoodItem>()
-    //     .toList();
-    //
-    // List<PassioFoodItem> foodItems = [];
-    // if (foodDataInfos.isNotEmpty) {
-    //   foodItems = await repository.fetchFoodItemForDataInfos(foodDataInfos);
-    // }
-    //
-    // final mergedFoodItems = foodItems + packagedFoods;
-    //
-    // final foodRecords =
-    //     mergedFoodItems.map((e) => FoodRecord.fromPassioFoodItem(e)).toList();
 
     final foodRecords = itemRecords + packagedFoodRecords;
 

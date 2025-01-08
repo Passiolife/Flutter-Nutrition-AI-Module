@@ -15,11 +15,13 @@ class GeneratingResultsSection extends StatelessWidget {
       buildWhen: (_, state) {
         return state is TakePhotoResultInitial ||
             state is FinishGeneratingResultsState ||
-            state is ResultsSuccessState;
+            state is ResultsSuccessState || state is ResultFailureState;
       },
       builder: (context, state) {
         if (state is! FinishGeneratingResultsState &&
-            state is! TakePhotoResultInitial) return const SizedBox.shrink();
+            state is! TakePhotoResultInitial) {
+          return const SizedBox.shrink();
+        }
         bool finishGeneratingResults = state is FinishGeneratingResultsState;
         return Expanded(
           child: Column(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/extension/date_time_extension.dart';
 import '../../../../../common/util/date_picker.dart';
 import '../../../../../common/util/date_time_utility.dart';
 import '../../../../../common/widgets/text_input/primary_text_input.dart';
@@ -20,7 +21,7 @@ class _TimeStampWidgetState extends State<TimeStampWidget> {
 
   String get _formattedDate {
     if (_selectedDate == null) return '';
-    return _selectedDate!.isToday() ? 'Today' : '${_selectedDate!.day}/${_selectedDate!.month}/${_selectedDate!.year}';
+    return _selectedDate!.isToday() ? 'Today' : '${_selectedDate?.format(DateTimeFormatStrings.monthDayYearHourMinute12Hour)}';
   }
 
   @override

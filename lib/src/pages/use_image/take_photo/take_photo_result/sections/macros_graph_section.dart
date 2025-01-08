@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../common/constant/app_colors.dart';
 import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/extension/number_extension.dart';
 import '../../../../../common/models/daily_nutrition_model.dart';
 import '../../../../../common/util/double_extensions.dart';
 import '../bloc/take_photo_result_bloc.dart';
@@ -21,13 +22,17 @@ class MacrosGraphSection extends StatelessWidget {
         if (state is! UpdateMacroNutrientState) return const SizedBox.shrink();
 
         int calories = state.viewModel.calories.toInt();
+        int caloriesTarget = state.viewModel.caloriesTarget.toInt();
         double carbs = state.viewModel.carbs;
+        double carbsTarget = state.viewModel.carbsTarget;
         double protein = state.viewModel.protein;
+        double proteinTarget = state.viewModel.proteinTarget;
         double fat = state.viewModel.fat;
+        double fatTarget = state.viewModel.fatTarget;
         List<DailyNutritionModel> listNutrition = [
           DailyNutritionModel(
             title: '$calories',
-            // subtitle: '1,512',
+            subtitle: caloriesTarget.format(),
             footer: context.localization.calories!,
             value: calories > 0 ? 1 : 0,
             progressColor: AppColors.yellow500,
@@ -35,7 +40,7 @@ class MacrosGraphSection extends StatelessWidget {
           ),
           DailyNutritionModel(
             title: '${carbs.format(places: 1)} g',
-            // subtitle: '170 g',
+            subtitle: '${carbsTarget.format()} g',
             footer: context.localization.carbs!,
             value: carbs > 0 ? 1 : 0,
             progressColor: AppColors.lBlue500Normal,
@@ -43,7 +48,7 @@ class MacrosGraphSection extends StatelessWidget {
           ),
           DailyNutritionModel(
             title: '${protein.format(places: 1)} g',
-            // subtitle: '113 g',
+            subtitle: '${proteinTarget.format()} g',
             footer: context.localization.protein!,
             value: protein > 0 ? 1 : 0,
             progressColor: AppColors.green500Success,
@@ -51,7 +56,7 @@ class MacrosGraphSection extends StatelessWidget {
           ),
           DailyNutritionModel(
             title: '${fat.format(places: 1)} g',
-            // subtitle: '42 g',
+            subtitle: '${fatTarget.format()} g',
             footer: context.localization.fat!,
             value: fat > 0 ? 1 : 0,
             progressColor: AppColors.purple500,

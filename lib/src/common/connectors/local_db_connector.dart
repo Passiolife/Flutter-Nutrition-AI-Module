@@ -68,19 +68,24 @@ class LocalDBConnector implements PassioConnector {
 
   @override
   Future<List<FoodRecord>> fetchDayRecords({required DateTime dateTime}) async {
-    final date = DateFormat('yyyyMMdd').format(dateTime);
-    List<Map>? data = await _databaseHelper.database.query(
-      _databaseHelper.tblFoodRecord,
-      where: '${_databaseHelper.colCreatedAt} = ?',
-      whereArgs: [date],
-      orderBy: '${_databaseHelper.colId} DESC',
-    );
-    return data.map((e) {
-      final foodRecordResponse =
-          FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
-      foodRecordResponse.id = e[_databaseHelper.colId].toString();
-      return foodRecordResponse;
-    }).toList();
+    try {
+      final date = DateFormat('yyyyMMdd').format(dateTime);
+      List<Map>? data = await _databaseHelper.database.query(
+        _databaseHelper.tblFoodRecord,
+        where: '${_databaseHelper.colCreatedAt} = ?',
+        whereArgs: [date],
+        orderBy: '${_databaseHelper.colId} DESC',
+      );
+      return data.map((e) {
+        final foodRecordResponse =
+        FoodRecord.fromJson(jsonDecode(e[_databaseHelper.colData]));
+        foodRecordResponse.id = e[_databaseHelper.colId].toString();
+        return foodRecordResponse;
+      }).toList();
+    } on Exception catch (e) {
+      print(e);
+      return [];
+    }
   }
 
   @override

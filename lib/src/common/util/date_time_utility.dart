@@ -220,3 +220,9 @@ String format15 = 'EEE, MMM d';
 String format16 = 'MMM d';
 
 String format17 = 'MMMM - yyyy';
+
+// 01/06/25
+String format18 = 'MM/dd/yy';
+
+// 01/06/25, 1:00 PM
+String format19 = '${format18}, ';

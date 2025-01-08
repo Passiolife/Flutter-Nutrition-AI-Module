@@ -1,14 +1,25 @@
+import 'dart:math' as math;
+
+import 'package:flutter/material.dart';
+
 import '../../../../../nutrition_ai_module.dart';
+import '../../../../common/constant/app_colors.dart';
+import '../../../../common/models/daily_nutrition_model.dart';
 import '../../../../common/util/double_extensions.dart';
 
 class TakePhotoResultViewModel {
   final MealLabel mealLabel;
-  final DateTime timestamp;
+  final DateTime dateTime;
   final List<FoodRecordViewModel> foodRecords;
   final double calories;
+  final double caloriesTarget;
   final double carbs;
+  final double carbsTarget;
   final double protein;
+  final double proteinTarget;
   final double fat;
+  final double fatTarget;
+  final List<DailyNutritionModel> listMacros;
 
   bool get isLogEnabled => foodRecords.any((e) => e.isSelected);
 
@@ -16,12 +27,17 @@ class TakePhotoResultViewModel {
 
   const TakePhotoResultViewModel._({
     required this.mealLabel,
-    required this.timestamp,
+    required this.dateTime,
     this.foodRecords = const [],
     this.calories = 0,
+    this.caloriesTarget = 0,
     this.carbs = 0,
+    this.carbsTarget = 0,
     this.protein = 0,
+    this.proteinTarget = 0,
     this.fat = 0,
+    this.fatTarget = 0,
+    this.listMacros = const [],
   });
 
   factory TakePhotoResultViewModel.init() {
@@ -29,7 +45,7 @@ class TakePhotoResultViewModel {
     final mealLabel = MealLabel.dateToMealLabel(timeStamp);
     return TakePhotoResultViewModel._(
       mealLabel: mealLabel,
-      timestamp: timeStamp,
+      dateTime: timeStamp,
     );
   }
 
@@ -45,18 +61,28 @@ class TakePhotoResultViewModel {
     DateTime? timestamp,
     List<FoodRecordViewModel>? foodRecords,
     double? calories,
+    double? caloriesTarget,
     double? carbs,
+    double? carbsTarget,
     double? protein,
+    double? proteinTarget,
     double? fat,
+    double? fatTarget,
+    List<DailyNutritionModel>? listMacros,
   }) {
     return TakePhotoResultViewModel._(
       mealLabel: mealLabel ?? this.mealLabel,
-      timestamp: timestamp ?? this.timestamp,
+      dateTime: timestamp ?? this.dateTime,
       foodRecords: foodRecords ?? this.foodRecords,
       calories: calories ?? this.calories,
+      caloriesTarget: caloriesTarget ?? this.caloriesTarget,
       carbs: carbs ?? this.carbs,
+      carbsTarget: carbsTarget ?? this.carbsTarget,
       protein: protein ?? this.protein,
+      proteinTarget: proteinTarget ?? this.proteinTarget,
       fat: fat ?? this.fat,
+      fatTarget: fatTarget ?? this.fatTarget,
+      listMacros: listMacros ?? this.listMacros,
     );
   }
 
@@ -93,8 +119,75 @@ class TakePhotoResultViewModel {
       protein += element.foodRecord.totalProteins;
       fat += element.foodRecord.totalFat;
     }
+
+    // Calories
+    double caloriesProgress = (calories / caloriesTarget).clamp(0.0, 2.0);
+    // Determine over progress
+    double caloriesOverProgress = math.max(caloriesProgress - 1, 0);
+    // Set the calories value, ensuring it's non-negative
+    double caloriesValue =
+        caloriesOverProgress > 0 ? caloriesOverProgress : caloriesProgress;
+    // Determine progress color based on over progress
+    Color caloriesProgressColor = caloriesOverProgress > 0
+        ? AppColors.yellow500
+        : AppColors.yellow900Dark;
+    // Set background color based on over progress
+    Color caloriesBackgroundColor = caloriesOverProgress > 0
+        ? AppColors.yellow500
+        : AppColors.brandPrimaryLight;
+
+    // Carbs
+    double carbsProgress = (carbs / carbsTarget).clamp(0.0, 2.0);
+    // Determine over progress
+    double carbsOverProgress = math.max(carbsProgress - 1, 0);
+    // Set the calories value, ensuring it's non-negative
+    double caloriesValue =
+    caloriesOverProgress > 0 ? caloriesOverProgress : caloriesProgress;
+    // Determine progress color based on over progress
+    Color caloriesProgressColor = caloriesOverProgress > 0
+        ? AppColors.yellow500
+        : AppColors.yellow900Dark;
+    // Set background color based on over progress
+    Color caloriesBackgroundColor = caloriesOverProgress > 0
+        ? AppColors.yellow500
+        : AppColors.brandPrimaryLight;
+
+    final listMacros = [
+      DailyNutritionModel(
+        footer: 'Calories',
+        title: '$calories',
+        subtitle: '$caloriesTarget',
+        value: caloriesValue,
+        progressColor: caloriesProgressColor,
+        backgroundColor: caloriesBackgroundColor,
+      ),
+      DailyNutritionModel(
+        footer: 'Carbs',
+        title: '${carbs.format(places: 1)} g',
+        subtitle: '${carbsTarget.format()} g',
+        value: caloriesValue,
+        progressColor: caloriesProgressColor,
+        backgroundColor: caloriesBackgroundColor,
+      ),
+    ];
+
     return copyWith(
-        calories: calories, carbs: carbs, protein: protein, fat: fat);
+      calories: calories,
+      carbs: carbs,
+      protein: protein,
+      fat: fat,
+      listMacros: listMacros,
+    );
+  }
+
+  TakePhotoResultViewModel updateMacroNutrientsTarget(double caloriesTarget,
+      double carbsTarget, double proteinTarget, double fatTarget) {
+    return copyWith(
+      caloriesTarget: caloriesTarget,
+      carbsTarget: carbsTarget,
+      proteinTarget: proteinTarget,
+      fatTarget: fatTarget,
+    );
   }
 }
 

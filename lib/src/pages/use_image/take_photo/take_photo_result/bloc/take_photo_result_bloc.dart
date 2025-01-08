@@ -6,6 +6,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/models/food_record/meal_label.dart';
+import '../../../../../common/models/user_profile/user_profile_model.dart';
+import '../../../../../common/util/user_session.dart';
+import '../../../../../nutrition_ai_module_configuration.dart';
 import '../../models/take_photo_result_view_model.dart';
 
 part 'take_photo_result_event.dart';
@@ -14,12 +17,20 @@ part 'take_photo_result_state.dart';
 class TakePhotoResultBloc
     extends Bloc<TakePhotoResultEvent, TakePhotoResultState> {
   // Views Properties
-  TakePhotoResultViewModel _viewModel = TakePhotoResultViewModel.init();
+  late TakePhotoResultViewModel _viewModel;
 
   final GetFoodRecordsByImageRecognition foodRecordsByImageRecognition;
+  final NutritionConfiguration nutritionConfiguration;
 
-  TakePhotoResultBloc({required this.foodRecordsByImageRecognition})
-      : super(const TakePhotoResultInitial()) {
+  double caloriesTarget = 0;
+  double carbsTarget = 0;
+  double proteinTarget = 0;
+  double fatTarget = 0;
+
+  TakePhotoResultBloc({
+    required this.nutritionConfiguration,
+    required this.foodRecordsByImageRecognition,
+  }) : super(const TakePhotoResultInitial()) {
     on<InitializeEvent>(_handleInitializeEvent);
     on<SetDefaultHeaderEvent>(_handleSetDefaultMealLabelEvent);
     on<UpdateMealLabelEvent>(_handleUpdateMealLabelEvent);
@@ -34,6 +45,7 @@ class TakePhotoResultBloc
   Future<void> _handleInitializeEvent(
       InitializeEvent event, Emitter<TakePhotoResultState> emit) async {
     _viewModel = TakePhotoResultViewModel.init();
+
     emit(const TakePhotoResultInitial());
   }
 
@@ -79,16 +91,39 @@ class TakePhotoResultBloc
     add(SetDefaultHeaderEvent());
     final capturedImages = event.images;
     if (capturedImages != null) {
-      final response = await foodRecordsByImageRecognition.call(capturedImages);
-      /*final foodRecords = (await foodRepository
-              .getFoodRecordsByImageRecognition(capturedImages))
-          .whereType<FoodRecord>()
-          .toList();*/
-      _viewModel = _viewModel.fromFoodRecords(response.response);
+      final result = await foodRecordsByImageRecognition.call(capturedImages);
 
       emit(const FinishGeneratingResultsState());
 
       await Future.delayed(const Duration(milliseconds: 700));
+
+      if (result.response.isEmpty) {
+        emit(const ResultFailureState());
+        return;
+      }
+
+      final profileModel =
+          UserProfileModel.fromJson(UserSession.instance.userProfile!.toJson());
+      List<FoodRecord> dayRecords = await nutritionConfiguration.connector
+          .fetchDayRecords(dateTime: _viewModel.dateTime);
+
+      caloriesTarget = profileModel.caloriesTarget -
+          dayRecords.fold(
+              0, (previous, element) => previous + element.totalCalories);
+      carbsTarget = profileModel.carbsGram -
+          dayRecords.fold(
+              0, (previous, element) => previous + element.totalCarbs);
+      proteinTarget = profileModel.proteinGram -
+          dayRecords.fold(
+              0, (previous, element) => previous + element.totalProteins);
+      fatTarget = profileModel.fatGram -
+          dayRecords.fold(
+              0, (previous, element) => previous + element.totalFat);
+
+      _viewModel = _viewModel.updateMacroNutrientsTarget(
+          caloriesTarget, carbsTarget, proteinTarget, fatTarget);
+
+      _viewModel = _viewModel.fromFoodRecords(result.response);
 
       add(UpdateMacroNutrientEvent());
       add(UpdateActionButtonsEvent());

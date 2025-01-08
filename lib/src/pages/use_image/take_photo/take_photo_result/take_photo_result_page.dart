@@ -5,6 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_shadow.dart';
 import '../../../../common/data/repository/nutrition_ai_repository_impl.dart';
 import '../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
@@ -16,6 +17,7 @@ import 'sections/action_buttons_section.dart';
 import 'sections/food_items_list_section.dart';
 import 'sections/generating_results_section.dart';
 import 'sections/macros_graph_section.dart';
+import 'sections/no_results_found_section.dart';
 import 'sections/result_header_section.dart';
 import 'widgets/barcode_missing_data_widget.dart';
 
@@ -40,6 +42,7 @@ class TakePhotoResultPage extends StatelessWidget {
       capturedImages: capturedImages,
       child: BlocProvider(
         create: (context) => TakePhotoResultBloc(
+          nutritionConfiguration: NutritionAIModule.instance.configuration,
           foodRecordsByImageRecognition: GetFoodRecordsByImageRecognition(
             repository: NutritionAIRepositoryImpl(),
           ),
