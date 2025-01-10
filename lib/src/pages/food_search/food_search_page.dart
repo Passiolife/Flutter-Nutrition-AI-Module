@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../nutrition_ai_module.dart';
 import '../../common/constant/app_constants.dart';
-import '../../common/constant/app_padding.dart';
 import '../../common/data/repository/food_log_repositoy_impl.dart';
 import '../../common/extension/context_extension.dart';
 import '../../common/router/routes.dart';

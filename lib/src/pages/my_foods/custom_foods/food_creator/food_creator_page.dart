@@ -118,7 +118,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                 child: Padding(
                   padding: EdgeInsets.all(16.r),
                   child: SingleChildScrollView(
-                    padding: EdgeInsets.only(bottom: context.keyboardHeight),
+                    padding: context.keyboardHeight,
                     child: Column(
                       key: _refreshKey,
                       children: [
@@ -177,7 +177,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                 ),
               ),
               Visibility(
-                visible: context.keyboardHeight <= 0,
+                visible: context.keyboardHeightValue <= 0,
                 child: Padding(
                   padding: EdgeInsets.symmetric(horizontal: 16.w),
                   child: ActionButtonsWidget(
@@ -191,7 +191,7 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
                   ),
                 ),
               ),
-              (context.bottomPadding + 8).verticalSpace,
+              (context.bottomPaddingValue + 8).verticalSpace,
             ],
           ),
         );

@@ -72,10 +72,32 @@ final class UpdateActionButtonsEvent extends TakePhotoResultEvent {
   List<Object?> get props => [];
 }
 
-final class UpdateServingSizeEvent extends TakePhotoResultEvent {
-  const UpdateServingSizeEvent({required this.index, required this.foodRecord});
+final class UpdateFoodRecordEvent extends TakePhotoResultEvent {
+  const UpdateFoodRecordEvent({required this.index, required this.foodRecord});
 
   final int index;
+  final FoodRecord foodRecord;
+
+  @override
+  List<Object?> get props => [foodRecord];
+}
+
+final class CreateRecipeEvent extends TakePhotoResultEvent {
+  const CreateRecipeEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class DoLogEvent extends TakePhotoResultEvent {
+  const DoLogEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
+final class VerifyMissingDataEvent extends TakePhotoResultEvent {
+  const VerifyMissingDataEvent({required this.foodRecord});
   final FoodRecord foodRecord;
 
   @override

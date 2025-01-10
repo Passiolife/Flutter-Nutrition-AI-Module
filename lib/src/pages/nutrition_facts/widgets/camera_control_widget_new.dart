@@ -17,7 +17,7 @@ class CameraControlWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: context.bottomPadding + 40.h,
+      bottom: context.bottomPaddingValue + 40.h,
       left: 0,
       right: 0,
       child: CaptureButtonWidget(

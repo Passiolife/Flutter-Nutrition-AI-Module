@@ -139,7 +139,7 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
                 Positioned(
                   left: 0,
                   right: 0,
-                  bottom: context.bottomPadding.h + (context.height * 0.1),
+                  bottom: context.bottomPaddingValue.h + (context.height * 0.1),
                   child: const GeneratingResultsWidget(),
                 )
               else if (_advisorFoodInfoList?.isNotEmpty ?? false)

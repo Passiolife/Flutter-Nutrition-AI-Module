@@ -56,14 +56,12 @@ class CameraWidgetState extends State<CameraWidget> {
     } else {
       if (_controller != null) {
         return SizedBox(
-          width: context.width, // Full screen width
-          height: context.height, // Full screen height
+          width: context.width,
+          height: context.height,
           child: FittedBox(
-            fit: BoxFit
-                .cover, // Scales CameraPreview to cover the entire container
+            fit: BoxFit.cover,
             child: SizedBox(
-              width: context
-                  .width, // Ensures CameraPreview has a defined width for scaling
+              height: context.width,
               child: CameraPreview(_controller!), // Displays the camera preview
             ),
           ),
@@ -137,7 +135,7 @@ class CameraWidgetState extends State<CameraWidget> {
       if (cameraController.value.hasError) {
         context.showSnackbar(
             text:
-            '${context.localization.error} ${cameraController.value.errorDescription}');
+                '${context.localization.error} ${cameraController.value.errorDescription}');
       }
     });
 
@@ -174,10 +172,12 @@ class CameraWidgetState extends State<CameraWidget> {
       case 'AudioAccessDeniedWithoutPrompt':
         // iOS only
         context.showSnackbar(
-            text: context.localization.pleaseGoToSettingsAppToEnableAudioAccess);
+            text:
+                context.localization.pleaseGoToSettingsAppToEnableAudioAccess);
       case 'AudioAccessRestricted':
         // iOS only
-        context.showSnackbar(text: context.localization.audioAccessIsRestricted);
+        context.showSnackbar(
+            text: context.localization.audioAccessIsRestricted);
       default:
         _showCameraException(e);
         break;
@@ -209,8 +209,8 @@ class CameraWidgetState extends State<CameraWidget> {
       if (e.code == 'setFlashModeFailed') {
         if (_lensDirection == CameraLensDirection.front) {
           context.showSnackbar(
-              text: context
-                  .localization.frontCameraFlashlightIsNotSupportedOnThisDevice);
+              text: context.localization
+                  .frontCameraFlashlightIsNotSupportedOnThisDevice);
         }
       }
     }

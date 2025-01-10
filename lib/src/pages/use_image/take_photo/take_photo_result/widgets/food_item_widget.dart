@@ -34,7 +34,7 @@ class FoodItemWidget extends StatelessWidget {
 
   List<MacroItemModel> _getMacros(BuildContext context) => [
         MacroItemModel(
-          value: calories.toInt(),
+          value: calories.round(),
           label: context.localization.cal ?? '',
           color: AppColors.yellow500,
         ),

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_constants.dart';
-import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/extension/number_extension.dart';
 import '../../../../../common/extension/string_extensions.dart';
@@ -19,15 +19,22 @@ import '../../../../../common/widgets/text_input/primary_text_input.dart';
 import '../../../../my_foods/custom_foods/food_creator/barcode_scanner/barcode_scanner_page.dart';
 
 class EditNutritionFacts extends StatefulWidget {
-  const EditNutritionFacts({required this.foodRecord, this.index, super.key});
+  const EditNutritionFacts({
+    required this.foodRecord,
+    required this.index,
+    required this.showMissing,
+    super.key,
+  });
 
   final FoodRecord foodRecord;
   final int? index;
+  final bool showMissing;
 
   static Future<FoodRecord?> navigate({
     required BuildContext context,
     required FoodRecord foodRecord,
     int? index,
+    bool showMissing = false,
   }) {
     return Navigator.push(
       context,
@@ -35,6 +42,7 @@ class EditNutritionFacts extends StatefulWidget {
         child: EditNutritionFacts(
           foodRecord: foodRecord,
           index: index,
+          showMissing: showMissing,
         ),
       ),
     );
@@ -73,6 +81,10 @@ class _EditNutritionFactsState extends State<EditNutritionFacts> {
     _quantity = _foodRecord.getSelectedQuantity();
     _weight = _foodRecord.computedWeight.value;
     _unit = _foodRecord.getSelectedUnit();
+
+    SchedulerBinding.instance.addPostFrameCallback((_){
+      _formKey.currentState?.validate();
+    });
   }
 
   @override
@@ -85,7 +97,7 @@ class _EditNutritionFactsState extends State<EditNutritionFacts> {
             Container(
               decoration: AppShadows.base,
               padding: AppPadding.pa16,
-              margin: AppPadding.pa16,
+              margin: AppPadding.pa16 + context.keyboardHeight,
               child: Form(
                 key: _formKey,
                 child: Column(
@@ -146,7 +158,7 @@ class _EditNutritionFactsState extends State<EditNutritionFacts> {
   }
 
   FoodRecord toFoodRecord(
-    /*String name,
+      /*String name,
     double quantity,
     String unit,
     double weight,
@@ -155,7 +167,7 @@ class _EditNutritionFactsState extends State<EditNutritionFacts> {
     double protein,
     double fat,
     String? barcode,*/
-  ) {
+      ) {
     // Create a list of serving sizes with a default serving unit if not provided
     final servingSizes = _foodRecord.servingSizes;
 
@@ -174,7 +186,14 @@ class _EditNutritionFactsState extends State<EditNutritionFacts> {
     );
 
     // Create a list of serving units with the serving weight and a default serving unit if not provided
-    final servingUnits = _foodRecord.servingUnits;
+    List<PassioServingUnit> servingUnits = _foodRecord.servingUnits;
+    final index = servingUnits.indexWhere((e) => e.unitName == _unit);
+    if (index != -1) {
+      final selectedServingUnit = servingUnits[index];
+      final newServingUnit = PassioServingUnit(
+          _unit!, UnitMass(_weight!, selectedServingUnit.weight.unit));
+      servingUnits[index] = newServingUnit;
+    }
 
     // Create a food amount object with the selected quantity, unit, serving sizes, and serving units
     final amount = PassioFoodAmount(
@@ -333,7 +352,7 @@ class _NutritionFactsWidgetState extends State<_NutritionFactsWidget> {
     _caloriesController =
         TextEditingController(text: widget.foodRecord.totalCalories.format());
     _carbsController =
-        TextEditingController(text: widget.foodRecord.totalCarbs.format());
+        TextEditingController(/*text: widget.foodRecord.totalCarbs.format()*/);
     _proteinController =
         TextEditingController(text: widget.foodRecord.totalProteins.format());
     _fatController =
@@ -565,6 +584,7 @@ class _PortionsWidgetState extends State<_PortionsWidget> {
                     ),
                   ),
                   SecondaryDropdown<String>(
+                    height: 40.h,
                     value: KeyValueModel(
                         text: _unit.toUpperCaseWord, value: _unit),
                     options: _units.map((e) {
@@ -657,7 +677,7 @@ class _ActionButtons extends StatelessWidget {
         ),
         Expanded(
           child: PrimaryButton(
-            text: context.localization.next,
+            text: context.localization.save,
             onTap: onNext,
           ),
         ),

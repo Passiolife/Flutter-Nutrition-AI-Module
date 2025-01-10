@@ -6,6 +6,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../nutrition_ai_module.dart';
+import '../../../common/domain/repository/nutrition_ai_repository.dart';
+import '../../../common/extension/passio/passio_food_item_extension.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
 import '../../../common/models/settings/settings.dart';
 import '../../../common/util/flutter_image_compress_util.dart';
@@ -18,26 +20,31 @@ class NutritionFactsBloc extends Bloc<TakePhotoEvent, NutritionFactsState> {
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
 
-  List<Uint8List> _images = [];
-  List<Uint8List> _resizedImages = [];
+  Uint8List? _images;
+  Uint8List? _resizedImages;
 
-  NutritionFactsBloc() : super(const TakePhotoInitialBuilderState()) {
+  final NutritionAIRepository nutritionAIRepository;
+
+  PassioFoodItem? _nutritionFacts;
+  PassioFoodItem? _ingredients;
+  PassioFoodItem? _finalFoodItem;
+
+  int _section = 0;
+
+  NutritionFactsBloc({required this.nutritionAIRepository}) : super(const InitialBuilderState()) {
     on<DoCheckIntroScreenEvent>(_handleDoCheckIntroScreenEvent);
     on<ShowIntroScreenEvent>(_handleShowIntroScreenEvent);
     on<DoIntroScreenCompletedEvent>(_handleDoIntroScreenCompletedEvent);
-    on<InitialEvent>(_handleInitialEvent);
-    on<DoNextEvent>(_handleDoNextEvent);
+    // on<InitialEvent>(_handleInitialEvent);
     on<DoTakeImageEvent>(_handleDoTakeImageEvent);
-    on<DoRemoveImageEvent>(_handleDoRemoveImageEvent);
     on<DoRecognizeImageEvent>(_handleDoRecognizeImageEvent);
-    on<UpdateSelectionEvent>(_handleUpdateSelectionEvent);
-    on<ClearSelectionEvent>(_handleClearSelectionEvent);
+    on<UpdateSectionEvent>(_handleUpdateSectionEvent);
     on<DoFoodLogEvent>(_handleDoFoodLogEvent);
   }
 
   FutureOr<void> _handleDoCheckIntroScreenEvent(
       DoCheckIntroScreenEvent event, Emitter<NutritionFactsState> emit) {
-    final seen = Settings.instance.getTakePictureIntroSeen();
+    final seen = Settings.instance.getNutritionFactsIntroSeen();
     if (seen) {
       add(const DoIntroScreenCompletedEvent());
     } else {
@@ -53,29 +60,24 @@ class NutritionFactsBloc extends Bloc<TakePhotoEvent, NutritionFactsState> {
   FutureOr<void> _handleDoIntroScreenCompletedEvent(
       DoIntroScreenCompletedEvent event, Emitter<NutritionFactsState> emit) {
     if (event.fromDialog) {
-      Settings.instance.setTakePictureIntroSeen(true);
+      Settings.instance.setNutritionFactsIntroSeen(true);
     }
     emit(const IntroDialogSeenBuilderState());
   }
 
-  FutureOr<void> _handleInitialEvent(
-      InitialEvent event, Emitter<NutritionFactsState> emit) {
-    _images = [];
-    _resizedImages = [];
-    // emit(const TakePhotoInitialListenerState());
-    emit(const TakePhotoInitialBuilderState());
-  }
-
-  Future<void> _handleDoNextEvent(
-      DoNextEvent event, Emitter<NutritionFactsState> emit) async {
-    add(DoRecognizeImageEvent(images: event.images));
-    // emit(const RecognizeImageLoadingListenerState());
-    emit(const RecognizeImageSuccessBuilderState());
-  }
-
   FutureOr<void> _handleDoTakeImageEvent(
       DoTakeImageEvent event, Emitter<NutritionFactsState> emit) async {
-    if (event.file != null) {
+    final file = event.file;
+    if (file != null) {
+      Uint8List? image = await FlutterImageCompressUtil.angleCorrect(file.path);
+      if (image == null) {
+        return;
+      }
+      _section = 1;
+      emit(UpdateSectionBuilderState(section: _section));
+      add(DoRecognizeImageEvent(image: image));
+    }
+    /*if (event.file != null) {
       final bytes =
           await FlutterImageCompressUtil.angleCorrect(event.file!.path);
       final resizedBytes = await FlutterImageCompressUtil.compress(
@@ -85,49 +87,74 @@ class NutritionFactsBloc extends Bloc<TakePhotoEvent, NutritionFactsState> {
       );
       if (bytes != null && resizedBytes != null) {
         _images = List.from(_images)..insert(0, bytes);
-        _resizedImages = List.from(_resizedImages)..insert(0, resizedBytes);
-        // emit(TakePhotoSuccessListenerState(
-        //     images: _images, resizedImages: _resizedImages));
-        // emit(const TakePhotoSuccessBuilderState());
-      }
-    }
-  }
 
-  FutureOr<void> _handleDoRemoveImageEvent(
-      DoRemoveImageEvent event, Emitter<NutritionFactsState> emit) async {
-    final index = event.index;
-    _images = List.from(_images)..removeAt(index);
-    _resizedImages = List.from(_resizedImages)..removeAt(index);
-    // emit(RemovePhotoListenerState(images: _images, resizedImages: _resizedImages));
-    // emit(const RemoveImageBuilderState());
+        // _resizedImages = List.from(_resizedImages)..insert(0, resizedBytes);
+      }
+    }*/
   }
 
   FutureOr<void> _handleDoRecognizeImageEvent(
       DoRecognizeImageEvent event, Emitter<NutritionFactsState> emit) async {
-    final result = await Future.wait(event.images
-        .map((e) async => NutritionAI.instance.recognizeImageRemote(e)));
-    final advisorFoodInfoList = result.expand((e) => e).toList();
-    final advisorFoodInfoLogList =
-        advisorFoodInfoList.toAdvisorFoodInfoLogList();
-    _updateVoiceLogsAndEmit(advisorFoodInfoLogList, emit);
+    final image = event.image;
+    emit(PreviewBuilderState(image: image, analyzedCompleted: false));
+    final foodItem = await nutritionAIRepository.recognizeNutritionFacts(image);
+    emit(PreviewBuilderState(image: image, analyzedCompleted: true));
+    await Future.delayed(Duration(milliseconds: 500));
+
+    if(_section == 0) {
+      return;
+    }
+
+    if (foodItem == null) {
+      emit(FailedToAnalyzedState(timestamp: DateTime.now().millisecond));
+      return;
+    } else if(foodItem.hasMacros) {
+      if(foodItem.hasIngredientsDescription) {
+        _finalFoodItem = foodItem;
+        return;
+      }
+      _nutritionFacts = foodItem;
+
+    } else if(foodItem.hasIngredientsDescription) {
+      _ingredients = foodItem;
+    }
+    if (_nutritionFacts == null && _ingredients == null) {
+      emit(BothNotFoundState(timestamp: DateTime.now().millisecond));
+    } else if (_nutritionFacts == null) {
+      emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond));
+    } else if (_ingredients == null) {
+      emit(IngredientsNotFoundState(timestamp: DateTime.now().millisecond));
+    }
   }
 
-  FutureOr<void> _handleUpdateSelectionEvent(
-      UpdateSelectionEvent event, Emitter<NutritionFactsState> emit) async {
-    final advisorFoodInfoLogList = event.data?.toggleSelectionFor(event.index);
-    _updateVoiceLogsAndEmit(advisorFoodInfoLogList, emit);
+  void _handleUpdateSectionEvent(UpdateSectionEvent event, Emitter<NutritionFactsState> emit) {
+    _section = event.section;
+    emit(UpdateSectionBuilderState(section: _section));
   }
 
-  FutureOr<void> _handleClearSelectionEvent(
-      ClearSelectionEvent event, Emitter<NutritionFactsState> emit) async {
-    final advisorFoodInfoLogList = event.data?.clearSelection();
-    _updateVoiceLogsAndEmit(advisorFoodInfoLogList, emit);
+  void _handleFoodItemAnalysis(PassioFoodItem foodItem, Emitter<NutritionFactsState> emit) {
+    // if (foodItem.hasMacros) {
+    //   _nutritionFacts = foodItem;
+    //   if (foodItem.hasIngredientsDescription) {
+    //     _finalFoodItem = foodItem;
+    //     emit(FullAnalysisCompleteState(timestamp: DateTime.now()));
+    //     return;
+    //   }
+    // } else if (foodItem.hasIngredientsDescription) {
+    //   _ingredients = foodItem;
+    // }
+
+    _emitAppropriateState(emit);
   }
 
-  void _updateVoiceLogsAndEmit(
-      List<AdvisorFoodInfoLog>? data, Emitter<NutritionFactsState> emit) {
-    // emit(RecognizeImageSuccessListenerState(data: data));
-    emit(const RecognizeImageSuccessBuilderState());
+  void _emitAppropriateState(Emitter<NutritionFactsState> emit) {
+    // if (_nutritionFacts == null && _ingredients == null) {
+    //   emit(NoDataFoundState(timestamp: DateTime.now()));
+    // } else if (_nutritionFacts == null) {
+    //   emit(MissingNutritionFactsState(timestamp: DateTime.now()));
+    // } else if (_ingredients == null) {
+    //   emit(MissingIngredientsState(timestamp: DateTime.now()));
+    // }
   }
 
   Future<void> _handleDoFoodLogEvent(

@@ -7,7 +7,7 @@ sealed class RecipeCreatorEvent extends Equatable {
 class DoPrefillEvent extends RecipeCreatorEvent {
   const DoPrefillEvent({required this.data});
 
-  final NavigationData data;
+  final RecipeCreatorNavigationData data;
 
   @override
   List<Object?> get props => [data];

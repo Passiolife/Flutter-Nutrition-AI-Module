@@ -61,7 +61,7 @@ class _VoiceActionButtonsSectionState extends State<VoiceActionButtonsSection> {
         bool isListening =
             (state is ListeningUpdateBuilderState) ? state.isListening : false;
         return Padding(
-          padding: AppPadding.pb8 + EdgeInsets.only(bottom: context.bottomPadding),
+          padding: AppPadding.pb8 + EdgeInsets.only(bottom: context.bottomPaddingValue),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [

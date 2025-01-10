@@ -14,7 +14,7 @@ class BottomNavBarSpaceWidget extends StatelessWidget {
     // AppDimens.h16: Additional space added to ensure the entire content remains visible.
     return SizedBox(
         height: AppDimens.h16 +
-            (context.bottomPadding + AppDimens.h16) +
+            (context.bottomPaddingValue + AppDimens.h16) +
             AppDimens.h16);
   }
 }

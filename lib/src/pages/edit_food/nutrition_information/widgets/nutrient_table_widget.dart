@@ -18,7 +18,7 @@ class NutrientTableWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return GridView.builder(
       shrinkWrap: true,
-      padding: AppPadding.pv16 + EdgeInsets.only(bottom: context.bottomPadding),
+      padding: AppPadding.pv16 + EdgeInsets.only(bottom: context.bottomPaddingValue),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         mainAxisSpacing: 16.h,

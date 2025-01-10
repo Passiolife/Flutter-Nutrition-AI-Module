@@ -8,15 +8,14 @@ class _TakePhotoResultScreen extends StatefulWidget {
 }
 
 class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
-
-  TakePhotoResultBloc? get _bloc => mounted ? context.read<TakePhotoResultBloc>() : null;
+  TakePhotoResultBloc? get _bloc =>
+      mounted ? context.read<TakePhotoResultBloc>() : null;
 
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       final navigationData = TakePhotoResultNavigationDataProvider.of(context);
       final capturedImages = navigationData.capturedImages;
-      _bloc?.add(InitializeEvent());
       _bloc?.add(DoProcessEvent(images: capturedImages));
     });
     super.initState();
@@ -24,29 +23,68 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            decoration: AppShadows.base,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const ResultHeaderSection(),
-                const MacrosGraphSection(),
-              ],
+    return BlocListener<TakePhotoResultBloc, TakePhotoResultState>(
+      listener: _handleStateChanges,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Container(
+              decoration: AppShadows.base,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const ResultHeaderSection(),
+                  const MacrosGraphSection(),
+                ],
+              ),
             ),
-          ),
-          const GeneratingResultsSection(),
-          // const BarcodeMissingDataWidget(),
-          const FoodItemsListSection(),
-          const NoResultsFoundSection(),
-          const ActionButtonsSection(),
-          context.bottomPadding.verticalSpace,
-        ],
+            const GeneratingResultsSection(),
+            // const BarcodeMissingDataWidget(),
+            const FoodItemsListSection(),
+            const NoResultsFoundSection(),
+            const ActionButtonsSection(),
+            context.bottomPaddingValue.verticalSpace,
+          ],
+        ),
       ),
+    );
+  }
+
+  void _handleStateChanges(BuildContext context, TakePhotoResultState state) {
+    if (state is FoodLogSuccessState) {
+      _showItemAddedToDiary(context);
+    } else if(state is CreateRecipeSuccessState) {
+      final foodRecord = state.foodRecord;
+      final recipeData = RecipeCreatorNavigationData(
+        loggedFoodRecord: foodRecord
+      );
+      Navigator.pushNamed(context, Routes.recipeCreator, arguments: recipeData);
+    }
+  }
+
+  void _showItemAddedToDiary(BuildContext context) {
+    ShowWidgetUtil.showCustomGeneralDialog(
+      context: context,
+      builder: (dsContext) {
+        return ItemAddedToDiaryWidget(
+          onTapNegative: () {
+            Navigator.pop(dsContext);
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.dashboard,
+              (route) => route.isFirst,
+              arguments: 1,
+            );
+          },
+          onTapPositive: () {
+            Navigator.pop(dsContext);
+            Navigator.popUntil(
+                context, (route) => route.settings.name == Routes.takePhoto);
+          },
+        );
+      },
     );
   }
 }

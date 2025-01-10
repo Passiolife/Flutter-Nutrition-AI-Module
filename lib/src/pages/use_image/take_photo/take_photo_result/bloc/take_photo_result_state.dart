@@ -23,16 +23,20 @@ final class ResultFailureState extends TakePhotoResultState {
 
   @override
   List<Object?> get props => [];
-
 }
 
 final class ResultsSuccessState extends TakePhotoResultState {
-  const ResultsSuccessState({required this.foodRecordsViewModel});
+  const ResultsSuccessState({
+    required this.foodRecordsViewModel,
+    required this.incompleteFoodRecordsViewModel,
+  });
 
   final List<FoodRecordViewModel> foodRecordsViewModel;
+  final List<FoodRecordViewModel> incompleteFoodRecordsViewModel;
 
   @override
-  List<Object> get props => [foodRecordsViewModel];
+  List<Object> get props =>
+      [foodRecordsViewModel, incompleteFoodRecordsViewModel];
 }
 
 final class UpdateHeaderState extends TakePhotoResultState {
@@ -45,19 +49,39 @@ final class UpdateHeaderState extends TakePhotoResultState {
 }
 
 final class UpdateMacroNutrientState extends TakePhotoResultState {
-  const UpdateMacroNutrientState({required this.viewModel});
+  const UpdateMacroNutrientState({required this.listMacros});
 
-  final TakePhotoResultViewModel viewModel;
+  final List<DailyNutritionModel> listMacros;
 
   @override
-  List<Object?> get props => [viewModel];
+  List<Object?> get props => [listMacros];
 }
 
 final class UpdateActionButtonsState extends TakePhotoResultState {
-  const UpdateActionButtonsState({required this.viewModel});
+  const UpdateActionButtonsState(
+      {required this.viewModel, required this.timestamp});
 
+  final int timestamp;
   final TakePhotoResultViewModel viewModel;
 
   @override
-  List<Object> get props => [viewModel];
+  List<Object> get props => [timestamp];
+}
+
+final class CreateRecipeSuccessState extends TakePhotoResultState {
+  const CreateRecipeSuccessState(
+      {required this.timestamp, required this.foodRecord});
+
+  final int timestamp;
+  final FoodRecord foodRecord;
+
+  @override
+  List<Object> get props => [timestamp, foodRecord];
+}
+
+final class FoodLogSuccessState extends TakePhotoResultState {
+  const FoodLogSuccessState();
+
+  @override
+  List<Object> get props => [];
 }

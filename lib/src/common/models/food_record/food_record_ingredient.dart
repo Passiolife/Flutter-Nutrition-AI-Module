@@ -50,6 +50,8 @@ class FoodRecordIngredient {
 
   String? barcode;
 
+  PassioFoodResultType resultType;
+
   /// Private constructor for creating a FoodRecordIngredient instance with specified properties.
   FoodRecordIngredient._({
     required this.id,
@@ -63,6 +65,7 @@ class FoodRecordIngredient {
     required this.selectedQuantity,
     required this.selectedUnit,
     required this.entityType,
+    required this.resultType,
     required this.referenceNutrients,
     this.sourceId,
     this.openFoodLicense,
@@ -87,12 +90,16 @@ class FoodRecordIngredient {
       referenceNutrients: foodRecord.nutrients(),
       openFoodLicense: foodRecord.openFoodLicense,
       barcode: foodRecord.barcode,
+      resultType: foodRecord.resultType,
     );
   }
 
   /// Factory constructor to create a FoodRecordIngredient from a PassioIngredient instance.
-  factory FoodRecordIngredient.fromPassioIngredient(PassioIngredient ingredient,
-      {PassioIDEntityType entityType = PassioIDEntityType.item}) {
+  factory FoodRecordIngredient.fromPassioIngredient(
+    PassioIngredient ingredient, {
+    PassioIDEntityType entityType = PassioIDEntityType.item,
+    PassioFoodResultType resultType = PassioFoodResultType.foodItem,
+  }) {
     return FoodRecordIngredient._(
       id: '',
       passioID: ingredient.id,
@@ -108,6 +115,7 @@ class FoodRecordIngredient {
       referenceNutrients: ingredient.referenceNutrients,
       openFoodLicense: ingredient.metadata.openFoodLicense(),
       barcode: ingredient.metadata.barcode,
+      resultType: resultType
     );
   }
 
@@ -140,6 +148,9 @@ class FoodRecordIngredient {
             json['referenceNutrients'] as Map<String, dynamic>),
         openFoodLicense: json['openFoodLicense'] as String?,
         barcode: json['barcode'] as String?,
+        resultType: PassioFoodResultType.values.firstWhere(
+                (element) => element.name == json['resultType'],
+            orElse: () => PassioFoodResultType.foodItem),
       );
 
   /// Converts the [FoodRecordIngredient] instance to a JSON object.
@@ -161,6 +172,7 @@ class FoodRecordIngredient {
         'referenceNutrients': referenceNutrients.toJson(),
         'openFoodLicense': openFoodLicense,
         'barcode': barcode,
+        'resultType': resultType.name,
       };
 
   /// Overrides the equality operator.
@@ -183,7 +195,8 @@ class FoodRecordIngredient {
         entityType == other.entityType &&
         referenceNutrients == other.referenceNutrients &&
         openFoodLicense == other.openFoodLicense &&
-        barcode == other.barcode;
+        barcode == other.barcode &&
+        resultType == other.resultType;
   }
 
   /// Overrides the hashCode method.
@@ -205,6 +218,7 @@ class FoodRecordIngredient {
       referenceNutrients,
       openFoodLicense,
       barcode,
+      resultType,
     );
   }
 

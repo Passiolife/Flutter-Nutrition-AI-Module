@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../common/models/food_record/food_record.dart';
 
-class NavigationData {
+class RecipeCreatorNavigationData {
   final bool logUponCreate;
   final FoodRecord? loggedFoodRecord;
   final FoodRecord? recipeFoodRecord;
 
-  const NavigationData({
+  const RecipeCreatorNavigationData({
     this.logUponCreate = false,
     this.loggedFoodRecord,
     this.recipeFoodRecord,
@@ -21,7 +21,7 @@ class NavigationDataProvider extends InheritedWidget {
     super.key,
   });
 
-  final NavigationData params;
+  final RecipeCreatorNavigationData params;
   // final bool logUponCreate;
   // final FoodRecord? loggedFoodRecord;
   // final FoodRecord? recipeFoodRecord;

@@ -57,7 +57,7 @@ class _SecondaryDropdownState<T> extends State<SecondaryDropdown<T>> {
           valueListenable: _errorText,
           builder: (BuildContext context, String? errorText, child) {
             return SizedBox(
-              height: 45.h,
+              height: widget.height ?? 52.h,
               width: context.width,
               child: DropdownMenu<KeyValueModel<T>>(
                 expandedInsets: EdgeInsets.zero,

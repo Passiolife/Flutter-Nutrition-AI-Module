@@ -224,7 +224,7 @@ class _ResultWidgetState extends State<ResultWidget> {
                   ),
                 ),
               ),
-              (context.bottomPadding + 16.h).verticalSpace,
+              (context.bottomPaddingValue + 16.h).verticalSpace,
             ],
           ),
         );

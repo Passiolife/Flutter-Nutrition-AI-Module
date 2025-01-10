@@ -43,6 +43,8 @@ class FoodRecord {
   /// Type of Passio ID entity.
   PassioIDEntityType? entityType;
 
+  PassioFoodResultType resultType;
+
   /// Label for the meal type.
   MealLabel? mealLabel;
 
@@ -112,6 +114,7 @@ class FoodRecord {
     this.mealLabel,
     this.openFoodLicense,
     this.barcode,
+    required this.resultType,
   });
 
   /// Factory constructor to create a FoodRecord from a FoodRecordIngredient instance.
@@ -133,6 +136,7 @@ class FoodRecord {
       null,
       openFoodLicense: ingredient.openFoodLicense,
       barcode: ingredient.barcode,
+      resultType: ingredient.resultType,
     );
     foodRecord._calculateQuantityForIngredients();
     foodRecord.logMeal();
@@ -167,6 +171,7 @@ class FoodRecord {
           .firstWhere((e) => e?.metadata.barcode != null, orElse: () => null)
           ?.metadata
           .barcode,
+      resultType: resultType,
     );
     foodRecord._calculateQuantityForIngredients();
     foodRecord.logMeal();
@@ -210,6 +215,10 @@ class FoodRecord {
             : null,
         openFoodLicense: json['openFoodLicense'] as String?,
         barcode: json['barcode'] as String?,
+        resultType: PassioFoodResultType.values.firstWhere(
+          (element) => element.name == json['resultType'] as String?,
+          orElse: () => PassioFoodResultType.foodItem,
+        ),
       );
 
   /// Converts the [FoodRecord] instance to a JSON object.
@@ -233,6 +242,7 @@ class FoodRecord {
         'mealLabel': mealLabel?.value,
         'openFoodLicense': openFoodLicense,
         'barcode': barcode,
+        'resultType': resultType.name,
       };
 
   /// Overrides the equality operator.
@@ -256,7 +266,8 @@ class FoodRecord {
         other.mealLabel == mealLabel &&
         other._createdAt == _createdAt &&
         other.openFoodLicense == openFoodLicense &&
-        other.barcode == barcode;
+        other.barcode == barcode &&
+        other.resultType == resultType;
   }
 
   /// Overrides the hashCode method.
@@ -278,6 +289,7 @@ class FoodRecord {
         _createdAt,
         openFoodLicense,
         barcode,
+        resultType,
       );
 
   FoodRecord clone() {
@@ -570,13 +582,19 @@ extension FoodRecordExtension on FoodRecord {
   }
 
   /// Retrieves the total calories in the food record based on the selected serving size.
+  double? get totalCaloriesOptional {
+    return nutrientsSelectedSize().calories?.value;
+  }
   double get totalCalories {
-    return nutrientsSelectedSize().calories?.value ?? 0;
+    return totalCaloriesOptional ?? 0;
   }
 
   /// Retrieves the total carbohydrates in the food record based on the selected serving size.
+  double? get totalCarbsOptional {
+    return nutrientsSelectedSize().carbs?.value;
+  }
   double get totalCarbs {
-    return nutrientsSelectedSize().carbs?.value ?? 0;
+    return totalCarbsOptional ?? 0;
   }
 
   /// Retrieves the total cholesterol in the food record based on the selected serving size.
@@ -590,8 +608,11 @@ extension FoodRecordExtension on FoodRecord {
   }
 
   /// Retrieves the total fat content in the food record based on the selected serving size.
+  double? get totalFatOptional {
+    return nutrientsSelectedSize().fat?.value;
+  }
   double get totalFat {
-    return nutrientsSelectedSize().fat?.value ?? 0;
+    return totalFatOptional ?? 0;
   }
 
   /// Retrieves the total iodine content in the food record based on the selected serving size.
@@ -630,8 +651,11 @@ extension FoodRecordExtension on FoodRecord {
   }
 
   /// Retrieves the total protein content in the food record based on the selected serving size.
+  double? get totalProteinsOptional {
+    return nutrientsSelectedSize().proteins?.value;
+  }
   double get totalProteins {
-    return nutrientsSelectedSize().proteins?.value ?? 0;
+    return totalProteinsOptional ?? 0;
   }
 
   /// Retrieves the total saturated fat content in the food record based on the selected serving size.
@@ -744,7 +768,53 @@ extension FoodRecordExtension on FoodRecord {
   }
 }
 
+extension UtilityExtension on FoodRecord {
+  bool get hasFullMacros {
+    return totalCaloriesOptional != null &&
+        totalCarbsOptional != null &&
+        totalProteinsOptional != null &&
+        totalFatOptional != null;
+  }
+
+  bool get hasServingSize {
+    return getSelectedUnit().isNotEmpty && getSelectedQuantity() > FoodRecord.zeroQuantity;
+  }
+
+  bool get hasNutritionFacts {
+    return hasFullMacros && hasServingSize;
+  }
+}
+
 extension CustomRecipeExtension on FoodRecord {
+  FoodRecord initializeFoodRecord({String? newIconId}) {
+    final newFoodRecord = FoodRecord.fromJson(toJson());
+    // this.foodRecord = FoodRecord.fromJson(foodRecord.toJson());
+    newFoodRecord.updateServingUnits();
+    newFoodRecord.updateServingSizes();
+    newFoodRecord.passioID = '';
+    newFoodRecord.name = '';
+    newFoodRecord.refCode = '';
+    newFoodRecord.entityType = PassioIDEntityType.recipe;
+    newFoodRecord.additionalData = '';
+    newFoodRecord.barcode = null;
+    newFoodRecord.iconId = newIconId ?? iconId;
+    newFoodRecord.setSelectedQuantity(1);
+    newFoodRecord.setSelectedUnit('serving');
+    newFoodRecord.removeMeal();
+    newFoodRecord.ingredients = [];
+    return newFoodRecord;
+  }
+
+  void addIngredientsToRecipe({required FoodRecord foodRecord}) {
+    if (foodRecord.entityType == PassioIDEntityType.recipe) {
+      for (var ingredient in foodRecord.ingredients) {
+        addRecipeIngredient(ingredient: ingredient);
+      }
+    } else {
+      addRecipeIngredientFromFoodRecord(foodRecord: foodRecord);
+    }
+  }
+
   /// Add Ingredient
   void addRecipeIngredientFromFoodRecord({required FoodRecord foodRecord}) {
     final ingredient = FoodRecordIngredient.fromFoodRecord(foodRecord);

@@ -61,7 +61,7 @@ class ResultWidget extends StatelessWidget {
               ),
             ],
           ),
-          (context.bottomPadding).verticalSpace,
+          (context.bottomPaddingValue).verticalSpace,
         ],
       ),
     );

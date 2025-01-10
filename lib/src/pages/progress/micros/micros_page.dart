@@ -63,7 +63,7 @@ class _MicrosPageState extends State<MicrosPage> {
                           _dayLog?.records ?? <FoodRecord>[]),
                     ),
                     Positioned(
-                      bottom: context.bottomPadding,
+                      bottom: context.bottomPaddingValue,
                       left: 0,
                       right: 0,
                       child: Container(

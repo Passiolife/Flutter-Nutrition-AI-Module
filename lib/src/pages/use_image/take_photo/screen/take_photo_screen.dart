@@ -15,16 +15,6 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
   @override
   void initState() {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      /*ShowWidgetUtil.showCustomModalBottomSheet(
-        context: context,
-        isDismissible: false,
-        isScrollControlled: true,
-        backgroundColor: context.theme.scaffoldBackgroundColor,
-        builder: (bsContext) {
-          return ResultSection();
-        },
-      );*/
-      // Navigator.pushNamed(context, Routes.takePhotoResult);
       _bloc?.add(const DoCheckIntroScreenEvent());
     });
     super.initState();
@@ -39,20 +29,15 @@ class _TakePhotoScreenState extends State<_TakePhotoScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         body: _seenIntroDialog
-            ? Column(
-                children: [
-                  const TakePhotoHeaderSection(),
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        const CameraSection(),
-                        const CameraFrameSection(),
-                        const CapturedImagesSection(),
-                      ],
-                    ),
-                  ),
-                ],
-              )
+            ? Stack(
+          fit: StackFit.expand,
+              children: [
+                const CameraSection(),
+                const CameraFrameSection(),
+                const CapturedImagesSection(),
+                const TakePhotoHeaderSection(),
+              ],
+            )
             : const SizedBox.shrink(),
       ),
     );

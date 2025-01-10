@@ -2,15 +2,17 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-import '../../../../../nutrition_ai_module.dart';
-import '../../../../common/constant/app_colors.dart';
-import '../../../../common/models/daily_nutrition_model.dart';
-import '../../../../common/util/double_extensions.dart';
+import '../../../../../../nutrition_ai_module.dart';
+import '../../../../../common/constant/app_colors.dart';
+import '../../../../../common/extension/number_extension.dart';
+import '../../../../../common/models/daily_nutrition_model.dart';
+import '../../../../../common/util/double_extensions.dart';
 
 class TakePhotoResultViewModel {
   final MealLabel mealLabel;
   final DateTime dateTime;
   final List<FoodRecordViewModel> foodRecords;
+  final List<FoodRecordViewModel> incompleteFoodRecords;
   final double calories;
   final double caloriesTarget;
   final double carbs;
@@ -22,13 +24,15 @@ class TakePhotoResultViewModel {
   final List<DailyNutritionModel> listMacros;
 
   bool get isLogEnabled => foodRecords.any((e) => e.isSelected);
+  bool isLogLoading = false;
 
   bool get isCreateRecipeEnabled => foodRecords.any((e) => e.isSelected);
 
-  const TakePhotoResultViewModel._({
+  TakePhotoResultViewModel._({
     required this.mealLabel,
     required this.dateTime,
     this.foodRecords = const [],
+    this.incompleteFoodRecords = const [],
     this.calories = 0,
     this.caloriesTarget = 0,
     this.carbs = 0,
@@ -50,16 +54,28 @@ class TakePhotoResultViewModel {
   }
 
   TakePhotoResultViewModel fromFoodRecords(List<FoodRecord> foodRecords) {
-    final foodRecordsViewModel = foodRecords
-        .expand((e) => [FoodRecordViewModel(foodRecord: e)])
+    final incompleteFoodRecordsViewModel = foodRecords
+        .where((e) => !e.hasNutritionFacts)
+        .map((e) => FoodRecordViewModel(foodRecord: e))
         .toList();
-    return copyWith(foodRecords: foodRecordsViewModel).updateMacroNutrients();
+    final foodRecordsViewModel = foodRecords
+        .where((e) => e.hasNutritionFacts)
+        .map((e) => FoodRecordViewModel(foodRecord: e))
+        .toList();
+
+    return copyWith(
+      incompleteFoodRecords: incompleteFoodRecordsViewModel,
+      foodRecords: foodRecordsViewModel,
+    ).updateMacroNutrients();
   }
+
+
 
   TakePhotoResultViewModel copyWith({
     MealLabel? mealLabel,
-    DateTime? timestamp,
+    DateTime? dateTime,
     List<FoodRecordViewModel>? foodRecords,
+    List<FoodRecordViewModel>? incompleteFoodRecords,
     double? calories,
     double? caloriesTarget,
     double? carbs,
@@ -72,8 +88,10 @@ class TakePhotoResultViewModel {
   }) {
     return TakePhotoResultViewModel._(
       mealLabel: mealLabel ?? this.mealLabel,
-      dateTime: timestamp ?? this.dateTime,
+      dateTime: dateTime ?? this.dateTime,
       foodRecords: foodRecords ?? this.foodRecords,
+      incompleteFoodRecords:
+          incompleteFoodRecords ?? this.incompleteFoodRecords,
       calories: calories ?? this.calories,
       caloriesTarget: caloriesTarget ?? this.caloriesTarget,
       carbs: carbs ?? this.carbs,
@@ -90,8 +108,8 @@ class TakePhotoResultViewModel {
     return copyWith(mealLabel: mealLabel);
   }
 
-  TakePhotoResultViewModel updateDateTime(DateTime timestamp) {
-    return copyWith(timestamp: timestamp);
+  TakePhotoResultViewModel updateDateTime(DateTime dateTime) {
+    return copyWith(dateTime: dateTime);
   }
 
   TakePhotoResultViewModel updateIsSelected(int index, bool isSelected) {
@@ -121,42 +139,61 @@ class TakePhotoResultViewModel {
     }
 
     // Calories
-    double caloriesProgress = (calories / caloriesTarget).clamp(0.0, 2.0);
-    // Determine over progress
-    double caloriesOverProgress = math.max(caloriesProgress - 1, 0);
-    // Set the calories value, ensuring it's non-negative
+    double caloriesProgress =
+        (calories / caloriesTarget).parseFormatted(places: 2).clamp(0.0, 2.0);
+    double caloriesOverProgress =
+        math.max(caloriesProgress - 1, 0).parseFormatted(places: 2);
     double caloriesValue =
         caloriesOverProgress > 0 ? caloriesOverProgress : caloriesProgress;
-    // Determine progress color based on over progress
     Color caloriesProgressColor = caloriesOverProgress > 0
-        ? AppColors.yellow500
-        : AppColors.yellow900Dark;
-    // Set background color based on over progress
+        ? AppColors.yellow900Dark
+        : AppColors.yellow500;
     Color caloriesBackgroundColor = caloriesOverProgress > 0
         ? AppColors.yellow500
         : AppColors.brandPrimaryLight;
 
     // Carbs
-    double carbsProgress = (carbs / carbsTarget).clamp(0.0, 2.0);
-    // Determine over progress
-    double carbsOverProgress = math.max(carbsProgress - 1, 0);
-    // Set the calories value, ensuring it's non-negative
-    double caloriesValue =
-    caloriesOverProgress > 0 ? caloriesOverProgress : caloriesProgress;
-    // Determine progress color based on over progress
-    Color caloriesProgressColor = caloriesOverProgress > 0
-        ? AppColors.yellow500
-        : AppColors.yellow900Dark;
-    // Set background color based on over progress
-    Color caloriesBackgroundColor = caloriesOverProgress > 0
-        ? AppColors.yellow500
+    double carbsProgress =
+        (carbs / carbsTarget).parseFormatted(places: 2).clamp(0.0, 2.0);
+    double carbsOverProgress =
+        math.max(carbsProgress - 1, 0).parseFormatted(places: 2);
+    double carbsValue =
+        carbsOverProgress > 0 ? carbsOverProgress : carbsProgress;
+    Color carbsProgressColor =
+        carbsOverProgress > 0 ? AppColors.lBlue900Dark : AppColors.blue500;
+    Color carbsBackgroundColor =
+        carbsOverProgress > 0 ? AppColors.blue500 : AppColors.brandPrimaryLight;
+
+    // Protein
+    double proteinProgress =
+        (protein / proteinTarget).parseFormatted(places: 2).clamp(0.0, 2.0);
+    double proteinOverProgress =
+        math.max(proteinProgress - 1, 0).parseFormatted(places: 2);
+    double proteinValue =
+        proteinOverProgress > 0 ? proteinOverProgress : proteinProgress;
+    Color proteinProgressColor = proteinOverProgress > 0
+        ? AppColors.green900Dark
+        : AppColors.green500Normal;
+    Color proteinBackgroundColor = proteinOverProgress > 0
+        ? AppColors.green500Normal
         : AppColors.brandPrimaryLight;
+
+    // Fat
+    double fatProgress =
+        (fat / fatTarget).parseFormatted(places: 2).clamp(0.0, 2.0);
+    double fatOverProgress =
+        math.max(fatProgress - 1, 0).parseFormatted(places: 2);
+    double fatValue = fatOverProgress > 0 ? fatOverProgress : fatProgress;
+    Color fatProgressColor =
+        fatOverProgress > 0 ? AppColors.purple900 : AppColors.purple500;
+    Color fatBackgroundColor =
+        fatOverProgress > 0 ? AppColors.purple500 : AppColors.brandPrimaryLight;
 
     final listMacros = [
       DailyNutritionModel(
         footer: 'Calories',
-        title: '$calories',
-        subtitle: '$caloriesTarget',
+        title: '${calories.round()}',
+        subtitle: '${caloriesTarget.round()}',
         value: caloriesValue,
         progressColor: caloriesProgressColor,
         backgroundColor: caloriesBackgroundColor,
@@ -165,9 +202,25 @@ class TakePhotoResultViewModel {
         footer: 'Carbs',
         title: '${carbs.format(places: 1)} g',
         subtitle: '${carbsTarget.format()} g',
-        value: caloriesValue,
-        progressColor: caloriesProgressColor,
-        backgroundColor: caloriesBackgroundColor,
+        value: carbsValue,
+        progressColor: carbsProgressColor,
+        backgroundColor: carbsBackgroundColor,
+      ),
+      DailyNutritionModel(
+        footer: 'Protein',
+        title: '${protein.format(places: 1)} g',
+        subtitle: '${proteinTarget.format()} g',
+        value: proteinValue,
+        progressColor: proteinProgressColor,
+        backgroundColor: proteinBackgroundColor,
+      ),
+      DailyNutritionModel(
+        footer: 'Fat',
+        title: '${fat.format(places: 1)} g',
+        subtitle: '${fatTarget.format()} g',
+        value: fatValue,
+        progressColor: fatProgressColor,
+        backgroundColor: fatBackgroundColor,
       ),
     ];
 
@@ -180,14 +233,34 @@ class TakePhotoResultViewModel {
     );
   }
 
-  TakePhotoResultViewModel updateMacroNutrientsTarget(double caloriesTarget,
-      double carbsTarget, double proteinTarget, double fatTarget) {
+  TakePhotoResultViewModel updateMacroNutrientsTarget(
+    double caloriesTarget,
+    double carbsTarget,
+    double proteinTarget,
+    double fatTarget,
+  ) {
     return copyWith(
       caloriesTarget: caloriesTarget,
       carbsTarget: carbsTarget,
       proteinTarget: proteinTarget,
       fatTarget: fatTarget,
     );
+  }
+
+  /// Overrides the hashCode method.
+  @override
+  int get hashCode {
+    return Object.hash(
+      mealLabel,
+      isLogLoading,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is TakePhotoResultViewModel &&
+        mealLabel == other.mealLabel &&
+        isLogLoading == other.isLogLoading;
   }
 }
 

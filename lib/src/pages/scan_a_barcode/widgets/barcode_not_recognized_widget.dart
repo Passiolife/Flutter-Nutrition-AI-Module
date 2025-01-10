@@ -39,7 +39,7 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
               ),
               SizedBox(height: AppDimens.h16),
               Text(
-                context.localization?.barcodeNotRecognized ?? '',
+                context.localization.barcodeNotRecognized ?? '',
                 style: AppTextStyle.textXl.addAll([AppTextStyle.bold]),
                 textAlign: TextAlign.center,
                 maxLines: 1,
@@ -47,7 +47,7 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
               ),
               SizedBox(height: AppDimens.h4),
               Text(
-                context.localization?.barcodeNotRecognizedDescription ?? '',
+                context.localization.barcodeNotRecognizedDescription ?? '',
                 style: AppTextStyle.textSm,
                 textAlign: TextAlign.center,
                 maxLines: 1,
@@ -59,7 +59,7 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      buttonText: context.localization?.cancel,
+                      buttonText: context.localization.cancel,
                       appButtonModel: AppButtonStyles.primaryBordered.copyWith(
                         padding: EdgeInsets.symmetric(vertical: AppDimens.h13),
                       ),
@@ -68,11 +68,11 @@ class BarcodeNotRecognizedWidget extends StatelessWidget {
                   ),
                   Expanded(
                     child: AppButton(
-                      buttonText: context.localization?.takePhoto,
+                      buttonText: context.localization.takePhoto,
                       appButtonModel: AppButtonStyles.primary.copyWith(
                         padding: EdgeInsets.symmetric(vertical: AppDimens.h13),
                       ),
-                      onTap: onTapCancel,
+                      onTap: onTapTakePhoto,
                     ),
                   ),
                 ],

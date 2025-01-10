@@ -4,7 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
-import '../../../common/extension/passio_nutrition_facts_extension.dart';
+import '../../../common/extension/passio/passio_nutrition_facts_extension.dart';
 import '../../../common/models/settings/settings.dart';
 
 part 'food_scan_event.dart';

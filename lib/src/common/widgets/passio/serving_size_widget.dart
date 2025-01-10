@@ -89,6 +89,7 @@ class ServingSizeWidgetState extends State<ServingSizeWidget> {
               ),
               child: NumberTextInput(
                 controller: _quantityController,
+                initialValue: _quantityController.text,
                 hintText: '',
                 isDense: true,
                 textAlign: TextAlign.center,

@@ -18,6 +18,7 @@ class Settings {
   static const String _scanIntroSeenKey = 'intro_seen';
   static const String _dragIntroSeenKey = 'intro_seen';
   static const String _takePictureIntroSeenKey = 'take_picture_intro_seen';
+  static const String _nutritionFactsIntroSeenKey = 'take_picture_intro_seen';
 
   // Key for the reminder notifications setting
   static const String _breakfastReminder = 'reminder_breakfast';
@@ -92,5 +93,14 @@ class Settings {
 
   bool getTokenTracking() {
     return _preferenceStore.getValue<bool>(_tokenTracking, false);
+  }
+
+  // Nutrition Facts
+  bool getNutritionFactsIntroSeen() {
+    return _preferenceStore.getValue<bool>(_nutritionFactsIntroSeenKey, false);
+  }
+
+  void setNutritionFactsIntroSeen(bool value) {
+    _preferenceStore.setValue(_nutritionFactsIntroSeenKey, value);
   }
 }

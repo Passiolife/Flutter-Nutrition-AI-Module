@@ -40,7 +40,7 @@ class _QuickSuggestionsWidgetState extends State<QuickSuggestionsWidget> {
 
   double _getInitialSize(BuildContext context) {
     // Define the pixel value you want to convert to initialSize
-    final double initialPixelValue = context.bottomPadding +
+    final double initialPixelValue = context.bottomPaddingValue +
         kBottomNavigationBarHeight +
         26.r +
         8.h +
@@ -126,7 +126,7 @@ class _QuickSuggestionsWidgetState extends State<QuickSuggestionsWidget> {
                       left: 8.w,
                       right: 8.w,
                       bottom:
-                          context.bottomPadding + kBottomNavigationBarHeight,
+                          context.bottomPaddingValue + kBottomNavigationBarHeight,
                     ),
                     itemBuilder: (context, index) {
                       final suggestion = widget.data.elementAt(index);

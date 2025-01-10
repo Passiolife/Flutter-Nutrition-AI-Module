@@ -220,7 +220,7 @@ class ResultWidgetState extends State<ResultWidget> {
               ),
             ],
           ),
-          context.bottomPadding.verticalSpace,
+          context.bottomPaddingValue.verticalSpace,
         ],
       ),
     );

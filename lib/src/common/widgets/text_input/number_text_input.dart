@@ -2,11 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../constant/app_border.dart';
 import '../../constant/app_constants.dart';
-import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
 import '../../extension/number_extension.dart';
+import '../../extension/string_extensions.dart';
 import '../keyboard/done_keyboard_button_widget.dart';
 import '../overlay/overlay_manager.dart';
 import 'base_text_input.dart';
@@ -140,16 +139,22 @@ class _NumberTextInputState extends State<NumberTextInput> {
 
   void _handleFocusChange() {
     if (_focusNode!.hasFocus) {
-      _overlayManager.showOverlay(
-          context,
-          DoneKeyboardButtonWidget(
-            onDone: () {
-              final formatted = _controller.text.localeFormatted<double?>();
-              if(formatted == null) return;
-              _controller.text = formatted.format();
-              widget.onFieldSubmitted?.call(formatted.format());
-            },
-          ));
+      _overlayManager.showOverlay(context, DoneKeyboardButtonWidget(
+        onDone: () {
+          final text = _controller.text;
+          if (text.isNotEmpty) {
+            final formatted = text.localeFormatted<double?>();
+            if (formatted == null) return;
+            // _controller.text = formatted.format();
+            widget.onFieldSubmitted?.call(formatted.format());
+          } else {
+            final formatted = double.tryParse(widget.initialValue ?? '');
+            if (formatted == null) return;
+            _controller.text = formatted.format();
+            widget.onFieldSubmitted?.call(formatted.format());
+          }
+        },
+      ));
     } else {
       _overlayManager.removeOverlay();
     }
@@ -168,9 +173,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
                 color: context.textThemeColors.brandTextDark,
               ),
           onFieldSubmitted: widget.onFieldSubmitted,
-          onTapOutside: (_) {
-
-          },
+          onTapOutside: (_) {},
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
           readOnly: widget.readOnly,
@@ -179,7 +182,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
           hintText: widget.hintText,
           controller: _controller,
           inputFormatters: widget.inputFormatters,
-          initialValue: widget.initialValue,
+          // initialValue: widget.initialValue,
           enabled: widget.enabled,
           maxLength: widget.maxLength,
           keyboardType: widget.keyboardType ??

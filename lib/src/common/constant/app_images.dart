@@ -35,6 +35,8 @@ class AppImages {
   static const icNutritionFactsLabel = '${iconsDir}ic_nutrition_facts_label.svg';
   static const icNoNutritionFactsLabelFound = '${iconsDir}ic_no_nutrition_facts_label_found.svg';
   static const icNoIngredientsLabelFound = '${iconsDir}ic_no_ingredients_label_found.svg';
+  static const icCheckMarkNew = '${iconsDir}ic_check_mark.svg';
+  static const icPencilAltNew = '${iconsDir}ic_pencil_alt.svg';
 
 
   static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';

@@ -1,6 +1,6 @@
 import 'package:nutrition_ai/nutrition_ai.dart';
 
-import 'null_safety_extension.dart';
+import '../null_safety_extension.dart';
 
 extension PassioNutritionFactsExtension on PassioNutritionFacts {
   PassioFoodItem toPassioFoodItem() {

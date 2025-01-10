@@ -10,7 +10,10 @@ class _NutritionFactsScreen extends StatefulWidget {
 class _NutritionFactsScreenState extends State<_NutritionFactsScreen> {
   bool _seenIntroDialog = true;
 
-  NutritionFactsBloc? get _bloc => mounted ? context.read<NutritionFactsBloc>() : null;
+  NutritionFactsBloc? get _bloc =>
+      mounted ? context.read<NutritionFactsBloc>() : null;
+
+  int _section = 0;
 
   @override
   void initState() {
@@ -22,115 +25,118 @@ class _NutritionFactsScreenState extends State<_NutritionFactsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<NutritionFactsBloc, NutritionFactsState>(
+    return BlocConsumer<NutritionFactsBloc, NutritionFactsState>(
       listener: (context, state) {
         _handleStateChanges(context, state);
       },
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: _seenIntroDialog
-            ? Column(
-                children: [
-                  const HeaderSection(),
-                  Expanded(
-                    child: Stack(
-                      children: [
-                        const CameraSection(),
-                        // const CameraFrameSection(),
-                        // const CapturedImagesSection(),
-                      ],
+      buildWhen: (_, state) {
+        return state is InitialBuilderState ||
+            state is UpdateSectionBuilderState;
+      },
+      builder: (BuildContext context, NutritionFactsState state) {
+        if (state is UpdateSectionBuilderState) {
+          _section = state.section;
+        }
+        return Scaffold(
+          resizeToAvoidBottomInset: false,
+          body: _seenIntroDialog
+              ? Column(
+                  children: [
+                    const HeaderSection(),
+                    Expanded(
+                      child: IndexedStack(
+                        index: _section,
+                        children: [
+                          const CameraSection(),
+                          PreviewSection(
+                            key: UniqueKey(),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
-              )
-            : const SizedBox.shrink(),
-      ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+        );
+      },
     );
   }
 
   void _handleStateChanges(BuildContext context, NutritionFactsState state) {
     if (state is ShowIntroDialogListenerState) {
-      ShowWidgetUtil.showCustomGeneralDialogNew(
-        context: context,
-        builder: (BuildContext context) {
-          return const CaptureNutritionFactsLabelWidget(
+      _showIntroDialog(context);
+    } else if (state is BothNotFoundState) {
+      _showNutritionFactsNotFoundDialog(context: context);
+    } else if (state is NutritionFactsNotFoundState) {
+      _showNutritionFactsNotFoundDialog(context: context);
+    } else if (state is IngredientsNotFoundState) {
+      _showIngredientsNotFoundDialog(context: context);
+    } else if (state is FailedToAnalyzedState) {
+      _showFailedToAnalyzedState(context: context);
+    }
+  }
+
+  void _showIntroDialog(BuildContext context) {
+    ShowWidgetUtil.showCustomGeneralDialogNew(
+      context: context,
+      builder: (BuildContext context) {
+        return CaptureNutritionFactsLabelWidget(
+          onTap: () {
+            Navigator.pop(context);
+            _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
+          },
+        );
+      },
+    );
+  }
+
+  void _showNutritionFactsNotFoundDialog({required BuildContext context}) {
+    ShowWidgetUtil.showCustomGeneralDialogNew(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext dContext) {
+        return NoNutritionFactsLabelFoundWidget(
+          onTapNegative: () {
+            Navigator.pop(dContext);
+            _bloc?.add(UpdateSectionEvent(section: 0));
+          },
+          onTapPositive: () {
+            Navigator.pop(dContext);
+          },
+          // onTap: () {
+          //   Navigator.pop(context);
+          //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
+          // },
+        );
+      },
+    );
+  }
+
+  void _showIngredientsNotFoundDialog({required BuildContext context}) {
+    ShowWidgetUtil.showCustomGeneralDialogNew(
+      context: context,
+      builder: (BuildContext context) {
+        return NoIngredientsLabelFoundWidget(
             // onTap: () {
             //   Navigator.pop(context);
             //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
             // },
-          );
-        },
-      );
-    }
-    // if (state is ListenerState) {
-    //   switch (state) {
-    //     case TakePhotoInitialListenerState():
-    //       _originalImages.clear();
-    //       _thumbImages.clear();
-    //       _advisorFoodInfoList = null;
-    //       break;
-    //     case TakePhotoSuccessListenerState():
-    //       _originalImages.insert(0, state.originalBytes);
-    //       _thumbImages.insert(0, state.compressedBytes);
-    //       break;
-    //     case RemovePhotoListenerState():
-    //       _originalImages.removeAt(state.index);
-    //       _thumbImages.removeAt(state.index);
-    //       break;
-    //     case RecognizeImageLoadingListenerState():
-    //       _isNextLoading = true;
-    //       break;
-    //     case RecognizeImageSuccessListenerState():
-    //       _isNextLoading = false;
-    //       _advisorFoodInfoList = state.data;
-    //       _originalImages.clear();
-    //       _thumbImages.clear();
-    //       if (_advisorFoodInfoList?.isEmpty ?? true) {
-    //         ShowWidgetUtil.showCustomModalBottomSheet(
-    //           context: context,
-    //           builder: (bsContext) {
-    //             return NoResultsFoundBottomSheet(
-    //               height: 222.h,
-    //               onTapNegative: () {
-    //                 Navigator.pop(bsContext);
-    //               },
-    //               onTapPositive: () {
-    //                 _onTapSearch(context: context);
-    //               },
-    //             );
-    //           },
-    //         );
-    //       }
-    //       break;
-    //     case FoodLogLoadingListenerState():
-    //       _visibleLoadingForLog = true;
-    //       break;
-    //     case FoodLogSuccessListenerState():
-    //       _visibleLoadingForLog = false;
-    //       context.showSnackbar(text: context.localization?.itemAddedToDiary);
-    //       DashboardPage.navigate(
-    //         context,
-    //         page: 1,
-    //         removeUntil: true,
-    //       );
-    //       break;
-    //     case FoodLogFailureListenerState():
-    //       _visibleLoadingForLog = false;
-    //       context.showSnackbar(text: context.localization?.foodLogErrorMessage);
-    //       break;
-    //     case ShowIntroDialogListenerState():
-    //       IntroDialog.show(
-    //         context: context,
-    //         onTapOk: (context) {
-    //           Navigator.pop(context);
-    //           _bloc.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-    //         },
-    //       );
-    //       break;
-    //     case IntroDialogSeenListenerState():
-    //       _seenIntroDialog = true;
-    //       break;
-    //   }
-    // }
+            );
+      },
+    );
+  }
+
+  void _showFailedToAnalyzedState({required BuildContext context}) {
+    ShowWidgetUtil.showCustomGeneralDialogNew(
+      context: context,
+      builder: (BuildContext context) {
+        return FailedToAnalyzeImageWidget(
+            // onTap: () {
+            //   Navigator.pop(context);
+            //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
+            // },
+            );
+      },
+    );
   }
 }

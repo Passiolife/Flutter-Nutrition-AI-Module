@@ -127,7 +127,7 @@ class _MealPlanPageState extends State<MealPlanPage>
                                   PassioMealTime.snack,
                             ),
                             24.verticalSpace,
-                            context.bottomPadding.verticalSpace,
+                            context.bottomPaddingValue.verticalSpace,
                           ],
                         ),
                       ),

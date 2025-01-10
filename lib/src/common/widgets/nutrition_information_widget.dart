@@ -104,7 +104,7 @@ class _NutritionInformationWidgetState
                     ]).copyWith(color: AppColors.indigo600Main),
                   ),
                 ),
-                SizedBox(height: context.bottomPadding + 40.h + 48.h),
+                SizedBox(height: context.bottomPaddingValue + 40.h + 48.h),
               ],
             ),
           ),

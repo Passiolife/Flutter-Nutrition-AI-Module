@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import '../nutrition_ai_module.dart';
 import 'common/constant/app_theme.dart';
+import 'common/router/clear_focus_on_push_observer.dart';
 import 'common/router/navigation_route_observer.dart';
 import 'common/router/routes.dart';
 import 'pages/advisor/advisor_page.dart';
@@ -48,7 +49,7 @@ class NavigationAIPage extends StatelessWidget {
       child: Navigator(
         key: _navigatorKey,
         initialRoute: Routes.initialPage,
-        observers: [NavigationRouteObserver.instance],
+        observers: [NavigationRouteObserver.instance, ClearFocusOnPushObserver()],
         onGenerateRoute: _generateRoute,
       ),
     );
@@ -116,8 +117,8 @@ class NavigationAIPage extends StatelessWidget {
     } else if (settings.name == Routes.barcodeScanner) {
       return BarcodeScannerPage.route();
     } else if (settings.name == Routes.recipeCreator) {
-      NavigationData params = const NavigationData();
-      if (arguments is NavigationData) {
+      RecipeCreatorNavigationData params = const RecipeCreatorNavigationData();
+      if (arguments is RecipeCreatorNavigationData) {
         params = arguments;
       }
       return RecipeCreatorPage.route(params: params);

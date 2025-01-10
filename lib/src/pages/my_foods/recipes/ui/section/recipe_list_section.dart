@@ -84,7 +84,7 @@ class RecipeListSection extends StatelessWidget {
   }) async {
     await RecipeCreatorPage.navigate(
       context: context,
-      params: NavigationData(recipeFoodRecord: foodRecord),
+      params: RecipeCreatorNavigationData(recipeFoodRecord: foodRecord),
     );
   }
 

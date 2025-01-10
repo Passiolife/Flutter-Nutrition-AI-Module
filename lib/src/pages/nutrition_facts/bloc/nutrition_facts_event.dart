@@ -11,15 +11,6 @@ final class InitialEvent extends TakePhotoEvent {
   List<Object?> get props => [];
 }
 
-final class DoNextEvent extends TakePhotoEvent {
-  const DoNextEvent({required this.images});
-
-  final List<Uint8List> images;
-
-  @override
-  List<Object?> get props => [images];
-}
-
 final class DoTakeImageEvent extends TakePhotoEvent {
   const DoTakeImageEvent({this.file});
 
@@ -29,42 +20,23 @@ final class DoTakeImageEvent extends TakePhotoEvent {
   List<Object?> get props => [file];
 }
 
-final class DoRemoveImageEvent extends TakePhotoEvent {
-  const DoRemoveImageEvent({required this.index});
-
-  final int index;
-
-  @override
-  List<Object?> get props => [index];
-}
-
 final class DoRecognizeImageEvent extends TakePhotoEvent {
-  const DoRecognizeImageEvent({required this.images});
+  const DoRecognizeImageEvent({required this.image});
 
-  final List<Uint8List> images;
-
-  @override
-  List<Object?> get props => [images];
-}
-
-final class UpdateSelectionEvent extends TakePhotoEvent {
-  final List<AdvisorFoodInfoLog>? data;
-  final int index;
-
-  const UpdateSelectionEvent({required this.data, required this.index});
+  final Uint8List image;
 
   @override
-  List<Object?> get props => [data, index];
+  List<Object?> get props => [image];
 }
 
-final class ClearSelectionEvent extends TakePhotoEvent {
-  final List<AdvisorFoodInfoLog>? data;
-
-  const ClearSelectionEvent({required this.data});
+final class UpdateSectionEvent extends TakePhotoEvent {
+  const UpdateSectionEvent({required this.section});
+  final int section;
 
   @override
-  List<Object?> get props => [data];
+  List<Object?> get props => [section];
 }
+
 
 final class DoFoodLogEvent extends TakePhotoEvent {
   final List<AdvisorFoodInfoLog>? data;

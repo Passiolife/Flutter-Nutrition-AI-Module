@@ -146,7 +146,7 @@ class _DashboardPageState extends State<DashboardPage> {
     // Check the value of e.text against context.localization and perform actions accordingly.
     //
     // Action for when the text matches the 'scan' localization.
-    if (action == context.localization?.scanABarcode) {
+    if (action == context.localization.scanABarcode) {
       Navigator.pushNamed(
         context,
         Routes.foodScan,
@@ -154,18 +154,19 @@ class _DashboardPageState extends State<DashboardPage> {
       // FoodScanPage.navigate(context);
     }
     // Action for when the text matches the 'search' localization.
-    else if (action == context.localization?.textSearch) {
+    else if (action == context.localization.textSearch) {
       FoodSearchPage.navigate(context, needsReturn: false);
-    } else if (action == context.localization?.voiceLogging) {
+    } else if (action == context.localization.voiceLogging) {
       VoiceLoggingPage.navigate(context);
-    } else if (action == context.localization?.takePhotos) {
+    } else if (action == context.localization.takePhotos) {
       TakePhotoPage.navigate(context);
-    } else if (action == context.localization?.selectPhotos) {
+      _bloc.add(const RefreshEvent());
+    } else if (action == context.localization.selectPhotos) {
       SelectPhotoPage.navigate(context);
-    } else if (action == context.localization?.aiAdvisor) {
+    } else if (action == context.localization.aiAdvisor) {
       await AdvisorPage.navigate(context);
       _bloc.add(const RefreshEvent());
-    } else if (action == context.localization?.myFoods) {
+    } else if (action == context.localization.myFoods) {
       await MyFoodsPage.navigate(context: context);
       _bloc.add(const RefreshEvent());
     }

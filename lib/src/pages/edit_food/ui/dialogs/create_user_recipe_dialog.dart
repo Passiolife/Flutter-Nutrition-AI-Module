@@ -123,7 +123,7 @@ class CreateUserRecipeDialog {
                                     Navigator.pop(dContext);
                                     RecipeCreatorPage.navigate(
                                       context: context,
-                                      params: NavigationData(
+                                      params: RecipeCreatorNavigationData(
                                         loggedFoodRecord: foodRecord,
                                         logUponCreate: logUpdateOnCreate,
                                       ),

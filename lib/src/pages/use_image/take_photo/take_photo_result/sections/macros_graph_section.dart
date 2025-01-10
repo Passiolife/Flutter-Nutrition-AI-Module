@@ -21,7 +21,8 @@ class MacrosGraphSection extends StatelessWidget {
       builder: (context, state) {
         if (state is! UpdateMacroNutrientState) return const SizedBox.shrink();
 
-        int calories = state.viewModel.calories.toInt();
+        final listNutrition = state.listMacros;
+        /*int calories = state.viewModel.calories.toInt();
         int caloriesTarget = state.viewModel.caloriesTarget.toInt();
         double carbs = state.viewModel.carbs;
         double carbsTarget = state.viewModel.carbsTarget;
@@ -62,7 +63,7 @@ class MacrosGraphSection extends StatelessWidget {
             progressColor: AppColors.purple500,
             backgroundColor: AppColors.brandPrimaryLight,
           ),
-        ];
+        ]*/;
         return MacrosGraphWidget(listNutrition: listNutrition);
       },
     );

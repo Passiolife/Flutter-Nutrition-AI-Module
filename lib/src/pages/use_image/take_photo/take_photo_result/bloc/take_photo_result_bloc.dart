@@ -3,13 +3,15 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
+import '../../../../../common/models/daily_nutrition_model.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/models/food_record/meal_label.dart';
 import '../../../../../common/models/user_profile/user_profile_model.dart';
 import '../../../../../common/util/user_session.dart';
 import '../../../../../nutrition_ai_module_configuration.dart';
-import '../../models/take_photo_result_view_model.dart';
+import '../models/take_photo_result_view_model.dart';
 
 part 'take_photo_result_event.dart';
 part 'take_photo_result_state.dart';
@@ -17,10 +19,11 @@ part 'take_photo_result_state.dart';
 class TakePhotoResultBloc
     extends Bloc<TakePhotoResultEvent, TakePhotoResultState> {
   // Views Properties
-  late TakePhotoResultViewModel _viewModel;
+  TakePhotoResultViewModel _viewModel = TakePhotoResultViewModel.init();
 
   final GetFoodRecordsByImageRecognition foodRecordsByImageRecognition;
   final NutritionConfiguration nutritionConfiguration;
+  final AddFoodLogsUseCase addFoodLogsUseCase;
 
   double caloriesTarget = 0;
   double carbsTarget = 0;
@@ -30,6 +33,7 @@ class TakePhotoResultBloc
   TakePhotoResultBloc({
     required this.nutritionConfiguration,
     required this.foodRecordsByImageRecognition,
+    required this.addFoodLogsUseCase,
   }) : super(const TakePhotoResultInitial()) {
     on<InitializeEvent>(_handleInitializeEvent);
     on<SetDefaultHeaderEvent>(_handleSetDefaultMealLabelEvent);
@@ -39,7 +43,10 @@ class TakePhotoResultBloc
     on<UpdateMacroNutrientEvent>(_handleUpdateMacroNutrientEvent);
     on<UpdateActionButtonsEvent>(_handleUpdateActionButtonsEvent);
     on<DoProcessEvent>(_handleDoProcessEvent);
-    on<UpdateServingSizeEvent>(_handleUpdateServingSizeEvent);
+    on<UpdateFoodRecordEvent>(_handleUpdateFoodRecordEvent);
+    on<CreateRecipeEvent>(_handleCreateRecipeEvent);
+    on<DoLogEvent>(_handleDoLogEvent);
+    on<VerifyMissingDataEvent>(_handleVerifyMissingDataEvent);
   }
 
   Future<void> _handleInitializeEvent(
@@ -78,12 +85,12 @@ class TakePhotoResultBloc
   Future<void> _handleUpdateMacroNutrientEvent(UpdateMacroNutrientEvent event,
       Emitter<TakePhotoResultState> emit) async {
     _viewModel = _viewModel.updateMacroNutrients();
-    emit(UpdateMacroNutrientState(viewModel: _viewModel));
+    emit(UpdateMacroNutrientState(listMacros: _viewModel.listMacros));
   }
 
   Future<void> _handleUpdateActionButtonsEvent(UpdateActionButtonsEvent event,
       Emitter<TakePhotoResultState> emit) async {
-    emit(UpdateActionButtonsState(viewModel: _viewModel));
+    emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
   }
 
   Future<void> _handleDoProcessEvent(
@@ -127,18 +134,55 @@ class TakePhotoResultBloc
 
       add(UpdateMacroNutrientEvent());
       add(UpdateActionButtonsEvent());
-      emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
+      emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords, incompleteFoodRecordsViewModel: _viewModel.incompleteFoodRecords));
       return;
     }
   }
 
-  Future<void> _handleUpdateServingSizeEvent(
-      UpdateServingSizeEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleUpdateFoodRecordEvent(
+      UpdateFoodRecordEvent event, Emitter<TakePhotoResultState> emit) async {
     final index = event.index;
     final foodRecord = event.foodRecord;
     _viewModel = _viewModel.updateFoodRecord(index, foodRecord);
     add(UpdateMacroNutrientEvent());
     add(UpdateActionButtonsEvent());
-    emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
+    emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords, incompleteFoodRecordsViewModel: _viewModel.incompleteFoodRecords));
+  }
+
+  Future<void> _handleCreateRecipeEvent(
+      CreateRecipeEvent event, Emitter<TakePhotoResultState> emit) async {
+    final recordsModels = _viewModel.foodRecords.where((element) => element.isSelected).toList();
+    final foodRecords = recordsModels.map((e) => e.foodRecord).toList();
+
+    final foodRecord = foodRecords.first.initializeFoodRecord();
+
+    for(FoodRecord record in foodRecords) {
+      foodRecord.addIngredientsToRecipe(foodRecord: record);
+    }
+    emit(CreateRecipeSuccessState(timestamp: DateTime.now().millisecondsSinceEpoch, foodRecord: foodRecord));
+  }
+
+  Future<void> _handleDoLogEvent(
+      DoLogEvent event, Emitter<TakePhotoResultState> emit) async {
+    _viewModel.isLogLoading = true;
+    emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
+    final recordsModels = _viewModel.foodRecords.where((element) => element.isSelected).toList();
+    final foodRecords = recordsModels.map((e) => e.foodRecord).toList();
+    final selectedDateTime = _viewModel.dateTime;
+    final selectedMealLabel = _viewModel.mealLabel;
+    for (var element in foodRecords) {
+      element.logMeal(dateTime: selectedDateTime);
+      element.mealLabel = selectedMealLabel;
+    }
+    await addFoodLogsUseCase.call(foodRecords);
+    _viewModel.isLogLoading = false;
+    emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
+    emit(const FoodLogSuccessState());
+  }
+
+  Future<void> _handleVerifyMissingDataEvent(
+      VerifyMissingDataEvent event, Emitter<TakePhotoResultState> emit) async {
+    final foodRecord = event.foodRecord;
+
   }
 }

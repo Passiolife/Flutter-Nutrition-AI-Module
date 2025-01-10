@@ -21,9 +21,7 @@ class AppLocalizations {
   /// Retrieve the language translation
   /// name: Component name
   String getLabel(String name) {
-    return (_localeData?.containsKey(name) ?? false)
-        ? _localeData![name]
-        : '';
+    return (_localeData?.containsKey(name) ?? false) ? _localeData![name] : '';
   }
 
   String? get scanningForFood => getLabel('scanningForFood');
@@ -867,4 +865,10 @@ class AppLocalizations {
   String? get editNutrition => getLabel('editNutrition');
 
   String get noResultsFoundDescription => getLabel('noResultsFoundDescription');
+
+  String get addMore => getLabel('addMore');
+
+  String get noBarcodeTakePicture => getLabel('noBarcodeTakePicture');
+
+  String get enterManually => getLabel('enterManually');
 }

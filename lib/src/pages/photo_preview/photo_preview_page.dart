@@ -16,9 +16,8 @@ import 'models/navigation_data_provider.dart';
 import 'sections/analyze_progress_section.dart';
 import 'sections/image_preview_section.dart';
 import 'widgets/action_button_widget.dart';
-import 'widgets/failed_to_analyze_image_widget.dart';
-import 'widgets/no_ingredients_label_found_widget.dart';
-import 'widgets/no_nutrition_facts_label_found_widget.dart';
+import '../nutrition_facts/widgets/no_ingredients_label_found_widget.dart';
+import '../nutrition_facts/widgets/no_nutrition_facts_label_found_widget.dart';
 
 part 'screen/photo_preview_screen.dart';
 

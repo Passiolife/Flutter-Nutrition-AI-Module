@@ -7,7 +7,12 @@ import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/button/primary_button.dart';
 
 class CaptureNutritionFactsLabelWidget extends StatelessWidget {
-  const CaptureNutritionFactsLabelWidget({super.key});
+  const CaptureNutritionFactsLabelWidget({
+    this.onTap,
+    super.key,
+  });
+
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -42,9 +47,7 @@ class CaptureNutritionFactsLabelWidget extends StatelessWidget {
               PrimaryButton(
                 text: context.localization.ok,
                 padding: AppPadding.pv12 + AppPadding.ph72,
-                onTap: () {
-                  Navigator.pop(context);
-                },
+                onTap: onTap,
               ),
             ],
           ),

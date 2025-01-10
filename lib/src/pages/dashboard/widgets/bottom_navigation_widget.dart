@@ -74,7 +74,7 @@ class BottomNavigationWidget extends StatelessWidget {
       decoration: AppShadows.base,
       padding: EdgeInsets.only(
         top: AppDimens.h16,
-        bottom: context.bottomPadding + AppDimens.h16,
+        bottom: context.bottomPaddingValue + AppDimens.h16,
       ),
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: AppDimens.w20),

@@ -9,7 +9,7 @@ class CameraFrameSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: 150.h,
+      top: 200.h,
       left: 24.w,
       right: 24.w,
       child: CameraFrameWidget(height: 380.h),

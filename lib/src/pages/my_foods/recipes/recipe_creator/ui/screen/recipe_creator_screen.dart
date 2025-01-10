@@ -55,7 +55,7 @@ class _RecipeCreatorScreenState extends State<_RecipeCreatorScreen> {
               ),
             ),
             const ActionButtonsSection(),
-            (context.bottomPadding + 8).verticalSpace,
+            (context.bottomPaddingValue + 8).verticalSpace,
           ],
         ),
       ),

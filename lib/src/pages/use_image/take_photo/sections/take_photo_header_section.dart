@@ -11,15 +11,20 @@ class TakePhotoHeaderSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomAppBar(
-      title: context.localization.photoLogging,
-      actions: [
-        HelpWidget(
-          onTap: () {
-            context.read<TakePhotoBloc>().add(const ShowIntroScreenEvent());
-          },
-        ),
-      ],
+    return Positioned(
+      top: 0,
+      left: 0,
+      right: 0,
+      child: CustomAppBar(
+        title: context.localization.photoLogging,
+        actions: [
+          HelpWidget(
+            onTap: () {
+              context.read<TakePhotoBloc>().add(const ShowIntroScreenEvent());
+            },
+          ),
+        ],
+      ),
     );
   }
 }

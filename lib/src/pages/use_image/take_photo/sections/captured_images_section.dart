@@ -63,7 +63,7 @@ class _CapturedImagesSectionState extends State<CapturedImagesSection> {
           }
         }
         return Positioned(
-          bottom: context.bottomPadding + 40.h + 78.h + 32.h,
+          bottom: context.bottomPaddingValue + 40.h + 78.h + 32.h,
           left: 0,
           right: 0,
           child: SizedBox(

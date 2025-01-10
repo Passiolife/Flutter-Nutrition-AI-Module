@@ -145,7 +145,7 @@ class _MacrosPageState extends State<MacrosPage>
                     ListView(
                       shrinkWrap: true,
                       padding: EdgeInsets.only(
-                          bottom: context.bottomPadding + 40.h + 48.h),
+                          bottom: context.bottomPaddingValue + 40.h + 48.h),
                       children: [
                         24.verticalSpace,
                         Container(
@@ -183,7 +183,7 @@ class _MacrosPageState extends State<MacrosPage>
                       ],
                     ),
                     Positioned(
-                      bottom: context.bottomPadding,
+                      bottom: context.bottomPaddingValue,
                       left: 0,
                       right: 0,
                       child: Container(

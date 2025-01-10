@@ -2,15 +2,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '../../../common/constant/app_border.dart';
 import '../../../common/constant/app_constants.dart';
-import '../../../common/constant/app_padding.dart';
 import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/button/primary_button.dart';
 import '../../../common/widgets/button/secondary_button.dart';
 
 class NoNutritionFactsLabelFoundWidget extends StatelessWidget {
-  const NoNutritionFactsLabelFoundWidget({super.key});
+  const NoNutritionFactsLabelFoundWidget({
+    this.onTapNegative,
+    this.onTapPositive,
+    super.key,
+  });
+
+  final VoidCallback? onTapNegative;
+  final VoidCallback? onTapPositive;
 
   @override
   Widget build(BuildContext context) {
@@ -45,20 +50,16 @@ class NoNutritionFactsLabelFoundWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: SecondaryButton(
-                  text: context.localization.cancel,
+                  text: context.localization.tryAgain,
                   padding: AppPadding.pv12,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: onTapNegative,
                 ),
               ),
               Expanded(
                 child: PrimaryButton(
-                  text: context.localization.takePhoto,
+                  text: context.localization.enterManually,
                   padding: AppPadding.pv12,
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
+                  onTap: onTapPositive,
                 ),
               ),
             ],

@@ -16,13 +16,16 @@ extension Dimension on BuildContext {
 
   bool get isKeyboardVisible => info.viewInsets.bottom != 0.0;
 
-  double get keyboardHeight => info.viewInsets.bottom;
+  double get keyboardHeightValue => info.viewInsets.bottom;
+  EdgeInsets get keyboardHeight => EdgeInsets.only(bottom: keyboardHeightValue);
 
   double get topPadding => padding.top;
 
-  double get bottomPadding => info.padding.bottom;
+  double get bottomPaddingValue => info.padding.bottom;
 
-  double get safeAreaPadding => topPadding + bottomPadding;
+  EdgeInsets get bottomPadding => EdgeInsets.only(bottom: bottomPaddingValue);
+
+  double get safeAreaPadding => topPadding + bottomPaddingValue;
 
   /// [localization] is use to get the locale string.
   AppLocalizations get localization => AppLocalizations.instance;

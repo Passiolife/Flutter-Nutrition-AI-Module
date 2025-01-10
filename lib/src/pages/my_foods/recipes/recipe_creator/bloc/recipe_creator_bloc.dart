@@ -19,7 +19,7 @@ class RecipeCreatorBloc extends Bloc<RecipeCreatorEvent, RecipeCreatorState> {
 
   RecipeCreatorViewModel viewModel = RecipeCreatorViewModel.empty();
 
-  NavigationData? _navigationData;
+  RecipeCreatorNavigationData? _navigationData;
 
   final ConvertFoodDataInfoToFoodRecordUseCase
       convertFoodDataInfoToFoodRecordUseCase;
@@ -149,8 +149,11 @@ class RecipeCreatorBloc extends Bloc<RecipeCreatorEvent, RecipeCreatorState> {
           ? await _connector.fetchUserFoodImage(id: foodRecord!.iconId)
           : null;
 
-      viewModel =
-          await RecipeCreatorViewModel.fromRecord(foodRecord!, foodImage);
+      viewModel = await RecipeCreatorViewModel.fromRecord(
+        foodRecord!,
+        foodImage,
+        isUpdate: recipeFoodRecord != null,
+      );
 
       emit(PrefillSuccessState(viewModel: viewModel));
     } catch (e) {}

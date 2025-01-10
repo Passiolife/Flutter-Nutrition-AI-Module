@@ -96,16 +96,6 @@ class _FoodScanPageState extends State<FoodScanPage>
         detectedCandidate: _detectedCandidate));
   }
 
-  void _redirectToEdit(PassioFoodItem? foodItem) {
-    EditFoodPage.navigate(
-      context: context,
-      params: EditFoodPageParams(
-        foodItem: foodItem,
-        visibleSwitch: true,
-      ),
-    );
-  }
-
   @override
   void onTapSearch() {
     FoodSearchPage.navigate(context, needsReturn: false);

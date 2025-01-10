@@ -410,7 +410,7 @@
   "frontCameraFlashlightIsNotSupportedOnThisDevice": "Front camera flashlight is not supported on this device.",
   "enterBarcode": "Enter Barcode",
   "barcodeMissingData": "Barcode Missing Data",
-  "barcodeMissingDataDescription": "This item will not log",
+  "barcodeMissingDataDescription": "Data missing, item will not be logged",
   "addImage": "Add Image",
   "photoPreview": "Photo Preview",
   "analyzingPhoto": "Analyzing Photo...",
@@ -421,9 +421,13 @@
   "noIngredientsLabelFound": "No Ingredients Label Found",
   "noIngredientsLabelFoundDescription": "Take a picture of just the Ingredients",
   "noNutritionFactsLabelFound": "No Nutrition Facts Label Found",
-  "noNutritionFactsLabelFoundDescription": "Take a photo of just the Nutrition Facts",
+  "noNutritionFactsLabelFoundDescription": "Please try again or enter manually",
   "nutritionFactsIncomplete": "Nutrition Facts Incomplete",
   "nutritionFactsIncompleteDescription": "This item will not log",
   "editNutrition": "Edit Nutrition",
-  "noResultsFoundDescription": "Sorry, we could not find any matches. Please try again, scan the nutrition facts, or "
+  "noResultsFoundDescription": "Sorry, we could not find any matches. Please try again, scan the nutrition facts, or ",
+  "addMore": "add more",
+  "resultDataMissingDescription": "Data missing, item will not be logged",
+  "noBarcodeTakePicture": "No barcode? Take a picture of ",
+  "enterManually": "Enter Manually"
 }

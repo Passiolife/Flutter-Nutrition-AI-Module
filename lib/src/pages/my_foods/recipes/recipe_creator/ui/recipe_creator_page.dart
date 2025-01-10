@@ -27,9 +27,9 @@ class RecipeCreatorPage extends StatelessWidget {
     super.key,
   });
 
-  final NavigationData params;
+  final RecipeCreatorNavigationData params;
 
-  static MaterialPageRoute route({required NavigationData params}) {
+  static MaterialPageRoute route({required RecipeCreatorNavigationData params}) {
     return MaterialPageRoute(
       settings: RouteSettings(name: Routes.recipeCreator),
       builder: (_) => RecipeCreatorPage(params: params),
@@ -38,7 +38,7 @@ class RecipeCreatorPage extends StatelessWidget {
 
   static Future navigate({
     required BuildContext context,
-    NavigationData params = const NavigationData(),
+    RecipeCreatorNavigationData params = const RecipeCreatorNavigationData(),
   }) async {
     return await Navigator.pushNamed(
       context,

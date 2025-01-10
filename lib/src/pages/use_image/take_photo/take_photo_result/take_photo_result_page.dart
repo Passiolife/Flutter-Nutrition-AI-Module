@@ -7,10 +7,18 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_shadow.dart';
+import '../../../../common/data/repository/food_log_repositoy_impl.dart';
 import '../../../../common/data/repository/nutrition_ai_repository_impl.dart';
+import '../../../../common/domain/repository/food_log_repositoy.dart';
+import '../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
 import '../../../../common/extension/context_extension.dart';
+import '../../../../common/router/routes.dart';
 import '../../../../common/util/navigation_utils/slide_page_route.dart';
+import '../../../../common/util/show_widget_util.dart';
+import '../../../../common/widgets/item_added_to_diary_widget.dart';
+import '../../../../nutrition_ai_module_configuration.dart';
+import '../../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
 import 'bloc/take_photo_result_bloc.dart';
 import 'models/take_photo_result_navigation_data_provider.dart';
 import 'sections/action_buttons_section.dart';
@@ -38,6 +46,10 @@ class TakePhotoResultPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final NutritionConfiguration configuration = NutritionAIModule.instance.configuration;
+
+    // FoodLogRepository
+    final FoodLogRepository repository = FoodLogRepositoryImpl(connector: configuration.connector);
     return TakePhotoResultNavigationDataProvider(
       capturedImages: capturedImages,
       child: BlocProvider(
@@ -46,6 +58,7 @@ class TakePhotoResultPage extends StatelessWidget {
           foodRecordsByImageRecognition: GetFoodRecordsByImageRecognition(
             repository: NutritionAIRepositoryImpl(),
           ),
+          addFoodLogsUseCase: AddFoodLogsUseCase(repository: repository)
         ),
         child: _TakePhotoResultScreen(),
       ),

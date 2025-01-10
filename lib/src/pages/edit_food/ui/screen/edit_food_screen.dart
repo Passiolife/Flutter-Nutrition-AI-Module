@@ -306,7 +306,7 @@ class _EditFoodScreenState extends State<EditFoodScreen>
     else if (state is UserRecipeFetchSuccessState) {
       await RecipeCreatorPage.navigate(
         context: context,
-        params: NavigationData(
+        params: RecipeCreatorNavigationData(
           logUponCreate: state.logUpdateOnCreate,
           loggedFoodRecord: _foodRecord,
           recipeFoodRecord: state.userRecipeRecord

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/constant/app_padding.dart';
@@ -6,6 +7,7 @@ import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/util/snackbar_extension.dart';
 import '../../../../../common/widgets/button/primary_button.dart';
 import '../../../../../common/widgets/button/secondary_button.dart';
+import '../bloc/take_photo_result_bloc.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   const ActionButtonsWidget({
@@ -13,6 +15,7 @@ class ActionButtonsWidget extends StatelessWidget {
     this.createRecipeEnabled = false,
     this.logEnabled = false,
     this.onTapLogSelected,
+    this.isLogLoading = false,
     super.key,
   });
 
@@ -21,6 +24,7 @@ class ActionButtonsWidget extends StatelessWidget {
 
   final bool logEnabled;
   final VoidCallback? onTapLogSelected;
+  final bool isLogLoading;
 
   @override
   Widget build(BuildContext context) {
@@ -32,8 +36,7 @@ class ActionButtonsWidget extends StatelessWidget {
           Expanded(
             child: SecondaryButton(
               padding: AppPadding.pv12,
-              onTap: () {
-              },
+              onTap: onTapCreateRecipe,
               text: context.localization.createRecipe,
               enabled: createRecipeEnabled,
             ),
@@ -42,8 +45,9 @@ class ActionButtonsWidget extends StatelessWidget {
             child: PrimaryButton(
               padding: AppPadding.pv12,
               enabled: logEnabled,
-              onTap: () {},
+              onTap: onTapLogSelected,
               text: context.localization.logSelected,
+              loading: isLogLoading,
             ),
           ),
         ],

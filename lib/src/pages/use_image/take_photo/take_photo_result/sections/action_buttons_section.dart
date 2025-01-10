@@ -17,12 +17,21 @@ class ActionButtonsSection extends StatelessWidget {
       builder: (context, state) {
         if (state is! UpdateActionButtonsState) return const SizedBox.shrink();
         return ActionButtonsWidget(
-          onTapCreateRecipe: () {},
+          onTapCreateRecipe: () => _onTapCreateRecipe(context),
           createRecipeEnabled: state.viewModel.isCreateRecipeEnabled,
           logEnabled: state.viewModel.isLogEnabled,
-          onTapLogSelected: () {},
+          onTapLogSelected: () => _onTapLogSelected(context),
+          isLogLoading: state.viewModel.isLogLoading,
         );
       },
     );
+  }
+
+  void _onTapCreateRecipe(BuildContext context) {
+    context.read<TakePhotoResultBloc>().add(const CreateRecipeEvent());
+  }
+
+  void _onTapLogSelected(BuildContext context) {
+    context.read<TakePhotoResultBloc>().add(const DoLogEvent());
   }
 }

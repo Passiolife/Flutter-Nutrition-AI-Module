@@ -124,7 +124,7 @@ class _MyFoodsPageState extends State<MyFoodsPage>
               },
             ),
           ),
-          (context.bottomPadding + 8).verticalSpace,
+          (context.bottomPaddingValue + 8).verticalSpace,
         ],
       ),
     );

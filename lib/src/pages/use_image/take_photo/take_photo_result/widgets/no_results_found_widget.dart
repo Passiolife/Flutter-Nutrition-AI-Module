@@ -16,7 +16,7 @@ class NoResultsFoundWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: Padding(
-        padding: AppPadding.ph16,
+        padding: AppPadding.ph16 + AppPadding.pb16,
         child: Column(
           children: [
             Expanded(

@@ -1,8 +1,12 @@
 import 'package:intl/intl.dart';
 
 extension DateTimeExtension on DateTime {
+  DateTime format(String format) {
+    final formattedString = formatToString(format);
+    return DateFormat(format).parse(formattedString);
+  }
 
-  String format(String format) {
+  String formatToString(String format) {
     return DateFormat(format).format(this);
   }
 }
@@ -13,6 +17,7 @@ abstract class DateFormatComponents {
   ///
   /// Formats year as: 2025
   static const year4Digit = 'yyyy';
+
   /// Formats year as: 25
   static const year2Digit = 'yy';
 
@@ -54,7 +59,8 @@ abstract class DateFormatStrings {
 
 abstract class TimeFormatString {
   /// Formats as: 1:00 PM
-  static const String hourMinute12Hour = '${DateFormatComponents.hour12}:${DateFormatComponents.minute2Digit} ${DateFormatComponents.amPm}';
+  static const String hourMinute12Hour =
+      '${DateFormatComponents.hour12}:${DateFormatComponents.minute2Digit} ${DateFormatComponents.amPm}';
 }
 
 abstract class DateTimeFormatStrings {

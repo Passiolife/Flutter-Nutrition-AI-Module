@@ -22,23 +22,20 @@ class CustomAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: AppPadding.ph8,
-      child: AppBar(
-        centerTitle: centerTitle,
-        backgroundColor: backgroundColor,
-        iconTheme: IconThemeData(color: context.iconThemeColors.brandIconLight),
-        title: title != null
-            ? Text(
-                title!,
-                style: AppTextStyle.text2xl.addAll([
-                  AppTextStyle.text2xl.leading8,
-                  AppTextStyle.extraBold,
-                ]).copyWith(color: context.textThemeColors.brandTextDark),
-              )
-            : null,
-        actions: actions,
-      ),
+    return AppBar(
+      centerTitle: centerTitle,
+      backgroundColor: backgroundColor,
+      iconTheme: IconThemeData(color: context.iconThemeColors.brandIconLight),
+      title: title != null
+          ? Text(
+              title!,
+              style: AppTextStyle.text2xl.addAll([
+                AppTextStyle.text2xl.leading8,
+                AppTextStyle.extraBold,
+              ]).copyWith(color: context.textThemeColors.brandTextDark),
+            )
+          : null,
+      actions: actions,
     );
   }
 }

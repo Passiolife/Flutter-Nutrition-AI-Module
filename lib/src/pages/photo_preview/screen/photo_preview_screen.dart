@@ -41,7 +41,7 @@ class _PhotoPreviewScreenState extends State<_PhotoPreviewScreen> {
                 children: [
                   AnalyzeProgressSection(),
                   ActionButtonWidget(),
-                  (context.bottomPadding + 16).verticalSpace,
+                  (context.bottomPaddingValue + 16).verticalSpace,
                 ],
               ),
             ),
@@ -92,16 +92,16 @@ class _PhotoPreviewScreenState extends State<_PhotoPreviewScreen> {
   }
 
   void _showFailedToAnalyzedState({required BuildContext context}) {
-    ShowWidgetUtil.showCustomGeneralDialogNew(
-      context: context,
-      builder: (BuildContext context) {
-        return FailedToAnalyzeImageWidget(
-          // onTap: () {
-          //   Navigator.pop(context);
-          //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-          // },
-        );
-      },
-    );
+    // ShowWidgetUtil.showCustomGeneralDialogNew(
+    //   context: context,
+    //   builder: (BuildContext context) {
+    //     return FailedToAnalyzeImageWidget(
+    //       // onTap: () {
+    //       //   Navigator.pop(context);
+    //       //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
+    //       // },
+    //     );
+    //   },
+    // );
   }
 }

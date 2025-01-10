@@ -6,6 +6,7 @@ import 'package:permission_handler/permission_handler.dart';
 import '../../../common/constant/app_colors.dart';
 import '../../../common/constant/app_dimens.dart';
 import '../../../common/extension/context_extension.dart';
+import '../../../common/router/routes.dart';
 import '../../../common/util/permission_manager_utility.dart';
 import '../../../common/util/show_widget_util.dart';
 import '../../dashboard/dashboard_page.dart';
@@ -85,7 +86,8 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
         listener: (context, state) =>
             _handleStateChanges(context: context, state: state),
         buildWhen: (_, state) {
-          return state is FoodScanInitial || state is BarcodeNotRecognizedStateNew;
+          return state is FoodScanInitial ||
+              state is BarcodeNotRecognizedStateNew;
         },
         builder: (BuildContext context, FoodScanState state) {
           return Column(
@@ -102,213 +104,9 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
                   ],
                 ),
               ),
-
-              // Expanded(
-              //   child: Stack(
-              //     fit: StackFit.expand,
-              //     children: [
-              //       _showPassioPreview
-              //           ? const PassioPreview()
-              //           : Container(color: AppColors.black),
-              //       GestureDetector(
-              //         behavior: HitTestBehavior.opaque,
-              //         onTap: state is ScanResultState
-              //             ? () =>
-              //             _bottomBackgroundWidgetKey.currentState
-              //                 ?.setInitialHeight()
-              //             : null,
-              //         child:
-              //         ScanningAnimationWidget(key: _scanningAnimationKey),
-              //       ),
-              //       Positioned(
-              //         top: 500.h,
-              //         left: 24.w,
-              //         right: 24.w,
-              //         child: CameraZoomFocusWidget(
-              //           currentZoomLevel: _currentZoom,
-              //           minZoomLevel: _cameraZoomLevel?.minZoomLevel ?? 1,
-              //           maxZoomLevel: _cameraZoomLevel?.maxZoomLevel ?? 10,
-              //           onChanged: (value) {
-              //             _bloc.add(
-              //                 DoUpdateCameraZoomLevelEvent(zoomLevel: value));
-              //           },
-              //           isFocusOn: false,
-              //           onChangeFocus: () {
-              //             context.showSnackbar(text: 'Work is in progress.');
-              //           },
-              //         ),
-              //       ),
-              //       (state is ScanLoadingState ||
-              //           state is ScanResultState ||
-              //           state is NutritionFactsResultState)
-              //           ? DraggableBottomSheetWidget(
-              //         key: ObjectKey(state is ScanResultState
-              //             ? state.foodItem
-              //             : true),
-              //         initialSize: _initialSheetSize,
-              //         minSize: _initialSheetSize,
-              //         maxSize: _maxSheetSize,
-              //         shouldDraggable: _sheetDraggable,
-              //         builder: (context, dragController, controller,
-              //             widgetState) {
-              //           return state is ScanResultState ||
-              //               state is NutritionFactsResultState
-              //               ? _currentMode == 2
-              //               ? NutritionFactsResultWidget(
-              //             nutritionFacts: _nutritionFacts,
-              //             isLoadingNext: state
-              //             is NutritionFactsLoadingNextState,
-              //             isEnableNext: _nutritionFacts != null,
-              //             handler: this,
-              //           )
-              //               : ResultWidget(
-              //             dragController: dragController,
-              //             scrollController: controller,
-              //             widgetState: widgetState,
-              //             iconId: _foodItem?.iconId ??
-              //                 _detectedCandidate?.passioID ??
-              //                 '',
-              //             foodName: _foodItem?.name ??
-              //                 _detectedCandidate?.foodName ??
-              //                 '',
-              //             alternatives: _alternatives,
-              //             listener: this,
-              //             shouldDraggable: _sheetDraggable,
-              //             visibleDragIntro: !Settings.instance
-              //                 .getDragIntroSeen(),
-              //           )
-              //               : const ScanningWidget();
-              //         },
-              //       )
-              //           : const SizedBox.shrink(),
-              //       ScannerModeWidget(
-              //         initialMode: _currentMode,
-              //         onModeChanged: (mode) {
-              //           _bottomBackgroundWidgetKey.currentState
-              //               ?.setMaxSizeWithInitialInPixels(
-              //               _bottomBackgroundWidgetKey.currentState
-              //                   ?.getInitialSizePixels() ??
-              //                   0);
-              //           _currentMode = mode;
-              //           _bloc.add(DoModeChangeEvent(mode: _currentMode ?? 0));
-              //         },
-              //       ),
-              //     ],
-              //   ),
-              // ),
             ],
           );
         },
-        // child: Column(
-        //   children: [
-        //     const AppBarSection(),
-        //     Expanded(
-        //       child: Stack(
-        //         children: [
-        //           const CameraSection(),
-        //           const CameraFrameSection(),
-        //           const ScanningAnimationWidget(),
-        //           const CameraControlSection(),
-        //           const ResultSection(),
-        //         ],
-        //       ),
-        //     ),
-        //
-        //     // Expanded(
-        //     //   child: Stack(
-        //     //     fit: StackFit.expand,
-        //     //     children: [
-        //     //       _showPassioPreview
-        //     //           ? const PassioPreview()
-        //     //           : Container(color: AppColors.black),
-        //     //       GestureDetector(
-        //     //         behavior: HitTestBehavior.opaque,
-        //     //         onTap: state is ScanResultState
-        //     //             ? () =>
-        //     //             _bottomBackgroundWidgetKey.currentState
-        //     //                 ?.setInitialHeight()
-        //     //             : null,
-        //     //         child:
-        //     //         ScanningAnimationWidget(key: _scanningAnimationKey),
-        //     //       ),
-        //     //       Positioned(
-        //     //         top: 500.h,
-        //     //         left: 24.w,
-        //     //         right: 24.w,
-        //     //         child: CameraZoomFocusWidget(
-        //     //           currentZoomLevel: _currentZoom,
-        //     //           minZoomLevel: _cameraZoomLevel?.minZoomLevel ?? 1,
-        //     //           maxZoomLevel: _cameraZoomLevel?.maxZoomLevel ?? 10,
-        //     //           onChanged: (value) {
-        //     //             _bloc.add(
-        //     //                 DoUpdateCameraZoomLevelEvent(zoomLevel: value));
-        //     //           },
-        //     //           isFocusOn: false,
-        //     //           onChangeFocus: () {
-        //     //             context.showSnackbar(text: 'Work is in progress.');
-        //     //           },
-        //     //         ),
-        //     //       ),
-        //     //       (state is ScanLoadingState ||
-        //     //           state is ScanResultState ||
-        //     //           state is NutritionFactsResultState)
-        //     //           ? DraggableBottomSheetWidget(
-        //     //         key: ObjectKey(state is ScanResultState
-        //     //             ? state.foodItem
-        //     //             : true),
-        //     //         initialSize: _initialSheetSize,
-        //     //         minSize: _initialSheetSize,
-        //     //         maxSize: _maxSheetSize,
-        //     //         shouldDraggable: _sheetDraggable,
-        //     //         builder: (context, dragController, controller,
-        //     //             widgetState) {
-        //     //           return state is ScanResultState ||
-        //     //               state is NutritionFactsResultState
-        //     //               ? _currentMode == 2
-        //     //               ? NutritionFactsResultWidget(
-        //     //             nutritionFacts: _nutritionFacts,
-        //     //             isLoadingNext: state
-        //     //             is NutritionFactsLoadingNextState,
-        //     //             isEnableNext: _nutritionFacts != null,
-        //     //             handler: this,
-        //     //           )
-        //     //               : ResultWidget(
-        //     //             dragController: dragController,
-        //     //             scrollController: controller,
-        //     //             widgetState: widgetState,
-        //     //             iconId: _foodItem?.iconId ??
-        //     //                 _detectedCandidate?.passioID ??
-        //     //                 '',
-        //     //             foodName: _foodItem?.name ??
-        //     //                 _detectedCandidate?.foodName ??
-        //     //                 '',
-        //     //             alternatives: _alternatives,
-        //     //             listener: this,
-        //     //             shouldDraggable: _sheetDraggable,
-        //     //             visibleDragIntro: !Settings.instance
-        //     //                 .getDragIntroSeen(),
-        //     //           )
-        //     //               : const ScanningWidget();
-        //     //         },
-        //     //       )
-        //     //           : const SizedBox.shrink(),
-        //     //       ScannerModeWidget(
-        //     //         initialMode: _currentMode,
-        //     //         onModeChanged: (mode) {
-        //     //           _bottomBackgroundWidgetKey.currentState
-        //     //               ?.setMaxSizeWithInitialInPixels(
-        //     //               _bottomBackgroundWidgetKey.currentState
-        //     //                   ?.getInitialSizePixels() ??
-        //     //                   0);
-        //     //           _currentMode = mode;
-        //     //           _bloc.add(DoModeChangeEvent(mode: _currentMode ?? 0));
-        //     //         },
-        //     //       ),
-        //     //     ],
-        //     //   ),
-        //     // ),
-        //   ],
-        // ),
       ),
     );
   }
@@ -318,21 +116,31 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
     if (state is IntroScreenVisibilityState) {
       _handleIntroVisibilityState(state);
     } else if (state is BarcodeNotRecognizedStateNew) {
-      ShowWidgetUtil.showCustomModalBottomSheet(
-        context: context,
-        backgroundColor: AppColors.transparent,
-        builder: (_) {
-          return BarcodeNotRecognizedWidget(
-            onTapCancel: () {
-              Navigator.pop(context);
-              _bloc?.add(const StartScanningEvent());
-            },
-          );
-        },
-      );
-    }  else if (state is AddedToDiaryVisibilityState) {
+      _showBarcodeNotRecognizedWidget(context);
+    } else if (state is AddedToDiaryVisibilityState) {
       _handleAddedToDiaryVisibilityState(state);
     }
+  }
+
+  void _showBarcodeNotRecognizedWidget(BuildContext context) {
+    ShowWidgetUtil.showCustomModalBottomSheet(
+      context: context,
+      isDismissible: false,
+      backgroundColor: AppColors.transparent,
+      builder: (dsContext) {
+        return BarcodeNotRecognizedWidget(
+          onTapCancel: () {
+            Navigator.pop(dsContext);
+            _bloc?.add(const StartScanningEvent());
+          },
+          onTapTakePhoto: () {
+            Navigator.pop(dsContext);
+            Navigator.pushNamed(context, Routes.nutritionFacts);
+            _bloc?.add(const StartScanningEvent());
+          },
+        );
+      },
+    );
   }
 
   // Handle intro screen visibility
@@ -360,8 +168,8 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
     await PermissionManagerUtility().request(
       context,
       Permission.camera,
-      title: context.localization?.permission,
-      message: context.localization?.cameraPermissionMessage,
+      title: context.localization.permission,
+      message: context.localization.cameraPermissionMessage,
       onTapCancelForSettings: (contextPermission) {
         Navigator.pop(contextPermission);
         Navigator.pop(context);

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/extension/context_extension.dart';
+import '../../../common/router/routes.dart';
 import '../../../common/widgets/bottom_sheet/base_bottom_sheet.dart';
 import '../../edit_food/ui/edit_food_page.dart';
 import '../bloc/food_scan_bloc.dart';
@@ -43,7 +44,7 @@ class _ResultSectionState extends State<ResultSection> {
           iconId = foodItem?.iconId;
           title = foodItem?.name;
           subtitle =
-              '${context.localization?.upc ?? ''}: ${foodItem?.ingredients.firstOrNull?.metadata.barcode ?? ''}';
+              '${context.localization.upc ?? ''}: ${foodItem?.ingredients.firstOrNull?.metadata.barcode ?? ''}';
         }
         return Align(
           alignment: Alignment.bottomCenter,
@@ -57,7 +58,11 @@ class _ResultSectionState extends State<ResultSection> {
                     onEdit: () => _onEdit(context: context, foodItem: foodItem),
                     onLog: () => _onLog(context: context, foodItem: foodItem),
                   )
-                : ScanningWidget(),
+                : ScanningWidget(
+                    onTap: () {
+                      Navigator.pushNamed(context, Routes.nutritionFacts);
+                    },
+                  ),
           ),
         );
       },

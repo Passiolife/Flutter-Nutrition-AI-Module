@@ -32,22 +32,30 @@ class RecipeCreatorViewModel {
   }
 
   static Future<RecipeCreatorViewModel> fromRecord(
-      FoodRecord record, Uint8List? image) async {
-    // final image = await record.customImage;
+      FoodRecord record, Uint8List? image,
+      {bool isUpdate = true}) async {
     final foodRecord = FoodRecord.fromJson(record.toJson());
+
     final sliderData = SliderData().updateSliderData(
-        foodRecord.getSelectedUnit(), foodRecord.getSelectedQuantity());
+      foodRecord.getSelectedUnit(),
+      foodRecord.getSelectedQuantity(),
+    );
+
     RecipeCreatorViewModel recipeViewModel = RecipeCreatorViewModel._(
-      recipeName: foodRecord.name,
-      image: image,
+      recipeName: isUpdate ? foodRecord.name : '',
+      image: isUpdate ? image : null,
       servingSize: foodRecord.computedWeight,
       sliderData: sliderData,
     );
+
     recipeViewModel = recipeViewModel.doUpdateIngredients(
-        foodRecord: foodRecord, isUpdate: false);
-    if(foodRecord.iconId.isNotEmpty) {
+      foodRecord: foodRecord,
+      isUpdate: false,
+    );
+    // if (foodRecord.iconId.isNotEmpty) {
       recipeViewModel.foodRecord?.iconId = foodRecord.iconId;
-    }
+    // }
+
     return recipeViewModel;
   }
 
@@ -118,13 +126,16 @@ class RecipeCreatorViewModel {
     int? index,
   }) {
     if (this.foodRecord == null) {
-      _initializeFoodRecord(foodRecord);
+      this.foodRecord =
+          foodRecord.initializeFoodRecord(newIconId: _uniqueIconId);
+      // _initializeFoodRecord(foodRecord);
     }
     if (isUpdate) {
       this.foodRecord?.updateRecipeIngredientFromFoodRecord(
           index: index!, foodRecord: foodRecord);
     } else {
-      if (foodRecord.entityType == PassioIDEntityType.recipe) {
+      this.foodRecord?.addIngredientsToRecipe(foodRecord: foodRecord);
+      /*if (foodRecord.entityType == PassioIDEntityType.recipe) {
         for (var ingredient in foodRecord.ingredients) {
           this.foodRecord?.addRecipeIngredient(ingredient: ingredient);
         }
@@ -132,7 +143,7 @@ class RecipeCreatorViewModel {
         this
             .foodRecord
             ?.addRecipeIngredientFromFoodRecord(foodRecord: foodRecord);
-      }
+      }*/
     }
     final updatedSliderData = sliderData?.updateSliderData(
         this.foodRecord!.getSelectedUnit(),

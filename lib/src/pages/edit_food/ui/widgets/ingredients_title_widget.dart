@@ -57,7 +57,7 @@ class IngredientsTitleWidget extends StatelessWidget {
       if (navigationParams.source == AppCommonConstants.userRecipe) {
         await RecipeCreatorPage.navigate(
           context: context,
-          params: recipe.NavigationData(recipeFoodRecord: foodRecord),
+          params: recipe.RecipeCreatorNavigationData(recipeFoodRecord: foodRecord),
         );
         return;
       }

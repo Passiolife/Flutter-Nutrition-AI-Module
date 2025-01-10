@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../common/constant/app_constants.dart';
+import '../../common/extension/context_extension.dart';
 import '../../common/models/user_profile/user_profile_model.dart';
 import '../../common/router/routes.dart';
-import '../../common/extension/context_extension.dart';
 import '../../common/util/keyboard_extension.dart';
 import '../../common/util/snackbar_extension.dart';
 import '../../common/widgets/app_button.dart';
@@ -59,13 +59,13 @@ class _MyProfilePageState extends State<MyProfilePage>
           body: Column(
             children: [
               CustomAppBarWidget(
-                title: context.localization?.myProfile,
+                title: context.localization.myProfile,
                 isMenuVisible: false,
               ),
               Expanded(
                 child: Padding(
-                  padding: EdgeInsets.only(
-                      left: 16.w, right: 16.w, bottom: context.keyboardHeight),
+                  padding: EdgeInsets.only(left: 16.w, right: 16.w) +
+                      context.keyboardHeight,
                   child: SingleChildScrollView(
                     child: Column(
                       children: [
@@ -135,14 +135,14 @@ class _MyProfilePageState extends State<MyProfilePage>
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: 16.w),
                 child: AppButton(
-                  buttonText: context.localization?.saveChanges,
+                  buttonText: context.localization.saveChanges,
                   appButtonModel: AppButtonStyles.primary,
                   onTap: () {
                     _bloc.add(DoSaveProfileEvent(userProfile: _profileModel));
                   },
                 ),
               ),
-              (context.bottomPadding + 16.h).verticalSpace,
+              (context.bottomPaddingValue + 16.h).verticalSpace,
             ],
           ),
         );
@@ -209,7 +209,7 @@ class _MyProfilePageState extends State<MyProfilePage>
       _mealPlans = state.mealPlans;
     } else if (state is SaveProfileSuccessState) {
       context.hideKeyboard();
-      context.showSnackbar(text: context.localization?.profileSaved);
+      context.showSnackbar(text: context.localization.profileSaved);
     }
   }
 }

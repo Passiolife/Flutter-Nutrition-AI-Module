@@ -25,6 +25,11 @@ class _CameraSectionState extends State<CameraSection> {
       listener: (context, state) {
         if (state is ScanningState) {
           _showPassioPreview = true;
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            context.read<FoodScanBloc>().add(const GetCameraZoomLevelEvent());
+          });
+
         }
       },
       buildWhen: (_, state) {

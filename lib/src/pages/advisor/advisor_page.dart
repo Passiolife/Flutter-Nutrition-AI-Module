@@ -153,7 +153,7 @@ class _AdvisorPageState extends State<AdvisorPage> {
                   },
                   visibleLoadingForSendButton: _visibleLoadingForSendButton,
                 ),
-              (context.bottomPadding + 8.h).verticalSpace,
+              (context.bottomPaddingValue + 8.h).verticalSpace,
             ],
           ),
         );

@@ -20,9 +20,9 @@ class HelpWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: VectorGraphic(
+    return IconButton(
+      onPressed: onTap,
+      icon: VectorGraphic(
         loader: AssetBytesLoader(AppImages.icQuestionMark),
         width: width ?? 24.r,
         height: height ?? 24.r,

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/constant/app_constants.dart';
-import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/widgets/button/primary_button.dart';
 import '../../../../../common/widgets/passio_image_widget.dart';
