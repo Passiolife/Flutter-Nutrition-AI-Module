@@ -6,6 +6,7 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../common/extension/passio/passio_food_item_extension.dart';
+import '../../../common/models/food_record/food_record.dart';
 
 part 'photo_preview_event.dart';
 part 'photo_preview_state.dart';
@@ -29,6 +30,14 @@ class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
     final foodItem = await nutritionAIRepository.recognizeNutritionFacts(image);
     emit(AnalyzeCompletedState(timestamp: DateTime.now().millisecond));
     await Future.delayed(Duration(milliseconds: 500));
+
+    if(foodItem?.hasNutritionFacts ?? false) {
+      final foodRecord = FoodRecord.fromPassioFoodItem(foodItem!);
+      emit(NutritionFactsFoundState(timestamp: DateTime.now().millisecond, foodRecord: foodRecord));
+
+    } else {
+      emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond));
+    }
     if (foodItem == null) {
       emit(FailedToAnalyzedState(timestamp: DateTime.now().millisecond));
       return;

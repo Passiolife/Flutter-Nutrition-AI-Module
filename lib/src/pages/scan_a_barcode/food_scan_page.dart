@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
-import '../../common/constant/app_constants.dart';
 import '../../common/router/routes.dart';
-import '../edit_food/ui/edit_food_page.dart';
-import '../food_search/food_search_page.dart';
-import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/food_scan_bloc.dart';
 import 'screen/food_scan_screen.dart';
-import 'widgets/nutrition_facts_result_widget.dart';
-import 'widgets/widgets.dart';
 
 class FoodScanPage extends StatefulWidget {
   const FoodScanPage({required this.selectedDateTime, super.key});
@@ -36,17 +29,18 @@ class FoodScanPage extends StatefulWidget {
   State<FoodScanPage> createState() => _FoodScanPageState();
 }
 
-class _FoodScanPageState extends State<FoodScanPage>
-    with TickerProviderStateMixin
-    implements FoodScanListener, NutritionFactsHandler {
+class _FoodScanPageState extends State<
+    FoodScanPage> /*with TickerProviderStateMixin
+    implements FoodScanListener, NutritionFactsHandler*/
+{
   // Bloc instance responsible for managing the state of the FoodScan feature
-  final FoodScanBloc _bloc = FoodScanBloc();
-
-  PassioFoodItem? _foodItem;
-  DetectedCandidate? _detectedCandidate;
-  final List<DetectedCandidate> _alternatives = [];
-
-  PassioNutritionFacts? _nutritionFacts;
+  // final FoodScanBloc _bloc = FoodScanBloc();
+  //
+  // PassioFoodItem? _foodItem;
+  // DetectedCandidate? _detectedCandidate;
+  // final List<DetectedCandidate> _alternatives = [];
+  //
+  // PassioNutritionFacts? _nutritionFacts;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +50,7 @@ class _FoodScanPageState extends State<FoodScanPage>
     );
   }
 
-  @override
+/*@override
   void onDragResult(bool isCollapsed) {
     if (isCollapsed) {
       Future.delayed(const Duration(milliseconds: AppDimens.duration150), () {
@@ -113,6 +107,6 @@ class _FoodScanPageState extends State<FoodScanPage>
       context: context,
       nutritionFacts: _nutritionFacts,
     );
-  }
+  }*/
 // END: NutritionFactsHandler methods
 }

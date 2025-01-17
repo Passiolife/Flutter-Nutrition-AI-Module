@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:image_picker/image_picker.dart';
@@ -10,23 +9,19 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common/constant/app_colors.dart';
 import '../../../common/constant/app_text_styles.dart';
-import '../../../common/extension/context_extension.dart';
-import '../../../common/extension/string_extensions.dart';
 import '../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
-import '../../../common/permission_manager/permission_manager.dart';
 import '../../../common/router/routes.dart';
-import '../../../common/util/permission_utility.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/util/permission_manager_utility.dart';
 import '../../../common/util/show_widget_util.dart';
 import '../../../common/util/snackbar_extension.dart';
+import '../../../common/extension/string_extensions.dart';
 import '../../../common/widgets/bottom_sheet/no_results_found_bottom_sheet.dart';
 import '../../../common/widgets/food_item_row_widget.dart';
 import '../../dashboard/dashboard_page.dart';
 import '../../food_search/food_search_page.dart';
 import 'bloc/select_photo_bloc.dart';
-import 'models/select_photo_navigation_data_provider.dart';
 import 'widgets/widgets.dart';
-
-part 'screen/select_photo_screen.dart';
 
 class SelectPhotoPage extends StatefulWidget {
   const SelectPhotoPage({
@@ -65,10 +60,10 @@ class SelectPhotoPage extends StatefulWidget {
 class _SelectPhotoPageState extends State<SelectPhotoPage> {
   // Listener for app lifecycle changes
   AppLifecycleListener? _lifecycleListener;
-  //
-  // // Instance of PermissionManagerUtility to handle permissions
-  // final PermissionManagerUtility _permissionManager =
-  //     PermissionManagerUtility();
+
+  // Instance of PermissionManagerUtility to handle permissions
+  final PermissionManagerUtility _permissionManager =
+      PermissionManagerUtility();
 
   final _bloc = SelectPhotoBloc();
 
@@ -97,14 +92,6 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SelectPhotoNavigationDataProvider(
-      returnResult: widget.returnResult,
-      maxLimit: widget.maxLimit,
-      child: BlocProvider(
-        create: (context) => SelectPhotoBloc(),
-        child: const _SelectPhotoScreen(),
-      ),
-    );
     return BlocConsumer<SelectPhotoBloc, SelectPhotoState>(
       bloc: _bloc,
       listener: (context, state) {
@@ -243,7 +230,7 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
                   onPositiveClick: () {
                     _bloc.add(DoFoodLogEvent(data: _advisorFoodInfoList));
                   },
-                ),
+                )
             ],
           ),
         );
@@ -256,7 +243,7 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
       // Callback function triggered on app lifecycle state change
       onStateChange: (state) {
         // Call permission manager to handle app lifecycle state change
-        // _permissionManager.didChangeAppLifecycleState(state);
+        _permissionManager.didChangeAppLifecycleState(state);
       },
     );
     _checkPermission();
@@ -272,26 +259,26 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
       }
     }
     if (!mounted) return;
-    // await _permissionManager.request(
-    //   context,
-    //   permission,
-    //   title: context.localization.permission,
-    //   message: context.localization.photosPermissionMessage,
-    //   onTapCancelForSettings: (contextPermission) {
-    //     Navigator.pop(contextPermission);
-    //     Navigator.pop(context);
-    //   },
-    //   onUpdateStatus: (Permission? permission) async {
-    //     if (((await permission?.isGranted) ?? false) ||
-    //         ((await permission?.isLimited) ?? false)) {
-    //       _bloc.add(DoPhotoPickerEvent(
-    //         from: from,
-    //         returnResult: widget.returnResult,
-    //         maxLimit: widget.maxLimit,
-    //       ));
-    //     }
-    //   },
-    // );
+    await _permissionManager.request(
+      context,
+      permission,
+      title: context.localization.permission,
+      message: context.localization.photosPermissionMessage,
+      onTapCancelForSettings: (contextPermission) {
+        Navigator.pop(contextPermission);
+        Navigator.pop(context);
+      },
+      onUpdateStatus: (Permission? permission) async {
+        if (((await permission?.isGranted) ?? false) ||
+            ((await permission?.isLimited) ?? false)) {
+          _bloc.add(DoPhotoPickerEvent(
+            from: from,
+            returnResult: widget.returnResult,
+            maxLimit: widget.maxLimit,
+          ));
+        }
+      },
+    );
   }
 
   void _handleStateChanges(BuildContext context, SelectPhotoState state) {
@@ -301,9 +288,6 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
           _images = state.images;
           if (widget.returnResult) {
             Navigator.pop(context, _images);
-          } else {
-            Navigator.pushReplacementNamed(context, Routes.takePhotoResult,
-                arguments: _images);
           }
           _advisorFoodInfoList = null;
           _isResultLoading = true;
@@ -314,7 +298,7 @@ class _SelectPhotoPageState extends State<SelectPhotoPage> {
         case RecognizeImageSuccessListenerState():
           _isResultLoading = false;
           _advisorFoodInfoList = state.data;
-          if (_advisorFoodInfoList?.isEmpty ?? true) {
+          if(_advisorFoodInfoList?.isEmpty ?? true) {
             ShowWidgetUtil.showCustomModalBottomSheet(
               context: context,
               builder: (bsContext) {

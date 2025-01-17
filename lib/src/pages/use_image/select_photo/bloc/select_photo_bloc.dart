@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +42,10 @@ class SelectPhotoBloc extends Bloc<SelectPhotoEvent, SelectPhotoState> {
       if (!event.returnResult) {
         add(DoRecognizeImageEvent(images: images));
       }
-      emit(PhotoPickerSuccessListenerState(images: images));
+      final futureImagesBytes = images.map((e) async => e.readAsBytes()).toList();
+      final imagesBytes = await Future.wait(futureImagesBytes);
+
+      emit(PhotoPickerSuccessListenerState(images: images, returnResult: event.returnResult, imagesBytes: imagesBytes));
       emit(const PhotoPickerSuccessBuilderState());
     } else {
       if (event.from == null) {

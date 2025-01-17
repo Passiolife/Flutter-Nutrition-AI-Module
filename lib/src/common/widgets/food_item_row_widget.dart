@@ -114,14 +114,14 @@ class _FoodItemRowWidgetState extends State<FoodItemRowWidget> {
                     onPressed: (context) => widget.data.onTapEdit?.call(),
                     backgroundColor: AppColors.indigo600Main,
                     foregroundColor: Colors.white,
-                    label: context.localization?.edit ?? '',
+                    label: context.localization.edit ?? '',
                   ),
                   SlidableAction(
                     onPressed: (context) =>
                         widget.data.onTapDelete?.call(false),
                     backgroundColor: AppColors.red500,
                     foregroundColor: Colors.white,
-                    label: context.localization?.delete ?? '',
+                    label: context.localization.delete ?? '',
                   ),
                 ],
               ),

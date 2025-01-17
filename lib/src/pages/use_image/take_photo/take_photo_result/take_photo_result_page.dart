@@ -27,7 +27,6 @@ import 'sections/generating_results_section.dart';
 import 'sections/macros_graph_section.dart';
 import 'sections/no_results_found_section.dart';
 import 'sections/result_header_section.dart';
-import 'widgets/barcode_missing_data_widget.dart';
 
 part 'screen/take_photo_result_screen.dart';
 

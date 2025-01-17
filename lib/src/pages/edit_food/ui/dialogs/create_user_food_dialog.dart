@@ -49,8 +49,8 @@ class CreateUserFoodDialog {
                           ]).copyWith(color: AppColors.gray900),
                           child: Text(
                             (includeEdit
-                                    ? context.localization?.createOrEditUserFood
-                                    : context.localization?.createUserFood) ??
+                                    ? context.localization.createOrEditUserFood
+                                    : context.localization.createUserFood) ??
                                 '',
                             textAlign: TextAlign.center,
                           ),
@@ -62,9 +62,9 @@ class CreateUserFoodDialog {
                           child: Text(
                             (includeEdit
                                     ? context.localization
-                                        ?.createOrEditUserFoodDescription
+                                        .createOrEditUserFoodDescription
                                     : context.localization
-                                        ?.createUserFoodDescription) ??
+                                        .createUserFoodDescription) ??
                                 '',
                             textAlign: TextAlign.center,
                           ),
@@ -75,7 +75,7 @@ class CreateUserFoodDialog {
                             Expanded(
                               child: Material(
                                 child: AppButton(
-                                  buttonText: context.localization?.cancel
+                                  buttonText: context.localization.cancel
                                       ?.toCapitalized(),
                                   appButtonModel:
                                       AppButtonStyles.primaryBordered,
@@ -92,7 +92,7 @@ class CreateUserFoodDialog {
                                   padding: EdgeInsets.only(left: 16.w),
                                   child: Material(
                                     child: AppButton(
-                                      buttonText: context.localization?.edit
+                                      buttonText: context.localization.edit
                                           ?.toCapitalized(),
                                       appButtonModel: AppButtonStyles.primary,
                                       onTap: () async {
@@ -116,7 +116,7 @@ class CreateUserFoodDialog {
                             Expanded(
                               child: Material(
                                 child: AppButton(
-                                  buttonText: context.localization?.create
+                                  buttonText: context.localization.create
                                       ?.toCapitalized(),
                                   appButtonModel: AppButtonStyles.primary,
                                   onTap: () async {
@@ -144,7 +144,7 @@ class CreateUserFoodDialog {
                                   ]).copyWith(color: AppColors.gray900),
                                   child: Text(
                                     context.localization
-                                            ?.updateLogUponCreating ??
+                                            .updateLogUponCreating ??
                                         '',
                                   ),
                                 ),

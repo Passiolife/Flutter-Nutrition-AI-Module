@@ -51,19 +51,19 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
   List<MenuModel> get _menus => [
         MenuModel(
           icon: AppImages.icProfile,
-          title: context.localization?.myProfile,
+          title: context.localization.myProfile,
         ),
         MenuModel(
           icon: AppImages.icTutorials,
-          title: context.localization?.tutorials,
+          title: context.localization.tutorials,
         ),
         MenuModel(
           icon: AppImages.icSettings,
-          title: context.localization?.settings,
+          title: context.localization.settings,
         ),
         MenuModel(
           icon: AppImages.icLogout,
-          title: context.localization?.logout.toUpperCaseWord,
+          title: context.localization.logout.toUpperCaseWord,
         ),
       ];
 
@@ -141,11 +141,11 @@ class CustomAppBarWidgetState extends State<CustomAppBarWidget> {
                   ),
                   onSelected: (value) {
                     final bloc = BlocProvider.of<DashboardBloc>(context);
-                    if (value.title == context.localization?.myProfile) {
+                    if (value.title == context.localization.myProfile) {
                       MyProfilePage.navigate(context: context).then((value) {
                         bloc.add(const RefreshEvent());
                       });
-                    } else if (value.title == context.localization?.settings) {
+                    } else if (value.title == context.localization.settings) {
                       SettingsPage.navigate(context: context).then((value) {
                         bloc.add(const RefreshEvent());
                       });

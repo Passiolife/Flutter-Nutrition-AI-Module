@@ -40,15 +40,17 @@ class ScanResultState extends FoodScanState {
   final PassioFoodItem? foodItem;
   final DetectedCandidate? detectedCandidate;
   final List<DetectedCandidate> alternatives;
+  final String? name;
 
   const ScanResultState({
+    this.name,
     this.foodItem,
     this.detectedCandidate,
     this.alternatives = const [],
   });
 
   @override
-  List<Object?> get props => [foodItem, detectedCandidate, alternatives];
+  List<Object?> get props => [name];
 }
 
 class NutritionFactsResultState extends FoodScanState {

@@ -173,6 +173,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
         alternatives.addAll(event.detectedCandidates?.skip(1) ?? []);
       }
       emit(ScanResultState(
+        name: foodItem?.name,
         foodItem: foodItem,
         detectedCandidate: detectedCandidate,
         alternatives: alternatives,

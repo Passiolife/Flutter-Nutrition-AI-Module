@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../nutrition_facts_page.dart';
+import 'nutrition_facts_navigation_data.dart';
 
 class NutritionFactsNavigationDataProvider extends InheritedWidget {
   const NutritionFactsNavigationDataProvider({
@@ -22,7 +23,7 @@ class NutritionFactsNavigationDataProvider extends InheritedWidget {
 
   static NutritionFactsNavigationDataProvider of(BuildContext context) {
     final widget = maybeOf(context);
-    assert(widget != null, 'No NavigationDataProvider found in context');
+    assert(widget != null, 'No NutritionFactsNavigationDataProvider found in context');
     return widget!;
   }
 }

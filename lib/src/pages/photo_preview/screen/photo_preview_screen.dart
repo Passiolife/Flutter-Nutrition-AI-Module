@@ -52,7 +52,9 @@ class _PhotoPreviewScreenState extends State<_PhotoPreviewScreen> {
   }
 
   void _handleStateChanges(BuildContext context, PhotoPreviewState state) {
-    if (state is BothNotFoundState) {
+    if(state is NutritionFactsFoundState) {
+      EditNutritionFactsPage.navigate(context: context, foodRecord: state.foodRecord);
+    }else if (state is BothNotFoundState) {
       _showNutritionFactsNotFoundDialog(context: context);
     } else if(state is NutritionFactsNotFoundState) {
       _showNutritionFactsNotFoundDialog(context: context);

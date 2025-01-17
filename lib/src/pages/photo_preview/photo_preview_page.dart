@@ -11,6 +11,7 @@ import '../../common/extension/context_extension.dart';
 import '../../common/router/routes.dart';
 import '../../common/util/show_widget_util.dart';
 import '../../common/widgets/app_bar/custom_app_bar.dart';
+import '../nutrition_facts/edit_nutrition_facts/edit_nutrition_facts_page.dart';
 import 'bloc/photo_preview_bloc.dart';
 import 'models/navigation_data_provider.dart';
 import 'sections/analyze_progress_section.dart';

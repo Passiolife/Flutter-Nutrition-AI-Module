@@ -11,14 +11,29 @@ final class PhotoPreviewInitial extends PhotoPreviewState {
 
 final class AnalyzeCompletedState extends PhotoPreviewState {
   const AnalyzeCompletedState({required this.timestamp});
+
   final int timestamp;
 
   @override
   List<Object?> get props => [timestamp];
 }
 
+final class NutritionFactsFoundState extends PhotoPreviewState {
+  const NutritionFactsFoundState({
+    required this.timestamp,
+    required this.foodRecord,
+  });
+
+  final int timestamp;
+  final FoodRecord foodRecord;
+
+  @override
+  List<Object?> get props => [timestamp, foodRecord];
+}
+
 final class BothNotFoundState extends PhotoPreviewState {
   const BothNotFoundState({required this.timestamp});
+
   final int timestamp;
 
   @override
@@ -27,6 +42,7 @@ final class BothNotFoundState extends PhotoPreviewState {
 
 final class NutritionFactsNotFoundState extends PhotoPreviewState {
   const NutritionFactsNotFoundState({required this.timestamp});
+
   final int timestamp;
 
   @override
@@ -35,6 +51,7 @@ final class NutritionFactsNotFoundState extends PhotoPreviewState {
 
 final class IngredientsNotFoundState extends PhotoPreviewState {
   const IngredientsNotFoundState({required this.timestamp});
+
   final int timestamp;
 
   @override
@@ -43,6 +60,7 @@ final class IngredientsNotFoundState extends PhotoPreviewState {
 
 final class FailedToAnalyzedState extends PhotoPreviewState {
   const FailedToAnalyzedState({required this.timestamp});
+
   final int timestamp;
 
   @override

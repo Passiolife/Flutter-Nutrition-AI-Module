@@ -9,6 +9,14 @@ extension DateTimeExtension on DateTime {
   String formatToString(String format) {
     return DateFormat(format).format(this);
   }
+
+  bool isSameDate(DateTime? dateTime) {
+    return year == dateTime?.year &&
+        month == dateTime?.month &&
+        day == dateTime?.day;
+  }
+
+  bool get isToday => isSameDate(DateTime.now());
 }
 
 /// Provides standard date format components.

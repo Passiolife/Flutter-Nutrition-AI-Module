@@ -89,7 +89,7 @@ class _DashboardPageState extends State<DashboardPage> {
 
   DashboardBloc get _bloc => BlocProvider.of<DashboardBloc>(context);
 
-  final OverlayUtil _overlayUtil = OverlayUtil();
+  final OverlayUtil _overlayUtil = OverlayUtilImpl();
 
   @override
   void initState() {
@@ -98,9 +98,14 @@ class _DashboardPageState extends State<DashboardPage> {
     }
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      _checkTokenTrackingStatus(context: context);
+      // _checkTokenTrackingStatus(context: context);
     });
     super.initState();
+  }
+
+  dispose() {
+    _overlayUtil.remove();
+    super.dispose();
   }
 
   @override

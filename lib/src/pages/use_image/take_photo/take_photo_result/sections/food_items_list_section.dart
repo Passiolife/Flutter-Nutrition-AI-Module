@@ -29,46 +29,47 @@ class FoodItemsListSection extends StatelessWidget {
           child: Column(
             children: [
               // Incomplete Food Records List
-              ListView.separated(
-                itemCount: incompleteFoodItems.length,
-                padding: AppPadding.pv16,
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  final foodItemModel = incompleteFoodItems.elementAt(index);
-                  return IncompleteFoodItemWidget(
-                    iconId: foodItemModel.foodRecord.iconId,
-                    title: foodItemModel.title,
-                    onTap: () {
-                      _showEditNutritionFactsDialog(context, foodItemModel);
-                    },
-                  );
-                  return FoodItemWidget(
-                    iconId: foodItemModel.foodRecord.iconId,
-                    title: foodItemModel.title,
-                    subtitle: foodItemModel.subtitle,
-                    calories: foodItemModel.foodRecord.totalCalories,
-                    carbs: foodItemModel.foodRecord.totalCarbs,
-                    protein: foodItemModel.foodRecord.totalProteins,
-                    fat: foodItemModel.foodRecord.totalFat,
-                    index: index,
-                    initialSelection: foodItemModel.isSelected,
-                    onChangeSelection: (isSelected) => _onChangeSelection(
-                      context: context,
+              if (incompleteFoodItems.isNotEmpty)
+                ListView.separated(
+                  itemCount: incompleteFoodItems.length,
+                  padding: AppPadding.pv16,
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    final foodItemModel = incompleteFoodItems.elementAt(index);
+                    return IncompleteFoodItemWidget(
+                      iconId: foodItemModel.foodRecord.iconId,
+                      title: foodItemModel.title,
+                      onTap: () {
+                        _showEditNutritionFactsDialog(context, foodItemModel);
+                      },
+                    );
+                    return FoodItemWidget(
+                      iconId: foodItemModel.foodRecord.iconId,
+                      title: foodItemModel.title,
+                      subtitle: foodItemModel.subtitle,
+                      calories: foodItemModel.foodRecord.totalCalories,
+                      carbs: foodItemModel.foodRecord.totalCarbs,
+                      protein: foodItemModel.foodRecord.totalProteins,
+                      fat: foodItemModel.foodRecord.totalFat,
                       index: index,
-                      isSelected: isSelected,
-                    ),
-                    onTap: () => _onTap(
-                      context: context,
-                      viewModel: foodItemModel,
-                      index: index,
-                    ),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return 8.verticalSpace;
-                },
-              ),
+                      initialSelection: foodItemModel.isSelected,
+                      onChangeSelection: (isSelected) => _onChangeSelection(
+                        context: context,
+                        index: index,
+                        isSelected: isSelected,
+                      ),
+                      onTap: () => _onTap(
+                        context: context,
+                        viewModel: foodItemModel,
+                        index: index,
+                      ),
+                    );
+                  },
+                  separatorBuilder: (BuildContext context, int index) {
+                    return 8.verticalSpace;
+                  },
+                ),
               // Food Records List
               ListView.separated(
                 itemCount: foodItems.length,
@@ -148,7 +149,9 @@ class FoodItemsListSection extends StatelessWidget {
       foodRecord: foodRecord,
     );
     if (newFoodRecord != null && context.mounted) {
-      context.read<TakePhotoResultBloc>().add(VerifyMissingDataEvent(foodRecord: newFoodRecord));
+      context
+          .read<TakePhotoResultBloc>()
+          .add(VerifyMissingDataEvent(foodRecord: newFoodRecord));
     }
     /*if(newFoodRecord!=null) {
       setState(() {

@@ -25,8 +25,8 @@ class NoResultsFoundWidget extends StatelessWidget {
                 children: [
                   Text(
                     context.localization.noResultsFound,
-                    style: AppTextStyle.textXl
-                        .addAll([AppTextStyle.textXl.leading7, AppTextStyle.bold]),
+                    style: AppTextStyle.textXl.addAll(
+                        [AppTextStyle.textXl.leading7, AppTextStyle.bold]),
                   ),
                   4.verticalSpace,
                   RichText(
@@ -40,10 +40,16 @@ class NoResultsFoundWidget extends StatelessWidget {
                         TextSpan(
                           text: context.localization.searchManually,
                           style: AppTextStyle.textSm
-                              .addAll([AppTextStyle.bold]).copyWith(color: context.theme.primaryColor),
-                          recognizer: TapGestureRecognizer()..onTap = () {
-                            Navigator.pushNamed(context, Routes.foodSearch);
-                          }
+                              .addAll([AppTextStyle.bold]).copyWith(
+                                  color: context.theme.primaryColor),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () {
+                              Navigator.pushNamed(
+                                context,
+                                Routes.foodSearch,
+                                arguments: false,
+                              );
+                            },
                         ),
                       ],
                     ),

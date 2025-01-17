@@ -65,7 +65,7 @@ extension FoodItemNutritionExtensions on PassioFoodItem {
   }
 
   bool get hasServingSize {
-    return true;
+    return this.amount.selectedQuantity > 0 && this.amount.selectedUnit.isNotEmpty;
   }
 
   bool get hasNutritionFacts {

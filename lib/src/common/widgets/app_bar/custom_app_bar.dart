@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../pages/scan_a_barcode/widgets/help_widget.dart';
 import '../../constant/app_colors.dart';
-import '../../constant/app_padding.dart';
 import '../../constant/app_text_styles.dart';
 import '../../extension/context_extension.dart';
 

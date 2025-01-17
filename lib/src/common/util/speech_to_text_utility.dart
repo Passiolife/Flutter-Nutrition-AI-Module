@@ -125,18 +125,16 @@ class SpeechToTextUtilityImpl extends SpeechToTextUtility {
   @override
   Future<bool> setLocale(String locale) async {
     final locales = await getLocales();
+
     _selectedLocale = locales.cast<stt.LocaleName?>().firstWhere(
           (localeName) {
-        if (localeName?.localeId.contains('-') ?? false) {
-          return localeName?.localeId.substring(
-              0, localeName.localeId.indexOf('-')) == locale;
-        }
-        return localeName?.name == locale;
+        final localeId = localeName?.localeId ?? '';
+        final normalizedLocale = localeId.split(RegExp('[-_]')).first;
+        return normalizedLocale == locale || localeName?.name == locale;
       },
-      orElse: () {
-        return null;
-      },
+      orElse: () => null,
     );
+
     return _selectedLocale != null;
   }
 

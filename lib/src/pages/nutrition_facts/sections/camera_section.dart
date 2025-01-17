@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
+import '../../../common/router/routes.dart';
 import '../../../common/widgets/camera/camera_widget.dart';
 import '../../../common/widgets/camera_frame_widget.dart';
 import '../bloc/nutrition_facts_bloc.dart';
@@ -50,8 +51,8 @@ class _CameraSectionState extends State<CameraSection> {
     final xFile =
         (await _cameraKey.currentState?.getController()?.takePicture());
     if (context.mounted) {
-      context.read<NutritionFactsBloc>().add(DoTakeImageEvent(file: xFile));
-      // Navigator.pushNamed(context, Routes.photoPreview, arguments: xFile);
+      // context.read<NutritionFactsBloc>().add(DoTakeImageEvent(file: xFile));
+      Navigator.pushNamed(context, Routes.photoPreview, arguments: xFile);
     }
   }
 }

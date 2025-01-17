@@ -28,7 +28,7 @@ class TitleSection extends StatelessWidget {
             ? (state.foodRecord?.ingredients.length ?? 0) > 1
             : true;
         return CustomAppBarWidget(
-          title: title ?? context.localization?.edit,
+          title: title ?? context.localization.foodDetails,
           isMenuVisible: false,
           suffix: Row(
             children: [

@@ -17,12 +17,18 @@ sealed class ListenerState extends SelectPhotoState {
 }
 
 final class PhotoPickerSuccessListenerState extends ListenerState {
-  const PhotoPickerSuccessListenerState({required this.images});
+  const PhotoPickerSuccessListenerState({
+    required this.images,
+    required this.returnResult,
+    this.imagesBytes,
+  });
 
   final List<XFile> images;
+  final List<Uint8List>? imagesBytes;
+  final bool returnResult;
 
   @override
-  List<Object?> get props => [images];
+  List<Object?> get props => [images, returnResult];
 }
 
 final class PhotoPickerFailureListenerState extends ListenerState {

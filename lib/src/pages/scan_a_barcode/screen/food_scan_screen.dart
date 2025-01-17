@@ -98,7 +98,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
                   children: [
                     CameraSection(),
                     CameraFrameSection(),
-                    ScanningAnimationSection(),
+                    // ScanningAnimationSection(),
                     CameraControlSection(),
                     ResultSection(),
                   ],
