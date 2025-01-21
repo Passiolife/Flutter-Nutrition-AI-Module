@@ -18,7 +18,6 @@ import '../sections/camera_control_section.dart';
 import '../sections/camera_frame_section.dart';
 import '../sections/camera_section.dart';
 import '../sections/result_section.dart';
-import '../sections/scanning_animation_section.dart';
 import '../widgets/barcode_not_recognized_widget.dart';
 
 class FoodScanScreen extends StatefulWidget {
@@ -116,13 +115,13 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
     if (state is IntroScreenVisibilityState) {
       _handleIntroVisibilityState(state);
     } else if (state is BarcodeNotRecognizedStateNew) {
-      _showBarcodeNotRecognizedWidget(context);
+      _showBarcodeNotRecognizedWidget(context, state.barcode);
     } else if (state is AddedToDiaryVisibilityState) {
       _handleAddedToDiaryVisibilityState(state);
     }
   }
 
-  void _showBarcodeNotRecognizedWidget(BuildContext context) {
+  void _showBarcodeNotRecognizedWidget(BuildContext context, String? barcode) {
     ShowWidgetUtil.showCustomModalBottomSheet(
       context: context,
       isDismissible: false,
@@ -133,9 +132,10 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
             Navigator.pop(dsContext);
             _bloc?.add(const StartScanningEvent());
           },
-          onTapTakePhoto: () {
+          onTapTakePhoto: () async {
             Navigator.pop(dsContext);
-            Navigator.pushNamed(context, Routes.nutritionFacts);
+            await Navigator.pushNamed(context, Routes.nutritionFacts,
+                arguments: barcode);
             _bloc?.add(const StartScanningEvent());
           },
         );

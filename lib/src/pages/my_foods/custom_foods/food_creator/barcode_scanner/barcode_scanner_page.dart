@@ -19,7 +19,7 @@ class BarcodeScannerPage extends StatefulWidget {
   const BarcodeScannerPage({super.key});
 
   static MaterialPageRoute route() {
-    return MaterialPageRoute(builder: (_) => const BarcodeScannerPage());
+    return MaterialPageRoute<String>(builder: (_) => const BarcodeScannerPage());
   }
 
   static Future navigate({required BuildContext context}) async {

@@ -71,10 +71,11 @@ class AddedToDiaryVisibilityState extends FoodScanState {
 
 // State representing the visibility of the barcode not recognized UI
 class BarcodeNotRecognizedStateNew extends FoodScanState {
-  const BarcodeNotRecognizedStateNew();
+  const BarcodeNotRecognizedStateNew({this.barcode});
+  final String? barcode;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [barcode];
 }
 
 // State representing the visibility of the barcode not recognized UI

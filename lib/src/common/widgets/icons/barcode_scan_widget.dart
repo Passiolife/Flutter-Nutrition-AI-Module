@@ -6,14 +6,14 @@ import '../../constant/app_constants.dart';
 
 class BarcodeScanWidget extends StatelessWidget {
   const BarcodeScanWidget({
-    this.color = AppColors.white,
+    this.color = AppColors.brandIconLight,
     this.width,
     this.height,
     this.onTap,
     super.key,
   });
 
-  final Color? color;
+  final Color color;
   final double? width;
   final double? height;
   final VoidCallback? onTap;
@@ -24,8 +24,8 @@ class BarcodeScanWidget extends StatelessWidget {
       loader: AssetBytesLoader(AppImages.icBarcodeScan),
       width: width ?? 24.r,
       height: height ?? 24.r,
-      colorFilter: const ColorFilter.mode(
-        AppColors.brandIconLight,
+      colorFilter: ColorFilter.mode(
+        color,
         BlendMode.srcIn,
       ),
     );

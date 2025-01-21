@@ -1,3 +1,6 @@
+import 'dart:io' show Platform;
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -5,7 +8,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constant/app_constants.dart';
 import '../../extension/context_extension.dart';
 import '../../extension/number_extension.dart';
-import '../../extension/string_extensions.dart';
 import '../keyboard/done_keyboard_button_widget.dart';
 import '../overlay/overlay_manager.dart';
 import 'base_text_input.dart';
@@ -125,38 +127,53 @@ class _NumberTextInputState extends State<NumberTextInput> {
   bool _isVisibility = false;
 
   FocusNode? _focusNode;
-  late OverlayManager _overlayManager;
+  OverlayManager? _overlayManager;
   late TextEditingController _controller;
+  ValueChanged<String>? _onFieldSubmitted;
 
   @override
   void initState() {
-    _overlayManager = OverlayManager();
     _controller = widget.controller ?? TextEditingController();
     _focusNode = widget.focusNode ?? FocusNode();
-    _focusNode!.addListener(_handleFocusChange);
+    if (Platform.isIOS) {
+      _overlayManager = OverlayManager();
+      _focusNode!.addListener(_handleFocusChange);
+    }
+    _onFieldSubmitted = widget.onFieldSubmitted;
     super.initState();
   }
 
   void _handleFocusChange() {
     if (_focusNode!.hasFocus) {
-      _overlayManager.showOverlay(context, DoneKeyboardButtonWidget(
+      _overlayManager?.showOverlay(context, DoneKeyboardButtonWidget(
         onDone: () {
           final text = _controller.text;
           if (text.isNotEmpty) {
-            final formatted = text.localeFormatted<double?>();
-            if (formatted == null) return;
+            _setAndUpdateText(text);
+            // final formatted = text.localeFormatted<double?>();
+            // if (formatted == null) return;
             // _controller.text = formatted.format();
-            widget.onFieldSubmitted?.call(formatted.format());
+            // _onFieldSubmitted?.call(formatted.format());
           } else {
-            final formatted = double.tryParse(widget.initialValue ?? '');
-            if (formatted == null) return;
-            _controller.text = formatted.format();
-            widget.onFieldSubmitted?.call(formatted.format());
+            _setAndUpdateText(widget.initialValue ?? '');
+            // final formatted = double.tryParse(widget.initialValue ?? '');
+            // if (formatted == null) return;
+            // _controller.text = formatted.format();
+            // _onFieldSubmitted?.call(formatted.format());
           }
         },
       ));
     } else {
-      _overlayManager.removeOverlay();
+      _overlayManager?.removeOverlay();
+    }
+  }
+
+  void _setAndUpdateText(String value) {
+    if (value.isNotEmpty) {
+      final formatted = value.localeFormatted<double?>();
+      if (formatted == null) return;
+      _controller.text = formatted.format();
+      _onFieldSubmitted?.call(formatted.format());
     }
   }
 
@@ -172,7 +189,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
                 color: context.textThemeColors.brandTextDark,
               ),
-          onFieldSubmitted: widget.onFieldSubmitted,
+          onFieldSubmitted: _setAndUpdateText,
           onTapOutside: (_) {},
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,

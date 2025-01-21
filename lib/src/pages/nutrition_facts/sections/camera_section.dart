@@ -7,6 +7,7 @@ import '../../../common/router/routes.dart';
 import '../../../common/widgets/camera/camera_widget.dart';
 import '../../../common/widgets/camera_frame_widget.dart';
 import '../bloc/nutrition_facts_bloc.dart';
+import '../models/nutrition_facts_navigation_data_provider.dart';
 import '../widgets/camera_control_widget_new.dart';
 
 class CameraSection extends StatefulWidget {
@@ -50,9 +51,18 @@ class _CameraSectionState extends State<CameraSection> {
   Future<void> _takePicture({required BuildContext context}) async {
     final xFile =
         (await _cameraKey.currentState?.getController()?.takePicture());
+
     if (context.mounted) {
+      final navigatorData = NutritionFactsNavigationDataProvider.of(context);
       // context.read<NutritionFactsBloc>().add(DoTakeImageEvent(file: xFile));
-      Navigator.pushNamed(context, Routes.photoPreview, arguments: xFile);
+      Navigator.pushNamed(
+        context,
+        Routes.photoPreview,
+        arguments: [
+          xFile,
+          navigatorData.barcode,
+        ],
+      );
     }
   }
 }

@@ -13,12 +13,17 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
 
   late final _bloc = context.read<EditNutritionFactsBloc>();
 
-  EditNutritionFactsNavigationDataProvider get _navigationData =>
-      EditNutritionFactsNavigationDataProvider.of(context);
+  late final _navigationData = EditNutritionFactsNavigationDataProvider.of(context);
 
   @override
   void initState() {
-    _bloc.add(ProcessEvent(foodRecord: _navigationData.foodRecord));
+    SchedulerBinding.instance.addPostFrameCallback((_) {
+      _bloc.add(ProcessEvent(
+        foodRecord: _navigationData.foodRecord,
+        imageBytes: _navigationData.imageBytes,
+        barcode: _navigationData.barcode,
+      ));
+    });
     super.initState();
   }
 
@@ -46,6 +51,18 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
                       ]),
                     ),
                     const DetailsSection(),
+                    const NutritionFactsSection(),
+                    const PortionSection(),
+                    ActionButtonsWidget(
+                      onCancel: () {
+                        Navigator.pop(context);
+                      },
+                      onSave: () {
+                        if(_formKey.currentState?.validate() ?? false) {
+                          context.read<EditNutritionFactsBloc>().add(const SaveEvent());
+                        }
+                      },
+                    ),
                     /*_DetailsWidget(
                       index: widget.index,
                       foodRecord: _foodRecord,

@@ -13,21 +13,21 @@ class HeroDialogRoute<T> extends BasePageRoute<T> {
     bool barrierDismissible = false,
     Color? barrierColor,
   }) : super(
-    child: child,
-    curve: curve,
-    transitionDuration: transitionDuration,
-    reverseTransitionDuration: reverseTransitionDuration,
-    settings: settings,
-    opaque: opaque,
-    barrierDismissible: barrierDismissible,
-    barrierColor: barrierColor,
-  );
+          child: child,
+          curve: curve,
+          transitionDuration: transitionDuration,
+          reverseTransitionDuration: reverseTransitionDuration,
+          settings: settings,
+          opaque: opaque,
+          barrierDismissible: barrierDismissible,
+          barrierColor: barrierColor,
+        );
 
   @override
   bool get opaque => false;
 
   @override
-  bool get barrierDismissible => true;
+  bool get barrierDismissible => false;
 
   @override
   Duration get transitionDuration => const Duration(milliseconds: 300);
@@ -41,9 +41,10 @@ class HeroDialogRoute<T> extends BasePageRoute<T> {
   @override
   Widget buildTransitions(BuildContext context, Animation<double> animation,
       Animation<double> secondaryAnimation, Widget child) {
-    return new FadeTransition(
-        opacity: new CurvedAnimation(parent: animation, curve: Curves.easeOut),
-        child: child);
+    return FadeTransition(
+      opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
+      child: child,
+    );
   }
 
   @override

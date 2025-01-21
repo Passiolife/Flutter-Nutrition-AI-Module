@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 
 import '../../../../common/models/food_record/food_record.dart';
@@ -6,16 +8,20 @@ class EditNutritionFactsNavigationDataProvider extends InheritedWidget {
   const EditNutritionFactsNavigationDataProvider({
     super.key,
     required this.foodRecord,
-    required this.index,
+    this.imageBytes,
+    this.barcode,
+    this.index,
     required super.child,
   });
 
-  final FoodRecord foodRecord;
+  final FoodRecord? foodRecord;
+  final Uint8List? imageBytes;
+  final String? barcode;
   final int? index;
 
   @override
   bool updateShouldNotify(EditNutritionFactsNavigationDataProvider oldWidget) {
-    return foodRecord != oldWidget.foodRecord && index != oldWidget.index;
+    return foodRecord != oldWidget.foodRecord && imageBytes != oldWidget.imageBytes && barcode != oldWidget.barcode && index != oldWidget.index;
   }
 
 

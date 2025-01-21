@@ -6,7 +6,6 @@ import '../../common/data/repository/nutrition_ai_repository_impl.dart';
 import '../../common/router/routes.dart';
 import '../../common/util/show_widget_util.dart';
 import 'bloc/nutrition_facts_bloc.dart';
-import 'models/nutrition_facts_navigation_data.dart';
 import 'models/nutrition_facts_navigation_data_provider.dart';
 import 'sections/camera_section.dart';
 import 'sections/header_section.dart';
@@ -20,23 +19,23 @@ part 'screen/nutrition_facts_screen.dart';
 
 class NutritionFactsPage extends StatelessWidget {
   const NutritionFactsPage({
-    this.navigationData = const NutritionFactsNavigationData(),
+    this.barcode,
     super.key,
   });
 
-  final NutritionFactsNavigationData? navigationData;
+  final String? barcode;
 
-  static MaterialPageRoute route() {
+  static MaterialPageRoute route({String? barcode}) {
     return MaterialPageRoute(
       settings: RouteSettings(name: Routes.nutritionFacts),
-      builder: (_) => NutritionFactsPage(),
+      builder: (_) => NutritionFactsPage(barcode: barcode),
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return NutritionFactsNavigationDataProvider(
-      navigationData: navigationData,
+      barcode: barcode,
       child: BlocProvider(
         create: (context) => NutritionFactsBloc(
             nutritionAIRepository: NutritionAIRepositoryImpl()),

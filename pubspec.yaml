@@ -64,6 +64,9 @@ dependencies:
   # This is a simple Service Locator for Dart and Flutter projects.
   get_it: ^8.0.1
 
+
+  image: ^4.5.2
+
   # https://pub.dev/packages/image_picker
   # A Flutter plugin for iOS and Android for picking images from the image library, and taking new pictures with the camera.
   image_picker: ^1.1.2
@@ -86,9 +89,9 @@ dependencies:
 
   # https://pub.dev/packages/nutrition_ai
   # When integrated into your app the SDK provides you with food recognition and nutrition assistant technology.
-#  nutrition_ai: ^3.2.3
-  nutrition_ai:
-     path: ../Flutter-Nutrition-AI-SDK/nutrition_ai
+  nutrition_ai: ^3.2.4
+#  nutrition_ai:
+#     path: ../Flutter-Nutrition-AI-SDK/nutrition_ai
 
   # https://pub.dev/packages/path
   # A comprehensive, cross-platform path manipulation library for Dart.

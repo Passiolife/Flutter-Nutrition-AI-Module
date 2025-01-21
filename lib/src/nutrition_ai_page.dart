@@ -49,7 +49,10 @@ class NavigationAIPage extends StatelessWidget {
       child: Navigator(
         key: _navigatorKey,
         initialRoute: Routes.initialPage,
-        observers: [NavigationRouteObserver.instance, ClearFocusOnPushObserver()],
+        observers: [
+          NavigationRouteObserver.instance,
+          ClearFocusOnPushObserver()
+        ],
         onGenerateRoute: _generateRoute,
       ),
     );
@@ -161,11 +164,26 @@ class NavigationAIPage extends StatelessWidget {
     } else if (settings.name == Routes.settings) {
       return SettingsPage.route();
     } else if (settings.name == Routes.photoPreview) {
-      XFile? file = arguments as XFile?;
-      return PhotoPreviewPage.route(file: file);
-    } else if (settings.name == Routes.nutritionFacts) {
-      return NutritionFactsPage.route();
-    } else {
+      XFile? file;
+      String? barcode;
+      if (arguments != null && arguments is List) {
+        file = arguments[0] as XFile?;
+        barcode = arguments[1] as String?;
+      }
+      return PhotoPreviewPage.route(file: file, barcode: barcode);
+    }
+
+    // Nutrition Facts
+    else if (settings.name == Routes.nutritionFacts) {
+      String? barcode;
+      if (arguments != null && arguments is String) {
+        barcode = arguments;
+      }
+      return NutritionFactsPage.route(barcode: barcode);
+    }
+
+    // Empty Screen
+    else {
       return MaterialPageRoute(builder: (context) {
         return SizedBox.shrink();
       });

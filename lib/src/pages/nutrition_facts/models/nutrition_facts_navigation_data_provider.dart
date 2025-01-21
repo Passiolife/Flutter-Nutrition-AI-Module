@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
 
-import '../nutrition_facts_page.dart';
-import 'nutrition_facts_navigation_data.dart';
-
 class NutritionFactsNavigationDataProvider extends InheritedWidget {
   const NutritionFactsNavigationDataProvider({
-    required this.navigationData,
+    this.barcode,
     required super.child,
     super.key,
   });
 
-  final NutritionFactsNavigationData? navigationData;
+  final String? barcode;
 
   @override
   bool updateShouldNotify(NutritionFactsNavigationDataProvider oldWidget) {
-    return navigationData != oldWidget.navigationData;
+    return barcode != oldWidget.barcode;
   }
 
   static NutritionFactsNavigationDataProvider? maybeOf(BuildContext context) {

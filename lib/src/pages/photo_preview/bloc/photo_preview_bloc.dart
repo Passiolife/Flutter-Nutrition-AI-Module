@@ -1,24 +1,23 @@
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../common/extension/passio/passio_food_item_extension.dart';
 import '../../../common/models/food_record/food_record.dart';
+import '../../../common/util/image_utility.dart';
 
 part 'photo_preview_event.dart';
 part 'photo_preview_state.dart';
 
 class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
   final NutritionAIRepository nutritionAIRepository;
+  final ImageUtility imageUtility;
 
-  PassioFoodItem? _nutritionFacts;
-  PassioFoodItem? _ingredients;
-  PassioFoodItem? _finalFoodItem;
-
-  PhotoPreviewBloc({required this.nutritionAIRepository})
+  PhotoPreviewBloc(
+      {required this.nutritionAIRepository, required this.imageUtility})
       : super(PhotoPreviewInitial()) {
     on<DoProcessEvent>(_handleDoProcessEvent);
   }
@@ -31,14 +30,20 @@ class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
     emit(AnalyzeCompletedState(timestamp: DateTime.now().millisecond));
     await Future.delayed(Duration(milliseconds: 500));
 
-    if(foodItem?.hasNutritionFacts ?? false) {
-      final foodRecord = FoodRecord.fromPassioFoodItem(foodItem!);
-      emit(NutritionFactsFoundState(timestamp: DateTime.now().millisecond, foodRecord: foodRecord));
+    // Image resizing
+    final resizedImageBytes = await imageUtility.resizeToUint8List(file);
 
+    if (foodItem?.hasNutritionFacts ?? false) {
+      final foodRecord = FoodRecord.fromPassioFoodItem(foodItem!);
+      emit(NutritionFactsFoundState(
+        timestamp: DateTime.now().millisecond,
+        foodRecord: foodRecord,
+        imageBytes: resizedImageBytes,
+      ));
     } else {
-      emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond));
+      emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond, imageBytes: resizedImageBytes));
     }
-    if (foodItem == null) {
+    /*if (foodItem == null) {
       emit(FailedToAnalyzedState(timestamp: DateTime.now().millisecond));
       return;
     } else if(foodItem.hasMacros) {
@@ -57,6 +62,6 @@ class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
       emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond));
     } else if (_ingredients == null) {
       emit(IngredientsNotFoundState(timestamp: DateTime.now().millisecond));
-    }
+    }*/
   }
 }

@@ -66,7 +66,7 @@ class DailyNutritionWidget extends StatelessWidget {
                 SizedBox(width: AppDimens.w8),
                 Expanded(
                   child: Text(
-                    context.localization?.dailyNutrition ?? '',
+                    context.localization.dailyNutrition ?? '',
                     style: AppTextStyle.textLg.addAll([
                       AppTextStyle.textLg.leading6,
                       AppTextStyle.semiBold

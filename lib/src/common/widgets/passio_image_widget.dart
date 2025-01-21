@@ -11,7 +11,7 @@ import '../models/food_record/food_record.dart';
 
 class PassioImageWidget extends StatefulWidget {
   const PassioImageWidget({
-    required this.iconId,
+    this.iconId,
     this.image,
     this.type = PassioIDEntityType.item,
     this.iconSize = IconSize.px90,
@@ -21,7 +21,7 @@ class PassioImageWidget extends StatefulWidget {
     super.key,
   });
 
-  final String iconId;
+  final String? iconId;
   final Uint8List? image;
   final PassioIDEntityType type;
   final IconSize iconSize;
@@ -37,7 +37,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
   late ValueNotifier<Uint8List?> _image;
 
   bool get _isRecipeIcon =>
-      widget.iconId.startsWith(AppCommonConstants.recipePrefix);
+      widget.iconId?.startsWith(AppCommonConstants.recipePrefix) ?? false;
 
   @override
   void initState() {
@@ -80,15 +80,18 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
     }
     if (_isRecipeIcon) {
       return;
-    } else if(widget.iconId.startsWith(FoodRecord.userFoodPrefix) || widget.iconId.startsWith(FoodRecord.userRecipePrefix)) {
+    } else if (widget.iconId == null) {
+      return;
+    } else if (widget.iconId!.startsWith(FoodRecord.userFoodPrefix) ||
+        widget.iconId!.startsWith(FoodRecord.userRecipePrefix)) {
       final result = await NutritionAIModule.instance.configuration.connector
-          .fetchUserFoodImage(id:  widget.iconId);
+          .fetchUserFoodImage(id: widget.iconId!);
       _image.value = result;
       return;
     }
     try {
       final result = await NutritionAI.instance.lookupIconsFor(
-        widget.iconId,
+        widget.iconId!,
         iconSize: widget.iconSize,
         type: widget.type,
       );
@@ -98,9 +101,9 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
         return;
       }
 
-      if (result.cachedIcon == null && widget.iconId.isNotEmpty) {
+      if (result.cachedIcon == null && widget.iconId!.isNotEmpty) {
         final fetchedImage = await NutritionAI.instance.fetchIconFor(
-          widget.iconId,
+          widget.iconId!,
           iconSize: widget.iconSize,
         );
         if (fetchedImage != null) {

@@ -429,5 +429,6 @@
   "addMore": "add more",
   "resultDataMissingDescription": "Data missing, item will not be logged",
   "noBarcodeTakePicture": "No barcode? Take a picture of ",
-  "enterManually": "Enter Manually"
+  "enterManually": "Enter Manually",
+  "saveAndLog": "Save & Log"
 }

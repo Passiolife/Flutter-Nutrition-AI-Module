@@ -72,6 +72,27 @@ class FoodRecordIngredient {
     this.barcode,
   });
 
+  factory FoodRecordIngredient.fromNutrientsWithDefaults(
+      PassioNutrients nutrients) {
+    return FoodRecordIngredient._(
+      id: '',
+      passioID: '',
+      refCode: '',
+      name: '',
+      additionalData: '',
+      iconId: '',
+      servingSizes: [],
+      servingUnits: [],
+      selectedQuantity: 0,
+      selectedUnit: '',
+      entityType: PassioIDEntityType.item,
+      referenceNutrients: nutrients,
+      openFoodLicense: '',
+      barcode: '',
+      resultType: PassioFoodResultType.foodItem,
+    );
+  }
+
   /// Factory constructor to create a FoodRecordIngredient from a FoodRecord instance.
   factory FoodRecordIngredient.fromFoodRecord(FoodRecord foodRecord,
       {PassioIDEntityType entityType = PassioIDEntityType.item}) {
@@ -101,22 +122,21 @@ class FoodRecordIngredient {
     PassioFoodResultType resultType = PassioFoodResultType.foodItem,
   }) {
     return FoodRecordIngredient._(
-      id: '',
-      passioID: ingredient.id,
-      refCode: ingredient.refCode,
-      name: ingredient.name,
-      additionalData: '',
-      iconId: ingredient.iconId,
-      servingSizes: ingredient.amount.servingSizes,
-      servingUnits: ingredient.amount.servingUnits,
-      selectedQuantity: ingredient.amount.selectedQuantity,
-      selectedUnit: ingredient.amount.selectedUnit,
-      entityType: entityType,
-      referenceNutrients: ingredient.referenceNutrients,
-      openFoodLicense: ingredient.metadata.openFoodLicense(),
-      barcode: ingredient.metadata.barcode,
-      resultType: resultType
-    );
+        id: '',
+        passioID: ingredient.id,
+        refCode: ingredient.refCode,
+        name: ingredient.name,
+        additionalData: '',
+        iconId: ingredient.iconId,
+        servingSizes: ingredient.amount.servingSizes,
+        servingUnits: ingredient.amount.servingUnits,
+        selectedQuantity: ingredient.amount.selectedQuantity,
+        selectedUnit: ingredient.amount.selectedUnit,
+        entityType: entityType,
+        referenceNutrients: ingredient.referenceNutrients,
+        openFoodLicense: ingredient.metadata.openFoodLicense(),
+        barcode: ingredient.metadata.barcode,
+        resultType: resultType);
   }
 
   /// Creates a [FoodRecordIngredient] instance from a JSON object.
@@ -149,7 +169,7 @@ class FoodRecordIngredient {
         openFoodLicense: json['openFoodLicense'] as String?,
         barcode: json['barcode'] as String?,
         resultType: PassioFoodResultType.values.firstWhere(
-                (element) => element.name == json['resultType'],
+            (element) => element.name == json['resultType'],
             orElse: () => PassioFoodResultType.foodItem),
       );
 
@@ -255,5 +275,87 @@ class FoodRecordIngredient {
       return UnitMass(weight2UnitRatio * selectedQuantity, UnitMassType.grams);
     }
     return UnitMass(0, UnitMassType.grams);
+  }
+}
+
+extension CustomFoodExtension on FoodRecordIngredient {
+  FoodRecordIngredient initializeFoodRecord({
+    String? newName,
+    PassioIDEntityType? newEntityType,
+    String? newIconId,
+    String? newBarcode,
+    double selectedQuantity = 1,
+    String selectedUnit = 'serving',
+  }) {
+    final newFoodRecordIngredient = FoodRecordIngredient.fromJson(toJson());
+    // this.foodRecord = FoodRecord.fromJson(foodRecord.toJson());
+    newFoodRecordIngredient.setDefaultServingUnits();
+    newFoodRecordIngredient.setServingSizes();
+    newFoodRecordIngredient.passioID = '';
+    newFoodRecordIngredient.name = newName ?? name ?? '';
+    newFoodRecordIngredient.refCode = refCode ?? '';
+    newFoodRecordIngredient.entityType = newEntityType ?? entityType;
+    newFoodRecordIngredient.additionalData = additionalData ?? '';
+    newFoodRecordIngredient.barcode = newBarcode ?? barcode;
+    newFoodRecordIngredient.iconId = newIconId ?? iconId;
+    newFoodRecordIngredient.selectedQuantity = selectedQuantity;
+    newFoodRecordIngredient.selectedUnit = selectedUnit;
+    return newFoodRecordIngredient;
+  }
+
+  void setDefaultServingUnits() {
+    final weight = UnitMass(1, UnitMassType.grams);
+    servingUnits = [
+      PassioServingUnit('serving', weight),
+      PassioServingUnit('gram', weight),
+    ];
+  }
+
+  void setServingSizes() {
+    servingSizes = [
+      PassioServingSize(1, 'serving'),
+      PassioServingSize(100, 'gram'),
+    ];
+  }
+
+  FoodRecordIngredient updateName({required String name}) {
+    this.name = name;
+    return this;
+  }
+
+  FoodRecordIngredient updateBarcode({String? barcode}) {
+    this.barcode = barcode;
+    return this;
+  }
+
+  FoodRecordIngredient updateSelectedQuantity({required double quantity}) {
+    selectedQuantity = quantity;
+    return this;
+  }
+
+  FoodRecordIngredient updateSelectedUnit({required String unit}) {
+    selectedUnit = unit;
+    return this;
+  }
+
+  void updateWeight({required double weight}) {
+    final index =
+        servingUnits.indexWhere((element) => element.unitName == selectedUnit);
+    if (index != -1) {
+      servingUnits[index] =
+          PassioServingUnit(selectedUnit, UnitMass(weight, UnitMassType.grams));
+    }
+  }
+
+  FoodRecordIngredient updateServingUnits(
+      {required List<PassioServingUnit> servingUnits}) {
+    this.servingUnits = servingUnits;
+    return this;
+  }
+
+  FoodRecordIngredient updateReferenceNutrients(
+      {required PassioNutrients nutrients}) {
+    referenceNutrients = nutrients;
+    return this;
   }
 }

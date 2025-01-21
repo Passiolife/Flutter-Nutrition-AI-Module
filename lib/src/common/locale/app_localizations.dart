@@ -871,4 +871,6 @@ class AppLocalizations {
   String get noBarcodeTakePicture => getLabel('noBarcodeTakePicture');
 
   String get enterManually => getLabel('enterManually');
+
+  String get saveAndLog => getLabel('saveAndLog');
 }
