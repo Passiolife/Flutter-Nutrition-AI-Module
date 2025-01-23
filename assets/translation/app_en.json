@@ -127,6 +127,7 @@
   "notWhatYouAreLookingFor": "Not what you’re looking for?",
   "itemAddedToDiary": "Item Added To Diary",
   "itemAddedToDiaryDescription": "View your diary or continue scanning.",
+  "itemAddedToDiaryFromBarcodeScanDescription": "View your diary or add more",
   "or": "or",
   "continueScanning": "continue scanning",
   "barcodeNotRecognized": "Barcode Not Recognized",
@@ -430,5 +431,6 @@
   "resultDataMissingDescription": "Data missing, item will not be logged",
   "noBarcodeTakePicture": "No barcode? Take a picture of ",
   "enterManually": "Enter Manually",
-  "saveAndLog": "Save & Log"
+  "saveAndLog": "Save & Log",
+  "nutritionFactsCustomFoodCreationMessage": "Logging this item will create a custom food. You can edit this item from your My Foods list."
 }

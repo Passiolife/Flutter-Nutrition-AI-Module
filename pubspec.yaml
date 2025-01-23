@@ -87,6 +87,8 @@ dependencies:
   # A collection of out of the box loading animations written in pure dart, no extra dependency
   loading_indicator: ^3.1.1
 
+  logging: ^1.3.0
+
   # https://pub.dev/packages/nutrition_ai
   # When integrated into your app the SDK provides you with food recognition and nutrition assistant technology.
   nutrition_ai: ^3.2.4

@@ -16,7 +16,7 @@ import '../../../../../common/widgets/drop_down/secondary_dropdown.dart';
 import '../../../../../common/widgets/icons/barcode_scan_widget.dart';
 import '../../../../../common/widgets/text_input/number_text_input.dart';
 import '../../../../../common/widgets/text_input/primary_text_input.dart';
-import '../../../../my_foods/custom_foods/food_creator/barcode_scanner/barcode_scanner_page.dart';
+import '../../../../barcode_scanner/barcode_scanner_page.dart';
 
 class EditNutritionFacts extends StatefulWidget {
   const EditNutritionFacts({

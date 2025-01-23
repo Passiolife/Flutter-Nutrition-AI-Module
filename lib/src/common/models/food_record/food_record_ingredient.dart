@@ -72,6 +72,42 @@ class FoodRecordIngredient {
     this.barcode,
   });
 
+  factory FoodRecordIngredient.fromCustomData({
+    required PassioNutrients nutrients,
+    String id = '',
+    String passioID = '',
+    String refCode = '',
+    String name = '',
+    String additionalData = '',
+    String iconId = '',
+    double selectedQuantity = 0,
+    String selectedUnit = '',
+    List<PassioServingUnit> servingUnits = const [],
+    List<PassioServingSize> servingSizes = const [],
+    PassioIDEntityType entityType = PassioIDEntityType.item,
+    String? openFoodLicense,
+    String? barcode,
+    PassioFoodResultType resultType = PassioFoodResultType.foodItem,
+  }) {
+    return FoodRecordIngredient._(
+      id: id,
+      passioID: passioID,
+      refCode: refCode,
+      name: name,
+      additionalData: additionalData,
+      iconId: iconId,
+      servingSizes: servingSizes,
+      servingUnits: servingUnits,
+      selectedQuantity: selectedQuantity,
+      selectedUnit: selectedUnit,
+      entityType: entityType,
+      referenceNutrients: nutrients,
+      openFoodLicense: openFoodLicense,
+      barcode: barcode,
+      resultType: resultType,
+    );
+  }
+
   factory FoodRecordIngredient.fromNutrientsWithDefaults(
       PassioNutrients nutrients) {
     return FoodRecordIngredient._(
@@ -286,9 +322,9 @@ extension CustomFoodExtension on FoodRecordIngredient {
     String? newBarcode,
     double selectedQuantity = 1,
     String selectedUnit = 'serving',
+    List<PassioServingUnit>? newServingUnits,
   }) {
     final newFoodRecordIngredient = FoodRecordIngredient.fromJson(toJson());
-    // this.foodRecord = FoodRecord.fromJson(foodRecord.toJson());
     newFoodRecordIngredient.setDefaultServingUnits();
     newFoodRecordIngredient.setServingSizes();
     newFoodRecordIngredient.passioID = '';
@@ -300,6 +336,16 @@ extension CustomFoodExtension on FoodRecordIngredient {
     newFoodRecordIngredient.iconId = newIconId ?? iconId;
     newFoodRecordIngredient.selectedQuantity = selectedQuantity;
     newFoodRecordIngredient.selectedUnit = selectedUnit;
+    if (newServingUnits != null) {
+      final contains = newServingUnits
+          .any((element) => element.unitName.toLowerCase() == 'gram');
+      if (contains) {
+        servingUnits
+            .removeWhere((element) => element.unitName.toLowerCase() != 'gram');
+      }
+    }
+    newFoodRecordIngredient.servingUnits =
+        (newServingUnits ?? []) + servingUnits;
     return newFoodRecordIngredient;
   }
 
@@ -338,13 +384,14 @@ extension CustomFoodExtension on FoodRecordIngredient {
     return this;
   }
 
-  void updateWeight({required double weight}) {
+  FoodRecordIngredient updateWeight({required double weight}) {
     final index =
         servingUnits.indexWhere((element) => element.unitName == selectedUnit);
     if (index != -1) {
       servingUnits[index] =
           PassioServingUnit(selectedUnit, UnitMass(weight, UnitMassType.grams));
     }
+    return this;
   }
 
   FoodRecordIngredient updateServingUnits(

@@ -33,7 +33,7 @@ class BarcodeScannerBloc extends Bloc<BarcodeScannerEvent, BarcodeScannerState>
 
   FutureOr<void> _handleScanningEvent(
       ScanningEvent event, Emitter<BarcodeScannerState> emit) {
-    emit(const ScanningListenerState());
+    // emit(const ScanningListenerState());
     emit(const ScanningBuilderState());
   }
 
@@ -54,9 +54,9 @@ class BarcodeScannerBloc extends Bloc<BarcodeScannerEvent, BarcodeScannerState>
 
   FutureOr<void> _handleScanningAnimationEvent(
       ScanningAnimationEvent event, Emitter<BarcodeScannerState> emit) async {
-    emit(ScanningAnimationBuilderListenerState(
-        shouldAnimate: event.shouldAnimate));
-    emit(const ScanningAnimationBuilderState());
+    // emit(ScanningAnimationBuilderListenerState(
+    //     shouldAnimate: event.shouldAnimate));
+    // emit(const ScanningAnimationBuilderState());
   }
 
   @override

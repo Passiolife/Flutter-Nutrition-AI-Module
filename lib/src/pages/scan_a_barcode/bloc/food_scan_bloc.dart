@@ -4,6 +4,8 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../nutrition_ai_module.dart';
+import '../../../common/domain/repository/custom_food_repository.dart';
+import '../../../common/domain/repository/food_log_repositoy.dart';
 import '../../../common/extension/passio/passio_nutrition_facts_extension.dart';
 import '../../../common/models/settings/settings.dart';
 
@@ -12,9 +14,12 @@ part 'food_scan_state.dart';
 
 class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     implements FoodRecognitionListener, NutritionFactsRecognitionListener {
-  /// [_connector] is use to perform operations.
-  PassioConnector get _connector =>
-      NutritionAIModule.instance.configuration.connector;
+  CustomFoodRepository customFoodRepository;
+  FoodLogRepository foodLogRepository;
+
+  // /// [_connector] is use to perform operations.
+  // PassioConnector get _connector =>
+  //     NutritionAIModule.instance.configuration.connector;
 
   bool? _previousResultForDrag;
 
@@ -26,6 +31,9 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
   double _currentZoom = 1;
   double _minZoom = 1;
   double _maxZoom = 1;
+
+  PassioFoodItem? foodItem;
+  FoodRecord? foodRecord;
 
   @override
   void onNutritionFactsRecognized(
@@ -49,7 +57,8 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     ));
   }
 
-  FoodScanBloc() : super(const FoodScanInitial()) {
+  FoodScanBloc({required this.foodLogRepository, required this.customFoodRepository})
+      : super(const FoodScanInitial()) {
     // Intro Dialog events
     on<IntroScreenEvent>(_handleIntroScreenEvent);
     on<IntroScreenCompleteEvent>(_handleIntroScreenCompleteEvent);
@@ -141,23 +150,28 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     var packagedFoodCandidates = event.packagedFoodCandidates;
     var detectedCandidates = event.detectedCandidates;
 
-    PassioFoodItem? foodItem;
     if ((barcodeCandidates?.isEmpty ?? true) &&
         (packagedFoodCandidates?.isEmpty ?? true) &&
         (detectedCandidates?.isEmpty ?? true)) {
+      foodItem = null;
+      foodRecord = null;
       emit(const ScanLoadingState());
     } else {
       DetectedCandidate? detectedCandidate;
       List<DetectedCandidate> alternatives = [];
 
       if (barcodeCandidates?.firstOrNull != null) {
-        foodItem = await NutritionAI.instance
-            .fetchFoodItemForProductCode(barcodeCandidates!.first.value);
-        if (foodItem == null) {
-          add(StopFoodDetectionEvent());
-          add(BarcodeNotRecognizedEvent(
-              shouldVisible: true, barcode: barcodeCandidates.first.value));
-          return;
+        foodRecord = await customFoodRepository.fetchFoodByBarcode(
+            barcode: barcodeCandidates!.first.value);
+        if (foodRecord == null) {
+          foodItem = await NutritionAI.instance
+              .fetchFoodItemForProductCode(barcodeCandidates.first.value);
+          if (foodItem == null) {
+            add(StopFoodDetectionEvent());
+            add(BarcodeNotRecognizedEvent(
+                shouldVisible: true, barcode: barcodeCandidates.first.value));
+            return;
+          }
         }
       } else if (packagedFoodCandidates?.firstOrNull != null) {
         foodItem = await NutritionAI.instance.fetchFoodItemForProductCode(
@@ -173,10 +187,10 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
         alternatives.addAll(event.detectedCandidates?.skip(1) ?? []);
       }
       emit(ScanResultState(
-        name: foodItem?.name,
-        foodItem: foodItem,
-        detectedCandidate: detectedCandidate,
-        alternatives: alternatives,
+        iconId: foodRecord?.iconId ?? foodItem?.iconId,
+        title: foodRecord?.name ?? foodItem?.name,
+        subtitle:
+            'UPC: ${foodRecord?.barcode ?? foodItem?.ingredients.firstOrNull?.metadata.barcode ?? ''}',
       ));
     }
   }
@@ -224,7 +238,10 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     add(const StopFoodDetectionEvent());
     add(const ScanningAnimationEvent(shouldAnimate: false));
     FoodRecord? foodRecord;
-    if (event.foodItem != null) {
+    if (event.foodRecord != null) {
+      foodRecord = event.foodRecord;
+      foodRecord?.logMeal();
+    } else if (event.foodItem != null) {
       foodRecord = FoodRecord.fromPassioFoodItem(event.foodItem!);
     } else if (event.detectedCandidate != null) {
       final foodItem = await NutritionAI.instance
@@ -234,7 +251,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
       }
     }
     if (foodRecord != null) {
-      _connector.updateRecord(foodRecord: foodRecord, isNew: true);
+      foodLogRepository.addFoodLog(foodRecord: foodRecord);
       add(const AddedToDiaryVisibilityEvent(true));
     }
   }

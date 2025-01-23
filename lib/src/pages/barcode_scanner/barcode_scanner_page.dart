@@ -1,25 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
-import '../../../../../common/constant/app_colors.dart';
-import '../../../../../common/constant/app_constants.dart';
-import '../../../../../common/router/routes.dart';
-import '../../../../../common/extension/context_extension.dart';
-import '../../../../../common/util/permission_manager_utility.dart';
-import '../../../../edit_food/ui/edit_food_page.dart';
-import '../food_creator_page.dart';
+import '../../common/constant/app_constants.dart';
+import '../../common/extension/context_extension.dart';
+import '../../common/permission_manager/permission_manager.dart';
+import '../../common/router/routes.dart';
+import '../../common/util/show_widget_util.dart';
+import '../../common/widgets/app_bar/custom_app_bar.dart';
+import '../edit_food/ui/edit_food_page.dart';
+import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/barcode_scanner_bloc.dart';
 import 'dialogs/barcode_dialog.dart';
+import 'sections/camera_section.dart';
+import 'widgets/barcode_in_system_widget.dart';
+import 'widgets/custom_food_already_exists_widget.dart';
 import 'widgets/widgets.dart';
+
+part 'screen/barcode_scanner_screen.dart';
 
 class BarcodeScannerPage extends StatefulWidget {
   const BarcodeScannerPage({super.key});
 
   static MaterialPageRoute route() {
-    return MaterialPageRoute<String>(builder: (_) => const BarcodeScannerPage());
+    return MaterialPageRoute<String>(
+        builder: (_) => const BarcodeScannerPage());
   }
 
   static Future navigate({required BuildContext context}) async {
@@ -37,7 +45,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
   final _bloc = BarcodeScannerBloc();
 
   // Instance of PermissionManagerUtility to handle permissions
-  final _permissionManager = PermissionManagerUtility();
+  // final _permissionManager = PermissionManagerUtility();
 
   // Listener for app lifecycle changes
   AppLifecycleListener? _lifecycleListener;
@@ -70,7 +78,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
       // Callback function triggered on app lifecycle state change
       onStateChange: (state) {
         // Call permission manager to handle app lifecycle state change
-        _permissionManager.didChangeAppLifecycleState(state);
+        // _permissionManager.didChangeAppLifecycleState(state);
       },
     );
 
@@ -79,6 +87,10 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
 
   @override
   Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (context) => BarcodeScannerBloc(),
+      child: const _BarcodeScannerScreen(),
+    );
     return BlocConsumer<BarcodeScannerBloc, BarcodeScannerState>(
       bloc: _bloc,
       listener: _handleStateChanges,
@@ -127,21 +139,21 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
 
   // Check camera permission
   Future _checkPermission() async {
-    await PermissionManagerUtility().request(
-      context,
-      Permission.camera,
-      title: context.localization.permission,
-      message: context.localization.cameraPermissionMessage,
-      onTapCancelForSettings: (contextPermission) {
-        Navigator.pop(contextPermission);
-        Navigator.pop(context);
-      },
-      onUpdateStatus: (Permission? permission) async {
-        if ((await permission?.isGranted) ?? false) {
-          _startScanning();
-        }
-      },
-    );
+    // await PermissionManagerUtility().request(
+    //   context,
+    //   Permission.camera,
+    //   title: context.localization.permission,
+    //   message: context.localization.cameraPermissionMessage,
+    //   onTapCancelForSettings: (contextPermission) {
+    //     Navigator.pop(contextPermission);
+    //     Navigator.pop(context);
+    //   },
+    //   onUpdateStatus: (Permission? permission) async {
+    //     if ((await permission?.isGranted) ?? false) {
+    //       _startScanning();
+    //     }
+    //   },
+    // );
   }
 
   void _startScanning() {
@@ -151,19 +163,19 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
   void _handleStateChanges(BuildContext context, BarcodeScannerState state) {
     if (state is ListenerState) {
       switch (state) {
-        case ScanningListenerState():
-          _handleScanningState(state);
-          break;
+        // case ScanningListenerState():
+        //   _handleScanningState(state);
+        //   break;
         case CustomFoodRecordFoundListenerState():
           _visibleDialog = true;
           _showBarcodeDialog(
             context: context,
             title: context.localization.customFoodAlreadyExists,
             description:
-                context.localization.customFoodAlreadyExistsDescription,
+            context.localization.customFoodAlreadyExistsDescription,
             foodRecord: state.foodRecord,
             customFoodButtonText:
-                context.localization.createCustomFoodWithoutBarcode,
+            context.localization.createCustomFoodWithoutBarcode,
             fromCustomFood: true,
           );
           break;
@@ -184,20 +196,20 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
             state.barcode,
           );
           break;
-        case ScanningAnimationBuilderListenerState():
-          _handleScanningAnimationState(state.shouldAnimate);
-          break;
+        // case ScanningAnimationBuilderListenerState():
+        //   _handleScanningAnimationState(state.shouldAnimate);
+        //   break;
       }
     }
   }
 
   // Handle scanning animation
-  void _handleScanningState(ScanningListenerState state) {
-    if (!_showPassioPreview) {
-      _showPassioPreview = true;
-    }
-    _handleScanningAnimationState(true);
-  }
+  // void _handleScanningState(ScanningListenerState state) {
+  //   if (!_showPassioPreview) {
+  //     _showPassioPreview = true;
+  //   }
+  //   _handleScanningAnimationState(true);
+  // }
 
   // Handle scan result visibility
   void _handleScanningAnimationState(bool shouldStart) {
@@ -227,9 +239,9 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
         Navigator.pop(dContext);
         _startScanning();
       },
-      onViewExistingItem: (dContext) {
+      onViewExistingItem: (dContext) async {
         Navigator.pop(dContext);
-        EditFoodPage.navigate(
+        await EditFoodPage.navigate(
           context: context,
           params: EditFoodPageParams(
             foodRecord: foodRecord,
@@ -237,6 +249,7 @@ class _BarcodeScannerPageState extends State<BarcodeScannerPage> {
             visibleLogUponCreate: false,
           ),
         );
+        _startScanning();
       },
       customFoodButtonText: customFoodButtonText,
       onCreateCustomFood: (dContext) {

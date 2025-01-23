@@ -15,13 +15,6 @@ sealed class ListenerState extends BarcodeScannerState {
   const ListenerState();
 }
 
-final class ScanningListenerState extends ListenerState {
-  const ScanningListenerState();
-
-  @override
-  List<Object?> get props => [];
-}
-
 final class CustomFoodRecordFoundListenerState extends ListenerState {
   const CustomFoodRecordFoundListenerState({required this.foodRecord});
 
@@ -53,14 +46,14 @@ final class UnknownBarcodeFoundListenerState extends ListenerState {
   List<Object?> get props => [barcode];
 }
 
-final class ScanningAnimationBuilderListenerState extends ListenerState {
-  final bool shouldAnimate;
-
-  const ScanningAnimationBuilderListenerState({required this.shouldAnimate});
-
-  @override
-  List<Object?> get props => [shouldAnimate];
-}
+// final class ScanningAnimationBuilderListenerState extends ListenerState {
+//   final bool shouldAnimate;
+//
+//   const ScanningAnimationBuilderListenerState({required this.shouldAnimate});
+//
+//   @override
+//   List<Object?> get props => [shouldAnimate];
+// }
 
 sealed class BuilderState extends BarcodeScannerState {
   const BuilderState();

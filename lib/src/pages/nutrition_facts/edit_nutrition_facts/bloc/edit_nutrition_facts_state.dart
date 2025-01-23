@@ -61,3 +61,10 @@ final class UpdatePortionsState extends EditNutritionFactsState {
   @override
   List<Object?> get props => [selectedQuantity, selectedUnit, units, weight];
 }
+
+final class SaveSuccessState extends EditNutritionFactsState {
+  const SaveSuccessState();
+
+  @override
+  List<Object> get props => [];
+}

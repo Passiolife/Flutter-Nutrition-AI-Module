@@ -12,7 +12,7 @@ class HeaderSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomAppBar(
-      title: context.localization.photoLogging,
+      title: context.localization.barcodeScan,
       actions: [
         HelpWidget(
           onTap: () {

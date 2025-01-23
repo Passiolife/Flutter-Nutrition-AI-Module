@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../../common/constant/app_colors.dart';
+import '../../../common/constant/app_colors.dart';
 import '../widgets/barcode_widget.dart';
 
 class BarcodeDialog {

@@ -13,7 +13,8 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
 
   late final _bloc = context.read<EditNutritionFactsBloc>();
 
-  late final _navigationData = EditNutritionFactsNavigationDataProvider.of(context);
+  late final _navigationData =
+      EditNutritionFactsNavigationDataProvider.of(context);
 
   @override
   void initState() {
@@ -29,41 +30,40 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Material(
-        color: AppColors.transparent,
-        child: Wrap(
-          children: [
-            Container(
-              decoration: AppShadows.base,
-              padding: AppPadding.pa16,
-              margin: AppPadding.pa16 + context.keyboardHeight,
-              child: Form(
-                key: _formKey,
-                child: Column(
-                  spacing: 16.h,
-                  children: [
-                    Text(
-                      context.localization.editNutritionFacts ?? '',
-                      style: AppTextStyle.textXl.addAll([
-                        AppTextStyle.textXl.leading7,
-                        AppTextStyle.bold,
-                      ]),
-                    ),
-                    const DetailsSection(),
-                    const NutritionFactsSection(),
-                    const PortionSection(),
-                    ActionButtonsWidget(
-                      onCancel: () {
-                        Navigator.pop(context);
-                      },
-                      onSave: () {
-                        if(_formKey.currentState?.validate() ?? false) {
-                          context.read<EditNutritionFactsBloc>().add(const SaveEvent());
-                        }
-                      },
-                    ),
-                    /*_DetailsWidget(
+    return BlocListener<EditNutritionFactsBloc, EditNutritionFactsState>(
+      listener: _handleStateChanges,
+      child: Center(
+        child: Material(
+          color: AppColors.transparent,
+          child: Wrap(
+            children: [
+              Container(
+                decoration: AppShadows.base,
+                padding: AppPadding.pa16,
+                margin: AppPadding.pa16 + context.keyboardHeight,
+                child: Form(
+                  key: _formKey,
+                  child: Column(
+                    spacing: 16.h,
+                    children: [
+                      const HeaderWidget(),
+                      const DetailsSection(),
+                      const NutritionFactsSection(),
+                      const PortionSection(),
+                      ActionButtonsWidget(
+                        onCancel: () {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        },
+                        onSave: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            context
+                                .read<EditNutritionFactsBloc>()
+                                .add(const SaveEvent());
+                          }
+                        },
+                      ),
+                      /*_DetailsWidget(
                       index: widget.index,
                       foodRecord: _foodRecord,
                       onChange: (name, barcode) {
@@ -71,7 +71,7 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
                         _barcode = barcode;
                       },
                     ),*/
-                    /*_NutritionFactsWidget(
+                      /*_NutritionFactsWidget(
                       index: widget.index,
                       foodRecord: _foodRecord,
                       onChange: (calories, carbs, protein, fat) {
@@ -100,13 +100,45 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
                         }
                       },
                     ),*/
-                  ],
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
+
+  void _handleStateChanges(
+      BuildContext context, EditNutritionFactsState state) {
+    if (state is SaveSuccessState) {
+      _showItemAddedToDiary(context);
+    }
+  }
+
+  void _showItemAddedToDiary(BuildContext context) {
+    ShowWidgetUtil.showCustomGeneralDialog(
+      context: context,
+      builder: (dContext) {
+        return ItemAddedToDiaryWidget(
+          positiveText: context.localization.addMore.toUpperCaseWord,
+          onTapNegative: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.dashboard,
+                  (route) => route.isFirst,
+              arguments: 1,
+            );
+          },
+          onTapPositive: () {
+            Navigator.popUntil(
+                context, (route) => route.settings.name == Routes.foodScan);
+          },
+        );
+      },
+    );
+  }
+
 }

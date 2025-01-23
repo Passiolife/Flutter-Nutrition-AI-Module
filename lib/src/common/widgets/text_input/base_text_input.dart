@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../constant/app_colors.dart';
 import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
+import '../../extension/widget_extension.dart';
 import '../../util/regexp.dart';
 
 typedef TextInputValidator = String? Function(String?);
@@ -24,6 +25,7 @@ class BaseTextInput extends StatelessWidget {
 
   final String hintText;
   final String? labelText;
+  final Alignment? labelAlignment;
   final String? initialValue;
   final String? accessibilityLabel;
 
@@ -41,6 +43,8 @@ class BaseTextInput extends StatelessWidget {
 
   final Widget? prefix;
   final Widget? suffix;
+  final BoxConstraints? suffixIconConstraints;
+  final String? suffixText;
   final Widget? labelIcon;
 
   final Color fillColor;
@@ -49,6 +53,7 @@ class BaseTextInput extends StatelessWidget {
   final TextStyle? textStyle;
   final TextStyle? labelStyle;
   final TextStyle? hintStyle;
+  final TextStyle? suffixStyle;
   final TextStyle? errorStyle;
 
   final InputBorder? enabledBorder;
@@ -62,6 +67,7 @@ class BaseTextInput extends StatelessWidget {
   const BaseTextInput({
     super.key,
     this.labelText,
+    this.labelAlignment,
     required this.hintText,
     this.controller,
     this.inputFormatters,
@@ -77,10 +83,13 @@ class BaseTextInput extends StatelessWidget {
     this.obscureText = false,
     this.prefix,
     this.suffix,
+    this.suffixIconConstraints,
+    this.suffixText,
     this.fillColor = AppColors.white,
     this.textStyle,
     this.labelStyle,
     this.hintStyle,
+    this.suffixStyle,
     this.textAlign = TextAlign.start,
     this.isDense,
     this.accessibilityLabel = '',
@@ -112,7 +121,7 @@ class BaseTextInput extends StatelessWidget {
       children: [
         if (labelText?.isNotEmpty == true)
           Padding(
-            padding: AppPadding.pb4,
+            padding: AppPadding.pb8,
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -120,10 +129,12 @@ class BaseTextInput extends StatelessWidget {
                   labelText!,
                   style: labelStyle,
                 ),
-                8.horizontalSpace,
-                if (labelIcon != null) labelIcon!,
+                if (labelIcon != null) ...[8.horizontalSpace, labelIcon!],
               ],
             ),
+          ).wrapIf(
+            labelAlignment != null,
+            (child) => Align(alignment: labelAlignment!, child: child),
           ),
         Semantics(
           onSetText: (value) => controller?.text = value,
@@ -158,10 +169,11 @@ class BaseTextInput extends StatelessWidget {
             readOnly: readOnly,
             autovalidateMode: autoValidateMode,
             cursorColor: context.theme.primaryColor,
-            onTapOutside: onTapOutside ?? (_) {
-              // Close the keyboard when user click outside the text field
-              FocusManager.instance.primaryFocus?.unfocus();
-            },
+            onTapOutside: onTapOutside ??
+                (_) {
+                  // Close the keyboard when user click outside the text field
+                  FocusManager.instance.primaryFocus?.unfocus();
+                },
             buildCounter: (
               context, {
               required currentLength,
@@ -192,6 +204,9 @@ class BaseTextInput extends StatelessWidget {
               fillColor: fillColor,
               prefixIcon: prefix,
               suffixIcon: suffix,
+              suffixIconConstraints: suffixIconConstraints,
+              suffixText: suffixText,
+              suffixStyle: suffixStyle,
             ),
           ),
         ),

@@ -29,6 +29,7 @@ class NumberTextInput extends StatefulWidget {
 
   final String hintText;
   final String? labelText;
+  final Alignment? labelAlignment;
   final String? initialValue;
   final String? accessibilityLabel;
   final String? footnote;
@@ -46,7 +47,12 @@ class NumberTextInput extends StatefulWidget {
   final int? maxLines;
 
   final Widget? prefix;
+
   final Widget? suffix;
+  final BoxConstraints? suffixIconConstraints;
+
+  final String? suffixText;
+
   final Widget? footNoteIcon;
   final Widget? labelIcon;
 
@@ -58,6 +64,7 @@ class NumberTextInput extends StatefulWidget {
   final TextStyle? textStyle;
   final TextStyle? labelStyle;
   final TextStyle? hintStyle;
+  final TextStyle? suffixStyle;
   final TextStyle? errorStyle;
 
   final InputBorder? enabledBorder;
@@ -74,6 +81,7 @@ class NumberTextInput extends StatefulWidget {
     this.controller,
     required this.hintText,
     this.labelText,
+    this.labelAlignment,
     this.inputFormatters,
     this.validator,
     this.onChanged,
@@ -85,11 +93,14 @@ class NumberTextInput extends StatefulWidget {
     this.isPassword = false,
     this.prefix,
     this.suffix,
+    this.suffixIconConstraints,
+    this.suffixText,
     this.enableCounterText = false,
     this.fillColor = Colors.white,
     this.textStyle,
     this.labelStyle,
     this.hintStyle,
+    this.suffixStyle,
     this.textAlign = TextAlign.start,
     this.isDense,
     this.accessibilityLabel = '',
@@ -196,6 +207,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
           readOnly: widget.readOnly,
           focusNode: _focusNode,
           labelText: widget.labelText,
+          labelAlignment: widget.labelAlignment,
           hintText: widget.hintText,
           controller: _controller,
           inputFormatters: widget.inputFormatters,
@@ -206,6 +218,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
               TextInputType.numberWithOptions(decimal: true),
           obscureText: widget.isPassword && !_isVisibility,
           prefix: widget.prefix,
+          suffixText: widget.suffixText,
           suffix: widget.isPassword
               ? IconButton(
                   icon: Icon(
@@ -223,7 +236,9 @@ class _NumberTextInputState extends State<NumberTextInput> {
                   },
                 )
               : widget.suffix,
+          suffixIconConstraints: widget.suffixIconConstraints,
           labelIcon: widget.labelIcon,
+
           contentPadding:
               widget.contentPadding ?? AppPadding.ph12 + AppPadding.pv10,
           focusColor: context.theme.primaryColor,
@@ -234,8 +249,17 @@ class _NumberTextInputState extends State<NumberTextInput> {
               AppTextStyle.textXs.copyWith(
                 color: context.textThemeColors.errorColor,
               ),
-          labelStyle: widget.labelStyle ?? AppTextStyle.textXs,
+          labelStyle: widget.labelStyle ??
+              AppTextStyle.textSm.addAll(
+                  [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
+                color: context.textThemeColors.brandTextLight,
+              ),
           hintStyle: widget.hintStyle ??
+              AppTextStyle.textBase
+                  .addAll([AppTextStyle.textBase.leading6]).copyWith(
+                color: context.textThemeColors.brandTextLight,
+              ),
+          suffixStyle: widget.suffixStyle ??
               AppTextStyle.textBase
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
                 color: context.textThemeColors.brandTextLight,

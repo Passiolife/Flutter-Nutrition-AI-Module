@@ -17,6 +17,7 @@ class AppImages {
   static const imgMyFoodsThumbnail = '${imageDir}img_my_foods_thumbnail.png';
 
   // Icons
+  static const icBarcodeNewNew = '${iconsDir}ic_barc.svg';
   static const icBarcodeScan = '${iconsDir}ic_scan_barcode.svg';
   static const icClose = '${iconsDir}ic_close.svg';
   static const icPlus = '${iconsDir}ic_plus.svg';

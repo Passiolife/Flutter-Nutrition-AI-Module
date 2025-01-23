@@ -9,6 +9,7 @@ import '../../../common/extension/context_extension.dart';
 import '../../../common/router/routes.dart';
 import '../../../common/util/permission_manager_utility.dart';
 import '../../../common/util/show_widget_util.dart';
+import '../../../common/widgets/item_added_to_diary_widget.dart';
 import '../../dashboard/dashboard_page.dart';
 import '../bloc/food_scan_bloc.dart';
 import '../dialog/added_to_diary_dialog.dart';
@@ -57,14 +58,6 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
     );
 
     _bloc?.add(const IntroScreenEvent());
-
-    /*ShowWidgetUtil.showCustomModalBottomSheet(
-      context: context,
-      backgroundColor: AppColors.transparent,
-      builder: (_) {
-        return BarcodeNotRecognizedWidget();
-      },
-    );*/
   }
 
   @override
@@ -183,20 +176,38 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
   }
 
   void _handleAddedToDiaryVisibilityState(AddedToDiaryVisibilityState state) {
-    AddedToDiaryDialog.show(
+    ShowWidgetUtil.showCustomGeneralDialog(
       context: context,
-      onTapViewDiary: (dialogContext) {
-        Navigator.pop(dialogContext);
-        DashboardPage.navigate(
-          context,
-          page: 1,
-          removeUntil: true,
+      builder: (_) {
+        return ItemAddedToDiaryWidget(
+          onTapNegative: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.dashboard,
+                  (route) => route.isFirst,
+              arguments: 1,
+            );
+          },
+          onTapPositive: () {
+            _bloc?.add(const StartScanningEvent());
+          },
         );
       },
-      onTapContinue: (dialogContext) {
-        Navigator.pop(dialogContext);
-        _bloc?.add(const StartScanningEvent());
-      },
     );
+    // AddedToDiaryDialog.show(
+    //   context: context,
+    //   onTapViewDiary: (dialogContext) {
+    //     Navigator.pop(dialogContext);
+    //     DashboardPage.navigate(
+    //       context,
+    //       page: 1,
+    //       removeUntil: true,
+    //     );
+    //   },
+    //   onTapContinue: (dialogContext) {
+    //     Navigator.pop(dialogContext);
+    //     _bloc?.add(const StartScanningEvent());
+    //   },
+    // );
   }
 }

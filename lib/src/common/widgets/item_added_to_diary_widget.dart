@@ -71,16 +71,22 @@ class ItemAddedToDiaryWidget extends StatelessWidget {
                       child: SecondaryButton(
                         text: negativeText ?? context.localization.viewDiary,
                         padding: AppPadding.pv12,
-                        onTap: onTapNegative,
+                        onTap: () {
+                          Navigator.pop(context);
+                          onTapNegative?.call();
+                        },
                       ),
                     ),
                     16.horizontalSpace,
                     Expanded(
                       child: PrimaryButton(
                         text: positiveText ??
-                            context.localization.addMore.toUpperCaseWord,
+                            context.localization.continueScanning.toUpperCaseWord,
                         padding: AppPadding.pv12,
-                        onTap: onTapPositive,
+                        onTap: () {
+                          Navigator.pop(context);
+                          onTapPositive?.call();
+                        },
                       ),
                     ),
                   ],

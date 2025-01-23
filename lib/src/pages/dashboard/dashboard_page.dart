@@ -9,7 +9,6 @@ import '../../common/util/overlay_widget.dart';
 import '../../common/util/preference_store.dart';
 import '../advisor/advisor_page.dart';
 import '../diary/diary_page.dart';
-import '../food_scan/food_scan_page.dart';
 import '../food_search/food_search_page.dart';
 import '../home/home_page.dart';
 import '../meal_plan/meal_plan_page.dart';
@@ -152,10 +151,12 @@ class _DashboardPageState extends State<DashboardPage> {
     //
     // Action for when the text matches the 'scan' localization.
     if (action == context.localization.scanABarcode) {
-      Navigator.pushNamed(
+      await Navigator.pushNamed(
         context,
         Routes.foodScan,
       );
+      _bloc.add(const RefreshEvent());
+
       // FoodScanPage.navigate(context);
     }
     // Action for when the text matches the 'search' localization.

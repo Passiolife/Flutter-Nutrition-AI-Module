@@ -578,7 +578,7 @@ class AppLocalizations {
 
   String? get takePictureIntroSubtitle => getLabel('takePictureIntroSubtitle');
 
-  String? get myFoods => getLabel('myFoods');
+  String get myFoods => getLabel('myFoods');
 
   String? get custom => getLabel('custom');
 
@@ -671,19 +671,19 @@ class AppLocalizations {
 
   String? get viewExistingItem => getLabel('viewExistingItem');
 
-  String? get barcodeInSystem => getLabel('barcodeInSystem');
+  String get barcodeInSystem => getLabel('barcodeInSystem');
 
-  String? get barcodeInSystemDescription =>
+  String get barcodeInSystemDescription =>
       getLabel('barcodeInSystemDescription');
 
-  String? get customFoodAlreadyExists => getLabel('customFoodAlreadyExists');
+  String get customFoodAlreadyExists => getLabel('customFoodAlreadyExists');
 
-  String? get customFoodAlreadyExistsDescription =>
+  String get customFoodAlreadyExistsDescription =>
       getLabel('customFoodAlreadyExistsDescription');
 
-  String? get createCustomFoodAnyway => getLabel('createCustomFoodAnyway');
+  String get createCustomFoodAnyway => getLabel('createCustomFoodAnyway');
 
-  String? get createCustomFoodWithoutBarcode =>
+  String get createCustomFoodWithoutBarcode =>
       getLabel('createCustomFoodWithoutBarcode');
 
   String? get api => getLabel('api');
@@ -873,4 +873,5 @@ class AppLocalizations {
   String get enterManually => getLabel('enterManually');
 
   String get saveAndLog => getLabel('saveAndLog');
+  String get nutritionFactsCustomFoodCreationMessage => getLabel('nutritionFactsCustomFoodCreationMessage');
 }

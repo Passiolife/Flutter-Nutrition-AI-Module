@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../nutrition_ai_module.dart';
 import '../../../common/extension/context_extension.dart';
 import '../../../common/router/routes.dart';
 import '../../../common/widgets/bottom_sheet/base_bottom_sheet.dart';
@@ -32,7 +31,6 @@ class _ResultSectionState extends State<ResultSection> {
             state is AddedToDiaryVisibilityState;
       },
       builder: (context, state) {
-        PassioFoodItem? foodItem;
         String? iconId;
         String? title;
         String? subtitle;
@@ -40,11 +38,9 @@ class _ResultSectionState extends State<ResultSection> {
             state is AddedToDiaryVisibilityState) {
           return const SizedBox.shrink();
         } else if (state is ScanResultState) {
-          foodItem = state.foodItem;
-          iconId = foodItem?.iconId;
-          title = foodItem?.name;
-          subtitle =
-              '${context.localization.upc ?? ''}: ${foodItem?.ingredients.firstOrNull?.metadata.barcode ?? ''}';
+          iconId = state.iconId;
+          title = state.title;
+          subtitle = state.subtitle;
         }
         return Align(
           alignment: Alignment.bottomCenter,
@@ -55,8 +51,8 @@ class _ResultSectionState extends State<ResultSection> {
                     iconId: iconId ?? '',
                     title: title,
                     subtitle: subtitle,
-                    onEdit: () => _onEdit(context: context, foodItem: foodItem),
-                    onLog: () => _onLog(context: context, foodItem: foodItem),
+                    onEdit: () => _onEdit(context: context),
+                    onLog: () => _onLog(context: context),
                   )
                 : ScanningWidget(
                     onTap: () {
@@ -69,10 +65,13 @@ class _ResultSectionState extends State<ResultSection> {
     );
   }
 
-  void _onEdit({required BuildContext context, PassioFoodItem? foodItem}) {
+  void _onEdit({required BuildContext context}) {
+    final foodRecord = context.read<FoodScanBloc>().foodRecord;
+    final foodItem = context.read<FoodScanBloc>().foodItem;
     EditFoodPage.navigate(
       context: context,
       params: EditFoodPageParams(
+        foodRecord: foodRecord,
         foodItem: foodItem,
         redirectToDiaryOnLog: true,
         visibleFoodCreator: true,
@@ -81,10 +80,15 @@ class _ResultSectionState extends State<ResultSection> {
     );
   }
 
-  void _onLog({required BuildContext context, PassioFoodItem? foodItem}) {
-    context.read<FoodScanBloc>().add(DoFoodLogEvent(
-          dateTime: DateTime.now(),
-          foodItem: foodItem,
-        ));
+  void _onLog({required BuildContext context}) {
+    final foodRecord = context.read<FoodScanBloc>().foodRecord;
+    final foodItem = context.read<FoodScanBloc>().foodItem;
+    context.read<FoodScanBloc>().add(
+          DoFoodLogEvent(
+            dateTime: DateTime.now(),
+            foodItem: foodItem,
+            foodRecord: foodRecord,
+          ),
+        );
   }
 }

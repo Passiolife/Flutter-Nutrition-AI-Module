@@ -37,20 +37,26 @@ class ScanLoadingState extends FoodScanState {
 }
 
 class ScanResultState extends FoodScanState {
-  final PassioFoodItem? foodItem;
-  final DetectedCandidate? detectedCandidate;
-  final List<DetectedCandidate> alternatives;
-  final String? name;
+  // final PassioFoodItem? foodItem;
+  // final DetectedCandidate? detectedCandidate;
+  // final List<DetectedCandidate> alternatives;
+  // final String? name;
+  final String? iconId;
+  final String? title;
+  final String? subtitle;
 
   const ScanResultState({
-    this.name,
-    this.foodItem,
-    this.detectedCandidate,
-    this.alternatives = const [],
+    // this.name,
+    // this.foodItem,
+    // this.detectedCandidate,
+    // this.alternatives = const [],
+    this.iconId,
+    this.title,
+    this.subtitle,
   });
 
   @override
-  List<Object?> get props => [name];
+  List<Object?> get props => [iconId, title, subtitle];
 }
 
 class NutritionFactsResultState extends FoodScanState {

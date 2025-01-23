@@ -34,7 +34,6 @@ class PortionWidget extends StatefulWidget {
 }
 
 class _PortionWidgetState extends State<PortionWidget> {
-
   late TextEditingController _servingController;
   late TextEditingController _weightController;
 
@@ -42,8 +41,7 @@ class _PortionWidgetState extends State<PortionWidget> {
   void initState() {
     _servingController =
         TextEditingController(text: widget.initialSelectedQuantity);
-    _weightController =
-        TextEditingController(text: widget.initialWeight);
+    _weightController = TextEditingController(text: widget.initialWeight);
     super.initState();
   }
 
@@ -93,19 +91,6 @@ class _PortionWidgetState extends State<PortionWidget> {
               //     _unit,
               //   );
               // },
-              // unit: context.localization.cal
-            ),
-            _buildField(
-              context: context,
-              title: context.localization.weight ?? '',
-              controller: _weightController,
-              // onFieldSubmitted: (_) {
-              //   widget.onChange?.call(
-              //     double.tryParse(_servingController.text),
-              //     double.tryParse(_weightController.text),
-              //     _unit,
-              //   );
-              // },
             ),
             Expanded(
               flex: 3,
@@ -124,7 +109,8 @@ class _PortionWidgetState extends State<PortionWidget> {
                   SecondaryDropdown<String>(
                     height: 40.h,
                     value: KeyValueModel(
-                        text: widget.initialSelectedUnit?.toUpperCaseWord ?? '', value: widget.initialSelectedUnit ?? ''),
+                        text: widget.initialSelectedUnit?.toUpperCaseWord ?? '',
+                        value: widget.initialSelectedUnit ?? ''),
                     options: widget.units.map((e) {
                       return KeyValueModel(value: e, text: e.toUpperCaseWord);
                     }).toList(),
@@ -144,6 +130,19 @@ class _PortionWidgetState extends State<PortionWidget> {
                 ],
               ),
             ),
+            _buildField(
+              context: context,
+              title: context.localization.weight ?? '',
+              controller: _weightController,
+              // onFieldSubmitted: (_) {
+              //   widget.onChange?.call(
+              //     double.tryParse(_servingController.text),
+              //     double.tryParse(_weightController.text),
+              //     _unit,
+              //   );
+              // },
+              unit: context.localization.g,
+            ),
           ],
         ),
       ],
@@ -154,43 +153,34 @@ class _PortionWidgetState extends State<PortionWidget> {
     required BuildContext context,
     required String title,
     int flex = 1,
-    String? suffix,
+    String? unit,
     TextEditingController? controller,
     Function(String)? onFieldSubmitted,
   }) {
     return Expanded(
       flex: flex,
-      child: Column(
-        spacing: 8.w,
-        children: [
-          Text(
-            title,
-            style: AppTextStyle.textSm.addAll(
-                [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
-              color: context.textThemeColors.brandTextLight,
-            ),
-          ),
-          NumberTextInput(
-            isDense: true,
-            hintText: '-',
-            contentPadding: AppPadding.pv8,
-            textAlign: TextAlign.center,
-            controller: controller,
-            errorStyle: TextStyle(height: 0.01),
-            autoValidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              return value.isNotNullOrEmpty ? null : '';
-            },
-            onFieldSubmitted: onFieldSubmitted,
-            // suffix: Text(
-            //   unit ?? '',
-            //   style: AppTextStyle.textSm.addAll(
-            //       [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
-            //     color: context.textThemeColors.brandTextLight,
-            //   ),
-            // ),
-          ),
-        ],
+      child: NumberTextInput(
+        isDense: true,
+        labelText: title,
+        labelAlignment: Alignment.center,
+        hintText: '-',
+        contentPadding: AppPadding.pv8 + AppPadding.ph8,
+        textAlign: TextAlign.center,
+        controller: controller,
+        errorStyle: TextStyle(height: 0.01),
+        autoValidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) {
+          return value.isNotNullOrEmpty ? null : '';
+        },
+        onFieldSubmitted: onFieldSubmitted,
+        suffixText: unit ?? '',
+        // suffix: Text(
+        //   unit ?? '',
+        //   style: AppTextStyle.textSm.addAll(
+        //       [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
+        //     color: context.textThemeColors.brandTextLight,
+        //   ),
+        // ),
       ),
     );
   }

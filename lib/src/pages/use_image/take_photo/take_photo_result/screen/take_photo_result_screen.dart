@@ -70,7 +70,6 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
       builder: (dsContext) {
         return ItemAddedToDiaryWidget(
           onTapNegative: () {
-            Navigator.pop(dsContext);
             Navigator.pushNamedAndRemoveUntil(
               context,
               Routes.dashboard,
@@ -79,7 +78,6 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
             );
           },
           onTapPositive: () {
-            Navigator.pop(dsContext);
             Navigator.popUntil(
                 context, (route) => route.settings.name == Routes.takePhoto);
           },

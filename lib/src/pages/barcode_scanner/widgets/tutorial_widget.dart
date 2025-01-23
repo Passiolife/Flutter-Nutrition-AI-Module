@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../../../common/constant/app_constants.dart';
-import '../../../../../../common/extension/context_extension.dart';
+import '../../../common/constant/app_constants.dart';
+import '../../../common/extension/context_extension.dart';
 
 class TutorialWidget extends StatelessWidget {
   const TutorialWidget({super.key});
@@ -19,13 +19,13 @@ class TutorialWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            context.localization?.scanning ?? '',
+            context.localization.scanning ?? '',
             style: AppTextStyle.textSm
                 .addAll([AppTextStyle.textSm.leading5, AppTextStyle.bold]),
             textAlign: TextAlign.center,
           ),
           Text(
-            context.localization?.barcodeScannerDescription ?? '',
+            context.localization.barcodeScannerDescription ?? '',
             style: AppTextStyle.textSm
                 .addAll([AppTextStyle.textSm.leading5, AppTextStyle.medium]),
             textAlign: TextAlign.center,

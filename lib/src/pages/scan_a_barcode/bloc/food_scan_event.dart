@@ -141,11 +141,13 @@ class PackagedFoodNotRecognizedEvent extends FoodScanEvent {
 class DoFoodLogEvent extends FoodScanEvent {
   const DoFoodLogEvent({
     required this.dateTime,
+    this.foodRecord,
     this.foodItem,
     this.detectedCandidate,
   });
 
   final DateTime dateTime;
+  final FoodRecord? foodRecord;
   final PassioFoodItem? foodItem;
   final DetectedCandidate? detectedCandidate;
 

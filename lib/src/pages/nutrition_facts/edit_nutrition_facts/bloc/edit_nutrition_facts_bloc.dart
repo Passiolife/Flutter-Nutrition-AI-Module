@@ -1,10 +1,14 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../../../../common/domain/repository/custom_food_repository.dart';
+import '../../../../common/domain/repository/food_log_repositoy.dart';
 import '../../../../common/extension/null_safety_extension.dart';
+import '../../../../common/helper/custom_food_helper.dart';
 import '../../../../common/models/food_record/food_record.dart';
 import '../../../../common/models/food_record/food_record_ingredient.dart';
 import '../../../../common/util/double_extensions.dart';
@@ -14,6 +18,9 @@ part 'edit_nutrition_facts_state.dart';
 
 class EditNutritionFactsBloc
     extends Bloc<EditNutritionFactsEvent, EditNutritionFactsState> {
+  FoodLogRepository foodLogRepository;
+  CustomFoodRepository customFoodRepository;
+
   FoodRecord? _foodRecord;
 
   // Details
@@ -34,7 +41,10 @@ class EditNutritionFactsBloc
   List<String>? _units;
   double? _weight;
 
-  EditNutritionFactsBloc() : super(EditNutritionFactsInitial()) {
+  EditNutritionFactsBloc({
+    required this.foodLogRepository,
+    required this.customFoodRepository,
+  }) : super(const EditNutritionFactsInitial()) {
     on<ProcessEvent>(_handleProcessEvent);
     on<UpdateDetailsEvent>(_handleUpdateDetailsEvent);
     on<UpdateNutritionFactsEvent>(_handleUpdateNutritionFactsEvent);
@@ -59,8 +69,12 @@ class EditNutritionFactsBloc
     _fat = _foodRecord?.totalFatOptional;
 
     _selectedQuantity = _foodRecord?.getSelectedQuantity();
-    _selectedUnit = _foodRecord?.getSelectedUnit();
-    _units = _foodRecord?.servingUnits.map((e) => e.unitName).toList();
+    _selectedUnit =
+        _foodRecord?.getSelectedUnit() ?? CustomFoodHelper.defaultServingUnit;
+    _units = _foodRecord?.servingUnits.map((e) => e.unitName).toList() ?? [];
+    _units?.addAll(CustomFoodHelper.getDefaultServingUnits()
+        .where((element) => !_units!.contains(element.unitName))
+        .map((e) => e.unitName));
     _weight = _foodRecord?.computedWeight.value;
 
     add(const UpdateDetailsEvent());
@@ -112,9 +126,9 @@ class EditNutritionFactsBloc
 
   void _handleSaveEvent(
       SaveEvent event, Emitter<EditNutritionFactsState> emit) async {
-    FoodRecord? updatedFoodRecord = _foodRecord?.clone();
-    if (_foodRecord == null) {
-    } else {
+    try {
+      final foodRecordIngredient = _foodRecord?.ingredients.firstOrNull;
+
       final calories = UnitEnergy(_calories!, UnitEnergyType.kilocalories);
       final carbs = UnitMass(_carbs!, UnitMassType.grams);
       final proteins = UnitMass(_protein!, UnitMassType.grams);
@@ -123,27 +137,99 @@ class EditNutritionFactsBloc
 
       final nutrients = PassioNutrients.fromNutrients(
         weight: weight,
+        alcohol: foodRecordIngredient?.referenceNutrients.alcohol,
+        calcium: foodRecordIngredient?.referenceNutrients.calcium,
         calories: calories,
         carbs: carbs,
-        proteins: proteins,
+        cholesterol: foodRecordIngredient?.referenceNutrients.cholesterol,
+        chromium: foodRecordIngredient?.referenceNutrients.chromium,
         fat: fat,
+        fibers: foodRecordIngredient?.referenceNutrients.fibers,
+        folicAcid: foodRecordIngredient?.referenceNutrients.folicAcid,
+        iodine: foodRecordIngredient?.referenceNutrients.iodine,
+        iron: foodRecordIngredient?.referenceNutrients.iron,
+        magnesium: foodRecordIngredient?.referenceNutrients.magnesium,
+        monounsaturatedFat: foodRecordIngredient?.referenceNutrients.monounsaturatedFat,
+        phosphorus: foodRecordIngredient?.referenceNutrients.phosphorus,
+        polyunsaturatedFat: foodRecordIngredient?.referenceNutrients.polyunsaturatedFat,
+        potassium: foodRecordIngredient?.referenceNutrients.potassium,
+        proteins: proteins,
+        satFat: foodRecordIngredient?.referenceNutrients.satFat,
+        selenium: foodRecordIngredient?.referenceNutrients.selenium,
+        sodium: foodRecordIngredient?.referenceNutrients.sodium,
+        sugars: foodRecordIngredient?.referenceNutrients.sugars,
+        sugarsAdded: foodRecordIngredient?.referenceNutrients.sugarsAdded,
+        sugarAlcohol: foodRecordIngredient?.referenceNutrients.sugarAlcohol,
+        transFat: foodRecordIngredient?.referenceNutrients.transFat,
+        vitaminA: foodRecordIngredient?.referenceNutrients.vitaminA,
+        vitaminB6: foodRecordIngredient?.referenceNutrients.vitaminB6,
+        vitaminB12: foodRecordIngredient?.referenceNutrients.vitaminB12,
+        vitaminB12Added: foodRecordIngredient?.referenceNutrients.vitaminB12Added,
+        vitaminC: foodRecordIngredient?.referenceNutrients.vitaminC,
+        vitaminD: foodRecordIngredient?.referenceNutrients.vitaminD,
+        vitaminE: foodRecordIngredient?.referenceNutrients.vitaminE,
+        vitaminEAdded: foodRecordIngredient?.referenceNutrients.vitaminEAdded,
+        vitaminKDihydrophylloquinone: foodRecordIngredient?.referenceNutrients.vitaminKDihydrophylloquinone,
+        vitaminKMenaquinone4: foodRecordIngredient?.referenceNutrients.vitaminKMenaquinone4,
+        vitaminKPhylloquinone: foodRecordIngredient?.referenceNutrients.vitaminKPhylloquinone,
+        vitaminARAE: foodRecordIngredient?.referenceNutrients.vitaminARAE,
+        zinc: foodRecordIngredient?.referenceNutrients.zinc,
       );
-      FoodRecordIngredient foodRecordIngredient =
-          FoodRecordIngredient.fromNutrientsWithDefaults(nutrients);
-      foodRecordIngredient.initializeFoodRecord(
-        newName: _name,
-        newBarcode: _barcode,
+
+      final ingredient = FoodRecordIngredient.fromCustomData(
+        id: _foodRecord?.id ?? '',
+        nutrients: nutrients,
+        name: _name!,
+        iconId: CustomFoodHelper.generateIconId(),
+        servingUnits: CustomFoodHelper.generateCustomServingUnits(_selectedUnit!, _weight!),
+        servingSizes: [],
         selectedQuantity: _selectedQuantity!,
         selectedUnit: _selectedUnit!,
+        barcode: _barcode,
       );
-      foodRecordIngredient.updateWeight(weight: _weight!);
-      print(foodRecordIngredient);
-      /*if (_name?.isNotNullOrEmpty == true) {
-        updatedFoodRecord = updatedFoodRecord?.updateName(name: _name!);
-      }
-      if (_barcode?.isNotNullOrEmpty == true) {
-        updatedFoodRecord = updatedFoodRecord?.updateBarcode(barcode: _barcode);
-      }*/
+
+      final foodRecord = FoodRecord.fromFoodRecordIngredient(ingredient);
+
+      final results = await Future.wait([
+        customFoodRepository.addFood(foodRecord: foodRecord),
+        customFoodRepository.addFoodImage(
+          id: foodRecord.iconId,
+          image: _imageBytes!,
+        ),
+      ]);
+
+      final userFoodId = results.first as String;
+
+      foodRecord.refCode = '${FoodRecord.userFoodPrefix}$userFoodId';
+
+      await foodLogRepository.addFoodLog(foodRecord: foodRecord);
+
+      emit(const SaveSuccessState());
+    } catch (e) {
+      log(e.toString());
     }
+    // FoodRecord? updatedFoodRecord = _foodRecord?.clone();
+    // if (updatedFoodRecord == null) {
+    // } else {
+    //   FoodRecordIngredient foodRecordIngredient =
+    //       FoodRecordIngredient.fromNutrientsWithDefaults(nutrients);
+    //   foodRecordIngredient.initializeFoodRecord(
+    //       newName: _name,
+    //       newBarcode: _barcode,
+    //       selectedQuantity: _selectedQuantity!,
+    //       selectedUnit: _selectedUnit!,
+    //       newServingUnits: updatedFoodRecord.servingUnits);
+    //   foodRecordIngredient =
+    //       foodRecordIngredient.updateWeight(weight: _weight!);
+    //   updatedFoodRecord =
+    //       FoodRecord.fromFoodRecordIngredient(foodRecordIngredient);
+    //   print(updatedFoodRecord);
+    //   /*if (_name?.isNotNullOrEmpty == true) {
+    //     updatedFoodRecord = updatedFoodRecord?.updateName(name: _name!);
+    //   }
+    //   if (_barcode?.isNotNullOrEmpty == true) {
+    //     updatedFoodRecord = updatedFoodRecord?.updateBarcode(barcode: _barcode);
+    //   }*/
+    // }
   }
 }

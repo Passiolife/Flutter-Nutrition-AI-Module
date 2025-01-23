@@ -105,6 +105,7 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
               context: context,
               title: context.localization.carbs ?? '',
               controller: _carbsController,
+              unit: context.localization.g,
               onFieldSubmitted: (_) {
                 // widget.onChange.call(
                 //   double.tryParse(_caloriesController.text),
@@ -118,6 +119,7 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
               context: context,
               title: context.localization.protein ?? '',
               controller: _proteinController,
+              unit: context.localization.g,
               onFieldSubmitted: (_) {
                 // widget.onChange.call(
                 //   double.tryParse(_caloriesController.text),
@@ -131,6 +133,7 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
               context: context,
               title: context.localization.fat ?? '',
               controller: _fatController,
+              unit: context.localization.g,
               onFieldSubmitted: (_) {
                 // widget.onChange.call(
                 //   double.tryParse(_caloriesController.text),
@@ -154,41 +157,24 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
     Function(String)? onFieldSubmitted,
   }) {
     return Expanded(
-      child: Column(
-        spacing: 8.w,
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            title,
-            style: AppTextStyle.textSm.addAll(
-                [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
-              color: context.textThemeColors.brandTextLight,
-            ),
-          ),
-          NumberTextInput(
-            isDense: true,
-            hintText: '-',
-            contentPadding: AppPadding.pv8,
-            textAlign: TextAlign.center,
-            controller: controller,
-            errorStyle: TextStyle(height: 0.01),
-            autoValidateMode: AutovalidateMode.onUserInteraction,
-            validator: (value) {
-              return value.isNotNullOrEmpty ? null : '';
-            },
-            inputFormatters: [
-              const SingleDecimalFormatter(),
-            ],
-            onFieldSubmitted: onFieldSubmitted,
-            // suffix: Text(
-            //   unit ?? '',
-            //   style: AppTextStyle.textSm.addAll(
-            //       [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
-            //     color: context.textThemeColors.brandTextLight,
-            //   ),
-            // ),
-          ),
+      child: NumberTextInput(
+        isDense: true,
+        labelText: title,
+        labelAlignment: Alignment.center,
+        hintText: '-',
+        contentPadding: AppPadding.pv8 + AppPadding.ph8,
+        textAlign: TextAlign.center,
+        controller: controller,
+        errorStyle: TextStyle(height: 0.01),
+        autoValidateMode: AutovalidateMode.onUserInteraction,
+        validator: (value) {
+          return value.isNotNullOrEmpty ? null : '';
+        },
+        inputFormatters: [
+          const SingleDecimalFormatter(),
         ],
+        onFieldSubmitted: onFieldSubmitted,
+        suffixText: unit ?? '',
       ),
     );
   }

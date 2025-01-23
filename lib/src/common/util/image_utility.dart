@@ -4,6 +4,8 @@ import 'dart:typed_data';
 
 import 'package:image/image.dart' as img;
 
+import 'isolate_utility.dart';
+
 abstract class ImageUtility {
   /// Resizes an image file and returns the resized image as a new file.
   Future<File> resize(File file, {int width = 150, int height = 150});
@@ -23,6 +25,8 @@ class ImageUtilityImpl implements ImageUtility {
     }
 
     String filePath = file.path;
+
+    // final isolateUtility = IsolateUtility();
 
     // Prepare data for the isolate
     final receivePort = ReceivePort();

@@ -46,7 +46,7 @@ class ResultWidget extends StatelessWidget {
             children: [
               Expanded(
                 child: AppButton(
-                  buttonText: context.localization?.edit,
+                  buttonText: context.localization.edit,
                   appButtonModel: AppButtonStyles.primaryBordered,
                   onTap: onEdit,
                 ),
@@ -54,7 +54,7 @@ class ResultWidget extends StatelessWidget {
               16.horizontalSpace,
               Expanded(
                 child: AppButton(
-                  buttonText: context.localization?.log,
+                  buttonText: context.localization.log,
                   appButtonModel: AppButtonStyles.primary,
                   onTap: onLog,
                 ),

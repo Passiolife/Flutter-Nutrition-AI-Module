@@ -10,9 +10,9 @@ import '../../../../common/router/routes.dart';
 import '../../../../common/extension/context_extension.dart';
 import '../../../../common/util/snackbar_extension.dart';
 import '../../../../common/extension/string_extensions.dart';
+import '../../../barcode_scanner/barcode_scanner_page.dart';
 import '../../../dashboard/dashboard_page.dart';
 import '../../my_foods_page.dart';
-import 'barcode_scanner/barcode_scanner_page.dart';
 import 'bloc/food_creator_bloc.dart';
 import 'view_models/food_creator_view_model.dart';
 import 'view_models/nutrient_view_model.dart';
@@ -252,8 +252,20 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
   }
 
   Future<void> _onTapBarcode() async {
-    final barcode = await BarcodeScannerPage.navigate(context: context);
-    _bloc.add(DoUpdateBarcodeEvent(barcode: barcode));
+    final navigationResult = await BarcodeScannerPage.navigate(context: context);
+    if(navigationResult == null) {
+      return;
+    }
+    if(navigationResult is String) {
+      _bloc.add(DoUpdateBarcodeEvent(barcode: navigationResult));
+    } else if(navigationResult is FoodRecord?) {
+      _bloc.add(DoConversionEvent(
+        loggedFoodRecord: widget.loggedFoodRecord,
+        userFoodRecord: navigationResult,
+        nutritionFacts: widget.nutritionFacts,
+        logUponCreate: widget.logUponCreate,
+      ));
+    }
   }
 
   void _handleStateChanges(BuildContext context, FoodCreatorState state) {
