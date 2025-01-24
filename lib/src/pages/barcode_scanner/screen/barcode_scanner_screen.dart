@@ -115,7 +115,7 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
         return CustomFoodAlreadyExistsWidget(
           onNegativeButtonTap: () {
             Navigator.pop(dContext);
-            _startScanning();
+            Navigator.pop(context);
           },
           onPositiveButtonTap: () async {
             Navigator.pop(dContext);
@@ -149,7 +149,7 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
         return BarcodeInSystemWidget(
           onNegativeButtonTap: () {
             Navigator.pop(dContext);
-            _startScanning();
+            Navigator.pop(context);
           },
           onPositiveButtonTap: () async {
             Navigator.pop(dContext);

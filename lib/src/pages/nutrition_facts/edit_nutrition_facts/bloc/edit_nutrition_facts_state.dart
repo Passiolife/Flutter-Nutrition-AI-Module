@@ -11,8 +11,8 @@ final class EditNutritionFactsInitial extends EditNutritionFactsState {
   List<Object> get props => [];
 }
 
-final class UpdateDetailsState extends EditNutritionFactsState {
-  const UpdateDetailsState({
+final class RefreshDetailsState extends EditNutritionFactsState {
+  const RefreshDetailsState({
     this.iconId,
     this.barcode,
     this.name,
@@ -28,8 +28,8 @@ final class UpdateDetailsState extends EditNutritionFactsState {
   List<Object?> get props => [iconId, barcode, name, imageBytes];
 }
 
-final class UpdateNutritionFactsState extends EditNutritionFactsState {
-  const UpdateNutritionFactsState({
+final class RefreshNutritionFactsState extends EditNutritionFactsState {
+  const RefreshNutritionFactsState({
     this.calories,
     this.carbs,
     this.protein,
@@ -45,8 +45,8 @@ final class UpdateNutritionFactsState extends EditNutritionFactsState {
   List<Object?> get props => [calories, carbs, protein, fat];
 }
 
-final class UpdatePortionsState extends EditNutritionFactsState {
-  const UpdatePortionsState({
+final class RefreshPortionsState extends EditNutritionFactsState {
+  const RefreshPortionsState({
     this.selectedQuantity,
     this.selectedUnit,
     this.units,

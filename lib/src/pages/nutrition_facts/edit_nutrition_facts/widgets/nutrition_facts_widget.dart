@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/extension/context_extension.dart';
+import '../../../../common/extension/number_extension.dart';
 import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/formatter/single_decimal_formatter.dart';
 import '../../../../common/widgets/text_input/number_text_input.dart';
@@ -40,12 +41,14 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
     _carbsController = TextEditingController(text: widget.initialCarbs);
     _proteinController = TextEditingController(text: widget.initialProtein);
     _fatController = TextEditingController(text: widget.initialFat);
+    _setListener();
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant NutritionFactsWidget oldWidget) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      _removeListener();
       if (oldWidget.initialCalories != widget.initialCalories) {
         _caloriesController.text = widget.initialCalories ?? '';
       }
@@ -58,9 +61,23 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
       if (oldWidget.initialFat != widget.initialFat) {
         _fatController.text = widget.initialFat ?? '';
       }
+      _setListener();
     });
-
     super.didUpdateWidget(oldWidget);
+  }
+
+  void _setListener() {
+    _caloriesController.addListener(_onFieldSubmitted);
+    _carbsController.addListener(_onFieldSubmitted);
+    _proteinController.addListener(_onFieldSubmitted);
+    _fatController.addListener(_onFieldSubmitted);
+  }
+
+  void _removeListener() {
+    _caloriesController.removeListener(_setListener);
+    _carbsController.removeListener(_setListener);
+    _proteinController.removeListener(_setListener);
+    _fatController.removeListener(_setListener);
   }
 
   @override
@@ -92,27 +109,17 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
               title: context.localization.calories ?? '',
               controller: _caloriesController,
               unit: context.localization.cal,
-              // onFieldSubmitted: (_) {
-              //   widget.onChange.call(
-              //     double.tryParse(_caloriesController.text),
-              //     double.tryParse(_carbsController.text),
-              //     double.tryParse(_proteinController.text),
-              //     double.tryParse(_fatController.text),
-              //   );
-              // },
+              onFieldSubmitted: (value) {
+                _onFieldSubmitted();
+              },
             ),
             _buildField(
               context: context,
               title: context.localization.carbs ?? '',
               controller: _carbsController,
               unit: context.localization.g,
-              onFieldSubmitted: (_) {
-                // widget.onChange.call(
-                //   double.tryParse(_caloriesController.text),
-                //   double.tryParse(_carbsController.text),
-                //   double.tryParse(_proteinController.text),
-                //   double.tryParse(_fatController.text),
-                // );
+              onFieldSubmitted: (value) {
+                _onFieldSubmitted();
               },
             ),
             _buildField(
@@ -120,13 +127,8 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
               title: context.localization.protein ?? '',
               controller: _proteinController,
               unit: context.localization.g,
-              onFieldSubmitted: (_) {
-                // widget.onChange.call(
-                //   double.tryParse(_caloriesController.text),
-                //   double.tryParse(_carbsController.text),
-                //   double.tryParse(_proteinController.text),
-                //   double.tryParse(_fatController.text),
-                // );
+              onFieldSubmitted: (value) {
+                _onFieldSubmitted();
               },
             ),
             _buildField(
@@ -134,18 +136,22 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
               title: context.localization.fat ?? '',
               controller: _fatController,
               unit: context.localization.g,
-              onFieldSubmitted: (_) {
-                // widget.onChange.call(
-                //   double.tryParse(_caloriesController.text),
-                //   double.tryParse(_carbsController.text),
-                //   double.tryParse(_proteinController.text),
-                //   double.tryParse(_fatController.text),
-                // );
+              onFieldSubmitted: (value) {
+                _onFieldSubmitted();
               },
             ),
           ],
         ),
       ],
+    );
+  }
+
+  void _onFieldSubmitted() {
+    widget.onChange?.call(
+      (_caloriesController.text).localeFormatted(),
+      (_carbsController.text).localeFormatted(),
+      (_proteinController.text).localeFormatted(),
+      (_fatController.text).localeFormatted(),
     );
   }
 

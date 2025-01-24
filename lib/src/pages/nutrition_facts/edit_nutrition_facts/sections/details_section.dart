@@ -16,18 +16,16 @@ class DetailsSection extends StatefulWidget {
 
 class _DetailsSectionState extends State<DetailsSection> {
 
-
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditNutritionFactsBloc, EditNutritionFactsState>(
-      buildWhen: (previous, current) => current is UpdateDetailsState,
+      buildWhen: (previous, current) => current is RefreshDetailsState,
       builder: (context, state) {
         String? iconId;
         String? name;
         String? barcode;
         Uint8List? imageBytes;
-        if (state is UpdateDetailsState) {
+        if (state is RefreshDetailsState) {
           iconId = state.iconId;
           name = state.name;
           barcode = state.barcode;

@@ -205,3 +205,10 @@ final class DoNextNutritionFactsEvent extends FoodScanEvent {
   @override
   List<Object?> get props => [nutritionFacts];
 }
+
+final class DoToggleFlashEvent extends FoodScanEvent {
+  const DoToggleFlashEvent();
+
+  @override
+  List<Object?> get props => [];
+}

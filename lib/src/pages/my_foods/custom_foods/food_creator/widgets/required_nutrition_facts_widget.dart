@@ -6,10 +6,11 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/dialogs/ok_button_with_keyboard.dart';
-import '../../../../../common/extension/number_extension.dart';
 import '../../../../../common/extension/context_extension.dart';
-import '../../../../../common/util/double_extensions.dart';
+import '../../../../../common/extension/null_safety_extension.dart';
+import '../../../../../common/extension/number_extension.dart';
 import '../../../../../common/extension/string_extensions.dart';
+import '../../../../../common/util/double_extensions.dart';
 import '../../../../../common/util/text_input_formatter_util.dart';
 import '../../../../../common/widgets/app_drop_down_menu.dart';
 import '../../../../../common/widgets/app_text_field.dart';
@@ -231,37 +232,39 @@ class _FormWidgetState extends State<_FormWidget> {
   final _proteinFocusNode = FocusNode();
 
   void _handleOnChange() {
+    double? calories = _caloriesController.text.localeFormatted(places: 2);
+    double? fat = _fatController.text.localeFormatted(places: 2);
+    double? carbs = _carbsController.text.localeFormatted(places: 2);
+    double? proteins = _carbsController.text.localeFormatted(places: 2);
     widget.onChange?.call(
-      // double.tryParse(_servingQuantityController.text)?.parseFormatted(places: 2),
       _servingQuantityController.text.localeFormatted(places: 2),
       _selectedUnit,
-      // double.tryParse(_weightController.text)?.parseFormatted(places: 2),
       _weightController.text.localeFormatted(places: 2),
       _selectedWeightSymbol.value,
-      _caloriesController.text.localeFormatted(places: 2, callback: (value) {
-        return UnitEnergy(
+      calories.let(
+        (value) => UnitEnergy(
           value,
           UnitEnergyType.kilocalories,
-        );
-      }),
-      _fatController.text.localeFormatted(places: 2, callback: (value) {
-        return UnitMass(
+        ),
+      ),
+      fat.let(
+        (value) => UnitMass(
           value,
           UnitMassType.grams,
-        );
-      }),
-        _carbsController.text.localeFormatted(places: 2, callback: (value) {
-          return UnitMass(
-            value,
-            UnitMassType.grams,
-          );
-        }),
-      _proteinController.text.localeFormatted(places: 2, callback: (value) {
-        return UnitMass(
+        ),
+      ),
+      carbs.let(
+        (value) => UnitMass(
           value,
           UnitMassType.grams,
-        );
-      }),
+        ),
+      ),
+      proteins.let(
+        (value) => UnitMass(
+          value,
+          UnitMassType.grams,
+        ),
+      ),
     );
   }
 
@@ -391,8 +394,8 @@ class _FormWidgetState extends State<_FormWidget> {
                       valueListenable: _selectedWeightSymbol,
                       builder: (context, value, child) {
                         return _NutritionFactField(
-                          title: context.localization.weight.toUpperCaseWord ??
-                              '',
+                          title:
+                              context.localization.weight.toUpperCaseWord ?? '',
                           inputType: const TextInputType.numberWithOptions(
                               decimal: true),
                           focusNode: _weightFocusNode,

@@ -258,7 +258,7 @@ class _ServingSizeWidgetState extends State<ServingSizeWidget> {
   void _handleOkButtonTap() {
     context.hideKeyboard();
     if (_quantityController.text.isNotEmpty) {
-      double quantity = _quantityController.text.localeFormatted(places: 2);
+      double quantity = _quantityController.text.localeFormatted(places: 2) ?? 0;
       _selectedQuantity = (quantity > 0) ? quantity : FoodRecord.zeroQuantity;
       widget.listener?.onServingQuantityChanged(
         _selectedQuantity,

@@ -5,6 +5,8 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 import '../../domain/repository/nutrition_ai_repository.dart';
 
 class NutritionAIRepositoryImpl extends NutritionAIRepository {
+  const NutritionAIRepositoryImpl();
+
   @override
   Future<List<PassioAdvisorFoodInfo>> recognizeImage(Uint8List image,
       {PassioImageResolution resolution = PassioImageResolution.res_512,
@@ -54,7 +56,20 @@ class NutritionAIRepositoryImpl extends NutritionAIRepository {
   }
 
   @override
-  Future<PassioFoodItem?> recognizeNutritionFacts(Uint8List bytes, {PassioImageResolution resolution = PassioImageResolution.res_1080}) {
-    return NutritionAI.instance.recognizeNutritionFactsRemote(bytes, resolution: resolution);
+  Future<PassioFoodItem?> recognizeNutritionFacts(Uint8List bytes,
+      {PassioImageResolution resolution = PassioImageResolution.res_1080}) {
+    return NutritionAI.instance
+        .recognizeNutritionFactsRemote(bytes, resolution: resolution);
+  }
+
+  @override
+  Future<void> enableFlashlight(bool enabled) async {
+    return NutritionAI.instance.enableFlashlight(enabled: enabled);
+  }
+
+  @override
+  Future<PassioFoodItem?> fetchFoodItemForProductCode(
+      String productCode) async {
+    return await NutritionAI.instance.fetchFoodItemForProductCode(productCode);
   }
 }

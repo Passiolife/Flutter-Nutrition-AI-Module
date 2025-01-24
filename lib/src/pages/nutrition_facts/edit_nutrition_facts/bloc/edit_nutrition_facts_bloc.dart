@@ -46,11 +46,16 @@ class EditNutritionFactsBloc
     required this.customFoodRepository,
   }) : super(const EditNutritionFactsInitial()) {
     on<ProcessEvent>(_handleProcessEvent);
-    on<UpdateDetailsEvent>(_handleUpdateDetailsEvent);
-    on<UpdateNutritionFactsEvent>(_handleUpdateNutritionFactsEvent);
-    on<UpdatePortionsEvent>(_handleUpdatePortionsEvent);
+
+    on<RefreshDetailsEvent>(_handleRefreshDetailsEvent);
+    on<RefreshNutritionFactsEvent>(_handleRefreshNutritionFactsEvent);
+    on<RefreshPortionsEvent>(_handleRefreshPortionsEvent);
+
     on<UpdateNameEvent>(_handleUpdateNameEvent);
     on<UpdateBarcodeEvent>(_handleUpdateBarcodeEvent);
+    on<UpdateNutritionFactsEvent>(_handleUpdateNutritionFactsEvent);
+    on<UpdatePortionsEvent>(_handleUpdatePortionsEvent);
+
     on<SaveEvent>(_handleSaveEvent);
   }
 
@@ -77,14 +82,14 @@ class EditNutritionFactsBloc
         .map((e) => e.unitName));
     _weight = _foodRecord?.computedWeight.value;
 
-    add(const UpdateDetailsEvent());
-    add(const UpdateNutritionFactsEvent());
-    add(UpdatePortionsEvent());
+    add(const RefreshDetailsEvent());
+    add(const RefreshNutritionFactsEvent());
+    add(const RefreshPortionsEvent());
   }
 
-  void _handleUpdateDetailsEvent(
-      UpdateDetailsEvent event, Emitter<EditNutritionFactsState> emit) async {
-    emit(UpdateDetailsState(
+  void _handleRefreshDetailsEvent(
+      RefreshDetailsEvent event, Emitter<EditNutritionFactsState> emit) async {
+    emit(RefreshDetailsState(
       iconId: _iconId,
       barcode: _barcode,
       name: _name,
@@ -92,9 +97,9 @@ class EditNutritionFactsBloc
     ));
   }
 
-  void _handleUpdateNutritionFactsEvent(
-      UpdateNutritionFactsEvent event, Emitter<EditNutritionFactsState> emit) {
-    emit(UpdateNutritionFactsState(
+  void _handleRefreshNutritionFactsEvent(
+      RefreshNutritionFactsEvent event, Emitter<EditNutritionFactsState> emit) {
+    emit(RefreshNutritionFactsState(
       calories: _calories?.let((it) => it.format(places: 2)) ?? '',
       carbs: _carbs?.let((it) => it.format(places: 2)) ?? '',
       protein: _protein?.let((it) => it.format(places: 2)) ?? '',
@@ -102,15 +107,44 @@ class EditNutritionFactsBloc
     ));
   }
 
-  void _handleUpdatePortionsEvent(
-      UpdatePortionsEvent event, Emitter<EditNutritionFactsState> emit) {
-    emit(UpdatePortionsState(
+  void _handleUpdateNutritionFactsEvent(
+      UpdateNutritionFactsEvent event, Emitter<EditNutritionFactsState> emit) {
+    if (event.calories != null) {
+      _calories = event.calories;
+    }
+    if (event.carbs != null) {
+      _carbs = event.carbs;
+    }
+    if (event.protein != null) {
+      _protein = event.protein;
+    }
+    if (event.fat != null) {
+      _fat = event.fat;
+    }
+  }
+
+  void _handleRefreshPortionsEvent(
+      RefreshPortionsEvent event, Emitter<EditNutritionFactsState> emit) {
+    emit(RefreshPortionsState(
       selectedQuantity:
           _selectedQuantity?.let((it) => it.format(places: 2)) ?? '',
       selectedUnit: _selectedUnit,
       units: _units,
       weight: _weight?.let((it) => it.format(places: 2)) ?? '',
     ));
+  }
+
+  void _handleUpdatePortionsEvent(
+      UpdatePortionsEvent event, Emitter<EditNutritionFactsState> emit) {
+    if (event.quantity != null) {
+      _selectedQuantity = event.quantity;
+    }
+    if (event.unit != null) {
+      _selectedUnit = event.unit;
+    }
+    if (event.weight != null) {
+      _weight = event.weight;
+    }
   }
 
   void _handleUpdateNameEvent(
@@ -121,7 +155,7 @@ class EditNutritionFactsBloc
   void _handleUpdateBarcodeEvent(
       UpdateBarcodeEvent event, Emitter<EditNutritionFactsState> emit) async {
     _barcode = event.barcode;
-    add(UpdateDetailsEvent());
+    add(const RefreshDetailsEvent());
   }
 
   void _handleSaveEvent(
@@ -134,6 +168,8 @@ class EditNutritionFactsBloc
       final proteins = UnitMass(_protein!, UnitMassType.grams);
       final fat = UnitMass(_fat!, UnitMassType.grams);
       final weight = UnitMass(_weight!, UnitMassType.grams);
+
+      return;
 
       final nutrients = PassioNutrients.fromNutrients(
         weight: weight,
@@ -149,9 +185,11 @@ class EditNutritionFactsBloc
         iodine: foodRecordIngredient?.referenceNutrients.iodine,
         iron: foodRecordIngredient?.referenceNutrients.iron,
         magnesium: foodRecordIngredient?.referenceNutrients.magnesium,
-        monounsaturatedFat: foodRecordIngredient?.referenceNutrients.monounsaturatedFat,
+        monounsaturatedFat:
+            foodRecordIngredient?.referenceNutrients.monounsaturatedFat,
         phosphorus: foodRecordIngredient?.referenceNutrients.phosphorus,
-        polyunsaturatedFat: foodRecordIngredient?.referenceNutrients.polyunsaturatedFat,
+        polyunsaturatedFat:
+            foodRecordIngredient?.referenceNutrients.polyunsaturatedFat,
         potassium: foodRecordIngredient?.referenceNutrients.potassium,
         proteins: proteins,
         satFat: foodRecordIngredient?.referenceNutrients.satFat,
@@ -164,14 +202,18 @@ class EditNutritionFactsBloc
         vitaminA: foodRecordIngredient?.referenceNutrients.vitaminA,
         vitaminB6: foodRecordIngredient?.referenceNutrients.vitaminB6,
         vitaminB12: foodRecordIngredient?.referenceNutrients.vitaminB12,
-        vitaminB12Added: foodRecordIngredient?.referenceNutrients.vitaminB12Added,
+        vitaminB12Added:
+            foodRecordIngredient?.referenceNutrients.vitaminB12Added,
         vitaminC: foodRecordIngredient?.referenceNutrients.vitaminC,
         vitaminD: foodRecordIngredient?.referenceNutrients.vitaminD,
         vitaminE: foodRecordIngredient?.referenceNutrients.vitaminE,
         vitaminEAdded: foodRecordIngredient?.referenceNutrients.vitaminEAdded,
-        vitaminKDihydrophylloquinone: foodRecordIngredient?.referenceNutrients.vitaminKDihydrophylloquinone,
-        vitaminKMenaquinone4: foodRecordIngredient?.referenceNutrients.vitaminKMenaquinone4,
-        vitaminKPhylloquinone: foodRecordIngredient?.referenceNutrients.vitaminKPhylloquinone,
+        vitaminKDihydrophylloquinone: foodRecordIngredient
+            ?.referenceNutrients.vitaminKDihydrophylloquinone,
+        vitaminKMenaquinone4:
+            foodRecordIngredient?.referenceNutrients.vitaminKMenaquinone4,
+        vitaminKPhylloquinone:
+            foodRecordIngredient?.referenceNutrients.vitaminKPhylloquinone,
         vitaminARAE: foodRecordIngredient?.referenceNutrients.vitaminARAE,
         zinc: foodRecordIngredient?.referenceNutrients.zinc,
       );
@@ -181,7 +223,8 @@ class EditNutritionFactsBloc
         nutrients: nutrients,
         name: _name!,
         iconId: CustomFoodHelper.generateIconId(),
-        servingUnits: CustomFoodHelper.generateCustomServingUnits(_selectedUnit!, _weight!),
+        servingUnits: CustomFoodHelper.generateCustomServingUnits(
+            _selectedUnit!, _weight!),
         servingSizes: [],
         selectedQuantity: _selectedQuantity!,
         selectedUnit: _selectedUnit!,

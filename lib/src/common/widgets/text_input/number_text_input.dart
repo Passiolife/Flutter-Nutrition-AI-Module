@@ -181,7 +181,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
 
   void _setAndUpdateText(String value) {
     if (value.isNotEmpty) {
-      final formatted = value.localeFormatted<double?>();
+      double? formatted = value.localeFormatted();
       if (formatted == null) return;
       _controller.text = formatted.format();
       _onFieldSubmitted?.call(formatted.format());
@@ -201,7 +201,6 @@ class _NumberTextInputState extends State<NumberTextInput> {
                 color: context.textThemeColors.brandTextDark,
               ),
           onFieldSubmitted: _setAndUpdateText,
-          onTapOutside: (_) {},
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,
           readOnly: widget.readOnly,

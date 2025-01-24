@@ -35,16 +35,13 @@ extension DoubleExtension on num? {
 }
 
 extension StringNumberExtension on String? {
-  T? localeFormatted<T>(
-      {String? locale, int places = 1, T Function(double)? callback}) {
+  double? localeFormatted({String? locale, int places = 1}) {
     if (this == null || (this?.isEmpty ?? false)) return null;
-    String updatedLocale = locale ?? ((this?.contains(',') ?? false) ? 'de_DE' : 'en_US');
+    String updatedLocale =
+        locale ?? ((this?.contains(',') ?? false) ? 'de_DE' : 'en_US');
     final formattedNumber = NumberFormat.decimalPattern(updatedLocale)
         .tryParse(this ?? '')
         .parseFormatted(places: places);
-    if (callback == null) {
-      return formattedNumber as T?;
-    }
-    return callback.call(formattedNumber);
+    return formattedNumber;
   }
 }

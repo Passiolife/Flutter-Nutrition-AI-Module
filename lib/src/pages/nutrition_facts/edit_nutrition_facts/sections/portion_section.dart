@@ -1,24 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../common/util/double_extensions.dart';
 import '../bloc/edit_nutrition_facts_bloc.dart';
 import '../widgets/portion_widget.dart';
 
-class PortionSection extends StatefulWidget {
+class PortionSection extends StatelessWidget {
   const PortionSection({super.key});
-
-  @override
-  State<PortionSection> createState() => _PortionSectionState();
-}
-
-class _PortionSectionState extends State<PortionSection> {
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditNutritionFactsBloc, EditNutritionFactsState>(
       buildWhen: (_, state) {
-        return state is UpdatePortionsState;
+        return state is RefreshPortionsState;
       },
       builder: (context, state) {
         String? selectedQuantity;
@@ -26,12 +19,10 @@ class _PortionSectionState extends State<PortionSection> {
         String? weight;
         List<String> units = [];
 
-        if (state is UpdatePortionsState) {
+        if (state is RefreshPortionsState) {
           selectedQuantity = state.selectedQuantity;
           selectedUnit = state.selectedUnit;
           weight = state.weight;
-          // _servingController.text = state.selectedQuantity.format();
-          // _weightController.text = state.weight?.value.format() ?? '';
           selectedUnit = state.selectedUnit ?? '';
           units = state.units ?? [];
         }
@@ -40,12 +31,24 @@ class _PortionSectionState extends State<PortionSection> {
           initialSelectedUnit: selectedUnit,
           initialWeight: weight,
           units: units,
-          // servingController: _servingController,
-          // weightController: _weightController,
-          // units: _units,
-          // selectedUnit: _selectedUnit,
+          onChange: (quantity, unit, weight) => _onChange(context: context, quantity: quantity, unit: unit, weight: weight),
         );
       },
     );
+  }
+
+  void _onChange({
+    required BuildContext context,
+    required double? quantity,
+    required String? unit,
+    required double? weight,
+  }) {
+    context.read<EditNutritionFactsBloc>().add(
+          UpdatePortionsEvent(
+            quantity: quantity,
+            weight: weight,
+            unit: unit,
+          ),
+        );
   }
 }

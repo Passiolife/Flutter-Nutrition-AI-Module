@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../nutrition_ai_module.dart';
 import '../../../common/domain/repository/custom_food_repository.dart';
 import '../../../common/domain/repository/food_log_repositoy.dart';
+import '../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../common/extension/passio/passio_nutrition_facts_extension.dart';
 import '../../../common/models/settings/settings.dart';
 
@@ -16,6 +17,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     implements FoodRecognitionListener, NutritionFactsRecognitionListener {
   CustomFoodRepository customFoodRepository;
   FoodLogRepository foodLogRepository;
+  NutritionAIRepository nutritionRepository;
 
   // /// [_connector] is use to perform operations.
   // PassioConnector get _connector =>
@@ -26,6 +28,8 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
   int? _currentMode;
 
   PassioNutritionFacts? _nutritionFacts;
+
+  bool _enableFlashlight = false;
 
   // Camera Zoom Members
   double _currentZoom = 1;
@@ -57,8 +61,11 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     ));
   }
 
-  FoodScanBloc({required this.foodLogRepository, required this.customFoodRepository})
-      : super(const FoodScanInitial()) {
+  FoodScanBloc({
+    required this.nutritionRepository,
+    required this.foodLogRepository,
+    required this.customFoodRepository,
+  }) : super(const FoodScanInitial()) {
     // Intro Dialog events
     on<IntroScreenEvent>(_handleIntroScreenEvent);
     on<IntroScreenCompleteEvent>(_handleIntroScreenCompleteEvent);
@@ -75,6 +82,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
     // Camera Zoom Events
     on<GetCameraZoomLevelEvent>(_handleGetCameraZoomLevelEvent);
     on<DoUpdateCameraZoomLevelEvent>(_handleDoUpdateCameraZoomLevelEvent);
+    on<DoToggleFlashEvent>(_handleDoToggleFlashEvent);
 
     // Scan dialog event
     on<ScanResultDragEvent>(_handleScanResultDragEvent);
@@ -164,7 +172,7 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
         foodRecord = await customFoodRepository.fetchFoodByBarcode(
             barcode: barcodeCandidates!.first.value);
         if (foodRecord == null) {
-          foodItem = await NutritionAI.instance
+          foodItem = await nutritionRepository
               .fetchFoodItemForProductCode(barcodeCandidates.first.value);
           if (foodItem == null) {
             add(StopFoodDetectionEvent());
@@ -308,8 +316,11 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
       DoUpdateCameraZoomLevelEvent event, Emitter<FoodScanState> emit) {
     _currentZoom = event.zoomLevel;
     NutritionAI.instance.setCameraZoomLevel(zoomLevel: _currentZoom);
-    emit(UpdatedCameraZoomStateNew(
-        currentZoom: _currentZoom, minZoom: _minZoom, maxZoom: _maxZoom));
+    emit(UpdatedCameraControlStateNew(
+        currentZoom: _currentZoom,
+        minZoom: _minZoom,
+        maxZoom: _maxZoom,
+        enabledFlashlight: _enableFlashlight));
   }
 
   Future<void> _handleGetCameraZoomLevelEvent(
@@ -345,5 +356,16 @@ class FoodScanBloc extends Bloc<FoodScanEvent, FoodScanState>
       ClearNutritionFactsEvent event, Emitter<FoodScanState> emit) {
     _nutritionFacts = null;
     emit(ScanLoadingState());
+  }
+
+  Future<void> _handleDoToggleFlashEvent(
+      DoToggleFlashEvent event, Emitter<FoodScanState> emit) async {
+    _enableFlashlight = !_enableFlashlight;
+    await nutritionRepository.enableFlashlight(_enableFlashlight);
+    emit(UpdatedCameraControlStateNew(
+        currentZoom: _currentZoom,
+        minZoom: _minZoom,
+        maxZoom: _maxZoom,
+        enabledFlashlight: _enableFlashlight));
   }
 }

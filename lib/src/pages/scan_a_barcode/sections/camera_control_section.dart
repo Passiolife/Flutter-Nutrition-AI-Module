@@ -13,16 +13,18 @@ class CameraControlSection extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FoodScanBloc, FoodScanState>(
       buildWhen: (_, state) {
-        return state is FoodScanInitial || state is UpdatedCameraZoomStateNew;
+        return state is FoodScanInitial || state is UpdatedCameraControlStateNew;
       },
       builder: (context, state) {
         double currentZoom = 1;
         double minZoom = 1;
         double maxZoom = 1;
-        if (state is UpdatedCameraZoomStateNew) {
+        bool enabledFlashlight = false;
+        if (state is UpdatedCameraControlStateNew) {
           currentZoom = state.currentZoom;
           minZoom = state.minZoom;
           maxZoom = state.maxZoom;
+          enabledFlashlight = state.enabledFlashlight;
         }
         return Positioned(
           top: 414.h,
@@ -35,7 +37,7 @@ class CameraControlSection extends StatelessWidget {
             onChanged: (value) => _onChanged(context: context, value: value),
             isFocusOn: false,
             onChangeFocus: () => _onChangeFocus(context: context),
-            isFlashOn: false,
+            isFlashOn: enabledFlashlight,
             onChangeFlash: () => _onChangeFlash(context: context),
           ),
         );
@@ -54,7 +56,7 @@ class CameraControlSection extends StatelessWidget {
   }
 
   void _onChangeFlash({required BuildContext context}) {
-    context.showSnackbar(text: 'Work is in progress.');
+    context.read<FoodScanBloc>().add(const DoToggleFlashEvent());
   }
 
 }

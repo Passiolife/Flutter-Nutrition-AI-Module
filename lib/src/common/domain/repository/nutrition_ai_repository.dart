@@ -3,6 +3,8 @@ import 'dart:typed_data';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 abstract class NutritionAIRepository {
+  const NutritionAIRepository();
+
   Future<List<PassioAdvisorFoodInfo>> recognizeImage(Uint8List image,
       {PassioImageResolution resolution = PassioImageResolution.res_512,
         String? message});
@@ -23,4 +25,8 @@ abstract class NutritionAIRepository {
   Future<PassioFoodItem?> recognizeNutritionFacts(Uint8List bytes,
       {PassioImageResolution resolution =
           PassioImageResolution.res_1080});
+
+  Future<void> enableFlashlight(bool enabled);
+
+  Future<PassioFoodItem?> fetchFoodItemForProductCode(String productCode);
 }

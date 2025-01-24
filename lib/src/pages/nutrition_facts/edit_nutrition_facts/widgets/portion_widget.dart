@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../common/constant/app_constants.dart';
 import '../../../../common/extension/context_extension.dart';
+import '../../../../common/extension/number_extension.dart';
 import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/models/key_value_model.dart';
 import '../../../../common/widgets/drop_down/secondary_dropdown.dart';
@@ -11,23 +12,20 @@ import '../../../../common/widgets/text_input/number_text_input.dart';
 
 class PortionWidget extends StatefulWidget {
   const PortionWidget({
-    // this.servingController,
-    // this.weightController,
     this.initialSelectedQuantity,
     this.initialSelectedUnit,
     this.units = const [],
     this.initialWeight,
+    this.onChange,
     super.key,
   });
 
   final String? initialSelectedQuantity;
   final String? initialSelectedUnit;
   final List<String> units;
-
-  // final TextEditingController? servingController;
-  // final TextEditingController? weightController;
-
   final String? initialWeight;
+
+  final Function(double? quantity, String unit, double? weight)? onChange;
 
   @override
   State<PortionWidget> createState() => _PortionWidgetState();
@@ -36,26 +34,67 @@ class PortionWidget extends StatefulWidget {
 class _PortionWidgetState extends State<PortionWidget> {
   late TextEditingController _servingController;
   late TextEditingController _weightController;
+  late String _unit = widget.initialSelectedUnit ?? '';
+
+  bool _shouldVisibleWeightField = true;
 
   @override
   void initState() {
     _servingController =
         TextEditingController(text: widget.initialSelectedQuantity);
     _weightController = TextEditingController(text: widget.initialWeight);
+
+    _setListener();
     super.initState();
   }
 
   @override
   void didUpdateWidget(covariant PortionWidget oldWidget) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
+      _removeListener();
       if (oldWidget.initialSelectedQuantity != widget.initialSelectedQuantity) {
         _servingController.text = widget.initialSelectedQuantity ?? '';
       }
       if (oldWidget.initialWeight != widget.initialWeight) {
         _weightController.text = widget.initialWeight ?? '';
       }
+      if (oldWidget.initialSelectedUnit != widget.initialSelectedUnit) {
+        setState(() {
+          _unit = widget.initialSelectedUnit ?? '';
+        });
+      }
+      _setListener();
     });
     super.didUpdateWidget(oldWidget);
+  }
+
+  void _setListener() {
+    _servingController.addListener(_onFieldSubmitted);
+    _weightController.addListener(_onFieldSubmitted);
+  }
+
+  void _removeListener() {
+    _servingController.removeListener(_setListener);
+    _weightController.removeListener(_setListener);
+  }
+
+  void _onFieldSubmitted() {
+    String? serving = _servingController.text.localeFormatted().format();
+    String? weight = _weightController.text.localeFormatted().format();
+
+    if (widget.initialSelectedQuantity == serving &&
+        widget.initialWeight == weight &&
+        _unit == widget.initialSelectedUnit) {
+      return;
+    }
+
+    _shouldVisibleWeightField = _unit != 'gram';
+
+    widget.onChange?.call(
+      (_servingController.text).localeFormatted(),
+      _unit,
+      (_weightController.text).localeFormatted(),
+    );
   }
 
   @override
@@ -84,13 +123,9 @@ class _PortionWidgetState extends State<PortionWidget> {
               context: context,
               title: context.localization.serving.toUpperCaseWord,
               controller: _servingController,
-              // onFieldSubmitted: (_) {
-              //   widget.onChange?.call(
-              //     double.tryParse(_servingController.text),
-              //     double.tryParse(_weightController.text),
-              //     _unit,
-              //   );
-              // },
+              onFieldSubmitted: (value) {
+                _onFieldSubmitted();
+              },
             ),
             Expanded(
               flex: 3,
@@ -107,41 +142,32 @@ class _PortionWidgetState extends State<PortionWidget> {
                     ),
                   ),
                   SecondaryDropdown<String>(
-                    height: 40.h,
+                    height: 44.h,
                     value: KeyValueModel(
-                        text: widget.initialSelectedUnit?.toUpperCaseWord ?? '',
-                        value: widget.initialSelectedUnit ?? ''),
+                        text: _unit.toUpperCaseWord, value: _unit),
                     options: widget.units.map((e) {
                       return KeyValueModel(value: e, text: e.toUpperCaseWord);
                     }).toList(),
                     onSelected: (value) {
-                      // if (value != null) {
-                      //   setState(() {
-                      //     _unit = value.value;
-                      //   });
-                      //   widget.onChange?.call(
-                      //     double.tryParse(_servingController.text),
-                      //     double.tryParse(_weightController.text),
-                      //     _unit,
-                      //   );
-                      // }
+                      if (value == null) return;
+                      _unit = value.value;
+                      _onFieldSubmitted();
                     },
                   ),
                 ],
               ),
             ),
-            _buildField(
-              context: context,
-              title: context.localization.weight ?? '',
-              controller: _weightController,
-              // onFieldSubmitted: (_) {
-              //   widget.onChange?.call(
-              //     double.tryParse(_servingController.text),
-              //     double.tryParse(_weightController.text),
-              //     _unit,
-              //   );
-              // },
-              unit: context.localization.g,
+            Visibility(
+              visible: _shouldVisibleWeightField,
+              child: _buildField(
+                context: context,
+                title: context.localization.weight ?? '',
+                controller: _weightController,
+                onFieldSubmitted: (value) {
+                  _onFieldSubmitted();
+                },
+                unit: context.localization.g,
+              ),
             ),
           ],
         ),

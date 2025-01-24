@@ -146,19 +146,21 @@ class UpdatedCameraZoomState extends FoodScanState {
   List<Object?> get props => [zoomLevel];
 }
 
-class UpdatedCameraZoomStateNew extends FoodScanState {
-  const UpdatedCameraZoomStateNew({
+class UpdatedCameraControlStateNew extends FoodScanState {
+  const UpdatedCameraControlStateNew({
     required this.currentZoom,
     required this.minZoom,
     required this.maxZoom,
+    required this.enabledFlashlight,
   });
 
   final double currentZoom;
   final double minZoom;
   final double maxZoom;
+  final bool enabledFlashlight;
 
   @override
-  List<Object?> get props => [currentZoom, minZoom, maxZoom];
+  List<Object?> get props => [currentZoom, minZoom, maxZoom, enabledFlashlight];
 }
 
 final class NutritionFactsLoadingNextState extends FoodScanState {
