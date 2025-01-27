@@ -148,6 +148,7 @@ class FoodRecord {
     PassioFoodItem foodItem, {
     PassioIDEntityType entityType = PassioIDEntityType.item,
     PassioFoodResultType resultType = PassioFoodResultType.foodItem,
+    String? barcode,
   }) {
     final foodRecord = FoodRecord._(
       '',
@@ -166,7 +167,7 @@ class FoodRecord {
           .toList(),
       null,
       openFoodLicense: foodItem.isOpenFood(),
-      barcode: foodItem.ingredients
+      barcode: barcode ?? foodItem.ingredients
           .cast<PassioIngredient?>()
           .firstWhere((e) => e?.metadata.barcode != null, orElse: () => null)
           ?.metadata
@@ -585,6 +586,7 @@ extension FoodRecordExtension on FoodRecord {
   double? get totalCaloriesOptional {
     return nutrientsSelectedSize().calories?.value;
   }
+
   double get totalCalories {
     return totalCaloriesOptional ?? 0;
   }
@@ -593,6 +595,7 @@ extension FoodRecordExtension on FoodRecord {
   double? get totalCarbsOptional {
     return nutrientsSelectedSize().carbs?.value;
   }
+
   double get totalCarbs {
     return totalCarbsOptional ?? 0;
   }
@@ -611,6 +614,7 @@ extension FoodRecordExtension on FoodRecord {
   double? get totalFatOptional {
     return nutrientsSelectedSize().fat?.value;
   }
+
   double get totalFat {
     return totalFatOptional ?? 0;
   }
@@ -654,6 +658,7 @@ extension FoodRecordExtension on FoodRecord {
   double? get totalProteinsOptional {
     return nutrientsSelectedSize().proteins?.value;
   }
+
   double get totalProteins {
     return totalProteinsOptional ?? 0;
   }
@@ -777,7 +782,8 @@ extension UtilityExtension on FoodRecord {
   }
 
   bool get hasServingSize {
-    return getSelectedUnit().isNotEmpty && getSelectedQuantity() > FoodRecord.zeroQuantity;
+    return getSelectedUnit().isNotEmpty &&
+        getSelectedQuantity() > FoodRecord.zeroQuantity;
   }
 
   bool get hasNutritionFacts {
@@ -869,5 +875,3 @@ extension CustomRecipeExtension on FoodRecord {
     ];
   }
 }
-
-

@@ -38,11 +38,11 @@ class _EditImageWidgetState extends State<EditImageWidget> {
   List<MenuModel> getMenu(BuildContext context) => [
         MenuModel(
           icon: AppImages.icCamera,
-          title: context.localization?.takePhoto,
+          title: context.localization.takePhoto,
         ),
         MenuModel(
           icon: AppImages.icViewGrid,
-          title: context.localization?.selectPhoto,
+          title: context.localization.selectPhoto,
         ),
       ];
 
@@ -65,13 +65,13 @@ class _EditImageWidgetState extends State<EditImageWidget> {
         );
       },
       onSelected: (value) async {
-        if (value.title == context.localization?.takePhoto) {
+        if (value.title == context.localization.takePhoto) {
           List<Uint8List>? profiles = await TakePhotoPage.navigate(context,
               returnResult: true, maxLimit: 1);
           if (profiles?.firstOrNull != null) {
             _image.value = profiles?.firstOrNull;
           }
-        } else if (value.title == context.localization?.selectPhoto) {
+        } else if (value.title == context.localization.selectPhoto) {
           List<XFile>? profiles = await SelectPhotoPage.navigate(context,
               returnResult: true, maxLimit: 1);
           if (profiles?.firstOrNull != null) {
@@ -107,7 +107,7 @@ class _EditImageWidgetState extends State<EditImageWidget> {
               }),
           8.verticalSpace,
           Text(
-            context.localization?.editImage ?? '',
+            context.localization.editImage ?? '',
             style: AppTextStyle.textSm
                 .addAll([AppTextStyle.textSm.leading5]).copyWith(
               decoration: AppTextStyle.underline,

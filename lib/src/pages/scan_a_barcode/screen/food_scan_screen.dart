@@ -177,6 +177,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
 
   void _handleAddedToDiaryVisibilityState(AddedToDiaryVisibilityState state) {
     ShowWidgetUtil.showCustomGeneralDialog(
+      barrierDismissible: false,
       context: context,
       builder: (_) {
         return ItemAddedToDiaryWidget(

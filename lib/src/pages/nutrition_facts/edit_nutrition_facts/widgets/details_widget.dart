@@ -87,6 +87,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
               PrimaryTextInput(
                 isDense: true,
                 hintText: context.localization.enterName.toUpperCaseWord,
+                textCapitalization: TextCapitalization.sentences,
                 controller: _nameController,
                 // Disable the error text by setting empty error style
                 errorStyle: TextStyle(height: 0.01),

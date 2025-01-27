@@ -62,6 +62,17 @@ final class RefreshPortionsState extends EditNutritionFactsState {
   List<Object?> get props => [selectedQuantity, selectedUnit, units, weight];
 }
 
+final class RefreshActionButtonsState extends EditNutritionFactsState {
+  const RefreshActionButtonsState({
+    required this.isUpdate,
+  });
+
+  final bool isUpdate;
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class SaveSuccessState extends EditNutritionFactsState {
   const SaveSuccessState();
 

@@ -39,33 +39,6 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
           children: [
             CustomAppBar(title: context.localization.barcodeScanner),
             Expanded(child: const CameraSection()),
-            // Expanded(
-            //   child: Stack(
-            //     fit: StackFit.expand,
-            //     children: [
-            //       _showPassioPreview
-            //           ? const PassioPreview()
-            //           : Container(color: AppColors.black),
-            //       // TODO: Handle animation
-            //       /*AnimatedOpacity(
-            //             opacity: _visibleDialog ? 0 : 1,
-            //             duration: const Duration(milliseconds: 250),
-            //             child:
-            //                 ScanningAnimationWidget(key: _scanningAnimationKey),
-            //           ),*/
-            //       Positioned(
-            //         top: 110.h + 380.h,
-            //         left: 0,
-            //         right: 0,
-            //         child: AnimatedOpacity(
-            //           opacity: _visibleDialog ? 0 : 1,
-            //           duration: const Duration(milliseconds: 250),
-            //           child: const TutorialWidget(),
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
           ],
         ),
       ),
@@ -95,10 +68,7 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
           _showCustomFoodAlreadyExistsDialog(foodRecord: state.foodRecord);
           break;
         case SystemFoodRecordFoundListenerState():
-          _showBarcodeInSystemDialog(
-            barcode: state.barcode,
-            foodRecord: state.foodRecord,
-          );
+          _showBarcodeInSystemDialog(foodRecord: state.foodRecord);
           break;
         case UnknownBarcodeFoundListenerState():
           Navigator.pop(context, state.barcode);
@@ -114,58 +84,33 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
       builder: (dContext) {
         return CustomFoodAlreadyExistsWidget(
           onNegativeButtonTap: () {
-            Navigator.pop(dContext);
             Navigator.pop(context);
           },
           onPositiveButtonTap: () async {
-            Navigator.pop(dContext);
-            await EditFoodPage.navigate(
-              context: context,
-              params: EditFoodPageParams(
-                foodRecord: foodRecord,
-                redirectToDiaryOnLog: true,
-                visibleLogUponCreate: false,
-              ),
-            );
-            _startScanning();
+            Navigator.pop(context, foodRecord);
           },
           onNeutralButtonTap: () {
-            Navigator.pop(dContext);
-            foodRecord?.barcode = null;
-            Navigator.pop(context, foodRecord);
-            // _popAndReturnData(foodRecord: foodRecord);
+            Navigator.pop(context);
           },
         );
       },
     );
   }
 
-  void _showBarcodeInSystemDialog(
-      {String? barcode, FoodRecord? foodRecord}) async {
+  void _showBarcodeInSystemDialog({FoodRecord? foodRecord}) async {
     ShowWidgetUtil.showCustomGeneralDialogNew(
       barrierDismissible: false,
       context: context,
       builder: (dContext) {
         return BarcodeInSystemWidget(
           onNegativeButtonTap: () {
-            Navigator.pop(dContext);
             Navigator.pop(context);
           },
           onPositiveButtonTap: () async {
-            Navigator.pop(dContext);
-            await EditFoodPage.navigate(
-              context: context,
-              params: EditFoodPageParams(
-                foodRecord: foodRecord,
-                redirectToDiaryOnLog: true,
-                visibleLogUponCreate: false,
-              ),
-            );
-            _startScanning();
+            Navigator.pop(context, foodRecord);
           },
           onNeutralButtonTap: () {
-            Navigator.pop(dContext);
-            Navigator.pop(context, barcode);
+            Navigator.pop(context, foodRecord?.barcode);
           },
         );
       },

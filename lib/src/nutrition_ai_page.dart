@@ -46,14 +46,35 @@ class NavigationAIPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Theme(
       data: AppTheme().lightTheme,
-      child: Navigator(
-        key: _navigatorKey,
-        initialRoute: Routes.initialPage,
-        observers: [
-          NavigationRouteObserver.instance,
-          ClearFocusOnPushObserver()
-        ],
-        onGenerateRoute: _generateRoute,
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (didPop, result) {
+          // if (NavigationRouteObserver.instance.currentRouteName ==
+          //     Routes.dashboard) {
+          //   _navigatorKey.currentState?.popUntil((_) => false);
+          // }
+          // if (Navigator.canPop(context)) {
+          //   if (NavigationRouteObserver.instance.routeStack.isEmpty) {
+          //     WidgetsBinding.instance.addPostFrameCallback((_) {
+          //       Navigator.of(context, rootNavigator: true).pop(result);
+          //     });
+          //     return;
+          //   }
+          //   WidgetsBinding.instance.addPostFrameCallback((_) {
+          //     _navigatorKey.currentState?.pop();
+          //   });
+          //   return;
+          // }
+        },
+        child: Navigator(
+          key: _navigatorKey,
+          initialRoute: Routes.initialPage,
+          observers: [
+            NavigationRouteObserver.instance,
+            ClearFocusOnPushObserver()
+          ],
+          onGenerateRoute: _generateRoute,
+        ),
       ),
     );
   }

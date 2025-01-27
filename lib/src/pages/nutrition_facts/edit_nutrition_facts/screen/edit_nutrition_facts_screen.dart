@@ -46,11 +46,20 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
                   child: Column(
                     spacing: 16.h,
                     children: [
-                      const HeaderWidget(),
+                      const HeaderSection(),
                       const DetailsSection(),
                       const NutritionFactsSection(),
                       const PortionSection(),
-                      ActionButtonsWidget(
+                      ActionButtonsSection(
+                        onPositiveTap: () {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            context
+                                .read<EditNutritionFactsBloc>()
+                                .add(const SaveEvent());
+                          }
+                        },
+                      ),
+                      /*ActionButtonsWidget(
                         onCancel: () {
                           Navigator.pop(context);
                           Navigator.pop(context);
@@ -62,7 +71,7 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
                                 .add(const SaveEvent());
                           }
                         },
-                      ),
+                      ),*/
                       /*_DetailsWidget(
                       index: widget.index,
                       foodRecord: _foodRecord,
@@ -121,6 +130,7 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
   void _showItemAddedToDiary(BuildContext context) {
     ShowWidgetUtil.showCustomGeneralDialog(
       context: context,
+      barrierDismissible: false,
       builder: (dContext) {
         return ItemAddedToDiaryWidget(
           positiveText: context.localization.addMore.toUpperCaseWord,
@@ -128,7 +138,7 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               Routes.dashboard,
-                  (route) => route.isFirst,
+              (route) => route.isFirst,
               arguments: 1,
             );
           },
@@ -140,5 +150,4 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
       },
     );
   }
-
 }

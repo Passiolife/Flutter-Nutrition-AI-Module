@@ -1,16 +1,15 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../common/domain/repository/custom_food_repository.dart';
 import '../../../../common/domain/repository/food_log_repositoy.dart';
+import '../../../../common/domain/use_cases/custom_food/create_custom_food_ingredient_use_case.dart';
 import '../../../../common/extension/null_safety_extension.dart';
+import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/helper/custom_food_helper.dart';
 import '../../../../common/models/food_record/food_record.dart';
-import '../../../../common/models/food_record/food_record_ingredient.dart';
 import '../../../../common/util/double_extensions.dart';
 
 part 'edit_nutrition_facts_event.dart';
@@ -20,11 +19,14 @@ class EditNutritionFactsBloc
     extends Bloc<EditNutritionFactsEvent, EditNutritionFactsState> {
   FoodLogRepository foodLogRepository;
   CustomFoodRepository customFoodRepository;
+  CreateCustomFoodIngredientUseCase createCustomFoodIngredientUseCase;
 
   FoodRecord? _foodRecord;
 
+  String? _id;
+
   // Details
-  String? _iconId = '';
+  String? _iconId;
   String? _name = '';
   String? _barcode = '';
   Uint8List? _imageBytes;
@@ -41,20 +43,26 @@ class EditNutritionFactsBloc
   List<String>? _units;
   double? _weight;
 
+  bool get isUpdate => _id.isNotNullOrEmpty;
+
   EditNutritionFactsBloc({
     required this.foodLogRepository,
     required this.customFoodRepository,
+    required this.createCustomFoodIngredientUseCase,
   }) : super(const EditNutritionFactsInitial()) {
     on<ProcessEvent>(_handleProcessEvent);
 
     on<RefreshDetailsEvent>(_handleRefreshDetailsEvent);
     on<RefreshNutritionFactsEvent>(_handleRefreshNutritionFactsEvent);
     on<RefreshPortionsEvent>(_handleRefreshPortionsEvent);
+    on<RefreshActionButtonsEvent>(_handleRefreshActionButtonsEvent);
 
     on<UpdateNameEvent>(_handleUpdateNameEvent);
     on<UpdateBarcodeEvent>(_handleUpdateBarcodeEvent);
     on<UpdateNutritionFactsEvent>(_handleUpdateNutritionFactsEvent);
     on<UpdatePortionsEvent>(_handleUpdatePortionsEvent);
+
+    on<PopulateBarcodeScannerDataEvent>(_handlePopulateBarcodeScannerDataEvent);
 
     on<SaveEvent>(_handleSaveEvent);
   }
@@ -62,6 +70,8 @@ class EditNutritionFactsBloc
   void _handleProcessEvent(
       ProcessEvent event, Emitter<EditNutritionFactsState> emit) {
     _foodRecord = event.foodRecord;
+
+    _id = _foodRecord?.id;
 
     _iconId = _foodRecord?.iconId;
     _barcode = _foodRecord?.barcode ?? event.barcode ?? '';
@@ -85,6 +95,7 @@ class EditNutritionFactsBloc
     add(const RefreshDetailsEvent());
     add(const RefreshNutritionFactsEvent());
     add(const RefreshPortionsEvent());
+    add(const RefreshActionButtonsEvent());
   }
 
   void _handleRefreshDetailsEvent(
@@ -158,19 +169,76 @@ class EditNutritionFactsBloc
     add(const RefreshDetailsEvent());
   }
 
+  void _handlePopulateBarcodeScannerDataEvent(
+      PopulateBarcodeScannerDataEvent event,
+      Emitter<EditNutritionFactsState> emit) async {
+    final data = event.data;
+    if (data == null) return;
+    if (data is String) {
+      add(UpdateBarcodeEvent(barcode: data));
+    } else if (data is FoodRecord) {
+      Uint8List? imageBytes;
+      if (data.iconId.isNullOrEmpty) {
+        imageBytes = _imageBytes;
+      }
+      add(ProcessEvent(foodRecord: data, imageBytes: imageBytes));
+    } else {
+      return;
+    }
+  }
+
+  void _handleRefreshActionButtonsEvent(RefreshActionButtonsEvent event,
+      Emitter<EditNutritionFactsState> emit) async {
+    emit(RefreshActionButtonsState(isUpdate: isUpdate));
+  }
+
   void _handleSaveEvent(
       SaveEvent event, Emitter<EditNutritionFactsState> emit) async {
-    try {
-      final foodRecordIngredient = _foodRecord?.ingredients.firstOrNull;
+    final foodRecordIngredient = _foodRecord?.ingredients.firstOrNull;
 
-      final calories = UnitEnergy(_calories!, UnitEnergyType.kilocalories);
-      final carbs = UnitMass(_carbs!, UnitMassType.grams);
-      final proteins = UnitMass(_protein!, UnitMassType.grams);
-      final fat = UnitMass(_fat!, UnitMassType.grams);
-      final weight = UnitMass(_weight!, UnitMassType.grams);
+    final updatedIngredient = await createCustomFoodIngredientUseCase.call(
+      ingredient: foodRecordIngredient,
+      id: _id,
+      name: _name,
+      iconId: _iconId,
+      selectedQuantity: _selectedQuantity,
+      selectedUnit: _selectedUnit,
+      servingWeight: _weight,
+      barcode: _barcode,
+      calories: _calories,
+      carbs: _carbs,
+      proteins: _protein,
+      fat: _fat,
+    );
 
-      return;
+    final foodRecord = FoodRecord.fromFoodRecordIngredient(updatedIngredient);
 
+    List<dynamic> results;
+
+    if(isUpdate) {
+      results = await Future.wait([
+        customFoodRepository.updateFood(foodRecord: foodRecord),
+      ]);
+    } else {
+      results = await Future.wait([
+        customFoodRepository.addFood(foodRecord: foodRecord),
+        if (_imageBytes != null)
+          customFoodRepository.addFoodImage(
+            id: foodRecord.iconId,
+            image: _imageBytes!,
+          ),
+      ]);
+    }
+
+    final userFoodId = results.first as String;
+
+    foodRecord.refCode = '${FoodRecord.userFoodPrefix}$userFoodId';
+
+    await foodLogRepository.addFoodLog(foodRecord: foodRecord);
+
+    emit(const SaveSuccessState());
+    return;
+/*
       final nutrients = PassioNutrients.fromNutrients(
         weight: weight,
         alcohol: foodRecordIngredient?.referenceNutrients.alcohol,
@@ -247,10 +315,7 @@ class EditNutritionFactsBloc
 
       await foodLogRepository.addFoodLog(foodRecord: foodRecord);
 
-      emit(const SaveSuccessState());
-    } catch (e) {
-      log(e.toString());
-    }
+      emit(const SaveSuccessState());*/
     // FoodRecord? updatedFoodRecord = _foodRecord?.clone();
     // if (updatedFoodRecord == null) {
     // } else {

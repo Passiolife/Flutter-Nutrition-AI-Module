@@ -88,43 +88,46 @@ class ShowWidgetUtil {
       pageBuilder: (context, anim1, anim2) => builder.call(context),
       transitionDuration: const Duration(milliseconds: AppDimens.duration250),
       transitionBuilder: (context, animation1, animation2, child) {
-        return SlideTransition(
-          position: Tween(
-            begin: const Offset(0, 1),
-            end: const Offset(0, 0),
-          ).animate(animation1),
-          child: Material(
-            color: Colors.transparent,
-            child: fullscreen
-                ? child
-                : Stack(
-              children: [
-                // Full-screen GestureDetector to handle taps outside the dialog
-                Positioned.fill(
-                  child: GestureDetector(
-                    onTap: () {
-                      if (barrierDismissible) {
-                        Navigator.of(context).pop();
-                      }
-                    },
-                    behavior: HitTestBehavior.opaque,
-                  ),
-                ),
-                SizedBox(
-                  width: context.width,
-                  child: Center(
-                    child: Wrap(
+        return PopScope(
+          canPop: false,
+          child: SlideTransition(
+            position: Tween(
+              begin: const Offset(0, 1),
+              end: const Offset(0, 0),
+            ).animate(animation1),
+            child: Material(
+              color: Colors.transparent,
+              child: fullscreen
+                  ? child
+                  : Stack(
                       children: [
-                        GestureDetector(
-                          onTap: () {},
-                          behavior: HitTestBehavior.opaque,
-                          child: child,
+                        // Full-screen GestureDetector to handle taps outside the dialog
+                        Positioned.fill(
+                          child: GestureDetector(
+                            onTap: () {
+                              if (barrierDismissible) {
+                                Navigator.of(context).pop();
+                              }
+                            },
+                            behavior: HitTestBehavior.opaque,
+                          ),
+                        ),
+                        SizedBox(
+                          width: context.width,
+                          child: Center(
+                            child: Wrap(
+                              children: [
+                                GestureDetector(
+                                  onTap: () {},
+                                  behavior: HitTestBehavior.opaque,
+                                  child: child,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                ),
-              ],
             ),
           ),
         );

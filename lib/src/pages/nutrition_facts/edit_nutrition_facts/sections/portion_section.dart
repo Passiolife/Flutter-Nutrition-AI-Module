@@ -31,7 +31,12 @@ class PortionSection extends StatelessWidget {
           initialSelectedUnit: selectedUnit,
           initialWeight: weight,
           units: units,
-          onChange: (quantity, unit, weight) => _onChange(context: context, quantity: quantity, unit: unit, weight: weight),
+          onChange: (quantity, unit, weight) => _onChange(
+            context: context,
+            quantity: quantity,
+            unit: unit,
+            weight: weight,
+          ),
         );
       },
     );

@@ -25,16 +25,12 @@ final class CustomFoodRecordFoundListenerState extends ListenerState {
 }
 
 final class SystemFoodRecordFoundListenerState extends ListenerState {
-  const SystemFoodRecordFoundListenerState({
-    required this.foodRecord,
-    required this.barcode,
-  });
+  const SystemFoodRecordFoundListenerState({required this.foodRecord});
 
   final FoodRecord foodRecord;
-  final String barcode;
 
   @override
-  List<Object?> get props => [foodRecord, barcode];
+  List<Object?> get props => [foodRecord];
 }
 
 final class UnknownBarcodeFoundListenerState extends ListenerState {

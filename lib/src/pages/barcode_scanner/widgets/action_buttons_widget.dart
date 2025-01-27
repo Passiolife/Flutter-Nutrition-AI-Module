@@ -31,15 +31,21 @@ class ActionButtonsWidget extends StatelessWidget {
             Expanded(
               child: SecondaryButton(
                 text: context.localization.cancel,
-                onTap: onNegativeButtonTap,
+                onTap: () {
+                  Navigator.pop(context);
+                  onNegativeButtonTap?.call();
+                },
                 padding: AppPadding.pv12,
               ),
             ),
             16.horizontalSpace,
             Expanded(
               child: PrimaryButton(
-                text: context.localization.viewExistingItem,
-                onTap: onPositiveButtonTap,
+                text: context.localization.useExistingItem,
+                onTap: () {
+                  Navigator.pop(context);
+                  onPositiveButtonTap?.call();
+                },
                 padding: AppPadding.pv12,
               ),
             ),
@@ -48,7 +54,10 @@ class ActionButtonsWidget extends StatelessWidget {
         16.verticalSpace,
         PrimaryButton(
           text: neutralButtonText,
-          onTap: onNeutralButtonTap,
+          onTap: () {
+            Navigator.pop(context);
+            onNeutralButtonTap?.call();
+          },
           padding: AppPadding.pv12,
         ),
       ],

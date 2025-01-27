@@ -39,8 +39,11 @@ class TakePhotoPage extends StatelessWidget {
     );
   }
 
-  static Future navigate(BuildContext context,
-      {bool returnResult = false, int maxLimit = 7}) async {
+  static Future navigate(
+    BuildContext context, {
+    bool returnResult = false,
+    int maxLimit = 7,
+  }) async {
     return await Navigator.pushNamed(
       context,
       Routes.takePhoto,

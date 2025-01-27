@@ -74,8 +74,8 @@ class _PortionWidgetState extends State<PortionWidget> {
   }
 
   void _removeListener() {
-    _servingController.removeListener(_setListener);
-    _weightController.removeListener(_setListener);
+    _servingController.removeListener(_onFieldSubmitted);
+    _weightController.removeListener(_onFieldSubmitted);
   }
 
   void _onFieldSubmitted() {
@@ -88,7 +88,9 @@ class _PortionWidgetState extends State<PortionWidget> {
       return;
     }
 
-    _shouldVisibleWeightField = _unit != 'gram';
+    setState(() {
+      _shouldVisibleWeightField = _unit != 'gram';
+    });
 
     widget.onChange?.call(
       (_servingController.text).localeFormatted(),

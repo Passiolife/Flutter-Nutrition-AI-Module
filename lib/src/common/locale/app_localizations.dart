@@ -349,6 +349,8 @@ class AppLocalizations {
 
   String? get create => getLabel('create');
 
+  String? get update => getLabel('update');
+
   String? get weightTrend => getLabel('weightTrend');
 
   String? get currentWeight => getLabel('currentWeight');
@@ -671,6 +673,8 @@ class AppLocalizations {
 
   String? get viewExistingItem => getLabel('viewExistingItem');
 
+  String? get useExistingItem => getLabel('useExistingItem');
+
   String get barcodeInSystem => getLabel('barcodeInSystem');
 
   String get barcodeInSystemDescription =>
@@ -873,5 +877,9 @@ class AppLocalizations {
   String get enterManually => getLabel('enterManually');
 
   String get saveAndLog => getLabel('saveAndLog');
-  String get nutritionFactsCustomFoodCreationMessage => getLabel('nutritionFactsCustomFoodCreationMessage');
+
+  String get updateAndLog => getLabel('updateAndLog');
+
+  String get nutritionFactsCustomFoodCreationMessage =>
+      getLabel('nutritionFactsCustomFoodCreationMessage');
 }

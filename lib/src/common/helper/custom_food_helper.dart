@@ -28,9 +28,18 @@ class CustomFoodHelper {
     double? weight,
   ) {
     return [
-      if (selectedUnit!=null && weight != null && selectedUnit != 'gram')
+      if (selectedUnit != null && weight != null && selectedUnit != 'gram')
         PassioServingUnit(selectedUnit, UnitMass(weight, UnitMassType.grams)),
       PassioServingUnit('gram', UnitMass(1, UnitMassType.grams)),
+    ];
+  }
+
+  static List<PassioServingSize> generateCustomServingSizes(
+      String? selectedUnit) {
+    return [
+      if (selectedUnit != null && selectedUnit != 'gram')
+        PassioServingSize(1, selectedUnit),
+      PassioServingSize(100, 'gram'),
     ];
   }
 }

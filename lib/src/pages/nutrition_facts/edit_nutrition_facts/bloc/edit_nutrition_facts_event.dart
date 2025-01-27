@@ -73,6 +73,13 @@ final class RefreshPortionsEvent extends EditNutritionFactsEvent {
   List<Object?> get props => [];
 }
 
+final class RefreshActionButtonsEvent extends EditNutritionFactsEvent {
+  const RefreshActionButtonsEvent();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class UpdateNameEvent extends EditNutritionFactsEvent {
   final String name;
 
@@ -96,4 +103,12 @@ final class SaveEvent extends EditNutritionFactsEvent {
 
   @override
   List<Object?> get props => [];
+}
+
+final class PopulateBarcodeScannerDataEvent extends EditNutritionFactsEvent {
+  const PopulateBarcodeScannerDataEvent({required this.data});
+  final dynamic data;
+
+  @override
+  List<Object?> get props => [data];
 }

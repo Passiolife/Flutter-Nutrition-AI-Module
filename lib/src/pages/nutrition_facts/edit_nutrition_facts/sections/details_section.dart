@@ -15,7 +15,6 @@ class DetailsSection extends StatefulWidget {
 }
 
 class _DetailsSectionState extends State<DetailsSection> {
-
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<EditNutritionFactsBloc, EditNutritionFactsState>(
@@ -48,11 +47,11 @@ class _DetailsSectionState extends State<DetailsSection> {
   }
 
   void _onTapBarcode() async {
-    String? barcode = await Navigator.pushNamed<String>(context, Routes.barcodeScanner);
-    if ((barcode?.isNotEmpty ?? false) && mounted) {
-      context.read<EditNutritionFactsBloc>().add(UpdateBarcodeEvent(barcode: barcode!));
+    final data = await Navigator.pushNamed(context, Routes.barcodeScanner);
+    if (mounted) {
+      context
+          .read<EditNutritionFactsBloc>()
+          .add(PopulateBarcodeScannerDataEvent(data: data));
     }
   }
-
-
 }

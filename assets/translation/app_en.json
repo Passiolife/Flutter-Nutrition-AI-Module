@@ -308,6 +308,7 @@
   "barcodeScanner": "Barcode Scanner",
   "barcodeScannerDescription": "Place your barcode within the frame",
   "viewExistingItem": "View Existing Item",
+  "useExistingItem": "Use Existing Item",
   "barcodeInSystem": "Barcode In System",
   "barcodeInSystemDescription": "This barcode matches an existing item in our database. You can use the data from the database, or continue with creating a custom food.",
   "customFoodAlreadyExists": "Custom Food Already Exists",
@@ -380,7 +381,7 @@
   "done": "Done",
   "error": "Error",
   "timestamp": "Timestamp",
-
+  "update": "Update",
 
   "@voiceLoggingPage": {
     "description": "Used within the voice logging page for all subsequent translations."
@@ -432,5 +433,7 @@
   "noBarcodeTakePicture": "No barcode? Take a picture of ",
   "enterManually": "Enter Manually",
   "saveAndLog": "Save & Log",
+  "updateAndLog": "Update & Log",
   "nutritionFactsCustomFoodCreationMessage": "Logging this item will create a custom food. You can edit this item from your My Foods list."
+
 }

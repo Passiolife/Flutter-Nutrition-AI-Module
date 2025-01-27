@@ -52,6 +52,10 @@ class _CameraSectionState extends State<CameraSection> {
               captureEnabled: length < navigationData.maxLimit,
               positiveEnabled: length > 0,
               onPositiveTap: () {
+                if(navigationData.returnResult) {
+                  Navigator.pop(context, images);
+                  return;
+                }
                 Navigator.pushNamed(context, Routes.takePhotoResult, arguments: images);
                 _bloc?.add(const InitialEvent());
               },

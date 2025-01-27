@@ -58,14 +58,22 @@ class _CaptureButtonWidgetState extends State<CaptureButtonWidget> {
   }
 
   @override
+  void didUpdateWidget(covariant CaptureButtonWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if(oldWidget.isEnabled != widget.isEnabled) {
+      _isEnable = widget.isEnabled;
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
     // Determine the size of the button.
     final buttonSize = widget.size ?? CaptureButtonWidget.defaultSize;
 
     return GestureDetector(
-      onTapDown: (_) => _onTapDown(),
-      onTapUp: (_) => _onTapUp(),
-      onTapCancel: _onTapCancel,
+      onTapDown: (_) => widget.isEnabled ? _onTapDown() : null,
+      onTapUp: (_) => widget.isEnabled ? _onTapUp() : null,
+      onTapCancel: widget.isEnabled ? _onTapCancel : null,
       onTap: widget.isEnabled ? _onTap : null,
       child: AnimatedOpacity(
         opacity: _isEnable ? 1 : 0.4,

@@ -5,7 +5,12 @@ import '../../../../common/extension/context_extension.dart';
 import '../../../../common/extension/text_span_extension.dart';
 
 class HeaderWidget extends StatelessWidget {
-  const HeaderWidget({super.key});
+  const HeaderWidget({
+    this.isUpdate = false,
+    super.key,
+  });
+
+  final bool isUpdate;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +26,9 @@ class HeaderWidget extends StatelessWidget {
         Text.rich(
           textAlign: TextAlign.center,
           TextSpan(
-            children: context
-                .localization.nutritionFactsCustomFoodCreationMessage
-                .generateSpans(
+            children:
+                getNutritionFactsCustomFoodCreationMessage(context, isUpdate)
+                    .generateSpans(
               defaultStyle: AppTextStyle.textSm,
               highlightStyles: {
                 context.localization.myFoods:
@@ -34,5 +39,15 @@ class HeaderWidget extends StatelessWidget {
         ),
       ],
     );
+  }
+
+  String getNutritionFactsCustomFoodCreationMessage(
+      BuildContext context, bool isUpdate) {
+    String text = context.localization.nutritionFactsCustomFoodCreationMessage;
+    if (isUpdate) {
+      return text.replaceFirst(
+          context.localization.create ?? '', context.localization.update ?? '');
+    }
+    return text;
   }
 }

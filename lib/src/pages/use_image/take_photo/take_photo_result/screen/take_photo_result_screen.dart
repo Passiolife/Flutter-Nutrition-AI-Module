@@ -66,6 +66,7 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
 
   void _showItemAddedToDiary(BuildContext context) {
     ShowWidgetUtil.showCustomGeneralDialog(
+      barrierDismissible: false,
       context: context,
       builder: (dsContext) {
         return ItemAddedToDiaryWidget(

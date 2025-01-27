@@ -307,14 +307,14 @@ class _DetailsWidgetState extends State<_DetailsWidget> {
                   child: BarcodeScanWidget(),
                 ),
                 onTap: () async {
-                  String? barcode =
-                      await BarcodeScannerPage.navigate(context: context);
-                  if (barcode?.isNotEmpty ?? false) {
-                    setState(() {
-                      _barcode = barcode;
-                    });
-                    widget.onChange?.call(_nameController.text, _barcode);
-                  }
+                  // String? barcode =
+                  //     await BarcodeScannerPage.navigate(context: context);
+                  // if (barcode?.isNotEmpty ?? false) {
+                  //   setState(() {
+                  //     _barcode = barcode;
+                  //   });
+                  //   widget.onChange?.call(_nameController.text, _barcode);
+                  // }
                 },
               ),
             ],

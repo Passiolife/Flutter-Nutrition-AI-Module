@@ -252,20 +252,20 @@ class _FoodCreatorPageState extends State<FoodCreatorPage> {
   }
 
   Future<void> _onTapBarcode() async {
-    final navigationResult = await BarcodeScannerPage.navigate(context: context);
-    if(navigationResult == null) {
-      return;
-    }
-    if(navigationResult is String) {
-      _bloc.add(DoUpdateBarcodeEvent(barcode: navigationResult));
-    } else if(navigationResult is FoodRecord?) {
-      _bloc.add(DoConversionEvent(
-        loggedFoodRecord: widget.loggedFoodRecord,
-        userFoodRecord: navigationResult,
-        nutritionFacts: widget.nutritionFacts,
-        logUponCreate: widget.logUponCreate,
-      ));
-    }
+    // final navigationResult = await BarcodeScannerPage.navigate(context: context);
+    // if(navigationResult == null) {
+    //   return;
+    // }
+    // if(navigationResult is String) {
+    //   _bloc.add(DoUpdateBarcodeEvent(barcode: navigationResult));
+    // } else if(navigationResult is FoodRecord?) {
+    //   _bloc.add(DoConversionEvent(
+    //     loggedFoodRecord: widget.loggedFoodRecord,
+    //     userFoodRecord: navigationResult,
+    //     nutritionFacts: widget.nutritionFacts,
+    //     logUponCreate: widget.logUponCreate,
+    //   ));
+    // }
   }
 
   void _handleStateChanges(BuildContext context, FoodCreatorState state) {

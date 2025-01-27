@@ -44,6 +44,7 @@ class CameraControlWidget extends StatelessWidget {
           16.horizontalSpace,
           CaptureButtonWidget(
             onTap: onCapture,
+            isEnabled: captureEnabled,
           ),
           16.horizontalSpace,
           Expanded(
