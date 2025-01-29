@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../common/extension/passio/passio_food_item_extension.dart';
 import '../../../common/models/food_record/food_record.dart';
-import '../../../common/util/image_utility.dart';
+import '../../../common/util/image_utility/image_utility.dart';
 
 part 'photo_preview_event.dart';
 part 'photo_preview_state.dart';
@@ -16,9 +16,10 @@ class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
   final NutritionAIRepository nutritionAIRepository;
   final ImageUtility imageUtility;
 
-  PhotoPreviewBloc(
-      {required this.nutritionAIRepository, required this.imageUtility})
-      : super(PhotoPreviewInitial()) {
+  PhotoPreviewBloc({
+    required this.nutritionAIRepository,
+    required this.imageUtility,
+  }) : super(PhotoPreviewInitial()) {
     on<DoProcessEvent>(_handleDoProcessEvent);
   }
 
@@ -41,7 +42,9 @@ class PhotoPreviewBloc extends Bloc<PhotoPreviewEvent, PhotoPreviewState> {
         imageBytes: resizedImageBytes,
       ));
     } else {
-      emit(NutritionFactsNotFoundState(timestamp: DateTime.now().millisecond, imageBytes: resizedImageBytes));
+      emit(NutritionFactsNotFoundState(
+          timestamp: DateTime.now().millisecond,
+          imageBytes: resizedImageBytes));
     }
     /*if (foodItem == null) {
       emit(FailedToAnalyzedState(timestamp: DateTime.now().millisecond));

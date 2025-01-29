@@ -24,7 +24,7 @@ class SecondaryButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedOpacity(
       duration: const Duration(milliseconds: 250),
-      opacity: enabled ? 1 : 0.4,
+      opacity: enabled ? 1 : 0.5,
       child: AppButton(
         buttonText: text,
         appButtonModel: AppButtonStyles.primaryBordered

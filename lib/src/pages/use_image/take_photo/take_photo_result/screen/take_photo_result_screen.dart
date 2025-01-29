@@ -68,8 +68,11 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
     ShowWidgetUtil.showCustomGeneralDialog(
       barrierDismissible: false,
       context: context,
-      builder: (dsContext) {
+      builder: (dContext) {
         return ItemAddedToDiaryWidget(
+          title: '5 Items Added To Diary\n1 Custom Food Created',
+          subtitle: context.localization.viewYourDiaryOrAddMore,
+          positiveText: context.localization.addMore.toUpperCaseWord,
           onTapNegative: () {
             Navigator.pushNamedAndRemoveUntil(
               context,
@@ -79,8 +82,7 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
             );
           },
           onTapPositive: () {
-            Navigator.popUntil(
-                context, (route) => route.settings.name == Routes.takePhoto);
+            Navigator.pop(context);
           },
         );
       },

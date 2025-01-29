@@ -173,10 +173,10 @@ class _EditImageWidgetState extends State<EditImageWidget> {
             _image.value = profiles?.firstOrNull;
           }
         } else if (value.title == context.localization.selectPhoto) {
-          List<XFile>? profiles = await SelectPhotoPage.navigate(context,
+          List<Uint8List>? profiles = await SelectPhotoPage.navigate(context,
               returnResult: true, maxLimit: 1);
           if (profiles?.firstOrNull != null) {
-            _image.value = await profiles?.firstOrNull?.readAsBytes();
+            _image.value = profiles?.firstOrNull;
           }
         }
         if (_image.value != null) {

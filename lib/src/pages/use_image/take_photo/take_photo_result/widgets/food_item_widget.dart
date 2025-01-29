@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -18,6 +20,7 @@ class FoodItemWidget extends StatelessWidget {
     required this.carbs,
     required this.protein,
     required this.fat,
+    this.image,
     this.initialSelection = false,
     this.onChangeSelection,
     this.onTap,
@@ -25,6 +28,7 @@ class FoodItemWidget extends StatelessWidget {
     super.key,
   });
 
+  final Uint8List? image;
   final String iconId, title, subtitle;
   final double calories, carbs, protein, fat;
   final bool initialSelection;
@@ -72,6 +76,7 @@ class FoodItemWidget extends StatelessWidget {
                 spacing: 8.h,
                 children: [
                   FoodItemRow(
+                    image: image,
                     iconId: iconId,
                     index: index,
                     title: title,

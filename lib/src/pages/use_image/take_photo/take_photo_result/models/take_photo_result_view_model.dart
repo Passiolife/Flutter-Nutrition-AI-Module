@@ -1,4 +1,5 @@
 import 'dart:math' as math;
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,6 @@ class TakePhotoResultViewModel {
   final MealLabel mealLabel;
   final DateTime dateTime;
   final List<FoodRecordViewModel> foodRecords;
-  final List<FoodRecordViewModel> incompleteFoodRecords;
   final double calories;
   final double caloriesTarget;
   final double carbs;
@@ -32,7 +32,6 @@ class TakePhotoResultViewModel {
     required this.mealLabel,
     required this.dateTime,
     this.foodRecords = const [],
-    this.incompleteFoodRecords = const [],
     this.calories = 0,
     this.caloriesTarget = 0,
     this.carbs = 0,
@@ -53,29 +52,34 @@ class TakePhotoResultViewModel {
     );
   }
 
-  TakePhotoResultViewModel fromFoodRecords(List<FoodRecord> foodRecords) {
-    final incompleteFoodRecordsViewModel = foodRecords
+  TakePhotoResultViewModel fromFoodRecords(
+      List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
+          data) {
+    /*final incompleteFoodRecordsViewModel = foodRecords
         .where((e) => !e.hasNutritionFacts)
         .map((e) => FoodRecordViewModel(foodRecord: e))
-        .toList();
-    final foodRecordsViewModel = foodRecords
-        .where((e) => e.hasNutritionFacts)
-        .map((e) => FoodRecordViewModel(foodRecord: e))
+        .toList();*/
+    final foodRecordsViewModel = data
+        // .where((e) => e.hasNutritionFacts)
+        .map(
+          (e) => FoodRecordViewModel(
+            foodRecord: e.foodRecord,
+            image: e.image,
+            isBarcodeNotFound: e.isBarcodeNotFound,
+            isSelected: !e.isBarcodeNotFound,
+          ),
+        )
         .toList();
 
     return copyWith(
-      incompleteFoodRecords: incompleteFoodRecordsViewModel,
       foodRecords: foodRecordsViewModel,
     ).updateMacroNutrients();
   }
-
-
 
   TakePhotoResultViewModel copyWith({
     MealLabel? mealLabel,
     DateTime? dateTime,
     List<FoodRecordViewModel>? foodRecords,
-    List<FoodRecordViewModel>? incompleteFoodRecords,
     double? calories,
     double? caloriesTarget,
     double? carbs,
@@ -90,8 +94,6 @@ class TakePhotoResultViewModel {
       mealLabel: mealLabel ?? this.mealLabel,
       dateTime: dateTime ?? this.dateTime,
       foodRecords: foodRecords ?? this.foodRecords,
-      incompleteFoodRecords:
-          incompleteFoodRecords ?? this.incompleteFoodRecords,
       calories: calories ?? this.calories,
       caloriesTarget: caloriesTarget ?? this.caloriesTarget,
       carbs: carbs ?? this.carbs,
@@ -268,6 +270,8 @@ class TakePhotoResultViewModel {
 class FoodRecordViewModel {
   final FoodRecord foodRecord;
   final bool isSelected;
+  final Uint8List? image;
+  final bool isBarcodeNotFound;
 
   String get title => foodRecord.name;
 
@@ -277,15 +281,21 @@ class FoodRecordViewModel {
   const FoodRecordViewModel({
     required this.foodRecord,
     this.isSelected = true,
+    this.image,
+    this.isBarcodeNotFound = false,
   });
 
   FoodRecordViewModel copyWith({
     FoodRecord? foodRecord,
     bool? isSelected,
+    Uint8List? image,
+    bool? isBarcodeNotFound,
   }) {
     return FoodRecordViewModel(
       foodRecord: foodRecord ?? this.foodRecord,
       isSelected: isSelected ?? this.isSelected,
+      image: image ?? this.image,
+      isBarcodeNotFound: isBarcodeNotFound ?? this.isBarcodeNotFound,
     );
   }
 

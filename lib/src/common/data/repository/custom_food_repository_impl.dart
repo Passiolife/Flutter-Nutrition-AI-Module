@@ -22,7 +22,7 @@ class CustomFoodRepositoryImpl extends CustomFoodRepository {
 
   @override
   Future<void> addFoodImage({required String id, required Uint8List image}) async {
-    await connector.updateUserFoodImage(id: id, image: image, isNew: false);
+    await connector.updateUserFoodImage(id: id, image: image, isNew: true);
     return;
   }
 

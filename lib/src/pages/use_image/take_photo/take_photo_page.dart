@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../common/data/repository/nutrition_ai_repository_impl.dart';
 import '../../../common/router/routes.dart';
+import '../../../common/util/image_utility/image_utility_impl.dart';
 import '../../../common/util/show_widget_util.dart';
 import 'bloc/take_photo_bloc.dart';
 import 'models/take_photo_navigation_data_provider.dart';
@@ -53,11 +55,17 @@ class TakePhotoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final nutritionAIRepository = NutritionAIRepositoryImpl();
+    final imageUtility = ImageUtilityImpl();
+
     return TakePhotoNavigationDataProvider(
       returnResult: returnResult,
       maxLimit: maxLimit,
       child: BlocProvider(
-        create: (context) => TakePhotoBloc(),
+        create: (context) => TakePhotoBloc(
+          nutritionAIRepository: nutritionAIRepository,
+          imageUtility: imageUtility,
+        ),
         child: _TakePhotoScreen(),
       ),
     );

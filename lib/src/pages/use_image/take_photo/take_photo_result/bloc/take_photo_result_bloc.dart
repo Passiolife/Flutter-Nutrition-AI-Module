@@ -134,7 +134,7 @@ class TakePhotoResultBloc
 
       add(UpdateMacroNutrientEvent());
       add(UpdateActionButtonsEvent());
-      emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords, incompleteFoodRecordsViewModel: _viewModel.incompleteFoodRecords));
+      emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
       return;
     }
   }
@@ -146,7 +146,7 @@ class TakePhotoResultBloc
     _viewModel = _viewModel.updateFoodRecord(index, foodRecord);
     add(UpdateMacroNutrientEvent());
     add(UpdateActionButtonsEvent());
-    emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords, incompleteFoodRecordsViewModel: _viewModel.incompleteFoodRecords));
+    emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
   }
 
   Future<void> _handleCreateRecipeEvent(
@@ -166,6 +166,7 @@ class TakePhotoResultBloc
       DoLogEvent event, Emitter<TakePhotoResultState> emit) async {
     _viewModel.isLogLoading = true;
     emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
+
     final recordsModels = _viewModel.foodRecords.where((element) => element.isSelected).toList();
     final foodRecords = recordsModels.map((e) => e.foodRecord).toList();
     final selectedDateTime = _viewModel.dateTime;

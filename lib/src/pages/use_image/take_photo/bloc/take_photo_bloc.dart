@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
@@ -6,14 +7,18 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../nutrition_ai_module.dart';
+import '../../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../../common/models/advisor_food_info_log/advisor_food_info_log.dart';
 import '../../../../common/models/settings/settings.dart';
-import '../../../../common/util/flutter_image_compress_util.dart';
+import '../../../../common/util/image_utility/image_utility.dart';
 
 part 'take_photo_event.dart';
 part 'take_photo_state.dart';
 
 class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
+  final ImageUtility imageUtility;
+  final NutritionAIRepository nutritionAIRepository;
+
   /// [_connector] use to perform operations.
   PassioConnector get _connector =>
       NutritionAIModule.instance.configuration.connector;
@@ -21,7 +26,10 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
   List<Uint8List> _images = [];
   List<Uint8List> _resizedImages = [];
 
-  TakePhotoBloc() : super(const TakePhotoInitialBuilderState()) {
+  TakePhotoBloc({
+    required this.nutritionAIRepository,
+    required this.imageUtility,
+  }) : super(const TakePhotoInitialBuilderState()) {
     on<DoCheckIntroScreenEvent>(_handleDoCheckIntroScreenEvent);
     on<ShowIntroScreenEvent>(_handleShowIntroScreenEvent);
     on<DoIntroScreenCompletedEvent>(_handleDoIntroScreenCompletedEvent);
@@ -75,22 +83,25 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
 
   FutureOr<void> _handleDoTakeImageEvent(
       DoTakeImageEvent event, Emitter<TakePhotoState> emit) async {
-    if (event.file != null) {
-      final bytes =
-          await FlutterImageCompressUtil.angleCorrect(event.file!.path);
-      final resizedBytes = await FlutterImageCompressUtil.compress(
-        event.file!.path,
-        minWidth: 200,
-        minHeight: 200,
-      );
-      if (bytes != null && resizedBytes != null) {
-        _images = List.from(_images)..insert(0, bytes);
-        _resizedImages = List.from(_resizedImages)..insert(0, resizedBytes);
-        emit(TakePhotoSuccessListenerState(
-            images: _images, resizedImages: _resizedImages));
-        // emit(const TakePhotoSuccessBuilderState());
-      }
-    }
+    final xFile = event.file;
+    if (xFile == null) return;
+
+    final file = File(xFile.path);
+
+    emit(const CameraProcessingListenerState());
+
+    final fixOrientationImage = await imageUtility.fixOrientationToUint8List(file);
+    final resizedImage = await imageUtility.resizeUint8List(fixOrientationImage, width: 200, height: 200);
+    // final List<Uint8List> result = await Future.wait([
+    //   imageUtility.fixOrientationToUint8List(file),
+    //   imageUtility.resizeToUint8List(file, width: 200, height: 200),
+    // ]);
+    _images = List.from(_images)..insert(0, fixOrientationImage);
+    _resizedImages = List.from(_resizedImages)..insert(0, resizedImage);
+
+    emit(TakePhotoSuccessListenerState(
+        images: _images, resizedImages: _resizedImages));
+    // emit(const TakePhotoSuccessBuilderState());
   }
 
   FutureOr<void> _handleDoRemoveImageEvent(
@@ -98,7 +109,8 @@ class TakePhotoBloc extends Bloc<TakePhotoEvent, TakePhotoState> {
     final index = event.index;
     _images = List.from(_images)..removeAt(index);
     _resizedImages = List.from(_resizedImages)..removeAt(index);
-    emit(RemovePhotoListenerState(images: _images, resizedImages: _resizedImages));
+    emit(RemovePhotoListenerState(
+        images: _images, resizedImages: _resizedImages));
     // emit(const RemoveImageBuilderState());
   }
 

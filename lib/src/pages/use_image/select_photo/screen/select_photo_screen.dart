@@ -25,7 +25,6 @@ class _SelectPhotoScreenState extends State<_SelectPhotoScreen>
   void onPermissionGranted(Permission permission) {
     context.read<SelectPhotoBloc>().add(
       DoPhotoPickerEvent(
-        from: '',
         returnResult: _navigationDataProvider.returnResult,
         maxLimit: _navigationDataProvider.maxLimit,
       ),

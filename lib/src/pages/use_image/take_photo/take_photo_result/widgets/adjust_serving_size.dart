@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:nutrition_ai/nutrition_ai.dart';
@@ -15,14 +17,21 @@ import '../../../../../common/widgets/passio/serving_size_widget.dart';
 import 'edit_nutrition_facts.dart';
 
 class AdjustServingSize extends StatefulWidget {
-  const AdjustServingSize({required this.foodRecord, this.index, super.key});
+  const AdjustServingSize({
+    required this.foodRecord,
+    this.image,
+    this.index,
+    super.key,
+  });
 
   final FoodRecord foodRecord;
+  final Uint8List? image;
   final int? index;
 
   static Future<FoodRecord?> navigate({
     required BuildContext context,
     required FoodRecord foodRecord,
+    Uint8List? image,
     int? index,
   }) async {
     return await Navigator.push(
@@ -30,6 +39,7 @@ class AdjustServingSize extends StatefulWidget {
       HeroDialogRoute(
         child: AdjustServingSize(
           foodRecord: foodRecord,
+          image: image,
           index: index,
         ),
       ),
@@ -76,6 +86,7 @@ class _AdjustServingSizeState extends State<AdjustServingSize> {
                       Expanded(
                         child: FoodItemRow(
                           index: widget.index,
+                          image: widget.image,
                           iconId: _foodRecord.iconId,
                           title: _foodRecord.name,
                           subtitle:
@@ -83,16 +94,18 @@ class _AdjustServingSizeState extends State<AdjustServingSize> {
                         ),
                       ),
                       Visibility(
-                        visible: true,//_foodRecord.resultType == PassioFoodResultType.nutritionFacts,
+                        visible: _foodRecord.resultType !=
+                            PassioFoodResultType.foodItem,
                         child: IconPencilAltWidget(
                           onTap: () async {
                             FocusScope.of(context).unfocus();
                             // FocusManager.instance.primaryFocus?.unfocus();
-                            final newFoodRecord = await EditNutritionFacts.navigate(
+                            final newFoodRecord =
+                                await EditNutritionFacts.navigate(
                               context: context,
                               foodRecord: _foodRecord,
                             );
-                            if(newFoodRecord!=null) {
+                            if (newFoodRecord != null) {
                               setState(() {
                                 _foodRecord = newFoodRecord;
                               });

@@ -17,8 +17,7 @@ class ActionButtonsSection extends StatelessWidget {
       builder: (context, state) {
         if (state is! UpdateActionButtonsState) return const SizedBox.shrink();
         return ActionButtonsWidget(
-          onTapCreateRecipe: () => _onTapCreateRecipe(context),
-          createRecipeEnabled: state.viewModel.isCreateRecipeEnabled,
+          onTapNegativeButton: () => _onTapCreateRecipe(context),
           logEnabled: state.viewModel.isLogEnabled,
           onTapLogSelected: () => _onTapLogSelected(context),
           isLogLoading: state.viewModel.isLogLoading,
@@ -28,7 +27,8 @@ class ActionButtonsSection extends StatelessWidget {
   }
 
   void _onTapCreateRecipe(BuildContext context) {
-    context.read<TakePhotoResultBloc>().add(const CreateRecipeEvent());
+    Navigator.pop(context);
+    // context.read<TakePhotoResultBloc>().add(const CreateRecipeEvent());
   }
 
   void _onTapLogSelected(BuildContext context) {

@@ -11,12 +11,19 @@ import 'icons/icon_check_mark_widget.dart';
 
 class ItemAddedToDiaryWidget extends StatelessWidget {
   const ItemAddedToDiaryWidget({
+    this.title,
+    this.subtitle,
     this.negativeText,
     this.positiveText,
     this.onTapNegative,
     this.onTapPositive,
     super.key,
   });
+
+  /// Title
+  /// itemAddedToDiary
+  final String? title;
+  final String? subtitle;
 
   /// Negative Button
   /// Default text: View Diary
@@ -50,14 +57,12 @@ class ItemAddedToDiaryWidget extends StatelessWidget {
                 ),
                 SizedBox(height: AppDimens.h16),
                 Text(
-                  context.localization.itemAddedToDiary ?? '',
+                  title ?? context.localization.itemAddedToDiary ?? '',
                   style: AppTextStyle.textXl.addAll([AppTextStyle.bold]),
                   textAlign: TextAlign.center,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
                 ),
                 Text(
-                  context.localization.itemAddedToDiaryDescription ?? '',
+                  subtitle ?? context.localization.itemAddedToDiaryDescription ?? '',
                   style: AppTextStyle.textSm
                       .addAll([AppTextStyle.textSm.leading5]),
                   textAlign: TextAlign.center,

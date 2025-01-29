@@ -880,6 +880,13 @@ class AppLocalizations {
 
   String get updateAndLog => getLabel('updateAndLog');
 
+
   String get nutritionFactsCustomFoodCreationMessage =>
       getLabel('nutritionFactsCustomFoodCreationMessage');
+
+  String get barcodeNotFound => getLabel('barcodeNotFound');
+  String get barcodeNotFoundDescription => getLabel('barcodeNotFoundDescription');
+  String get customFoodCreated => getLabel('customFoodCreated');
+  String get customFoodCreatedDescription => getLabel('customFoodCreatedDescription');
+  String get viewYourDiaryOrAddMore => getLabel('viewYourDiaryOrAddMore');
 }

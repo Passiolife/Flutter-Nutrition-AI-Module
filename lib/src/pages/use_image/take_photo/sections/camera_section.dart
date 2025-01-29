@@ -33,9 +33,10 @@ class _CameraSectionState extends State<CameraSection> {
         BlocBuilder<TakePhotoBloc, TakePhotoState>(
           buildWhen: (_, state) {
             return state is TakePhotoSuccessListenerState ||
-                state is RemovePhotoListenerState || state is TakePhotoInitialBuilderState;
+                state is RemovePhotoListenerState || state is TakePhotoInitialBuilderState || state is CameraProcessingListenerState;
           },
           builder: (context, state) {
+            bool isProcessing = state is CameraProcessingListenerState;
             final images = (state is TakePhotoSuccessListenerState)
                 ? state.images
                 : (state is RemovePhotoListenerState)
@@ -49,8 +50,8 @@ class _CameraSectionState extends State<CameraSection> {
               onCapture: () {
                 _takePicture();
               },
-              captureEnabled: length < navigationData.maxLimit,
-              positiveEnabled: length > 0,
+              captureEnabled: !isProcessing && length < navigationData.maxLimit,
+              positiveEnabled: !isProcessing && length > 0,
               onPositiveTap: () {
                 if(navigationData.returnResult) {
                   Navigator.pop(context, images);

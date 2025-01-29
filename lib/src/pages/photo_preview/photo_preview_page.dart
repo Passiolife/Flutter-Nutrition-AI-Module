@@ -11,7 +11,7 @@ import '../../common/data/repository/nutrition_ai_repository_impl.dart';
 import '../../common/extension/context_extension.dart';
 import '../../common/models/food_record/food_record.dart';
 import '../../common/router/routes.dart';
-import '../../common/util/image_utility.dart';
+import '../../common/util/image_utility/image_utility_impl.dart';
 import '../../common/util/show_widget_util.dart';
 import '../../common/widgets/app_bar/custom_app_bar.dart';
 import '../nutrition_facts/edit_nutrition_facts/edit_nutrition_facts_page.dart';

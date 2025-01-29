@@ -117,6 +117,44 @@ class FoodRecord {
     required this.resultType,
   });
 
+  factory FoodRecord.fromCustomData({
+    required List<FoodRecordIngredient> ingredients,
+    String id = '',
+    String passioID = '',
+    String refCode = '',
+    String name = '',
+    String additionalData = '',
+    String iconId = '',
+    double selectedQuantity = FoodRecord.zeroQuantity,
+    String selectedUnit = '',
+    List<PassioServingUnit> servingUnits = const [],
+    List<PassioServingSize> servingSizes = const [],
+    PassioIDEntityType entityType = PassioIDEntityType.item,
+    String? openFoodLicense,
+    String? barcode,
+    PassioFoodResultType resultType = PassioFoodResultType.foodItem,
+  }) {
+    return FoodRecord._(
+      id,
+      passioID,
+      refCode,
+      name,
+      additionalData,
+      iconId,
+      servingSizes,
+      servingUnits,
+      selectedQuantity,
+      selectedUnit,
+      entityType,
+      ingredients,
+      null,
+      mealLabel: null,
+      openFoodLicense: openFoodLicense,
+      barcode: barcode,
+      resultType: resultType,
+    );
+  }
+
   /// Factory constructor to create a FoodRecord from a FoodRecordIngredient instance.
   factory FoodRecord.fromFoodRecordIngredient(FoodRecordIngredient ingredient,
       {PassioIDEntityType entityType = PassioIDEntityType.item}) {
@@ -167,11 +205,13 @@ class FoodRecord {
           .toList(),
       null,
       openFoodLicense: foodItem.isOpenFood(),
-      barcode: barcode ?? foodItem.ingredients
-          .cast<PassioIngredient?>()
-          .firstWhere((e) => e?.metadata.barcode != null, orElse: () => null)
-          ?.metadata
-          .barcode,
+      barcode: barcode ??
+          foodItem.ingredients
+              .cast<PassioIngredient?>()
+              .firstWhere((e) => e?.metadata.barcode != null,
+                  orElse: () => null)
+              ?.metadata
+              .barcode,
       resultType: resultType,
     );
     foodRecord._calculateQuantityForIngredients();

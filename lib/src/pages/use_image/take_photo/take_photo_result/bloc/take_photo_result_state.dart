@@ -26,17 +26,12 @@ final class ResultFailureState extends TakePhotoResultState {
 }
 
 final class ResultsSuccessState extends TakePhotoResultState {
-  const ResultsSuccessState({
-    required this.foodRecordsViewModel,
-    required this.incompleteFoodRecordsViewModel,
-  });
+  const ResultsSuccessState({required this.foodRecordsViewModel});
 
   final List<FoodRecordViewModel> foodRecordsViewModel;
-  final List<FoodRecordViewModel> incompleteFoodRecordsViewModel;
 
   @override
-  List<Object> get props =>
-      [foodRecordsViewModel, incompleteFoodRecordsViewModel];
+  List<Object> get props => [foodRecordsViewModel];
 }
 
 final class UpdateHeaderState extends TakePhotoResultState {

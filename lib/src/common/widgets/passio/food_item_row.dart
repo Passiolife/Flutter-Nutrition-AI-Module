@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -10,10 +12,12 @@ class FoodItemRow extends StatelessWidget {
     required this.iconId,
     required this.title,
     required this.subtitle,
+    this.image,
     this.index,
     super.key,
   });
 
+  final Uint8List? image;
   final String iconId;
   final String title;
   final String subtitle;
@@ -24,6 +28,7 @@ class FoodItemRow extends StatelessWidget {
     return Row(
       children: [
         PassioImageWidget(
+          image: image,
           iconId: iconId,
           heroTag: '$iconId $index',
           radius: 20.r,

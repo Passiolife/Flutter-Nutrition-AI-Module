@@ -41,7 +41,7 @@ class AddedToDiaryWidget extends StatelessWidget {
               ),
               SizedBox(height: AppDimens.h16),
               Text(
-                context.localization?.itemAddedToDiary ?? '',
+                context.localization.itemAddedToDiary ?? '',
                 style: AppTextStyle.textXl.addAll([AppTextStyle.bold]).copyWith(
                     color: AppColors.green500Success),
                 textAlign: TextAlign.center,
@@ -49,7 +49,7 @@ class AddedToDiaryWidget extends StatelessWidget {
                 overflow: TextOverflow.ellipsis,
               ),
               Text(
-                context.localization?.itemAddedToDiaryDescription ?? '',
+                context.localization.itemAddedToDiaryDescription ?? '',
                 style: AppTextStyle.textSm
                     .addAll([AppTextStyle.textSm.leading5]).copyWith(
                         color: AppColors.gray900),
@@ -62,7 +62,7 @@ class AddedToDiaryWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: AppButton(
-                      buttonText: context.localization?.viewDiary,
+                      buttonText: context.localization.viewDiary,
                       appButtonModel: AppButtonStyles.primaryBordered.copyWith(
                         padding: EdgeInsets.symmetric(vertical: AppDimens.h13),
                       ),
@@ -73,7 +73,7 @@ class AddedToDiaryWidget extends StatelessWidget {
                   Expanded(
                     child: AppButton(
                       buttonText: context
-                          .localization?.continueScanning.toUpperCaseWord,
+                          .localization.continueScanning.toUpperCaseWord,
                       appButtonModel: AppButtonStyles.primary.copyWith(
                         padding: EdgeInsets.symmetric(vertical: AppDimens.h13),
                       ),

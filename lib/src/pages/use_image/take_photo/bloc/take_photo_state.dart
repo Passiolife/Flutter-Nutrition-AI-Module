@@ -16,6 +16,13 @@ final class TakePhotoInitialListenerState extends ListenerState {
   List<Object> get props => [];
 }
 
+final class CameraProcessingListenerState extends ListenerState {
+  const CameraProcessingListenerState();
+
+  @override
+  List<Object?> get props => [];
+}
+
 final class TakePhotoSuccessListenerState extends ListenerState {
   const TakePhotoSuccessListenerState({
     required this.images,

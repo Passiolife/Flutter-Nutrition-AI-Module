@@ -55,7 +55,6 @@
   "allDay": "All Day",
   "noFoodInLog": "No food in log. \nPress Add Item below start.",
   "target": "Target:",
-
   "back": "Back",
   "recipeWith": "recipe with",
   "ingredients": "Ingredients",
@@ -238,10 +237,7 @@
   "generateReport": "Generate Report",
   "send": "Send",
   "aiAdvisor": "AI Advisor",
-
-
   "generatingResults": "Generating results...",
-
   "recognitionErrorMessage": "Failed to generate voice log recognition results.",
   "foodLogErrorMessage": "Unable to log your food entry at this time. Please try again later.",
   "useImage": "Use Image",
@@ -360,7 +356,6 @@
   "favoriteUpdatedSuccessfully": "Favorite updated successfully",
   "api": "API",
   "totalUsage": "Total Usage",
-
   "@common": {
     "description": "Used within the app for all subsequent translations."
   },
@@ -382,7 +377,6 @@
   "error": "Error",
   "timestamp": "Timestamp",
   "update": "Update",
-
   "@voiceLoggingPage": {
     "description": "Used within the voice logging page for all subsequent translations."
   },
@@ -395,7 +389,6 @@
   "microphonePermissionMessage": "App requires microphone access to capture your voice for food recognition.",
   "speechRecognitionPermissionMessage": "App requires speech recognition access to retrieve a list of recognized foods from your speech queries.",
   "yourResults": "Your Results",
-
   "@TakePhotoResultPage": {
     "description": "Used within the Take Photo Result Page for all subsequent translations."
   },
@@ -434,6 +427,10 @@
   "enterManually": "Enter Manually",
   "saveAndLog": "Save & Log",
   "updateAndLog": "Update & Log",
-  "nutritionFactsCustomFoodCreationMessage": "Logging this item will create a custom food. You can edit this item from your My Foods list."
-
+  "nutritionFactsCustomFoodCreationMessage": "Logging this item will create a custom food. You can edit this item from your My Foods list.",
+  "barcodeNotFound": "Barcode Not Found",
+  "barcodeNotFoundDescription": "item will not be logged, edit data manually",
+  "customFoodCreated": "A Custom Food Has Been Created",
+  "customFoodCreatedDescription": "The edits have been saved for future logs. You can edit this item from your My Foods lists.",
+  "viewYourDiaryOrAddMore": "View your diary or add more"
 }
