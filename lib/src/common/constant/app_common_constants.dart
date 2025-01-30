@@ -5,6 +5,8 @@ class AppCommonConstants {
   static const dateTime = 'dateTime';
 
   static const data = 'data';
+  static const index = 'index';
+  static const image = 'image';
 
   // Hero tags
   static const iconHeroTag = 'icon_tag';

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../common/constant/app_text_styles.dart';
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/extension/text_span_extension.dart';
+import '../../constant/app_text_styles.dart';
+import '../../extension/context_extension.dart';
+import '../../extension/text_span_extension.dart';
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({
@@ -17,7 +17,7 @@ class HeaderWidget extends StatelessWidget {
     return Column(
       children: [
         Text(
-          context.localization.editNutritionFacts ?? '',
+          context.localization.editNutritionFacts,
           style: AppTextStyle.textXl.addAll([
             AppTextStyle.textXl.leading7,
             AppTextStyle.bold,
@@ -46,7 +46,7 @@ class HeaderWidget extends StatelessWidget {
     String text = context.localization.nutritionFactsCustomFoodCreationMessage;
     if (isUpdate) {
       return text.replaceFirst(
-          context.localization.create ?? '', context.localization.update ?? '');
+          context.localization.create, context.localization.update);
     }
     return text;
   }

@@ -270,6 +270,7 @@ class TakePhotoResultViewModel {
 class FoodRecordViewModel {
   final FoodRecord foodRecord;
   final bool isSelected;
+  final bool isSaved;
   final Uint8List? image;
   final bool isBarcodeNotFound;
 
@@ -281,6 +282,7 @@ class FoodRecordViewModel {
   const FoodRecordViewModel({
     required this.foodRecord,
     this.isSelected = true,
+    this.isSaved = false,
     this.image,
     this.isBarcodeNotFound = false,
   });

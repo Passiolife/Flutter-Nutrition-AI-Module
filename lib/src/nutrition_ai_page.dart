@@ -4,10 +4,13 @@ import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
 
 import '../nutrition_ai_module.dart';
+import 'common/constant/app_constants.dart';
 import 'common/constant/app_theme.dart';
 import 'common/router/clear_focus_on_push_observer.dart';
 import 'common/router/navigation_route_observer.dart';
 import 'common/router/routes.dart';
+import 'common/util/navigation_utils/core_route.dart';
+import 'pages/adjust_serving_size/adjust_serving_size_page.dart';
 import 'pages/advisor/advisor_page.dart';
 import 'pages/barcode_scanner/barcode_scanner_page.dart';
 import 'pages/dashboard/dashboard_page.dart';
@@ -201,6 +204,22 @@ class NavigationAIPage extends StatelessWidget {
         barcode = arguments;
       }
       return NutritionFactsPage.route(barcode: barcode);
+    }
+
+    else if (settings.name == Routes.adjustServingSize) {
+      final Map<String, dynamic> arguments = settings.arguments as Map<String, dynamic>;
+
+      final FoodRecord foodRecord = arguments[AppCommonConstants.data];
+      final int? index = arguments[AppCommonConstants.index];
+      final Uint8List? image = arguments[AppCommonConstants.image];
+
+      return HeroDialogRoute(
+        child: AdjustServingSizePage(
+          foodRecord: foodRecord,
+          image: image,
+          index: index,
+        ),
+      );
     }
 
     // Empty Screen

@@ -6,6 +6,7 @@ import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/extension/string_extensions.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/util/double_extensions.dart';
 import '../../../../../common/util/navigation_utils/hero_dialog_route.dart';
@@ -14,7 +15,7 @@ import '../../../../../common/widgets/button/secondary_button.dart';
 import '../../../../../common/widgets/icons/icon_pencil_alt_widget.dart';
 import '../../../../../common/widgets/passio/food_item_row.dart';
 import '../../../../../common/widgets/passio/serving_size_widget.dart';
-import 'edit_nutrition_facts.dart';
+import '../../../../edit_nutrition_facts/edit_nutrition_facts_page.dart';
 
 class AdjustServingSize extends StatefulWidget {
   const AdjustServingSize({
@@ -99,7 +100,13 @@ class _AdjustServingSizeState extends State<AdjustServingSize> {
                         child: IconPencilAltWidget(
                           onTap: () async {
                             FocusScope.of(context).unfocus();
-                            // FocusManager.instance.primaryFocus?.unfocus();
+                            _showEditNutritionFactsPage(
+                              context: context,
+                              foodRecord: _foodRecord,
+                              imageBytes: widget.image,
+                            );
+
+                            /*// FocusManager.instance.primaryFocus?.unfocus();
                             final newFoodRecord =
                                 await EditNutritionFacts.navigate(
                               context: context,
@@ -109,7 +116,7 @@ class _AdjustServingSizeState extends State<AdjustServingSize> {
                               setState(() {
                                 _foodRecord = newFoodRecord;
                               });
-                            }
+                            }*/
                           },
                         ),
                       ),
@@ -143,6 +150,27 @@ class _AdjustServingSizeState extends State<AdjustServingSize> {
         ),
       ),
     );
+  }
+
+  Future<void> _showEditNutritionFactsPage({
+    required BuildContext context,
+    FoodRecord? foodRecord,
+    Uint8List? imageBytes,
+    String? barcode,
+  }) async {
+    final FoodRecord? newFoodRecord = await EditNutritionFactsPage.navigate(
+      context: context,
+      foodRecord: foodRecord,
+      imageBytes: imageBytes,
+      barcode: barcode,
+      positiveButtonText: foodRecord?.id.isNotNullOrEmpty == true ? context.localization.update : context.localization.save ,
+      shouldReturnOnSave: true,
+    );
+    if(newFoodRecord != null) {
+      setState(() {
+      _foodRecord = newFoodRecord;
+      });
+    }
   }
 }
 

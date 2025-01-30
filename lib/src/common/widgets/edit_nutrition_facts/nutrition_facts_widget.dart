@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../common/constant/app_constants.dart';
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/extension/number_extension.dart';
-import '../../../../common/extension/string_extensions.dart';
-import '../../../../common/formatter/single_decimal_formatter.dart';
-import '../../../../common/widgets/text_input/number_text_input.dart';
+import '../../constant/app_constants.dart';
+import '../../extension/context_extension.dart';
+import '../../extension/number_extension.dart';
+import '../../extension/string_extensions.dart';
+import '../../formatter/single_decimal_formatter.dart';
+import '../text_input/number_text_input.dart';
 
 class NutritionFactsWidget extends StatefulWidget {
   const NutritionFactsWidget({

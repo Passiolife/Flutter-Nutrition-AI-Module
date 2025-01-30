@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/edit_nutrition_facts_bloc.dart';
-import '../widgets/nutrition_facts_widget.dart';
+import '../../../../common/widgets/edit_nutrition_facts/nutrition_facts_widget.dart';
 
 class NutritionFactsSection extends StatefulWidget {
   const NutritionFactsSection({super.key});

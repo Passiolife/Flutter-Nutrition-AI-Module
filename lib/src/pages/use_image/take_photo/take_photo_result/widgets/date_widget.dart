@@ -48,6 +48,7 @@ class _TimeStampWidgetState extends State<TimeStampWidget> {
       isDense: true,
       readOnly: true,
       onTap: () {
+
         DatePicker.showAdaptive(context: context, selectedDate: _selectedDate, onDateTimeChanged: (dateTime) {
           setState(() {
             _selectedDate = dateTime;

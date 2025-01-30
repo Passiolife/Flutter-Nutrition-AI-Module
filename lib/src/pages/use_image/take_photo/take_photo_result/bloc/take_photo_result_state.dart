@@ -75,8 +75,10 @@ final class CreateRecipeSuccessState extends TakePhotoResultState {
 }
 
 final class FoodLogSuccessState extends TakePhotoResultState {
-  const FoodLogSuccessState();
+  const FoodLogSuccessState({required this.foodLogCount, required this.customFoodCount});
+  final int foodLogCount;
+  final int customFoodCount;
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [foodLogCount, customFoodCount];
 }

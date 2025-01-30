@@ -201,7 +201,7 @@ class FoodRecord {
       foodItem.amount.selectedUnit,
       foodItem.ingredients.length <= 1 ? entityType : PassioIDEntityType.recipe,
       foodItem.ingredients
-          .map(FoodRecordIngredient.fromPassioIngredient)
+          .map((e) => FoodRecordIngredient.fromPassioIngredient(e, entityType: entityType, resultType: resultType))
           .toList(),
       null,
       openFoodLicense: foodItem.isOpenFood(),

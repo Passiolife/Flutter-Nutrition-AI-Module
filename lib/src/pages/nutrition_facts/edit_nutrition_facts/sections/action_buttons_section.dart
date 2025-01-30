@@ -3,11 +3,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../common/extension/context_extension.dart';
 import '../bloc/edit_nutrition_facts_bloc.dart';
-import '../widgets/action_buttons_widget.dart';
+import '../../../../common/widgets/edit_nutrition_facts/action_buttons_widget.dart';
 
 class ActionButtonsSection extends StatelessWidget {
-  const ActionButtonsSection({this.onPositiveTap, super.key});
+  const ActionButtonsSection({this.positiveButtonText, this.onPositiveTap, this.onNegativeTap, super.key});
   final VoidCallback? onPositiveTap;
+  final String? positiveButtonText;
+  final  VoidCallback? onNegativeTap;
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +23,9 @@ class ActionButtonsSection extends StatelessWidget {
           isUpdate = state.isUpdate;
         }
         return ActionButtonsWidget(
-          positiveText: isUpdate ? context.localization.updateAndLog : context.localization.saveAndLog,
-          onCancel: () {
-            Navigator.pop(context);
+          positiveText: positiveButtonText ?? (isUpdate ? context.localization.updateAndLog : context.localization.saveAndLog),
+          onCancel: () async{
+            onNegativeTap?.call();
             Navigator.pop(context);
           },
           onPositiveTap: onPositiveTap,

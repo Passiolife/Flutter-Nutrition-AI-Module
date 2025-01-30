@@ -28,6 +28,7 @@ class FoodItemRow extends StatelessWidget {
     return Row(
       children: [
         PassioImageWidget(
+          key: ValueKey([image, iconId, index]),
           image: image,
           iconId: iconId,
           heroTag: '$iconId $index',

@@ -54,7 +54,7 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
 
   void _handleStateChanges(BuildContext context, TakePhotoResultState state) {
     if (state is FoodLogSuccessState) {
-      _showItemAddedToDiary(context);
+      _showItemAddedToDiary(context: context, foodLogCount: state.foodLogCount, customFoodCount: state.customFoodCount);
     } else if(state is CreateRecipeSuccessState) {
       final foodRecord = state.foodRecord;
       final recipeData = RecipeCreatorNavigationData(
@@ -64,13 +64,13 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
     }
   }
 
-  void _showItemAddedToDiary(BuildContext context) {
+  void _showItemAddedToDiary({required BuildContext context, required int foodLogCount, required int customFoodCount}) {
     ShowWidgetUtil.showCustomGeneralDialog(
       barrierDismissible: false,
       context: context,
       builder: (dContext) {
         return ItemAddedToDiaryWidget(
-          title: '5 Items Added To Diary\n1 Custom Food Created',
+          title: '$foodLogCount ${context.localization.itemsAddedToDiary}\n$customFoodCount ${context.localization.customFoodCreated}',
           subtitle: context.localization.viewYourDiaryOrAddMore,
           positiveText: context.localization.addMore.toUpperCaseWord,
           onTapNegative: () {

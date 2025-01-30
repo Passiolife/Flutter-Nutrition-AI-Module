@@ -7,9 +7,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_shadow.dart';
+import '../../../../common/data/repository/custom_food_repository_impl.dart';
 import '../../../../common/data/repository/food_log_repositoy_impl.dart';
 import '../../../../common/data/repository/nutrition_ai_repository_impl.dart';
 import '../../../../common/domain/repository/food_log_repositoy.dart';
+import '../../../../common/domain/use_cases/custom_food/add_custom_food_use_case.dart';
+import '../../../../common/domain/use_cases/custom_food/add_custom_foods_use_case.dart';
 import '../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
 import '../../../../common/extension/context_extension.dart';
@@ -61,6 +64,11 @@ class TakePhotoResultPage extends StatelessWidget {
       imageUtility: imageUtility,
     );
 
+    final customFoodRepository =
+        CustomFoodRepositoryImpl(connector: configuration.connector);
+    final addCustomFoodUseCase =
+        AddCustomFoodUseCase(customFoodRepository: customFoodRepository);
+
     return TakePhotoResultNavigationDataProvider(
       capturedImages: capturedImages,
       child: BlocProvider(
@@ -68,6 +76,8 @@ class TakePhotoResultPage extends StatelessWidget {
           nutritionConfiguration: NutritionAIModule.instance.configuration,
           foodRecordsByImageRecognition: foodRecordsByImageRecognition,
           addFoodLogsUseCase: AddFoodLogsUseCase(repository: repository),
+          addCustomFoodsUseCase:
+              AddCustomFoodsUseCase(addCustomFoodUseCase: addCustomFoodUseCase),
         ),
         child: _TakePhotoResultScreen(),
       ),

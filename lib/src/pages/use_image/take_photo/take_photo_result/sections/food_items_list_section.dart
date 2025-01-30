@@ -9,12 +9,12 @@ import '../../../../../common/extension/string_extensions.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/util/show_widget_util.dart';
 import '../../../../../common/widgets/item_added_to_diary_widget.dart';
+import '../../../../adjust_serving_size/adjust_serving_size_page.dart';
+import '../../../../edit_nutrition_facts/edit_nutrition_facts_page.dart';
 import '../bloc/take_photo_result_bloc.dart';
 import '../models/take_photo_result_view_model.dart';
-import '../widgets/adjust_serving_size.dart';
 import '../widgets/barcode_not_found_widget.dart';
 import '../widgets/custom_food_created_widget.dart';
-import '../widgets/edit_nutrition_facts.dart';
 import '../widgets/food_item_widget.dart';
 
 class FoodItemsListSection extends StatelessWidget {
@@ -41,7 +41,7 @@ class FoodItemsListSection extends StatelessWidget {
                   image: foodItemModel.image,
                   iconId: foodItemModel.foodRecord.iconId,
                   onTap: () {
-                    _showAddedToDiaryDialog(context);
+                    // _showAddedToDiaryDialog(context);
                     // _showEditNutritionFactsDialog(context, foodItemModel);
                   },
                 );
@@ -168,7 +168,22 @@ class FoodItemsListSection extends StatelessWidget {
     required FoodRecordViewModel viewModel,
     required int index,
   }) async {
-    // Adjust serving size:
+    _showAdjustServingSize(
+      context: context,
+      viewModel: viewModel,
+      index: index,
+    );
+    /*Navigator.pushNamed(
+      context,
+      Routes.adjustServingSize,
+      arguments: {
+        AppCommonConstants.data: viewModel.foodRecord,
+        AppCommonConstants.index: index,
+        AppCommonConstants.image: viewModel.image,
+      },
+    );*/
+
+    /*// Adjust serving size:
     FoodRecord? updatedFoodRecord = await AdjustServingSize.navigate(
       context: context,
       foodRecord: viewModel.foodRecord,
@@ -178,6 +193,51 @@ class FoodItemsListSection extends StatelessWidget {
     if (updatedFoodRecord != null && context.mounted) {
       context.read<TakePhotoResultBloc>().add(
           UpdateFoodRecordEvent(index: index, foodRecord: updatedFoodRecord));
+    }*/
+  }
+
+  Future<void> _showAdjustServingSize({
+    required BuildContext context,
+    required FoodRecordViewModel viewModel,
+    required int index,
+  }) async {
+    final FoodRecord? newFoodRecord = await AdjustServingSizePage.navigate(
+      context: context,
+      index: index,
+      foodRecord: viewModel.foodRecord,
+      image: viewModel.image,
+      onTapEditing: () {
+        _showEditNutritionFactsDialog(
+          context: context,
+          viewModel: viewModel,
+          index: index,
+        );
+      },
+    );
+    if (newFoodRecord != null && context.mounted) {
+      context
+          .read<TakePhotoResultBloc>()
+          .add(UpdateFoodRecordEvent(index: index, foodRecord: newFoodRecord));
+    }
+  }
+
+  Future<void> _showEditNutritionFactsDialog({
+    required BuildContext context,
+    required FoodRecordViewModel viewModel,
+    required int index,
+  }) async {
+    final newFoodRecord = await EditNutritionFactsPage.navigate(
+      context: context,
+      index: index,
+      foodRecord: viewModel.foodRecord,
+      imageBytes: viewModel.image,
+      shouldReturnOnSave: true,
+    );
+    if (newFoodRecord != null && newFoodRecord != viewModel.foodRecord && context.mounted) {
+      Navigator.pop(context);
+      context
+          .read<TakePhotoResultBloc>()
+          .add(UpdateFoodRecordEvent(index: index, foodRecord: newFoodRecord));
     }
   }
 
@@ -194,7 +254,7 @@ class FoodItemsListSection extends StatelessWidget {
         );
   }
 
-  Future<void> _showEditNutritionFactsDialog(
+  /*Future<void> _showEditNutritionFactsDialog(
       BuildContext context, FoodRecordViewModel viewModel) async {
     final foodRecord = viewModel.foodRecord;
     final newFoodRecord = await EditNutritionFacts.navigate(
@@ -206,12 +266,12 @@ class FoodItemsListSection extends StatelessWidget {
           .read<TakePhotoResultBloc>()
           .add(VerifyMissingDataEvent(foodRecord: newFoodRecord));
     }
-    /*if(newFoodRecord!=null) {
+    */ /*if(newFoodRecord!=null) {
       setState(() {
         _foodRecord = newFoodRecord;
       });
-    }*/
-  }
+    }*/ /*
+  }*/
 
   void _showCustomFoodCreatedDialog(BuildContext context) {
     ShowWidgetUtil.showCustomGeneralDialogNew(

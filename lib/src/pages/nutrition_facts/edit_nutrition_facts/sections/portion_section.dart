@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../bloc/edit_nutrition_facts_bloc.dart';
-import '../widgets/portion_widget.dart';
+import '../../../../common/widgets/edit_nutrition_facts/portion_widget.dart';
 
 class PortionSection extends StatelessWidget {
   const PortionSection({super.key});

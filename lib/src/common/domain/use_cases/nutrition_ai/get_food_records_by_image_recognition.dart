@@ -10,7 +10,13 @@ import '../base_api_usecase.dart';
 
 class GetFoodRecordsByImageRecognition
     with
-        BaseApiUseCase<List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>,
+        BaseApiUseCase<
+            List<
+                ({
+                  FoodRecord foodRecord,
+                  Uint8List? image,
+                  bool isBarcodeNotFound
+                })>,
             List<Uint8List>?> {
   final NutritionAIRepository repository;
   final ImageUtility imageUtility;
@@ -24,11 +30,20 @@ class GetFoodRecordsByImageRecognition
   Future<
       ({
         APIError? error,
-        List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})> response,
+        List<
+            ({
+              FoodRecord foodRecord,
+              Uint8List? image,
+              bool isBarcodeNotFound
+            })> response,
       })> call(List<Uint8List>? params) async {
     if (params == null) {
       return (
-        response: <({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>[],
+        response: <({
+          FoodRecord foodRecord,
+          Uint8List? image,
+          bool isBarcodeNotFound
+        })>[],
         error: null,
       );
     }
@@ -39,7 +54,11 @@ class GetFoodRecordsByImageRecognition
 
     if (recognitionResultsByImage.isEmpty) {
       return (
-        response: <({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>[],
+        response: <({
+          FoodRecord foodRecord,
+          Uint8List? image,
+          bool isBarcodeNotFound
+        })>[],
         error: null
       );
     }
@@ -63,10 +82,15 @@ class GetFoodRecordsByImageRecognition
     final List<FoodRecord> fetchedFoodRecords =
         (await Future.wait(foodRecordFutures)).whereType<FoodRecord>().toList();
 
-    final List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})> finalFoodRecords =
-        fetchedFoodRecords
+    final List<
+            ({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
+        finalFoodRecords = fetchedFoodRecords
             .map<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>(
-                (e) => (foodRecord: e, image: null, isBarcodeNotFound: false,))
+                (e) => (
+                      foodRecord: e,
+                      image: null,
+                      isBarcodeNotFound: false,
+                    ))
             .toList();
 
     final Map<int, int> indexes = recognitionResultsByImage
@@ -108,7 +132,8 @@ class GetFoodRecordsByImageRecognition
       for (var map in resizedImages) ...map,
     };
 
-    final List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
+    final List<
+            ({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
         packagedFoodRecords =
         recognitionResultsByImage.asMap().entries.expand((entry) {
       final index = entry.key;
@@ -119,16 +144,19 @@ class GetFoodRecordsByImageRecognition
           e.value.resultType == PassioFoodResultType.nutritionFacts;
     }).map((e) {
       final image = finalResizedImages[e.index];
+      final resultType = e.value.resultType;
+
       if (e.value.packagedFoodItem != null) {
-        final foodRecord =
-            FoodRecord.fromPassioFoodItem(e.value.packagedFoodItem!);
+        final foodRecord = FoodRecord.fromPassioFoodItem(
+          e.value.packagedFoodItem!,
+          resultType: resultType,
+        );
         return (foodRecord: foodRecord, image: image, isBarcodeNotFound: false);
       } else {
         final barcode = e.value.productCode;
         final nutrients = PassioNutrients.fromNutrients();
         final servingUnits = CustomFoodHelper.getDefaultServingUnits();
         final selectedUnit = CustomFoodHelper.defaultServingUnit;
-        final resultType = e.value.resultType;
 
         final foodRecordIngredient = FoodRecordIngredient.fromCustomData(
           barcode: barcode,
@@ -165,8 +193,9 @@ class GetFoodRecordsByImageRecognition
     //         ))
     //     .toList();
 
-    final List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})> foodRecords =
-        finalFoodRecords + packagedFoodRecords;
+    final List<
+            ({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
+        foodRecords = finalFoodRecords + packagedFoodRecords;
 
     // recognizedData.forEach((element) {
     //   print(element);

@@ -18,7 +18,7 @@ class ResultHeaderSection extends StatefulWidget {
 
 class _ResultHeaderSectionState extends State<ResultHeaderSection> {
   MealLabel? _mealLabel;
-  DateTime? _timeStamp;
+  DateTime? _dateTime;
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class _ResultHeaderSectionState extends State<ResultHeaderSection> {
       builder: (context, state) {
         if (state is UpdateHeaderState) {
           _mealLabel = state.viewModel.mealLabel;
-          _timeStamp = state.viewModel.dateTime;
+          _dateTime = state.viewModel.dateTime;
         }
         return Column(
           mainAxisSize: MainAxisSize.min,
@@ -50,7 +50,7 @@ class _ResultHeaderSectionState extends State<ResultHeaderSection> {
                   ),
                   Expanded(
                     child: TimeStampWidget(
-                      initialValue: _timeStamp,
+                      initialValue: _dateTime,
                       onSelected: _onTimeStampSelected,
                     ),
                   ),

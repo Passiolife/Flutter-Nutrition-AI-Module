@@ -41,7 +41,7 @@ class DatePicker {
       initialDate: selectedDate,
       firstDate: DateTime(1),
       lastDate: DateTime(2100),
-      confirmText: context.localization?.save,
+      confirmText: context.localization.save,
       barrierColor: AppColors.black75Opacity,
       initialEntryMode: DatePickerEntryMode.calendarOnly,
       builder: (BuildContext context, Widget? child) {
@@ -162,7 +162,7 @@ class DatePicker {
                               children: [
                                 Expanded(
                                   child: AppButton(
-                                    buttonText: context.localization?.today,
+                                    buttonText: context.localization.today,
                                     appButtonModel: AppButtonStyles
                                         .simpleSecondary
                                         .addAll(AppShadows.sm.boxShadow ?? []),
@@ -176,7 +176,7 @@ class DatePicker {
                                 SizedBox(width: AppDimens.w24),
                                 Expanded(
                                   child: AppButton(
-                                    buttonText: context.localization?.save,
+                                    buttonText: context.localization.save,
                                     appButtonModel: AppButtonStyles.primary
                                         .addAll(AppShadows.sm.boxShadow ?? []),
                                     onTap: () {

@@ -21,7 +21,7 @@ class CustomFoodCreatedWidget extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            context.localization.customFoodCreated,
+            context.localization.customFoodHasBeenCreated,
             style: AppTextStyle.textXl
                 .addAll([AppTextStyle.textXl.leading7, AppTextStyle.bold]),
           ),

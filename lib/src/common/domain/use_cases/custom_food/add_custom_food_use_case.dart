@@ -15,7 +15,7 @@ class AddCustomFoodUseCase {
     final List<dynamic> results = await Future.wait([
       customFoodRepository.addFood(foodRecord: foodRecord),
       if (image != null)
-        customFoodRepository.addFoodImage(id: foodRecord.id, image: image),
+        customFoodRepository.addFoodImage(id: foodRecord.iconId, image: image),
     ]);
     return results.first as String;
   }

@@ -430,7 +430,9 @@
   "nutritionFactsCustomFoodCreationMessage": "Logging this item will create a custom food. You can edit this item from your My Foods list.",
   "barcodeNotFound": "Barcode Not Found",
   "barcodeNotFoundDescription": "item will not be logged, edit data manually",
-  "customFoodCreated": "A Custom Food Has Been Created",
+  "customFoodHasBeenCreated": "A Custom Food Has Been Created",
   "customFoodCreatedDescription": "The edits have been saved for future logs. You can edit this item from your My Foods lists.",
-  "viewYourDiaryOrAddMore": "View your diary or add more"
+  "viewYourDiaryOrAddMore": "View your diary or add more",
+  "itemsAddedToDiary": "Items Added To Diary",
+  "customFoodCreated": "Custom Food Created"
 }

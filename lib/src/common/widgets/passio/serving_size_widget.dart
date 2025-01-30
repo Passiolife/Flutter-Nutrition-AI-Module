@@ -111,6 +111,13 @@ class ServingSizeWidgetState extends State<ServingSizeWidget> {
                 }).toList(),
                 onSelected: (value) {
                   if (value != null) {
+                    if(value.value == 'gram') {
+                      _quantity = 100;
+                    } else {
+                      _quantity = 1;
+                    }
+                    _quantityController.text = _quantity.format();
+                    _sliderData = _sliderData.updateSliderData(_unit, _quantity);
                     setState(() {
                       _unit = value.value;
                     });
@@ -128,7 +135,14 @@ class ServingSizeWidgetState extends State<ServingSizeWidget> {
           value: _quantity,
           divisions: _sliderData.divisions,
           onChanged: (newQuantity) {
-            _quantity = newQuantity.parseFormatted();
+            if (_sliderData.minSlider != newQuantity) {
+              _quantity = newQuantity.parseFormatted();
+            }
+            setState(() {
+              _quantity = newQuantity;
+            });
+
+            _quantityController.text = _quantity.format();
             widget.onServingSizeChanged(
                 ServingSize(quantity: _quantity, unit: _unit));
           },

@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../common/constant/app_constants.dart';
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/extension/number_extension.dart';
-import '../../../../common/extension/string_extensions.dart';
-import '../../../../common/models/key_value_model.dart';
-import '../../../../common/widgets/drop_down/secondary_dropdown.dart';
-import '../../../../common/widgets/text_input/number_text_input.dart';
+import '../../constant/app_constants.dart';
+import '../../extension/context_extension.dart';
+import '../../extension/number_extension.dart';
+import '../../extension/string_extensions.dart';
+import '../../models/key_value_model.dart';
+import '../drop_down/secondary_dropdown.dart';
+import '../text_input/number_text_input.dart';
 
 class PortionWidget extends StatefulWidget {
   const PortionWidget({
@@ -44,6 +44,8 @@ class _PortionWidgetState extends State<PortionWidget> {
         TextEditingController(text: widget.initialSelectedQuantity);
     _weightController = TextEditingController(text: widget.initialWeight);
 
+    _setWeightField();
+
     _setListener();
     super.initState();
   }
@@ -61,6 +63,7 @@ class _PortionWidgetState extends State<PortionWidget> {
       if (oldWidget.initialSelectedUnit != widget.initialSelectedUnit) {
         setState(() {
           _unit = widget.initialSelectedUnit ?? '';
+          _setWeightField();
         });
       }
       _setListener();
@@ -79,17 +82,11 @@ class _PortionWidgetState extends State<PortionWidget> {
   }
 
   void _onFieldSubmitted() {
-    String? serving = _servingController.text.localeFormatted().format();
-    String? weight = _weightController.text.localeFormatted().format();
-
-    if (widget.initialSelectedQuantity == serving &&
-        widget.initialWeight == weight &&
-        _unit == widget.initialSelectedUnit) {
-      return;
-    }
+    // String? serving = _servingController.text.localeFormatted().format();
+    // String? weight = _weightController.text.localeFormatted().format();
 
     setState(() {
-      _shouldVisibleWeightField = _unit != 'gram';
+      _setWeightField();
     });
 
     widget.onChange?.call(
@@ -97,6 +94,10 @@ class _PortionWidgetState extends State<PortionWidget> {
       _unit,
       (_weightController.text).localeFormatted(),
     );
+  }
+
+  void _setWeightField() {
+    _shouldVisibleWeightField = _unit != 'gram';
   }
 
   @override
@@ -113,7 +114,7 @@ class _PortionWidgetState extends State<PortionWidget> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          context.localization.portions ?? '',
+          context.localization.portions,
           style: AppTextStyle.textBase
               .addAll([AppTextStyle.textBase.leading6, AppTextStyle.semiBold]),
         ),
@@ -135,7 +136,7 @@ class _PortionWidgetState extends State<PortionWidget> {
                 spacing: 8.w,
                 children: [
                   Text(
-                    context.localization.unit ?? '',
+                    context.localization.unit,
                     style: AppTextStyle.textSm.addAll([
                       AppTextStyle.textSm.leading4,
                       AppTextStyle.medium
@@ -163,7 +164,7 @@ class _PortionWidgetState extends State<PortionWidget> {
               visible: _shouldVisibleWeightField,
               child: _buildField(
                 context: context,
-                title: context.localization.weight ?? '',
+                title: context.localization.weight,
                 controller: _weightController,
                 onFieldSubmitted: (value) {
                   _onFieldSubmitted();
@@ -202,13 +203,6 @@ class _PortionWidgetState extends State<PortionWidget> {
         },
         onFieldSubmitted: onFieldSubmitted,
         suffixText: unit ?? '',
-        // suffix: Text(
-        //   unit ?? '',
-        //   style: AppTextStyle.textSm.addAll(
-        //       [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
-        //     color: context.textThemeColors.brandTextLight,
-        //   ),
-        // ),
       ),
     );
   }

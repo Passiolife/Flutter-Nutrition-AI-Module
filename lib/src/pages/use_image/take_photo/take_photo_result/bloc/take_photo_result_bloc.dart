@@ -3,8 +3,10 @@ import 'dart:typed_data';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../common/domain/use_cases/custom_food/add_custom_foods_use_case.dart';
 import '../../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
+import '../../../../../common/helper/custom_food_helper.dart';
 import '../../../../../common/models/daily_nutrition_model.dart';
 import '../../../../../common/models/food_record/food_record.dart';
 import '../../../../../common/models/food_record/meal_label.dart';
@@ -14,6 +16,7 @@ import '../../../../../nutrition_ai_module_configuration.dart';
 import '../models/take_photo_result_view_model.dart';
 
 part 'take_photo_result_event.dart';
+
 part 'take_photo_result_state.dart';
 
 class TakePhotoResultBloc
@@ -25,6 +28,8 @@ class TakePhotoResultBloc
   final NutritionConfiguration nutritionConfiguration;
   final AddFoodLogsUseCase addFoodLogsUseCase;
 
+  final AddCustomFoodsUseCase addCustomFoodsUseCase;
+
   double caloriesTarget = 0;
   double carbsTarget = 0;
   double proteinTarget = 0;
@@ -34,6 +39,7 @@ class TakePhotoResultBloc
     required this.nutritionConfiguration,
     required this.foodRecordsByImageRecognition,
     required this.addFoodLogsUseCase,
+    required this.addCustomFoodsUseCase,
   }) : super(const TakePhotoResultInitial()) {
     on<InitializeEvent>(_handleInitializeEvent);
     on<SetDefaultHeaderEvent>(_handleSetDefaultMealLabelEvent);
@@ -49,32 +55,32 @@ class TakePhotoResultBloc
     on<VerifyMissingDataEvent>(_handleVerifyMissingDataEvent);
   }
 
-  Future<void> _handleInitializeEvent(
-      InitializeEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleInitializeEvent(InitializeEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     _viewModel = TakePhotoResultViewModel.init();
 
     emit(const TakePhotoResultInitial());
   }
 
-  Future<void> _handleSetDefaultMealLabelEvent(
-      SetDefaultHeaderEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleSetDefaultMealLabelEvent(SetDefaultHeaderEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     emit(UpdateHeaderState(viewModel: _viewModel));
   }
 
-  Future<void> _handleUpdateMealLabelEvent(
-      UpdateMealLabelEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleUpdateMealLabelEvent(UpdateMealLabelEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     _viewModel = _viewModel.updateMealLabel(event.mealLabel);
   }
 
-  Future<void> _handleUpdateTimeStampEvent(
-      UpdateTimeStampEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleUpdateTimeStampEvent(UpdateTimeStampEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     final dateTime = event.timeStamp;
     if (dateTime == null) return;
     _viewModel = _viewModel.updateDateTime(dateTime);
   }
 
-  Future<void> _handleSelectFoodItemEvent(
-      SelectFoodItemEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleSelectFoodItemEvent(SelectFoodItemEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     final index = event.index;
     final isSelected = event.isSelected;
     _viewModel = _viewModel.updateIsSelected(index, isSelected);
@@ -90,11 +96,15 @@ class TakePhotoResultBloc
 
   Future<void> _handleUpdateActionButtonsEvent(UpdateActionButtonsEvent event,
       Emitter<TakePhotoResultState> emit) async {
-    emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
+    emit(UpdateActionButtonsState(
+        viewModel: _viewModel,
+        timestamp: DateTime
+            .now()
+            .millisecondsSinceEpoch));
   }
 
-  Future<void> _handleDoProcessEvent(
-      DoProcessEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleDoProcessEvent(DoProcessEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     add(SetDefaultHeaderEvent());
     final capturedImages = event.images;
     if (capturedImages != null) {
@@ -110,7 +120,7 @@ class TakePhotoResultBloc
       }
 
       final profileModel =
-          UserProfileModel.fromJson(UserSession.instance.userProfile!.toJson());
+      UserProfileModel.fromJson(UserSession.instance.userProfile!.toJson());
       List<FoodRecord> dayRecords = await nutritionConfiguration.connector
           .fetchDayRecords(dateTime: _viewModel.dateTime);
 
@@ -139,8 +149,8 @@ class TakePhotoResultBloc
     }
   }
 
-  Future<void> _handleUpdateFoodRecordEvent(
-      UpdateFoodRecordEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleUpdateFoodRecordEvent(UpdateFoodRecordEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     final index = event.index;
     final foodRecord = event.foodRecord;
     _viewModel = _viewModel.updateFoodRecord(index, foodRecord);
@@ -149,41 +159,108 @@ class TakePhotoResultBloc
     emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
   }
 
-  Future<void> _handleCreateRecipeEvent(
-      CreateRecipeEvent event, Emitter<TakePhotoResultState> emit) async {
-    final recordsModels = _viewModel.foodRecords.where((element) => element.isSelected).toList();
+  Future<void> _handleCreateRecipeEvent(CreateRecipeEvent event,
+      Emitter<TakePhotoResultState> emit) async {
+    final recordsModels =
+    _viewModel.foodRecords.where((element) => element.isSelected).toList();
     final foodRecords = recordsModels.map((e) => e.foodRecord).toList();
 
     final foodRecord = foodRecords.first.initializeFoodRecord();
 
-    for(FoodRecord record in foodRecords) {
+    for (FoodRecord record in foodRecords) {
       foodRecord.addIngredientsToRecipe(foodRecord: record);
     }
-    emit(CreateRecipeSuccessState(timestamp: DateTime.now().millisecondsSinceEpoch, foodRecord: foodRecord));
+    emit(CreateRecipeSuccessState(
+        timestamp: DateTime
+            .now()
+            .millisecondsSinceEpoch,
+        foodRecord: foodRecord));
   }
 
-  Future<void> _handleDoLogEvent(
-      DoLogEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleDoLogEvent(DoLogEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     _viewModel.isLogLoading = true;
-    emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
+    emit(UpdateActionButtonsState(
+      viewModel: _viewModel,
+      timestamp: DateTime
+          .now()
+          .millisecondsSinceEpoch,
+    ));
 
-    final recordsModels = _viewModel.foodRecords.where((element) => element.isSelected).toList();
-    final foodRecords = recordsModels.map((e) => e.foodRecord).toList();
+    // Create custom food which are not saved logic.
+    final List<({FoodRecord foodRecord, Uint8List? image})> unsavedFoodRecords =
+    _viewModel.foodRecords
+        .where((element) => element.isSelected && !element.isSaved)
+        .map(
+            (e) {
+              e.foodRecord.iconId = CustomFoodHelper.generateIconId();
+              e.foodRecord.removeMeal();
+          return (foodRecord: e.foodRecord, image: e.image);
+        }
+    )
+        .toList();
+
+    final customFoodResult = await addCustomFoodsUseCase.call(
+        unsavedFoodRecords);
+
+    List<FoodRecord> unsavedFoodRecordsUpdated = unsavedFoodRecords
+        .asMap()
+        .entries
+        .map((e) {
+      final insertId = customFoodResult.elementAt(e.key);
+      e.value.foodRecord.id = insertId;
+      return e.value.foodRecord;
+    }).toList();
+
+    print(unsavedFoodRecords);
+    // End: Create custom food which are not saved.
+
+    List<FoodRecord> savedFoodRecords = _viewModel.foodRecords
+        .where((element) => element.isSelected && element.isSaved)
+        .map((e) => e.foodRecord)
+        .toList();
+
+    final customFoodRecords = unsavedFoodRecordsUpdated + savedFoodRecords;
+
     final selectedDateTime = _viewModel.dateTime;
     final selectedMealLabel = _viewModel.mealLabel;
-    for (var element in foodRecords) {
+    for (var element in customFoodRecords) {
+      element.refCode = '${FoodRecord.userFoodPrefix}${element.id}';
       element.logMeal(dateTime: selectedDateTime);
       element.mealLabel = selectedMealLabel;
     }
-    await addFoodLogsUseCase.call(foodRecords);
+    await addFoodLogsUseCase.call(customFoodRecords);
+
     _viewModel.isLogLoading = false;
-    emit(UpdateActionButtonsState(viewModel: _viewModel, timestamp: DateTime.now().millisecondsSinceEpoch));
-    emit(const FoodLogSuccessState());
+    emit(UpdateActionButtonsState(
+        viewModel: _viewModel,
+        timestamp: DateTime
+            .now()
+            .millisecondsSinceEpoch));
+    emit(FoodLogSuccessState(foodLogCount: customFoodRecords.length,
+        customFoodCount: unsavedFoodRecords.length));
+    // final customFoodResult = await addCustomFoodsUseCase.call(unsavedFoodRecords);
+
+    /*final recordsModels = _viewModel.unsavedFoodRecords.where((element) => element.isSelected).toList();
+    final unsavedFoodRecords = recordsModels.map((e) => e.foodRecord).toList();
+    final selectedDateTime = _viewModel.dateTime;
+    final selectedMealLabel = _viewModel.mealLabel;
+    for (var element in unsavedFoodRecords) {
+      element.logMeal(dateTime: selectedDateTime);
+      element.mealLabel = selectedMealLabel;
+    }
+    await addFoodLogsUseCase.call(unsavedFoodRecords);
+    _viewModel.isLogLoading = false;
+    emit(UpdateActionButtonsState(
+        viewModel: _viewModel,
+        timestamp: DateTime
+            .now()
+            .millisecondsSinceEpoch));
+    emit(FoodLogSuccessState(foodLogCount:));*/
   }
 
-  Future<void> _handleVerifyMissingDataEvent(
-      VerifyMissingDataEvent event, Emitter<TakePhotoResultState> emit) async {
+  Future<void> _handleVerifyMissingDataEvent(VerifyMissingDataEvent event,
+      Emitter<TakePhotoResultState> emit) async {
     final foodRecord = event.foodRecord;
-
   }
 }

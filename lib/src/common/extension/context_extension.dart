@@ -3,25 +3,23 @@ import 'package:flutter/material.dart';
 import '../constant/app_theme.dart';
 import '../locale/app_localizations.dart';
 
-extension Util on BuildContext {
-  MediaQueryData get info => MediaQuery.of(this);
-
-  EdgeInsets get padding => MediaQuery.paddingOf(this);
+extension MediaQueryExtension on BuildContext {
+  MediaQueryData get mediaQuery => MediaQuery.of(this);
+  EdgeInsets get mediaPadding => MediaQuery.paddingOf(this);
 }
-
 extension Dimension on BuildContext {
-  double get height => info.size.height;
+  double get height => mediaQuery.size.height;
 
-  double get width => info.size.width;
+  double get width => mediaQuery.size.width;
 
-  bool get isKeyboardVisible => info.viewInsets.bottom != 0.0;
+  bool get isKeyboardVisible => mediaQuery.viewInsets.bottom != 0.0;
 
-  double get keyboardHeightValue => info.viewInsets.bottom;
+  double get keyboardHeightValue => mediaQuery.viewInsets.bottom;
   EdgeInsets get keyboardHeight => EdgeInsets.only(bottom: keyboardHeightValue);
 
-  double get topPadding => padding.top;
+  double get topPadding => mediaPadding.top;
 
-  double get bottomPaddingValue => info.padding.bottom;
+  double get bottomPaddingValue => mediaQuery.padding.bottom;
 
   EdgeInsets get bottomPadding => EdgeInsets.only(bottom: bottomPaddingValue);
 

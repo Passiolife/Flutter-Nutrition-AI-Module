@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../../../common/extension/context_extension.dart';
-import '../../../../common/extension/string_extensions.dart';
-import '../../../../common/widgets/icons/barcode_scan_widget.dart';
-import '../../../../common/widgets/passio_image_widget.dart';
-import '../../../../common/widgets/text_input/primary_text_input.dart';
+import '../../extension/context_extension.dart';
+import '../../extension/string_extensions.dart';
+import '../icons/barcode_scan_widget.dart';
+import '../passio_image_widget.dart';
+import '../text_input/primary_text_input.dart';
 
 class DetailsWidget extends StatefulWidget {
   const DetailsWidget({
