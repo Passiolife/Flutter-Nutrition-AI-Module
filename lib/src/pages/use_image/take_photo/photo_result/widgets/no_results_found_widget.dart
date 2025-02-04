@@ -61,7 +61,7 @@ class NoResultsFoundWidget extends StatelessWidget {
               children: [
                 Expanded(
                   child: SecondaryButton(
-                    text: context.localization.tryAgain,
+                    text: context.localization.cancel,
                     padding: AppPadding.pv12,
                     onTap: () {
                       Navigator.pop(context);
@@ -71,8 +71,11 @@ class NoResultsFoundWidget extends StatelessWidget {
                 16.horizontalSpace,
                 Expanded(
                   child: PrimaryButton(
-                    text: context.localization.scanNutritionFacts,
+                    text: context.localization.tryAgain,
                     padding: AppPadding.pv12,
+                    onTap: () {
+                      Navigator.pop(context);
+                    },
                   ),
                 ),
               ],

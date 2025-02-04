@@ -12,7 +12,7 @@ typedef OnDateTimeChanged = Function(DateTime dateTime);
 class DatePicker {
   const DatePicker._();
 
-  static Future showAdaptive({
+  static Future<void> showAdaptive({
     required BuildContext context,
     DateTime? selectedDate,
     OnDateTimeChanged? onDateTimeChanged,

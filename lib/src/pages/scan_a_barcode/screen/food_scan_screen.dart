@@ -10,16 +10,14 @@ import '../../../common/router/routes.dart';
 import '../../../common/util/permission_manager_utility.dart';
 import '../../../common/util/show_widget_util.dart';
 import '../../../common/widgets/item_added_to_diary_widget.dart';
-import '../../dashboard/dashboard_page.dart';
 import '../bloc/food_scan_bloc.dart';
-import '../dialog/added_to_diary_dialog.dart';
-import '../dialog/intro_dialog.dart';
 import '../sections/app_bar_section.dart';
 import '../sections/camera_control_section.dart';
 import '../sections/camera_frame_section.dart';
 import '../sections/camera_section.dart';
 import '../sections/result_section.dart';
 import '../widgets/barcode_not_recognized_widget.dart';
+import '../widgets/intro_widget.dart';
 
 class FoodScanScreen extends StatefulWidget {
   const FoodScanScreen({super.key});
@@ -139,21 +137,28 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
   // Handle intro screen visibility
   void _handleIntroVisibilityState(IntroScreenVisibilityState state) {
     if (state.shouldVisible) {
-      IntroDialog.show(
-        context: context,
-        onTapOk: (context) {
-          Navigator.pop(context);
+      _showIntroDialog(context: context);
+    } else {
+      // Check for permissions
+      _checkPermission();
+    }
+  }
+
+  void _showIntroDialog({required BuildContext context}) {
+    ShowWidgetUtil.showCustomGeneralDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (dContext) {
+        return IntroWidget(onTap: () {
+          Navigator.pop(dContext);
           Future.delayed(const Duration(milliseconds: AppDimens.duration250),
               () {
             _checkPermission();
             _bloc?.add(const IntroScreenCompleteEvent());
           });
-        },
-      );
-    } else {
-      // Check for permissions
-      _checkPermission();
-    }
+        });
+      },
+    );
   }
 
   // Check camera permission
@@ -185,7 +190,7 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
             Navigator.pushNamedAndRemoveUntil(
               context,
               Routes.dashboard,
-                  (route) => route.isFirst,
+              (route) => route.isFirst,
               arguments: 1,
             );
           },
@@ -195,20 +200,5 @@ class _FoodScanScreenState extends State<FoodScanScreen> {
         );
       },
     );
-    // AddedToDiaryDialog.show(
-    //   context: context,
-    //   onTapViewDiary: (dialogContext) {
-    //     Navigator.pop(dialogContext);
-    //     DashboardPage.navigate(
-    //       context,
-    //       page: 1,
-    //       removeUntil: true,
-    //     );
-    //   },
-    //   onTapContinue: (dialogContext) {
-    //     Navigator.pop(dialogContext);
-    //     _bloc?.add(const StartScanningEvent());
-    //   },
-    // );
   }
 }

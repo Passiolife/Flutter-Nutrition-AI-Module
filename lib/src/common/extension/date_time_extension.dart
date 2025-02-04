@@ -56,7 +56,7 @@ abstract class DateFormatComponents {
   static const second2Digit = 'ss'; // 00
 
   // AM/PM marker
-  static const amPm = 'A'; // AM | PM
+  static const amPm = 'a'; // AM | PM
 }
 
 abstract class DateFormatStrings {

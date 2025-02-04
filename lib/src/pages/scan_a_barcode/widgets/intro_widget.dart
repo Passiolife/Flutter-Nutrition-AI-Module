@@ -34,41 +34,41 @@ class IntroWidget extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
-                  context.localization?.foodScanIntroTitle ?? '',
+                  context.localization.foodScanIntroTitle ?? '',
                   style: AppTextStyle.textXl.addAll([
                     AppTextStyle.textXl.leading6,
                     AppTextStyle.bold
                   ]).copyWith(color: AppColors.black),
                 ),
-                SizedBox(height: 4.h),
-                Text(
-                  context.localization?.foodScanIntroDescription ?? '',
-                  textAlign: TextAlign.center,
-                  style: AppTextStyle.textSm
-                      .addAll([]).copyWith(color: AppColors.black),
-                ),
+                // SizedBox(height: 4.h),
+                // Text(
+                //   context.localization.foodScanIntroDescription ?? '',
+                //   textAlign: TextAlign.center,
+                //   style: AppTextStyle.textSm
+                //       .addAll([]).copyWith(color: AppColors.black),
+                // ),
                 SizedBox(height: 16.h),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _FoodsVarietyWidget(
-                      imagePath: AppImages.icFoods,
-                      text: context.localization?.wholeFoodsMode,
-                    ),
+                    // _FoodsVarietyWidget(
+                    //   imagePath: AppImages.icFoods,
+                    //   text: context.localization.wholeFoodsMode,
+                    // ),
                     _FoodsVarietyWidget(
                       imagePath: AppImages.icBarcodes,
-                      text: context.localization?.barcodeMode,
+                      text: context.localization.barcodeMode,
                     ),
-                    _FoodsVarietyWidget(
-                      imagePath: AppImages.icNutritionFacts,
-                      text: context.localization?.nutritionFactsMode,
-                    ),
+                    // _FoodsVarietyWidget(
+                    //   imagePath: AppImages.icNutritionFacts,
+                    //   text: context.localization.nutritionFactsMode,
+                    // ),
                   ],
                 ),
                 SizedBox(height: 16.h),
                 AppButton(
                   onTap: onTap,
-                  buttonText: context.localization?.ok,
+                  buttonText: context.localization.ok,
                   appButtonModel: AppButtonStyles.primary,
                 ),
               ],

@@ -11,8 +11,9 @@ import '../../../../common/data/repository/custom_food_repository_impl.dart';
 import '../../../../common/data/repository/food_log_repositoy_impl.dart';
 import '../../../../common/data/repository/nutrition_ai_repository_impl.dart';
 import '../../../../common/domain/repository/food_log_repositoy.dart';
-import '../../../../common/domain/use_cases/custom_food/add_custom_food_use_case.dart';
 import '../../../../common/domain/use_cases/custom_food/add_custom_foods_use_case.dart';
+import '../../../../common/domain/use_cases/custom_food/create_custom_food_ingredient_use_case.dart';
+import '../../../../common/domain/use_cases/custom_food/save_custom_food_use_case.dart';
 import '../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
 import '../../../../common/extension/context_extension.dart';
@@ -32,6 +33,7 @@ import 'sections/generating_results_section.dart';
 import 'sections/macros_graph_section.dart';
 import 'sections/no_results_found_section.dart';
 import 'sections/result_header_section.dart';
+import 'widgets/custom_food_created_widget.dart';
 
 part 'screen/take_photo_result_screen.dart';
 
@@ -59,13 +61,15 @@ class TakePhotoResultPage extends StatelessWidget {
     final FoodLogRepository repository =
         FoodLogRepositoryImpl(connector: configuration.connector);
 
+    final customFoodRepository =
+        CustomFoodRepositoryImpl(connector: configuration.connector);
+
     final foodRecordsByImageRecognition = GetFoodRecordsByImageRecognition(
       repository: nutritionAIRepository,
       imageUtility: imageUtility,
+      customFoodRepository: customFoodRepository,
     );
 
-    final customFoodRepository =
-        CustomFoodRepositoryImpl(connector: configuration.connector);
     final addCustomFoodUseCase =
         AddCustomFoodUseCase(customFoodRepository: customFoodRepository);
 
@@ -76,8 +80,11 @@ class TakePhotoResultPage extends StatelessWidget {
           nutritionConfiguration: NutritionAIModule.instance.configuration,
           foodRecordsByImageRecognition: foodRecordsByImageRecognition,
           addFoodLogsUseCase: AddFoodLogsUseCase(repository: repository),
+          addCustomFoodUseCase: addCustomFoodUseCase,
           addCustomFoodsUseCase:
               AddCustomFoodsUseCase(addCustomFoodUseCase: addCustomFoodUseCase),
+          createCustomFoodIngredientUseCase:
+              CreateCustomFoodIngredientUseCase(),
         ),
         child: _TakePhotoResultScreen(),
       ),

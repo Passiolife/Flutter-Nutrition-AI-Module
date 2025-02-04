@@ -6,8 +6,8 @@ import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/widgets/button/primary_button.dart';
 import '../../../../../common/widgets/passio_image_widget.dart';
 
-class BarcodeMissingDataWidget extends StatelessWidget {
-  const BarcodeMissingDataWidget({this.onAddImage, super.key,});
+class NutritionFactsIncompleteWidget extends StatelessWidget {
+  const NutritionFactsIncompleteWidget({this.onAddImage, super.key,});
 
   final VoidCallback? onAddImage;
 
@@ -43,7 +43,7 @@ class BarcodeMissingDataWidget extends StatelessWidget {
             ),
           ),
           PrimaryButton(
-            text: context.localization.addImage ?? '',
+            text: context.localization.editNutrition ?? '',
             padding: AppPadding.pa8,
             onTap: onAddImage,
           ),

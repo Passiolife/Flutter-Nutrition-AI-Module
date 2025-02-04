@@ -10,5 +10,13 @@ final class DoProcessEvent extends PhotoPreviewEvent {
 
   @override
   List<Object?> get props => [file];
+}
 
+final class SaveEvent extends PhotoPreviewEvent {
+  const SaveEvent({required this.foodRecord, this.imageBytes});
+  final FoodRecord foodRecord;
+  final Uint8List? imageBytes;
+
+  @override
+  List<Object?> get props => [foodRecord, imageBytes];
 }

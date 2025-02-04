@@ -10,15 +10,15 @@ class CustomFoodRepositoryImpl extends CustomFoodRepository {
   const CustomFoodRepositoryImpl({required this.connector});
 
   @override
-  Future<String> addFood({required FoodRecord foodRecord}) async {
-    return await connector.updateUserFood(foodRecord: foodRecord, isNew: true);
+  Future<String> updateFood({required FoodRecord foodRecord, required bool isNew}) async {
+    return await connector.updateUserFood(foodRecord: foodRecord, isNew: isNew);
   }
 
-  @override
+  /*@override
   Future<String> updateFood({required FoodRecord foodRecord}) async {
     await connector.updateUserFood(foodRecord: foodRecord, isNew: false);
     return foodRecord.id;
-  }
+  }*/
 
   @override
   Future<void> addFoodImage({required String id, required Uint8List image}) async {

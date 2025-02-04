@@ -1,5 +1,6 @@
 import 'package:nutrition_ai/nutrition_ai.dart';
 
+import '../extension/core_extension.dart';
 import '../models/food_record/food_record.dart';
 
 class CustomFoodHelper {
@@ -15,6 +16,36 @@ class CustomFoodHelper {
     PassioServingUnit('serving', UnitMass(1, UnitMassType.grams)),
     PassioServingUnit('gram', UnitMass(1, UnitMassType.grams)),
   ];
+
+  static List<String> getServingUnitNames({String? unit}) {
+    final names = [
+      'serving',
+      'piece',
+      'small',
+      'medium',
+      'large',
+      'cup',
+      'oz',
+      'gram',
+      'ml',
+      'handful',
+      'scoop',
+      'tbsp',
+      'tsp',
+      'slice',
+      'can',
+      'bottle',
+      'bar',
+      'packet',
+    ];
+
+    if (unit.isNotNullOrEmpty == true && !names.contains(unit)) {
+      names.insert(0, unit!);
+    }
+
+    return names;
+  }
+
 
   static List<PassioServingSize> getDefaultServingSizes() =>
       _defaultServingSizes;

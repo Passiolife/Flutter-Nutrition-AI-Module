@@ -10,10 +10,11 @@ class AddCustomFoodUseCase {
 
   Future<String> call({
     required FoodRecord foodRecord,
+    required bool isNew,
     Uint8List? image,
   }) async {
     final List<dynamic> results = await Future.wait([
-      customFoodRepository.addFood(foodRecord: foodRecord),
+      customFoodRepository.updateFood(foodRecord: foodRecord, isNew: isNew),
       if (image != null)
         customFoodRepository.addFoodImage(id: foodRecord.iconId, image: image),
     ]);

@@ -80,7 +80,7 @@ class FoodRecordIngredient {
     String name = '',
     String additionalData = '',
     String iconId = '',
-    double selectedQuantity = FoodRecord.zeroQuantity,
+    double selectedQuantity = 1,
     String selectedUnit = '',
     List<PassioServingUnit> servingUnits = const [],
     List<PassioServingSize> servingSizes = const [],

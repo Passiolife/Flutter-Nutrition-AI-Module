@@ -54,8 +54,7 @@ class _CameraSectionState extends State<CameraSection> {
 
     if (context.mounted) {
       final navigatorData = NutritionFactsNavigationDataProvider.of(context);
-      // context.read<NutritionFactsBloc>().add(DoTakeImageEvent(file: xFile));
-      Navigator.pushNamed(
+      await Navigator.pushNamed(
         context,
         Routes.photoPreview,
         arguments: [

@@ -168,7 +168,8 @@ class _DashboardPageState extends State<DashboardPage> {
       TakePhotoPage.navigate(context);
       _bloc.add(const RefreshEvent());
     } else if (action == context.localization.selectPhotos) {
-      SelectPhotoPage.navigate(context);
+      await SelectPhotoPage.navigate(context);
+      _bloc.add(const RefreshEvent());
     } else if (action == context.localization.aiAdvisor) {
       await AdvisorPage.navigate(context);
       _bloc.add(const RefreshEvent());

@@ -7,9 +7,11 @@ import '../../extension/text_span_extension.dart';
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({
     this.isUpdate = false,
+    this.visibleSubtitle = false,
     super.key,
   });
 
+  final bool visibleSubtitle;
   final bool isUpdate;
 
   @override
@@ -23,20 +25,21 @@ class HeaderWidget extends StatelessWidget {
             AppTextStyle.bold,
           ]),
         ),
-        Text.rich(
-          textAlign: TextAlign.center,
-          TextSpan(
-            children:
-                getNutritionFactsCustomFoodCreationMessage(context, isUpdate)
-                    .generateSpans(
-              defaultStyle: AppTextStyle.textSm,
-              highlightStyles: {
-                context.localization.myFoods:
-                    AppTextStyle.textSm.addAll([AppTextStyle.bold]),
-              },
+        if (visibleSubtitle)
+          Text.rich(
+            textAlign: TextAlign.center,
+            TextSpan(
+              children:
+                  getNutritionFactsCustomFoodCreationMessage(context, isUpdate)
+                      .generateSpans(
+                defaultStyle: AppTextStyle.textSm,
+                highlightStyles: {
+                  context.localization.myFoods:
+                      AppTextStyle.textSm.addAll([AppTextStyle.bold]),
+                },
+              ),
             ),
           ),
-        ),
       ],
     );
   }

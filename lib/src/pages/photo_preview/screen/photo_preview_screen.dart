@@ -73,21 +73,31 @@ class _PhotoPreviewScreenState extends State<_PhotoPreviewScreen> {
       _showIngredientsNotFoundDialog(context: context);
     } else if (state is FailedToAnalyzedState) {
       _showFailedToAnalyzedState(context: context);
-    }*/
+    }*/ else if (state is SaveSuccessState) {
+      _showItemAddedToDiary(context);
+    }
   }
 
-  void _showEditNutritionFactsPage({
+  Future<void> _showEditNutritionFactsPage({
     required BuildContext context,
     FoodRecord? foodRecord,
     Uint8List? imageBytes,
     String? barcode,
-  }) {
-    EditNutritionFactsPage.navigate(
+  }) async {
+    final FoodRecord? newFoodRecord = await EditNutritionFactsPage.navigate(
       context: context,
       foodRecord: foodRecord,
       imageBytes: imageBytes,
       barcode: barcode,
+      visibleSubtitle: true,
     );
+    if(!context.mounted) {
+      return;
+    }
+    if(newFoodRecord == null) {
+      Navigator.pop(context);
+    }
+    context.read<PhotoPreviewBloc>().add(SaveEvent(foodRecord: newFoodRecord!, imageBytes: imageBytes!));
   }
 
   void _showNutritionFactsNotFoundDialog({required BuildContext context, required Uint8List imageBytes}) {
@@ -102,39 +112,34 @@ class _PhotoPreviewScreenState extends State<_PhotoPreviewScreen> {
           },
           onTapPositive: () {
             Navigator.pop(dsContext);
-            _showEditNutritionFactsPage(context: context, imageBytes: imageBytes);
+            _showEditNutritionFactsPage(context: context, imageBytes: imageBytes, barcode: _navigationData.barcode);
           },
         );
       },
     );
   }
 
-  void _showIngredientsNotFoundDialog({required BuildContext context}) {
-    ShowWidgetUtil.showCustomGeneralDialogNew(
+  void _showItemAddedToDiary(BuildContext context) {
+    ShowWidgetUtil.showCustomGeneralDialog(
       context: context,
       barrierDismissible: false,
-      builder: (BuildContext context) {
-        return NoIngredientsLabelFoundWidget(
-            // onTap: () {
-            //   Navigator.pop(context);
-            //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-            // },
+      builder: (dContext) {
+        return ItemAddedToDiaryWidget(
+          positiveText: context.localization.addMore.toUpperCaseWord,
+          onTapNegative: () {
+            Navigator.pushNamedAndRemoveUntil(
+              context,
+              Routes.dashboard,
+                  (route) => route.isFirst,
+              arguments: 1,
             );
+          },
+          onTapPositive: () {
+            Navigator.popUntil(
+                context, (route) => route.settings.name == Routes.foodScan);
+          },
+        );
       },
     );
-  }
-
-  void _showFailedToAnalyzedState({required BuildContext context}) {
-    // ShowWidgetUtil.showCustomGeneralDialogNew(
-    //   context: context,
-    //   builder: (BuildContext context) {
-    //     return FailedToAnalyzeImageWidget(
-    //       // onTap: () {
-    //       //   Navigator.pop(context);
-    //       //   _bloc?.add(const DoIntroScreenCompletedEvent(fromDialog: true));
-    //       // },
-    //     );
-    //   },
-    // );
   }
 }

@@ -434,5 +434,7 @@
   "customFoodCreatedDescription": "The edits have been saved for future logs. You can edit this item from your My Foods lists.",
   "viewYourDiaryOrAddMore": "View your diary or add more",
   "itemsAddedToDiary": "Items Added To Diary",
-  "customFoodCreated": "Custom Food Created"
+  "customFoodCreated": "Custom Food Created",
+  "missingData": "Missing Data",
+  "missingDataDescription": "Data missing, item will not be logged"
 }

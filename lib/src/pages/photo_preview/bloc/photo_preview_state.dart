@@ -69,3 +69,10 @@ final class FailedToAnalyzedState extends PhotoPreviewState {
   @override
   List<Object?> get props => [timestamp];
 }
+
+final class SaveSuccessState extends PhotoPreviewState {
+  const SaveSuccessState();
+
+  @override
+  List<Object> get props => [];
+}

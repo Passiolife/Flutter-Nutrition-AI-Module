@@ -34,6 +34,20 @@ final class ResultsSuccessState extends TakePhotoResultState {
   List<Object> get props => [foodRecordsViewModel];
 }
 
+final class CustomFoodCreatedState extends TakePhotoResultState {
+  const CustomFoodCreatedState();
+
+  @override
+  List<Object> get props => [];
+}
+
+final class CustomFoodUpdatedState extends TakePhotoResultState {
+  const CustomFoodUpdatedState();
+
+  @override
+  List<Object> get props => [];
+}
+
 final class UpdateHeaderState extends TakePhotoResultState {
   const UpdateHeaderState({required this.viewModel});
 

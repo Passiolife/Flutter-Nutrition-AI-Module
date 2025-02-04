@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../../common/extension/context_extension.dart';
 import '../../../common/router/routes.dart';
@@ -55,9 +56,7 @@ class _ResultSectionState extends State<ResultSection> {
                     onLog: () => _onLog(context: context),
                   )
                 : ScanningWidget(
-                    onTap: () {
-                      Navigator.pushNamed(context, Routes.nutritionFacts);
-                    },
+                    onTap: _openNutritionFacts,
                   ),
           ),
         );
@@ -90,5 +89,13 @@ class _ResultSectionState extends State<ResultSection> {
             foodRecord: foodRecord,
           ),
         );
+  }
+
+  Future<void> _openNutritionFacts() async {
+    await NutritionAI.instance.stopCamera();
+    if(mounted) {
+      await Navigator.pushNamed(context, Routes.nutritionFacts);
+    }
+    await NutritionAI.instance.startCamera();
   }
 }

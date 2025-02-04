@@ -28,6 +28,7 @@ final class RefreshDetailsState extends EditNutritionFactsState {
   List<Object?> get props => [iconId, barcode, name, imageBytes];
 }
 
+
 final class RefreshNutritionFactsState extends EditNutritionFactsState {
   const RefreshNutritionFactsState({
     this.calories,

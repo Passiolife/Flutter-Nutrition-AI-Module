@@ -23,7 +23,7 @@ class ActionButtonsSection extends StatelessWidget {
           isUpdate = state.isUpdate;
         }
         return ActionButtonsWidget(
-          positiveText: positiveButtonText ?? context.localization.save,
+          positiveText: positiveButtonText ?? (isUpdate ? context.localization.update : context.localization.save),
           onCancel: () async{
             onNegativeTap?.call();
             Navigator.pop(context);

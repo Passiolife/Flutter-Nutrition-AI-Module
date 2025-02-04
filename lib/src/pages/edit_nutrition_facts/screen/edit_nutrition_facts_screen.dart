@@ -24,6 +24,9 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
         imageBytes: _navigationData.imageBytes,
         barcode: _navigationData.barcode,
       ));
+      if(_navigationData.initialValidate) {
+        _formKey.currentState?.validate();
+      }
     });
     super.initState();
   }

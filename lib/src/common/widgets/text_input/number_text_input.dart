@@ -200,6 +200,9 @@ class _NumberTextInputState extends State<NumberTextInput> {
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
                 color: context.textThemeColors.brandTextDark,
               ),
+          onTapOutside: (_) {
+
+          },
           onFieldSubmitted: _setAndUpdateText,
           onChanged: widget.onChanged,
           maxLines: widget.maxLines,

@@ -5,12 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../../common/constant/app_constants.dart';
 import '../../../../../common/extension/context_extension.dart';
+import '../../../../../common/widgets/button/primary_button.dart';
 import '../../../../../common/widgets/icons/icon_pencil_alt_widget.dart';
 import '../../../../../common/widgets/passio_image_widget.dart';
 
-class BarcodeNotFoundWidget extends StatelessWidget {
-  const BarcodeNotFoundWidget({
+class MissingDataWidget extends StatelessWidget {
+  const MissingDataWidget({
     required this.iconId,
+    this.title,
     this.image,
     this.onTap,
     super.key,
@@ -18,6 +20,7 @@ class BarcodeNotFoundWidget extends StatelessWidget {
 
   final Uint8List? image;
   final String iconId;
+  final String? title;
   final VoidCallback? onTap;
 
   @override
@@ -29,24 +32,24 @@ class BarcodeNotFoundWidget extends StatelessWidget {
         padding: AppPadding.ph8 + AppPadding.pv16,
         margin: AppPadding.ph16,
         child: Row(
-          spacing: 8.w,
           children: [
             PassioImageWidget(
               image: image,
               iconId: iconId,
               radius: 20.r,
             ),
+            8.horizontalSpace,
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    context.localization.barcodeNotFound ?? '',
+                    title ?? context.localization.missingData,
                     style: AppTextStyle.textSm.addAll(
                         [AppTextStyle.textSm.leading5, AppTextStyle.semiBold]),
                   ),
                   Text(
-                    context.localization.barcodeNotFoundDescription ?? '',
+                    context.localization.missingDataDescription,
                     style: AppTextStyle.textSm
                         .addAll([AppTextStyle.textSm.leading5]).copyWith(
                             color: context.textThemeColors.brandTextLight),
@@ -55,11 +58,6 @@ class BarcodeNotFoundWidget extends StatelessWidget {
               ),
             ),
             IconPencilAltWidget(onTap: onTap),
-            /*PrimaryButton(
-              text: context.localization.editNutrition ?? '',
-              padding: AppPadding.pa8,
-              onTap: onTap,
-            ),*/
           ],
         ),
       ),

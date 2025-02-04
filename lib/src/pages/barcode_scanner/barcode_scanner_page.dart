@@ -22,6 +22,7 @@ class BarcodeScannerPage extends StatelessWidget {
 
   static MaterialPageRoute route() {
     return MaterialPageRoute(
+      settings: const RouteSettings(name: Routes.barcodeScanner),
       builder: (_) => const BarcodeScannerPage(),
     );
   }

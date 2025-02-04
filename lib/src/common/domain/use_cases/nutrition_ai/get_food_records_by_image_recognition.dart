@@ -1,69 +1,63 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import '../../../../../nutrition_ai_module.dart';
+import '../../../extension/core_extension.dart';
 import '../../../helper/custom_food_helper.dart';
 import '../../../models/api_error.dart';
 import '../../../util/image_utility/image_utility.dart';
+import '../../repository/custom_food_repository.dart';
 import '../../repository/nutrition_ai_repository.dart';
 import '../base_api_usecase.dart';
 
+class FoodRecordItem {
+  final FoodRecord foodRecord;
+  final Uint8List? image;
+  final bool isBarcodeNotFound;
+
+  const FoodRecordItem({
+    required this.foodRecord,
+    this.image,
+    required this.isBarcodeNotFound,
+  });
+}
+
 class GetFoodRecordsByImageRecognition
-    with
-        BaseApiUseCase<
-            List<
-                ({
-                  FoodRecord foodRecord,
-                  Uint8List? image,
-                  bool isBarcodeNotFound
-                })>,
-            List<Uint8List>?> {
+    with BaseApiUseCase<List<FoodRecordItem>, List<Uint8List>?> {
   final NutritionAIRepository repository;
+  final CustomFoodRepository customFoodRepository;
   final ImageUtility imageUtility;
 
   const GetFoodRecordsByImageRecognition({
     required this.imageUtility,
     required this.repository,
+    required this.customFoodRepository,
   });
 
   @override
   Future<
       ({
         APIError? error,
-        List<
-            ({
-              FoodRecord foodRecord,
-              Uint8List? image,
-              bool isBarcodeNotFound
-            })> response,
+        List<FoodRecordItem> response,
       })> call(List<Uint8List>? params) async {
     if (params == null) {
-      return (
-        response: <({
-          FoodRecord foodRecord,
-          Uint8List? image,
-          bool isBarcodeNotFound
-        })>[],
-        error: null,
-      );
+      return (response: <FoodRecordItem>[], error: null);
     }
 
     final List<List<PassioAdvisorFoodInfo>> recognitionResultsByImage =
-        (await Future.wait(
-            params.map((image) async => repository.recognizeImage(image))));
+        await _getRecognitionResults(params);
 
     if (recognitionResultsByImage.isEmpty) {
-      return (
-        response: <({
-          FoodRecord foodRecord,
-          Uint8List? image,
-          bool isBarcodeNotFound
-        })>[],
-        error: null
-      );
+      return (response: <FoodRecordItem>[], error: null);
     }
 
-    final List<PassioAdvisorFoodInfo> allRecognizedFoodInfo =
+    final basicFoodRecords =
+        await _processBasicFoodItems(recognitionResultsByImage);
+    final packagedFoodRecords =
+        await _processPackagedFoodItems(params, recognitionResultsByImage);
+
+    return (response: basicFoodRecords + packagedFoodRecords, error: null);
+
+    /*final List<PassioAdvisorFoodInfo> allRecognizedFoodInfo =
         recognitionResultsByImage.expand((list) => list).toList();
 
     final List<Future<FoodRecord?>> foodRecordFutures = allRecognizedFoodInfo
@@ -71,8 +65,10 @@ class GetFoodRecordsByImageRecognition
         .map((data) async {
       final foodData = data.foodDataInfo;
       if (foodData == null) return null;
+
       final foodItem = await repository.fetchFoodItemForDataInfo(foodData);
       if (foodItem == null) return null;
+
       return FoodRecord.fromPassioFoodItem(
         foodItem,
         resultType: data.resultType,
@@ -82,16 +78,13 @@ class GetFoodRecordsByImageRecognition
     final List<FoodRecord> fetchedFoodRecords =
         (await Future.wait(foodRecordFutures)).whereType<FoodRecord>().toList();
 
-    final List<
-            ({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
-        finalFoodRecords = fetchedFoodRecords
-            .map<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>(
-                (e) => (
-                      foodRecord: e,
-                      image: null,
-                      isBarcodeNotFound: false,
-                    ))
-            .toList();
+    final List<FoodRecordItem> finalFoodRecords = fetchedFoodRecords
+        .map<FoodRecordItem>((e) => FoodRecordItem(
+              foodRecord: e,
+              image: null,
+              isBarcodeNotFound: false,
+            ))
+        .toList();
 
     final Map<int, int> indexes = recognitionResultsByImage
         .asMap()
@@ -132,9 +125,7 @@ class GetFoodRecordsByImageRecognition
       for (var map in resizedImages) ...map,
     };
 
-    final List<
-            ({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
-        packagedFoodRecords =
+    final packagedFoodRecordsFutures =
         recognitionResultsByImage.asMap().entries.expand((entry) {
       final index = entry.key;
       final values = entry.value;
@@ -142,18 +133,32 @@ class GetFoodRecordsByImageRecognition
     }).where((e) {
       return e.value.resultType == PassioFoodResultType.barcode ||
           e.value.resultType == PassioFoodResultType.nutritionFacts;
-    }).map((e) {
+    }).map((e) async {
       final image = finalResizedImages[e.index];
       final resultType = e.value.resultType;
+      final barcode = e.value.productCode;
 
-      if (e.value.packagedFoodItem != null) {
-        final foodRecord = FoodRecord.fromPassioFoodItem(
+      FoodRecord? foodRecord;
+      bool isBarcodeNotFound;
+
+      if (barcode != null) {
+        foodRecord =
+            await customFoodRepository.fetchFoodByBarcode(barcode: barcode);
+      }
+      if (foodRecord != null) {
+        isBarcodeNotFound = false;
+      } else if (e.value.packagedFoodItem != null) {
+        foodRecord = FoodRecord.fromPassioFoodItem(
           e.value.packagedFoodItem!,
           resultType: resultType,
         );
-        return (foodRecord: foodRecord, image: image, isBarcodeNotFound: false);
+        if (foodRecord.resultType == PassioFoodResultType.nutritionFacts &&
+            foodRecord.name.isNullOrEmpty) {
+          foodRecord.name = 'Scanned Nutrition Label';
+        }
+
+        isBarcodeNotFound = false;
       } else {
-        final barcode = e.value.productCode;
         final nutrients = PassioNutrients.fromNutrients();
         final servingUnits = CustomFoodHelper.getDefaultServingUnits();
         final selectedUnit = CustomFoodHelper.defaultServingUnit;
@@ -165,70 +170,179 @@ class GetFoodRecordsByImageRecognition
           servingUnits: servingUnits,
           resultType: resultType,
         );
-        final foodRecord =
-            FoodRecord.fromFoodRecordIngredient(foodRecordIngredient);
-        return (foodRecord: foodRecord, image: image, isBarcodeNotFound: true);
+        foodRecord = FoodRecord.fromFoodRecordIngredient(foodRecordIngredient);
+        isBarcodeNotFound = true;
       }
-    }).toList();
-    /*final List<({FoodRecord foodRecord, Uint8List? image})> packagedFoodRecords = recognitionResultsByImage
-        .asMap()
-        .entries.expand((e) => e.)
-        .where((entry) => entry.value[entry.key].packagedFoodItem != null)
-        .map((e) {
-          final result = (foodRecord: e);
-      */ /*rowEntry.value.asMap().entries.forEach((colEntry) {
-        if (colEntry.value.resultType == PassioFoodResultType.barcode ||
-            colEntry.value.resultType == PassioFoodResultType.nutritionFacts) {
-          result[rowEntry.key] = colEntry.key; // Add to the result map
-        }
-      });*/ /*
-      return result;
-    }).toList();*/
+      return FoodRecordItem(
+          foodRecord: foodRecord,
+          image: image,
+          isBarcodeNotFound: isBarcodeNotFound);
+    });
 
-    // List<FoodRecord> packagedFoodRecords = allRecognizedFoodInfo
-    //     .where((e) => e.packagedFoodItem != null)
-    //     .map((e) => FoodRecord.fromPassioFoodItem(
-    //           e.packagedFoodItem!,
-    //           resultType: e.resultType,
-    //         ))
-    //     .toList();
+    final List<FoodRecordItem> packagedFoodRecords =
+        await Future.wait(packagedFoodRecordsFutures);
 
-    final List<
-            ({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
-        foodRecords = finalFoodRecords + packagedFoodRecords;
+    final List<FoodRecordItem> foodRecords =
+        finalFoodRecords + packagedFoodRecords;
 
-    // recognizedData.forEach((element) {
-    //   print(element);
-    // });
-    // final recognizedData = await repository.recognizeImages(params);
-    /*
-    var foodRecordFutures =
-        recognizedData.where((e) => e.foodDataInfo != null).map((e) async {
-      final foodData = e.foodDataInfo;
-      if (foodData == null) return null;
-      final foodItem = await repository.fetchFoodItemForDataInfo(foodData);
-      if (foodItem == null) return null;
-      return FoodRecord.fromPassioFoodItem(
-        foodItem,
-        resultType: e.resultType,
-      );
-    }).toList();
+    return (response: foodRecords, error: null);*/
+  }
 
-    // Use Future.wait to resolve all futures and filter out nulls
-    List<FoodRecord> fetchedFoodRecords = (await Future.wait(foodRecordFutures))
+  Future<List<List<PassioAdvisorFoodInfo>>> _getRecognitionResults(
+      List<Uint8List> params) async {
+    return Future.wait(
+      params.map((image) => repository.recognizeImage(image)),
+    );
+  }
+
+  Future<List<FoodRecordItem>> _processBasicFoodItems(
+      List<List<PassioAdvisorFoodInfo>> recognitionResultsByImage) async {
+    final List<PassioAdvisorFoodInfo> allRecognizedFoodInfo =
+        recognitionResultsByImage
+            .expand((results) => results)
+            .where((info) => info.foodDataInfo != null)
+            .toList();
+
+    final foodRecords = await Future.wait(
+      allRecognizedFoodInfo.map(_convertToFoodRecord),
+    );
+
+    return foodRecords
         .whereType<FoodRecord>()
-        .toList();
-
-    List<FoodRecord> packagedFoodRecords = recognizedData
-        .where((e) => e.packagedFoodItem != null)
-        .map((e) => FoodRecord.fromPassioFoodItem(
-              e.packagedFoodItem!,
-              resultType: e.resultType,
+        .map((record) => FoodRecordItem(
+              foodRecord: record,
+              isBarcodeNotFound: false,
             ))
         .toList();
+  }
 
-    final foodRecords = fetchedFoodRecords + packagedFoodRecords;
-*/
-    return (response: foodRecords, error: null);
+  Future<FoodRecord?> _convertToFoodRecord(PassioAdvisorFoodInfo info) async {
+    final foodItem =
+        await repository.fetchFoodItemForDataInfo(info.foodDataInfo!);
+    return foodItem.let((value) => FoodRecord.fromPassioFoodItem(
+          value,
+          resultType: info.resultType,
+        ));
+  }
+
+  Future<List<FoodRecordItem>> _processPackagedFoodItems(
+    List<Uint8List> params,
+    List<List<PassioAdvisorFoodInfo>> recognitionResultsByImage,
+  ) async {
+    final targetResults = recognitionResultsByImage
+        .asMap().entries
+        .expand((entry) {
+      final index = entry.key;
+      final values = entry.value;
+      return values.map((value) => (index: index, value: value));
+    })
+        .where((e) => _isPackagedResultType(e.value))
+        .toList();
+
+    if (targetResults.isEmpty) return [];
+
+    final Set<int> imageIndexesToResize =
+        _getImageIndexesToResize(recognitionResultsByImage);
+    final Map<int, Uint8List> resizedImages =
+        await _resizeImages(params, imageIndexesToResize);
+
+    /*
+    final packagedFoodRecordsFutures =
+        recognitionResultsByImage.asMap().entries.expand((entry) {
+      final index = entry.key;
+      final values = entry.value;
+      return values.map((value) => (index: index, value: value));
+    }).where((e) {
+      return e.value.resultType == PassioFoodResultType.barcode ||
+          e.value.resultType == PassioFoodResultType.nutritionFacts;
+    }).map((e) async {
+      final image = finalResizedImages[e.index];
+      final resultType = e.value.resultType;
+      final barcode = e.value.productCode;
+    */
+    return Future.wait(
+      targetResults
+          .map((entry) => _createPackagedFoodRecord(entry.index, entry.value, resizedImages)),
+    );
+  }
+
+  bool _isPackagedResultType(PassioAdvisorFoodInfo info) {
+    return info.resultType == PassioFoodResultType.barcode ||
+        info.resultType == PassioFoodResultType.nutritionFacts;
+  }
+
+  Set<int> _getImageIndexesToResize(
+      List<List<PassioAdvisorFoodInfo>> recognitionResultsByImage) {
+    final indexes = <int>{};
+    for (var i = 0; i < recognitionResultsByImage.length; i++) {
+      if (recognitionResultsByImage[i].any(_isPackagedResultType)) {
+        indexes.add(i);
+      }
+    }
+    return indexes;
+  }
+
+  Future<Map<int, Uint8List>> _resizeImages(
+      List<Uint8List> params, Set<int> imageIndexes) async {
+    final resizedImages = await Future.wait(
+      imageIndexes.map((index) async {
+        final resized = await imageUtility.resizeUint8List(
+          params[index],
+          width: 100,
+          height: 100,
+        );
+        return MapEntry(index, resized);
+      }),
+    );
+    return Map.fromEntries(resizedImages);
+  }
+
+  Future<FoodRecordItem> _createPackagedFoodRecord(
+    int index,
+    PassioAdvisorFoodInfo info,
+    Map<int, Uint8List> resizedImages,
+  ) async {
+    final image = resizedImages[index];
+    final barcode = info.productCode;
+    FoodRecord? foodRecord;
+    bool isBarcodeNotFound = false;
+
+    if (barcode != null) {
+      foodRecord =
+          await customFoodRepository.fetchFoodByBarcode(barcode: barcode);
+    }
+
+    if (foodRecord != null) {
+    } else if (info.packagedFoodItem != null) {
+      foodRecord = FoodRecord.fromPassioFoodItem(
+        info.packagedFoodItem!,
+        resultType: info.resultType,
+      );
+      if (foodRecord.resultType == PassioFoodResultType.nutritionFacts &&
+          foodRecord.name.isNullOrEmpty) {
+        foodRecord.name = 'Scanned Nutrition Label';
+      }
+    } else {
+      foodRecord = _createDefaultFoodRecord(info);
+      isBarcodeNotFound = true;
+    }
+
+    return FoodRecordItem(
+      foodRecord: foodRecord,
+      image: image,
+      isBarcodeNotFound: isBarcodeNotFound,
+    );
+  }
+
+  FoodRecord _createDefaultFoodRecord(PassioAdvisorFoodInfo info) {
+    final foodRecordIngredient = FoodRecordIngredient.fromCustomData(
+      barcode: info.productCode,
+      nutrients: PassioNutrients.fromNutrients(),
+      selectedUnit: CustomFoodHelper.defaultServingUnit,
+      servingUnits: CustomFoodHelper.getDefaultServingUnits(),
+      resultType: info.resultType,
+    );
+
+    return FoodRecord.fromFoodRecordIngredient(foodRecordIngredient);
   }
 }

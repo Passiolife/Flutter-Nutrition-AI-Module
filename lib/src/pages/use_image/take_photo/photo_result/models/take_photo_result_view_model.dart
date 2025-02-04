@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_colors.dart';
+import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
+import '../../../../../common/extension/core_extension.dart';
 import '../../../../../common/extension/number_extension.dart';
 import '../../../../../common/models/daily_nutrition_model.dart';
 import '../../../../../common/util/double_extensions.dart';
@@ -52,24 +54,26 @@ class TakePhotoResultViewModel {
     );
   }
 
-  TakePhotoResultViewModel fromFoodRecords(
-      List<({FoodRecord foodRecord, Uint8List? image, bool isBarcodeNotFound})>
-          data) {
-    /*final incompleteFoodRecordsViewModel = foodRecords
-        .where((e) => !e.hasNutritionFacts)
-        .map((e) => FoodRecordViewModel(foodRecord: e))
-        .toList();*/
-    final foodRecordsViewModel = data
-        // .where((e) => e.hasNutritionFacts)
-        .map(
-          (e) => FoodRecordViewModel(
-            foodRecord: e.foodRecord,
-            image: e.image,
-            isBarcodeNotFound: e.isBarcodeNotFound,
-            isSelected: !e.isBarcodeNotFound,
-          ),
-        )
-        .toList();
+  TakePhotoResultViewModel fromFoodRecords(List<FoodRecordItem> data) {
+    final foodRecordsViewModel = data.map((e) {
+      final foodRecord = e.foodRecord;
+      final resultType = foodRecord.resultType;
+      final hasFullMacros = foodRecord.hasFullMacros;
+      final isValidBarcode = !e.isBarcodeNotFound;
+
+      final isFoodItem = resultType == PassioFoodResultType.foodItem;
+      final hasCompleteData = isFoodItem || hasFullMacros;
+      final isMissingData = !isFoodItem && !hasFullMacros;
+
+      return FoodRecordViewModel(
+        foodRecord: foodRecord,
+        image: e.image,
+        isBarcodeNotFound: e.isBarcodeNotFound,
+        isSelected: isValidBarcode && hasCompleteData,
+        isSaved: foodRecord.id.isNotNullOrEmpty,
+        hasMissingData: isMissingData,
+      );
+    }).toList();
 
     return copyWith(
       foodRecords: foodRecordsViewModel,
@@ -125,6 +129,12 @@ class TakePhotoResultViewModel {
     final updatedFoodRecordViewModel =
         foodRecords.elementAt(index).updateFoodRecord(foodRecord);
     foodRecords[index] = updatedFoodRecordViewModel;
+    return copyWith(foodRecords: foodRecords);
+  }
+
+  TakePhotoResultViewModel updateFoodRecordViewModel(
+      int index, FoodRecordViewModel foodRecordViewModel) {
+    foodRecords[index] = foodRecordViewModel;
     return copyWith(foodRecords: foodRecords);
   }
 
@@ -273,6 +283,7 @@ class FoodRecordViewModel {
   final bool isSaved;
   final Uint8List? image;
   final bool isBarcodeNotFound;
+  final bool hasMissingData;
 
   String get title => foodRecord.name;
 
@@ -285,19 +296,24 @@ class FoodRecordViewModel {
     this.isSaved = false,
     this.image,
     this.isBarcodeNotFound = false,
+    this.hasMissingData = false,
   });
 
   FoodRecordViewModel copyWith({
     FoodRecord? foodRecord,
     bool? isSelected,
+    bool? isSaved,
     Uint8List? image,
     bool? isBarcodeNotFound,
+    bool? hasMissingData,
   }) {
     return FoodRecordViewModel(
       foodRecord: foodRecord ?? this.foodRecord,
       isSelected: isSelected ?? this.isSelected,
+      isSaved: isSaved ?? this.isSaved,
       image: image ?? this.image,
       isBarcodeNotFound: isBarcodeNotFound ?? this.isBarcodeNotFound,
+      hasMissingData: hasMissingData ?? this.hasMissingData,
     );
   }
 
@@ -307,5 +323,17 @@ class FoodRecordViewModel {
 
   FoodRecordViewModel updateFoodRecord(FoodRecord foodRecord) {
     return copyWith(foodRecord: foodRecord);
+  }
+
+  FoodRecordViewModel updateIsSaved(bool value) {
+    return copyWith(isSaved: value);
+  }
+
+  FoodRecordViewModel updateIsBarcodeNotFound(bool value) {
+    return copyWith(isBarcodeNotFound: value);
+  }
+
+  FoodRecordViewModel updateHasMissingData(bool value) {
+    return copyWith(hasMissingData: value);
   }
 }

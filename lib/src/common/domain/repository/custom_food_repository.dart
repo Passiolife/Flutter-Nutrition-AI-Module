@@ -6,9 +6,9 @@ abstract class CustomFoodRepository {
   const CustomFoodRepository();
 
   // Food Related
-  Future<String> addFood({required FoodRecord foodRecord});
+  Future<String> updateFood({required FoodRecord foodRecord, required bool isNew});
 
-  Future<String> updateFood({required FoodRecord foodRecord});
+  // Future<String> updateFood({required FoodRecord foodRecord});
 
   // Image Related
   Future<void> addFoodImage({required String id, required Uint8List image});

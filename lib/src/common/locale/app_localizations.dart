@@ -115,8 +115,7 @@ class AppLocalizations {
 
   String get searching => getLabel('searching');
 
-  String get noFoodSearchResultMessage =>
-      getLabel('noFoodSearchResultMessage');
+  String get noFoodSearchResultMessage => getLabel('noFoodSearchResultMessage');
 
   String get myFavorites => getLabel('myFavorites');
 
@@ -280,8 +279,7 @@ class AppLocalizations {
   String get barcodeNotRecognizedDescription =>
       getLabel('barcodeNotRecognizedDescription');
 
-  String get packagedFoodNotRecognized =>
-      getLabel('packagedFoodNotRecognized');
+  String get packagedFoodNotRecognized => getLabel('packagedFoodNotRecognized');
 
   String get tryScanningNutritionFactsInstead =>
       getLabel('tryScanningNutritionFactsInstead');
@@ -403,11 +401,9 @@ class AppLocalizations {
 
   String get weightRecorded => getLabel('weightRecorded');
 
-  String get weightRecordDeleteMessage =>
-      getLabel('weightRecordDeleteMessage');
+  String get weightRecordDeleteMessage => getLabel('weightRecordDeleteMessage');
 
-  String get weightRecordUpdateMessage =>
-      getLabel('weightRecordUpdateMessage');
+  String get weightRecordUpdateMessage => getLabel('weightRecordUpdateMessage');
 
   String get personalInformation => getLabel('personalInformation');
 
@@ -668,8 +664,7 @@ class AppLocalizations {
 
   String get barcodeScanner => getLabel('barcodeScanner');
 
-  String get barcodeScannerDescription =>
-      getLabel('barcodeScannerDescription');
+  String get barcodeScannerDescription => getLabel('barcodeScannerDescription');
 
   String get viewExistingItem => getLabel('viewExistingItem');
 
@@ -716,8 +711,7 @@ class AppLocalizations {
 
   String get createUserFood => getLabel('createUserFood');
 
-  String get createUserFoodDescription =>
-      getLabel('createUserFoodDescription');
+  String get createUserFoodDescription => getLabel('createUserFoodDescription');
 
   String get updateLogUponCreating => getLabel('updateLogUponCreating');
 
@@ -768,8 +762,7 @@ class AppLocalizations {
 
   String get recipeNotFound => getLabel('recipeNotFound');
 
-  String get recipeNotFoundDescription =>
-      getLabel('recipeNotFoundDescription');
+  String get recipeNotFoundDescription => getLabel('recipeNotFoundDescription');
 
   String get createUserRecipe => getLabel('createUserRecipe');
 
@@ -804,8 +797,7 @@ class AppLocalizations {
 
   String get unit => getLabel('unit');
 
-  String get youHaveDeniedCameraAccess =>
-      getLabel('youHaveDeniedCameraAccess');
+  String get youHaveDeniedCameraAccess => getLabel('youHaveDeniedCameraAccess');
 
   String get pleaseGoToSettingsAppToEnableCameraAccess =>
       getLabel('pleaseGoToSettingsAppToEnableCameraAccess');
@@ -898,4 +890,7 @@ class AppLocalizations {
   String get itemsAddedToDiary => getLabel('itemsAddedToDiary');
 
   String get customFoodCreated => getLabel('customFoodCreated');
+
+  String get missingData => getLabel('missingData');
+  String get missingDataDescription => getLabel('missingDataDescription');
 }

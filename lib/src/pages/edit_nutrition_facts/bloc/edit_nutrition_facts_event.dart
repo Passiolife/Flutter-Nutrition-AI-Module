@@ -7,16 +7,18 @@ sealed class EditNutritionFactsEvent extends Equatable {
 final class ProcessEvent extends EditNutritionFactsEvent {
   const ProcessEvent({
     this.foodRecord,
+    this.barcodeFoodRecord,
     this.imageBytes,
     this.barcode,
   });
 
   final FoodRecord? foodRecord;
+  final FoodRecord? barcodeFoodRecord;
   final Uint8List? imageBytes;
   final String? barcode;
 
   @override
-  List<Object?> get props => [foodRecord, imageBytes, barcode];
+  List<Object?> get props => [foodRecord, barcodeFoodRecord, imageBytes, barcode];
 }
 
 final class RefreshDetailsEvent extends EditNutritionFactsEvent {

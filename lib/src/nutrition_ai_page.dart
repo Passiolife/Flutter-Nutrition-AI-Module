@@ -26,8 +26,8 @@ import 'pages/photo_preview/photo_preview_page.dart';
 import 'pages/scan_a_barcode/food_scan_page.dart';
 import 'pages/settings/settings_page.dart';
 import 'pages/use_image/select_photo/select_photo_page.dart';
+import 'pages/use_image/take_photo/photo_result/take_photo_result_page.dart';
 import 'pages/use_image/take_photo/take_photo_page.dart';
-import 'pages/use_image/take_photo/take_photo_result/take_photo_result_page.dart';
 import 'pages/voice_logging/voice_logging_page.dart';
 
 final GlobalKey<NavigatorState> _navigatorKey = GlobalKey<NavigatorState>();
