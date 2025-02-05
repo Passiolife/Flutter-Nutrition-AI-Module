@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../constant/app_constants.dart';
-import '../../extension/context_extension.dart';
-import '../core_widgets.dart';
+import '../../../common/constant/app_constants.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/widgets/core_widgets.dart';
 
 class ActionButtonsWidget extends StatelessWidget {
   const ActionButtonsWidget({

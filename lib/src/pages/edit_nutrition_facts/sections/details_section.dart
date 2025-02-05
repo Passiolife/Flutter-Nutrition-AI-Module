@@ -5,7 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/router/routes.dart';
 import '../bloc/edit_nutrition_facts_bloc.dart';
-import '../../../common/widgets/edit_nutrition_facts/details_widget.dart';
+import '../widgets/details_widget.dart';
 
 class DetailsSection extends StatefulWidget {
   const DetailsSection({super.key});

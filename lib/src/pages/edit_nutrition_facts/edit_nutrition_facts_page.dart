@@ -24,6 +24,7 @@ class EditNutritionFactsPage extends StatelessWidget {
   const EditNutritionFactsPage({
     required this.foodRecord,
     required this.imageBytes,
+    required this.visibleSubtitle,
     this.barcode,
     this.index,
     this.positiveButtonText,
@@ -32,7 +33,7 @@ class EditNutritionFactsPage extends StatelessWidget {
     this.shouldLog = false,
     this.shouldReturnOnSave = false,
     this.initialValidate = false,
-    required this.visibleSubtitle,
+    this.routeName,
     super.key,
   });
 
@@ -42,6 +43,8 @@ class EditNutritionFactsPage extends StatelessWidget {
   final int? index;
 
   final String? positiveButtonText;
+  final String? routeName;
+
   final VoidCallback? onPositiveButtonTap;
 
   final VoidCallback? onNegativeButtonTap;
@@ -66,6 +69,7 @@ class EditNutritionFactsPage extends StatelessWidget {
     bool shouldReturnOnSave = false,
     bool initialValidate = false,
     bool visibleSubtitle = false,
+    String? routeName,
   }) {
     return Navigator.push(
       context,
@@ -82,6 +86,7 @@ class EditNutritionFactsPage extends StatelessWidget {
           shouldReturnOnSave: shouldReturnOnSave,
           initialValidate: initialValidate,
           visibleSubtitle: visibleSubtitle,
+          routeName: routeName,
         ),
       ),
     );
@@ -100,8 +105,8 @@ class EditNutritionFactsPage extends StatelessWidget {
       index: index,
       positiveButtonText: positiveButtonText,
       onPositiveButtonTap: onPositiveButtonTap,
-      shouldReturnOnSave: shouldReturnOnSave,
       initialValidate: initialValidate,
+      routeName: routeName,
       child: BlocProvider(
         create: (_) => EditNutritionFactsBloc(
           createCustomFoodIngredientUseCase: createCustomFoodIngredientUseCase,

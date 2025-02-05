@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../constant/app_constants.dart';
-import '../../extension/context_extension.dart';
-import '../../extension/number_extension.dart';
-import '../../extension/string_extensions.dart';
-import '../../formatter/single_decimal_formatter.dart';
-import '../text_input/number_text_input.dart';
+import '../../../common/constant/app_constants.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/number_extension.dart';
+import '../../../common/extension/string_extensions.dart';
+import '../../../common/formatter/single_decimal_formatter.dart';
+import '../../../common/widgets/text_input/number_text_input.dart';
 
 class NutritionFactsWidget extends StatefulWidget {
   const NutritionFactsWidget({
@@ -49,16 +49,16 @@ class _NutritionFactsWidgetState extends State<NutritionFactsWidget> {
   void didUpdateWidget(covariant NutritionFactsWidget oldWidget) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _removeListener();
-      if (oldWidget.initialCalories != widget.initialCalories) {
+      if (_caloriesController.text != widget.initialCalories) {
         _caloriesController.text = widget.initialCalories ?? '';
       }
-      if (oldWidget.initialCarbs != widget.initialCarbs) {
+      if (_carbsController.text != widget.initialCarbs) {
         _carbsController.text = widget.initialCarbs ?? '';
       }
-      if (oldWidget.initialProtein != widget.initialProtein) {
+      if (_proteinController.text != widget.initialProtein) {
         _proteinController.text = widget.initialProtein ?? '';
       }
-      if (oldWidget.initialFat != widget.initialFat) {
+      if (_fatController.text != widget.initialFat) {
         _fatController.text = widget.initialFat ?? '';
       }
       _setListener();

@@ -19,7 +19,7 @@ class ImageNotFoundWidget extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: Container(
-        decoration: AppShadows.base,
+        decoration: AppShadows.base.copyWith(color: AppColors.rose50),
         padding: AppPadding.ph8 + AppPadding.pv16,
         margin: AppPadding.ph16,
         child: Row(

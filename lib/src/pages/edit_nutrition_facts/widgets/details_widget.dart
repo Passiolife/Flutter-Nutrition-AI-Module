@@ -4,11 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../extension/context_extension.dart';
-import '../../extension/string_extensions.dart';
-import '../icons/barcode_scan_widget.dart';
-import '../passio_image_widget.dart';
-import '../text_input/primary_text_input.dart';
+import '../../../common/extension/core_extension.dart';
+import '../../../common/widgets/icons/barcode_scan_widget.dart';
+import '../../../common/widgets/passio_image_widget.dart';
+import '../../../common/widgets/text_input/primary_text_input.dart';
 
 class DetailsWidget extends StatefulWidget {
   const DetailsWidget({
@@ -54,7 +53,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
   @override
   void didUpdateWidget(covariant DetailsWidget oldWidget) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
-      if(oldWidget.initialName != widget.initialName) {
+      if(_nameController.text != widget.initialName) {
         _nameController.text = widget.initialName ?? '';
       }
     });
@@ -89,7 +88,6 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                 hintText: context.localization.enterName.toUpperCaseWord,
                 textCapitalization: TextCapitalization.sentences,
                 controller: _nameController,
-                // Disable the error text by setting empty error style
                 errorStyle: TextStyle(height: 0.01),
                 validator: (value) {
                   return value.isNotNullOrEmpty ? null : '';

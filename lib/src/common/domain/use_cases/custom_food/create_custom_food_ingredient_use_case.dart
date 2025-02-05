@@ -63,7 +63,7 @@ class CreateCustomFoodIngredientUseCase {
   }) async {
 
     final referenceWeight = ingredient?.referenceNutrients.referenceWeight ?? UnitMass(100, UnitMassType.grams);
-    if(selectedUnit == 'gram') {
+    if(selectedUnit == 'gram' || selectedUnit == 'ml') {
       servingWeight = selectedQuantity;
     }
     final newServingWeight = UnitMass(

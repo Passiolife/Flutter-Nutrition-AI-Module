@@ -1,4 +1,3 @@
-import 'dart:math' as math;
 import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
@@ -125,29 +124,11 @@ class TakePhotoResultBloc
 
       final profileModel =
           UserProfileModel.fromJson(UserSession.instance.userProfile!.toJson());
-      List<FoodRecord> dayRecords = await nutritionConfiguration.connector
-          .fetchDayRecords(dateTime: _viewModel.dateTime);
 
-      caloriesTarget = math.max(
-          0.001,
-          profileModel.caloriesTarget -
-              dayRecords.fold(
-                  0, (previous, element) => previous + element.totalCalories));
-      carbsTarget = math.max(
-          0.001,
-          profileModel.carbsGram -
-              dayRecords.fold(
-                  0, (previous, element) => previous + element.totalCarbs));
-      proteinTarget = math.max(
-          0.001,
-          profileModel.proteinGram -
-              dayRecords.fold(
-                  0, (previous, element) => previous + element.totalProteins));
-      fatTarget = math.max(
-          0.001,
-          profileModel.fatGram -
-              dayRecords.fold(
-                  0, (previous, element) => previous + element.totalFat));
+      caloriesTarget = profileModel.caloriesTarget.toDouble();
+      carbsTarget = profileModel.carbsGram.toDouble();
+      proteinTarget = profileModel.proteinGram.toDouble();
+      fatTarget = profileModel.fatGram.toDouble();
 
       _viewModel = _viewModel.updateMacroNutrientsTarget(
           caloriesTarget, carbsTarget, proteinTarget, fatTarget);
@@ -244,15 +225,15 @@ class TakePhotoResultBloc
     // End: Create custom food which are not saved.
 
     List<FoodRecord> savedFoodRecords = _viewModel.foodRecords
-            .where((element) =>
-                element.isSelected &&
-                (element.isSaved ||
-                    element.foodRecord?.resultType ==
-                        PassioFoodResultType.foodItem))
-            .map((e) => e.foodRecord)
-            .whereType<FoodRecord>()
-            .toList() ??
-        [];
+        .where((element) {
+          return element.isSelected &&
+              (element.isSaved ||
+                  element.foodRecord?.resultType !=
+                      PassioFoodResultType.nutritionFacts);
+        })
+        .map((e) => e.foodRecord)
+        .whereType<FoodRecord>()
+        .toList();
 
     final customFoodRecords =
         unsavedCustomFoodRecordsUpdated + savedFoodRecords;
@@ -260,9 +241,10 @@ class TakePhotoResultBloc
     final selectedDateTime = _viewModel.dateTime;
     final selectedMealLabel = _viewModel.mealLabel;
     for (var element in customFoodRecords) {
-      element.refCode = element.resultType == PassioFoodResultType.foodItem
-          ? ''
-          : '${FoodRecord.userFoodPrefix}${element.id}';
+      element.refCode =
+          element.resultType == PassioFoodResultType.nutritionFacts
+              ? '${FoodRecord.userFoodPrefix}${element.id}'
+              : '';
       element.logMeal(dateTime: selectedDateTime);
       element.mealLabel = selectedMealLabel;
     }
@@ -282,7 +264,8 @@ class TakePhotoResultBloc
           List<({FoodRecord foodRecord, Uint8List? image})>
               unsavedFoodRecords) async {
     final futures = unsavedFoodRecords
-        .where((e) => e.foodRecord.resultType != PassioFoodResultType.foodItem)
+        .where((e) =>
+            e.foodRecord.resultType == PassioFoodResultType.nutritionFacts)
         .map((item) async {
       final record = item.foodRecord;
       final image = item.image;
@@ -344,7 +327,9 @@ class TakePhotoResultBloc
 
     final updatedFoodRecordViewModel = FoodRecordViewModel(
       foodRecord: foodRecord,
-      image: foodRecord?.resultType != PassioFoodResultType.foodItem ? foodRecordViewModel.image : null,
+      image: foodRecord?.resultType != PassioFoodResultType.foodItem
+          ? foodRecordViewModel.image
+          : null,
     );
     _viewModel =
         _viewModel.updateFoodRecordViewModel(index, updatedFoodRecordViewModel);

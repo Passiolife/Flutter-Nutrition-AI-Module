@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../constant/app_text_styles.dart';
-import '../../extension/context_extension.dart';
-import '../../extension/text_span_extension.dart';
+import '../../../common/constant/app_text_styles.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/text_span_extension.dart';
 
 class HeaderWidget extends StatelessWidget {
   const HeaderWidget({

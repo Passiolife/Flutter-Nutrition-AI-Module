@@ -14,10 +14,9 @@ class EditNutritionFactsNavigationDataProvider extends InheritedWidget {
     this.positiveButtonText,
     this.onPositiveButtonTap,
     this.onNegativeButtonTap,
-    this.shouldLog = false,
-    this.shouldReturnOnSave = false,
     this.initialValidate = false,
     this.visibleSubtitle = false,
+    this.routeName,
     required super.child,
   });
 
@@ -33,12 +32,11 @@ class EditNutritionFactsNavigationDataProvider extends InheritedWidget {
 
   final VoidCallback? onNegativeButtonTap;
 
-  final bool shouldLog;
-  final bool shouldReturnOnSave;
-
   final bool visibleSubtitle;
 
   final bool initialValidate;
+
+  final String? routeName;
 
   @override
   bool updateShouldNotify(EditNutritionFactsNavigationDataProvider oldWidget) {
@@ -47,11 +45,10 @@ class EditNutritionFactsNavigationDataProvider extends InheritedWidget {
         barcode != oldWidget.barcode &&
         index != oldWidget.index &&
         visibleSubtitle != oldWidget.visibleSubtitle &&
-        shouldLog != oldWidget.shouldLog &&
-        shouldReturnOnSave != oldWidget.shouldReturnOnSave &&
         initialValidate != oldWidget.initialValidate &&
         onNegativeButtonTap != oldWidget.onNegativeButtonTap &&
         positiveButtonText != oldWidget.positiveButtonText &&
+        routeName != oldWidget.routeName &&
         onPositiveButtonTap != oldWidget.onPositiveButtonTap;
   }
 

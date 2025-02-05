@@ -101,11 +101,10 @@ final class UpdateBarcodeEvent extends EditNutritionFactsEvent {
 }
 
 final class SaveEvent extends EditNutritionFactsEvent {
-  const SaveEvent({required this.shouldLog});
-  final bool shouldLog;
+  const SaveEvent();
 
   @override
-  List<Object?> get props => [shouldLog];
+  List<Object?> get props => [];
 }
 
 final class PopulateBarcodeScannerDataEvent extends EditNutritionFactsEvent {

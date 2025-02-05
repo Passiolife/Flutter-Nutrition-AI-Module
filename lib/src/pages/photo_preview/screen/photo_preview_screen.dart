@@ -90,6 +90,7 @@ class _PhotoPreviewScreenState extends State<_PhotoPreviewScreen> {
       imageBytes: imageBytes,
       barcode: barcode,
       visibleSubtitle: true,
+      routeName: Routes.photoPreview,
     );
     if(!context.mounted) {
       return;

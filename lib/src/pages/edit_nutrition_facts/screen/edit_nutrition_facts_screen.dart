@@ -60,7 +60,7 @@ class _EditNutritionFactsScreenState extends State<_EditNutritionFactsScreen> {
                           if (_formKey.currentState?.validate() ?? false) {
                             context
                                 .read<EditNutritionFactsBloc>()
-                                .add(SaveEvent(shouldLog: _navigationData.shouldLog));
+                                .add(const SaveEvent());
                           }
                         },
                       ),

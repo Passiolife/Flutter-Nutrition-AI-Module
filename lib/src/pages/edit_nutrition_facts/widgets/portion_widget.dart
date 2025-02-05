@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../constant/app_constants.dart';
-import '../../extension/context_extension.dart';
-import '../../extension/number_extension.dart';
-import '../../extension/string_extensions.dart';
-import '../../models/key_value_model.dart';
-import '../drop_down/secondary_dropdown.dart';
-import '../text_input/number_text_input.dart';
+import '../../../common/constant/app_constants.dart';
+import '../../../common/extension/context_extension.dart';
+import '../../../common/extension/number_extension.dart';
+import '../../../common/extension/string_extensions.dart';
+import '../../../common/models/key_value_model.dart';
+import '../../../common/widgets/drop_down/secondary_dropdown.dart';
+import '../../../common/widgets/text_input/number_text_input.dart';
 
 class PortionWidget extends StatefulWidget {
   const PortionWidget({
@@ -54,13 +54,13 @@ class _PortionWidgetState extends State<PortionWidget> {
   void didUpdateWidget(covariant PortionWidget oldWidget) {
     SchedulerBinding.instance.addPostFrameCallback((_) {
       _removeListener();
-      if (oldWidget.initialSelectedQuantity != widget.initialSelectedQuantity) {
+      if (_servingController.text != widget.initialSelectedQuantity) {
         _servingController.text = widget.initialSelectedQuantity ?? '';
       }
-      if (oldWidget.initialWeight != widget.initialWeight) {
+      if (_weightController.text != widget.initialWeight) {
         _weightController.text = widget.initialWeight ?? '';
       }
-      if (oldWidget.initialSelectedUnit != widget.initialSelectedUnit) {
+      if (_unit != widget.initialSelectedUnit) {
         setState(() {
           _unit = widget.initialSelectedUnit ?? '';
           _setWeightField();
@@ -97,7 +97,7 @@ class _PortionWidgetState extends State<PortionWidget> {
   }
 
   void _setWeightField() {
-    _shouldVisibleWeightField = _unit != 'gram';
+    _shouldVisibleWeightField = _unit != 'gram' && _unit != 'ml';
   }
 
   @override

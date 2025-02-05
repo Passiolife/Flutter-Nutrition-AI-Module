@@ -24,6 +24,7 @@ class CustomFoodCreatedWidget extends StatelessWidget {
             context.localization.customFoodHasBeenCreated,
             style: AppTextStyle.textXl
                 .addAll([AppTextStyle.textXl.leading7, AppTextStyle.bold]),
+            textAlign: TextAlign.center,
           ),
           Text.rich(
             textAlign: TextAlign.center,
