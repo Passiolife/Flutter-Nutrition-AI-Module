@@ -55,12 +55,6 @@ class _TakePhotoResultScreenState extends State<_TakePhotoResultScreen> {
   void _handleStateChanges(BuildContext context, TakePhotoResultState state) {
     if (state is FoodLogSuccessState) {
       _showItemAddedToDiary(context: context, foodLogCount: state.foodLogCount, customFoodCount: state.customFoodCount);
-    } else if(state is CreateRecipeSuccessState) {
-      final foodRecord = state.foodRecord;
-      final recipeData = RecipeCreatorNavigationData(
-        loggedFoodRecord: foodRecord
-      );
-      Navigator.pushNamed(context, Routes.recipeCreator, arguments: recipeData);
     } else if(state is CustomFoodCreatedState) {
       _showCustomFoodCreatedDialog(context);
     }

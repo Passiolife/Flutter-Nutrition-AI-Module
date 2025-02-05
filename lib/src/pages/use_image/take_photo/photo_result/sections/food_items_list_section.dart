@@ -7,14 +7,16 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/constant/app_padding.dart';
 import '../../../../../common/extension/context_extension.dart';
-import '../../../../../common/extension/string_extensions.dart';
 import '../../../../../common/models/food_record/food_record.dart';
+import '../../../../../common/router/routes.dart';
 import '../../../../adjust_serving_size/adjust_serving_size_page.dart';
 import '../../../../edit_nutrition_facts/edit_nutrition_facts_page.dart';
+import '../../../../food_search/models/food_selection_result.dart';
 import '../bloc/take_photo_result_bloc.dart';
 import '../models/take_photo_result_view_model.dart';
 import '../widgets/barcode_not_found_widget.dart';
 import '../widgets/food_item_widget.dart';
+import '../widgets/image_not_found_widget.dart';
 import '../widgets/missing_data_widget.dart';
 
 class FoodItemsListSection extends StatelessWidget {
@@ -36,10 +38,18 @@ class FoodItemsListSection extends StatelessWidget {
             shrinkWrap: true,
             itemBuilder: (context, index) {
               final foodItemModel = foodItems.elementAt(index);
-              if (foodItemModel.isBarcodeNotFound) {
+              final foodRecord = foodItemModel.foodRecord;
+              final image = foodItemModel.image;
+
+              if (foodRecord == null) {
+                return ImageNotFoundWidget(
+                  image: image,
+                  onTap: () => _onTapNotRecognized(context: context, index: index),
+                );
+              } else if (foodItemModel.isBarcodeNotFound) {
                 return BarcodeNotFoundWidget(
-                  image: foodItemModel.image,
-                  iconId: foodItemModel.foodRecord.iconId,
+                  image: image,
+                  iconId: foodRecord.iconId,
                   onTap: () {
                     _showEditNutritionFactsDialog(
                         context: context,
@@ -48,10 +58,10 @@ class FoodItemsListSection extends StatelessWidget {
                         initialValidate: true);
                   },
                 );
-              } else if(foodItemModel.hasMissingData) {
+              } else if (foodItemModel.hasMissingData) {
                 return MissingDataWidget(
-                  image: foodItemModel.image,
-                  iconId: foodItemModel.foodRecord.iconId,
+                  image: image,
+                  iconId: foodRecord.iconId,
                   title: foodItemModel.title,
                   onTap: () {
                     _showEditNutritionFactsDialog(
@@ -63,14 +73,14 @@ class FoodItemsListSection extends StatelessWidget {
                 );
               }
               return FoodItemWidget(
-                image: foodItemModel.image,
-                iconId: foodItemModel.foodRecord.iconId,
+                image: image,
+                iconId: foodRecord.iconId,
                 title: foodItemModel.title,
                 subtitle: foodItemModel.subtitle,
-                calories: foodItemModel.foodRecord.totalCalories,
-                carbs: foodItemModel.foodRecord.totalCarbs,
-                protein: foodItemModel.foodRecord.totalProteins,
-                fat: foodItemModel.foodRecord.totalFat,
+                calories: foodRecord.totalCalories,
+                carbs: foodRecord.totalCarbs,
+                protein: foodRecord.totalProteins,
+                fat: foodRecord.totalFat,
                 index: index,
                 initialSelection: foodItemModel.isSelected,
                 onChangeSelection: (isSelected) => _onChangeSelection(
@@ -94,6 +104,20 @@ class FoodItemsListSection extends StatelessWidget {
     );
   }
 
+  Future<void> _onTapNotRecognized({
+    required BuildContext context,
+    required int index,
+  }) async {
+    final data = await Navigator.pushNamed(context, Routes.foodSearch);
+    if (data != null && data is FoodSelectionResult && context.mounted) {
+      context.read<TakePhotoResultBloc>().add(UpdateNotRecognizedFoodEvent(
+            foodDataInfo: data.foodDataInfo,
+            foodRecord: data.foodRecord,
+            index: index,
+          ));
+    }
+  }
+
   Future<void> _onTap({
     required BuildContext context,
     required FoodRecordViewModel viewModel,
@@ -111,10 +135,12 @@ class FoodItemsListSection extends StatelessWidget {
     required FoodRecordViewModel viewModel,
     required int index,
   }) async {
+    final foodRecord = viewModel.foodRecord;
+    if (foodRecord == null) return;
     final FoodRecord? newFoodRecord = await AdjustServingSizePage.navigate(
       context: context,
       index: index,
-      foodRecord: viewModel.foodRecord,
+      foodRecord: foodRecord,
       image: viewModel.image,
       onTapEditing: () {
         Navigator.pop(context);
@@ -126,7 +152,7 @@ class FoodItemsListSection extends StatelessWidget {
       },
     );
     if (newFoodRecord != null &&
-        newFoodRecord != viewModel.foodRecord &&
+        newFoodRecord != foodRecord &&
         context.mounted) {
       context
           .read<TakePhotoResultBloc>()
@@ -148,7 +174,7 @@ class FoodItemsListSection extends StatelessWidget {
       imageBytes: image,
       shouldReturnOnSave: true,
       initialValidate: initialValidate,
-      positiveButtonText: viewModel.foodRecord.id.isNotNullOrEmpty
+      positiveButtonText: viewModel.isSaved
           ? context.localization.update
           : context.localization.save,
     );

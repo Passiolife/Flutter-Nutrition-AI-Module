@@ -77,17 +77,6 @@ final class UpdateActionButtonsState extends TakePhotoResultState {
   List<Object> get props => [timestamp];
 }
 
-final class CreateRecipeSuccessState extends TakePhotoResultState {
-  const CreateRecipeSuccessState(
-      {required this.timestamp, required this.foodRecord});
-
-  final int timestamp;
-  final FoodRecord foodRecord;
-
-  @override
-  List<Object> get props => [timestamp, foodRecord];
-}
-
 final class FoodLogSuccessState extends TakePhotoResultState {
   const FoodLogSuccessState({required this.foodLogCount, required this.customFoodCount});
   final int foodLogCount;

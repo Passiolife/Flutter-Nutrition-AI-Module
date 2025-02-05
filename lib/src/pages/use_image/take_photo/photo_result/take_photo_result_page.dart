@@ -78,6 +78,7 @@ class TakePhotoResultPage extends StatelessWidget {
       child: BlocProvider(
         create: (context) => TakePhotoResultBloc(
           nutritionConfiguration: NutritionAIModule.instance.configuration,
+          nutritionAIRepository: nutritionAIRepository,
           foodRecordsByImageRecognition: foodRecordsByImageRecognition,
           addFoodLogsUseCase: AddFoodLogsUseCase(repository: repository),
           addCustomFoodUseCase: addCustomFoodUseCase,

@@ -436,5 +436,7 @@
   "itemsAddedToDiary": "Items Added To Diary",
   "customFoodCreated": "Custom Food Created",
   "missingData": "Missing Data",
-  "missingDataDescription": "Data missing, item will not be logged"
+  "missingDataDescription": "Data missing, item will not be logged",
+  "imageNotRecognized": "Image Not Recognized",
+  "imageNotRecognizedDescription": "item will not be logged, search manually"
 }

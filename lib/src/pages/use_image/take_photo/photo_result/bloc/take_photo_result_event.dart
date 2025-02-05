@@ -73,7 +73,9 @@ final class UpdateActionButtonsEvent extends TakePhotoResultEvent {
 }
 
 final class CreateCustomFoodEvent extends TakePhotoResultEvent {
-  const CreateCustomFoodEvent({required this.foodRecord, required this.index, this.image});
+  const CreateCustomFoodEvent(
+      {required this.foodRecord, required this.index, this.image});
+
   final int index;
   final FoodRecord foodRecord;
   final Uint8List? image;
@@ -92,16 +94,24 @@ final class UpdateFoodRecordEvent extends TakePhotoResultEvent {
   List<Object?> get props => [foodRecord];
 }
 
-final class CreateRecipeEvent extends TakePhotoResultEvent {
-  const CreateRecipeEvent();
-
-  @override
-  List<Object?> get props => [];
-}
-
 final class DoLogEvent extends TakePhotoResultEvent {
   const DoLogEvent();
 
   @override
   List<Object?> get props => [];
+}
+
+final class UpdateNotRecognizedFoodEvent extends TakePhotoResultEvent {
+  const UpdateNotRecognizedFoodEvent({
+    required this.index,
+    this.foodRecord,
+    this.foodDataInfo,
+  });
+
+  final int index;
+  final PassioFoodDataInfo? foodDataInfo;
+  final FoodRecord? foodRecord;
+
+  @override
+  List<Object?> get props => [index, foodRecord, foodDataInfo];
 }

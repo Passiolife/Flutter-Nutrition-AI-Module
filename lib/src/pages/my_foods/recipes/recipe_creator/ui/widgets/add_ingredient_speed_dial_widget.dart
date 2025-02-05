@@ -21,7 +21,7 @@ class AddIngredientSpeedDialWidget extends StatelessWidget {
       [
         FloatingButtonExpandedWidget(
           imagePath: AppImages.icSearch,
-          text: context.localization?.textSearch,
+          text: context.localization.textSearch,
         ),
       ];
 
@@ -88,7 +88,7 @@ class AddIngredientSpeedDialWidget extends StatelessWidget {
     required BuildContext context,
     required String? action,
   }) async {
-    if (action == context.localization?.textSearch) {
+    if (action == context.localization.textSearch) {
       final searchData = await FoodSearchPage.navigate(context);
       if (searchData != null &&
           searchData is FoodSelectionResult &&
@@ -108,8 +108,8 @@ class AddIngredientSpeedDialWidget extends StatelessWidget {
             visibleDateView: false,
             visibleAddIngredient: false,
             needsReturn: true,
-            title: context.localization?.editIngredient,
-            positiveButtonText: context.localization?.addIngredient,
+            title: context.localization.editIngredient,
+            positiveButtonText: context.localization.addIngredient,
           ),
         );
         if (foodRecord != null && foodRecord is FoodRecord && context.mounted) {

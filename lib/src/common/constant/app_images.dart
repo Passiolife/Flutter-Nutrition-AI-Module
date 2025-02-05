@@ -38,6 +38,7 @@ class AppImages {
   static const icNoIngredientsLabelFound = '${iconsDir}ic_no_ingredients_label_found.svg';
   static const icCheckMarkNew = '${iconsDir}ic_check_mark.svg';
   static const icPencilAltNew = '${iconsDir}ic_pencil_alt.svg';
+  static const icSearchNew = '${iconsDir}ic_search_updated.svg';
 
 
   static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';

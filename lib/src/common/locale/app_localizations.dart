@@ -893,4 +893,6 @@ class AppLocalizations {
 
   String get missingData => getLabel('missingData');
   String get missingDataDescription => getLabel('missingDataDescription');
+  String get imageNotRecognized => getLabel('imageNotRecognized');
+  String get imageNotRecognizedDescription => getLabel('imageNotRecognizedDescription');
 }

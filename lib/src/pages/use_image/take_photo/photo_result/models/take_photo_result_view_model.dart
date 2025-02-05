@@ -57,20 +57,21 @@ class TakePhotoResultViewModel {
   TakePhotoResultViewModel fromFoodRecords(List<FoodRecordItem> data) {
     final foodRecordsViewModel = data.map((e) {
       final foodRecord = e.foodRecord;
-      final resultType = foodRecord.resultType;
-      final hasFullMacros = foodRecord.hasFullMacros;
+      final resultType = foodRecord?.resultType;
+      final hasFullMacros = foodRecord?.hasFullMacros ?? false;
       final isValidBarcode = !e.isBarcodeNotFound;
 
       final isFoodItem = resultType == PassioFoodResultType.foodItem;
       final hasCompleteData = isFoodItem || hasFullMacros;
       final isMissingData = !isFoodItem && !hasFullMacros;
+      final isSaved = foodRecord?.id.isNotNullOrEmpty ?? false;
 
       return FoodRecordViewModel(
         foodRecord: foodRecord,
         image: e.image,
         isBarcodeNotFound: e.isBarcodeNotFound,
         isSelected: isValidBarcode && hasCompleteData,
-        isSaved: foodRecord.id.isNotNullOrEmpty,
+        isSaved: isSaved,
         hasMissingData: isMissingData,
       );
     }).toList();
@@ -144,10 +145,11 @@ class TakePhotoResultViewModel {
     double calories = 0, carbs = 0, protein = 0, fat = 0;
 
     for (var element in selectedFoodRecords) {
-      calories += element.foodRecord.totalCalories;
-      carbs += element.foodRecord.totalCarbs;
-      protein += element.foodRecord.totalProteins;
-      fat += element.foodRecord.totalFat;
+      if(element.foodRecord == null) continue;
+      calories += element.foodRecord!.totalCalories;
+      carbs += element.foodRecord!.totalCarbs;
+      protein += element.foodRecord!.totalProteins;
+      fat += element.foodRecord!.totalFat;
     }
 
     // Calories
@@ -278,20 +280,20 @@ class TakePhotoResultViewModel {
 
 // Model to hold the state of each FoodRecord with selection state
 class FoodRecordViewModel {
-  final FoodRecord foodRecord;
+  final FoodRecord? foodRecord;
   final bool isSelected;
   final bool isSaved;
   final Uint8List? image;
   final bool isBarcodeNotFound;
   final bool hasMissingData;
 
-  String get title => foodRecord.name;
+  String get title => foodRecord?.name ?? '';
 
   String get subtitle =>
-      '${foodRecord.getSelectedQuantity().format()} ${foodRecord.getSelectedUnit()} (${foodRecord.computedWeight.value.format()} ${foodRecord.computedWeight.symbol})';
+      '${foodRecord?.getSelectedQuantity().format()} ${foodRecord?.getSelectedUnit()} (${foodRecord?.computedWeight.value.format()} ${foodRecord?.computedWeight.symbol})';
 
   const FoodRecordViewModel({
-    required this.foodRecord,
+    this.foodRecord,
     this.isSelected = true,
     this.isSaved = false,
     this.image,
@@ -336,4 +338,36 @@ class FoodRecordViewModel {
   FoodRecordViewModel updateHasMissingData(bool value) {
     return copyWith(hasMissingData: value);
   }
+
+  FoodRecordViewModel checkAndUpdateHasMissingData() {
+    final isMissingData = hasMissingNutritionData(foodRecord);
+    return updateHasMissingData(isMissingData);
+  }
+
+  FoodRecordViewModel updateImage(Uint8List image) {
+    return copyWith(image: image);
+  }
+
+  FoodRecordViewModel removeImage() {
+    return copyWith(image: null);
+  }
+
+  bool isFoodResultType(FoodRecord? record) {
+    return record?.resultType == PassioFoodResultType.foodItem;
+  }
+
+  bool hasFullMacroData(FoodRecord? record) {
+    return record?.hasFullMacros ?? false;
+  }
+
+  bool hasCompleteNutritionData(FoodRecord? record) {
+    final isFoodType = isFoodResultType(record);
+    final hasFullMacroNutrition = hasFullMacroData(record);
+    return isFoodType || hasFullMacroNutrition;
+  }
+
+  bool hasMissingNutritionData(FoodRecord? record) {
+    return !isFoodResultType(record) && !hasFullMacroData(record);
+  }
+
 }

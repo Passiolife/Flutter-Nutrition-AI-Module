@@ -5,12 +5,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../../nutrition_ai_module.dart';
+import '../../../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../../../common/domain/use_cases/custom_food/add_custom_foods_use_case.dart';
 import '../../../../../common/domain/use_cases/custom_food/create_custom_food_ingredient_use_case.dart';
 import '../../../../../common/domain/use_cases/custom_food/save_custom_food_use_case.dart';
 import '../../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
-import '../../../../../common/helper/custom_food_helper.dart';
 import '../../../../../common/models/daily_nutrition_model.dart';
 import '../../../../../common/util/user_session.dart';
 import '../../../../../nutrition_ai_module_configuration.dart';
@@ -31,6 +31,7 @@ class TakePhotoResultBloc
   final AddCustomFoodUseCase addCustomFoodUseCase;
   final AddCustomFoodsUseCase addCustomFoodsUseCase;
   final CreateCustomFoodIngredientUseCase createCustomFoodIngredientUseCase;
+  final NutritionAIRepository nutritionAIRepository;
 
   double caloriesTarget = 0;
   double carbsTarget = 0;
@@ -44,6 +45,7 @@ class TakePhotoResultBloc
     required this.addFoodLogsUseCase,
     required this.addCustomFoodsUseCase,
     required this.createCustomFoodIngredientUseCase,
+    required this.nutritionAIRepository,
   }) : super(const TakePhotoResultInitial()) {
     on<InitializeEvent>(_handleInitializeEvent);
     on<SetDefaultHeaderEvent>(_handleSetDefaultMealLabelEvent);
@@ -55,8 +57,8 @@ class TakePhotoResultBloc
     on<DoProcessEvent>(_handleDoProcessEvent);
     on<UpdateFoodRecordEvent>(_handleUpdateFoodRecordEvent);
     on<CreateCustomFoodEvent>(_handleCreateCustomFoodEvent);
-    on<CreateRecipeEvent>(_handleCreateRecipeEvent);
     on<DoLogEvent>(_handleDoLogEvent);
+    on<UpdateNotRecognizedFoodEvent>(_handleUpdateNotRecognizedFoodEvent);
   }
 
   Future<void> _handleInitializeEvent(
@@ -200,7 +202,7 @@ class TakePhotoResultBloc
         .updateIsBarcodeNotFound(false)
         .updateHasMissingData(false);
 
-    if(shouldSelect) {
+    if (shouldSelect) {
       foodRecordViewModel = foodRecordViewModel.updateIsSelected(shouldSelect);
     }
 
@@ -209,22 +211,6 @@ class TakePhotoResultBloc
     add(UpdateMacroNutrientEvent());
     add(UpdateActionButtonsEvent());
     emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
-  }
-
-  Future<void> _handleCreateRecipeEvent(
-      CreateRecipeEvent event, Emitter<TakePhotoResultState> emit) async {
-    final recordsModels =
-        _viewModel.foodRecords.where((element) => element.isSelected).toList();
-    final foodRecords = recordsModels.map((e) => e.foodRecord).toList();
-
-    final foodRecord = foodRecords.first.initializeFoodRecord();
-
-    for (FoodRecord record in foodRecords) {
-      foodRecord.addIngredientsToRecipe(foodRecord: record);
-    }
-    emit(CreateRecipeSuccessState(
-        timestamp: DateTime.now().millisecondsSinceEpoch,
-        foodRecord: foodRecord));
   }
 
   Future<void> _handleDoLogEvent(
@@ -258,12 +244,15 @@ class TakePhotoResultBloc
     // End: Create custom food which are not saved.
 
     List<FoodRecord> savedFoodRecords = _viewModel.foodRecords
-        .where((element) =>
-            element.isSelected &&
-            (element.isSaved ||
-                element.foodRecord.resultType == PassioFoodResultType.foodItem))
-        .map((e) => e.foodRecord)
-        .toList();
+            .where((element) =>
+                element.isSelected &&
+                (element.isSaved ||
+                    element.foodRecord?.resultType ==
+                        PassioFoodResultType.foodItem))
+            .map((e) => e.foodRecord)
+            .whereType<FoodRecord>()
+            .toList() ??
+        [];
 
     final customFoodRecords =
         unsavedCustomFoodRecordsUpdated + savedFoodRecords;
@@ -286,24 +275,6 @@ class TakePhotoResultBloc
     emit(FoodLogSuccessState(
         foodLogCount: customFoodRecords.length,
         customFoodCount: unsavedCustomFoodRecords.length));
-    // final customFoodResult = await addCustomFoodsUseCase.call(unsavedFoodRecords);
-
-    /*final recordsModels = _viewModel.unsavedFoodRecords.where((element) => element.isSelected).toList();
-    final unsavedFoodRecords = recordsModels.map((e) => e.foodRecord).toList();
-    final selectedDateTime = _viewModel.dateTime;
-    final selectedMealLabel = _viewModel.mealLabel;
-    for (var element in unsavedFoodRecords) {
-      element.logMeal(dateTime: selectedDateTime);
-      element.mealLabel = selectedMealLabel;
-    }
-    await addFoodLogsUseCase.call(unsavedFoodRecords);
-    _viewModel.isLogLoading = false;
-    emit(UpdateActionButtonsState(
-        viewModel: _viewModel,
-        timestamp: DateTime
-            .now()
-            .millisecondsSinceEpoch));
-    emit(FoodLogSuccessState(foodLogCount:));*/
   }
 
   Future<List<({FoodRecord foodRecord, Uint8List? image})>>
@@ -334,27 +305,51 @@ class TakePhotoResultBloc
     });
 
     return Future.wait(futures);
-    /*return _viewModel.foodRecords
-        .where((element) => element.isSelected && !element.isSaved)
-        .map((e) {
-      if (e.image != null) {
-        e.foodRecord.iconId = CustomFoodHelper.generateIconId();
-      }
-      e.foodRecord.removeMeal();
-      return (foodRecord: e.foodRecord, image: e.image);
-    }).toList();*/
   }
 
   List<({FoodRecord foodRecord, Uint8List? image})> getUnsavedFoodRecords() {
     return _viewModel.foodRecords
         .where((element) => element.isSelected && !element.isSaved)
         .map((e) {
-      if (e.image != null) {
-        e.foodRecord.iconId = CustomFoodHelper.generateIconId();
-      }
-      e.foodRecord.removeMeal();
-      return (foodRecord: e.foodRecord, image: e.image);
-    }).toList();
+          if (e.foodRecord == null) {
+            return null;
+          }
+          e.foodRecord?.removeMeal();
+          return (foodRecord: e.foodRecord, image: e.image);
+        })
+        .whereType<({FoodRecord foodRecord, Uint8List? image})>()
+        .toList();
   }
 
+  Future<void> _handleUpdateNotRecognizedFoodEvent(
+      UpdateNotRecognizedFoodEvent event,
+      Emitter<TakePhotoResultState> emit) async {
+    final index = event.index;
+    FoodRecord? foodRecord = event.foodRecord;
+    final foodDataInfo = event.foodDataInfo;
+
+    if (foodRecord == null && foodDataInfo == null) {
+      return;
+    }
+    if (foodDataInfo != null) {
+      final data =
+          await nutritionAIRepository.fetchFoodItemForDataInfo(foodDataInfo);
+      if (data == null) {
+        return;
+      }
+      foodRecord = FoodRecord.fromPassioFoodItem(data);
+    }
+    FoodRecordViewModel foodRecordViewModel =
+        _viewModel.foodRecords.elementAt(index);
+
+    final updatedFoodRecordViewModel = FoodRecordViewModel(
+      foodRecord: foodRecord,
+      image: foodRecord?.resultType != PassioFoodResultType.foodItem ? foodRecordViewModel.image : null,
+    );
+    _viewModel =
+        _viewModel.updateFoodRecordViewModel(index, updatedFoodRecordViewModel);
+    add(UpdateMacroNutrientEvent());
+    add(UpdateActionButtonsEvent());
+    emit(ResultsSuccessState(foodRecordsViewModel: _viewModel.foodRecords));
+  }
 }
