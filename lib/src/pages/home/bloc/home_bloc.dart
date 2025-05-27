@@ -89,4 +89,5 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     add(FetchRecordsEvent(
         dateTime: event.dateTime, weightUnit: event.weightUnit));
   }
+
 }

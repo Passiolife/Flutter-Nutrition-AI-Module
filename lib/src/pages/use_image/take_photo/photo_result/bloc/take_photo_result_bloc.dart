@@ -2,8 +2,8 @@ import 'dart:typed_data';
 
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:nutrition_ai/nutrition_ai.dart' as nutrition_ai;
 
-import '../../../../../../nutrition_ai_module.dart';
 import '../../../../../common/domain/repository/nutrition_ai_repository.dart';
 import '../../../../../common/domain/use_cases/custom_food/add_custom_foods_use_case.dart';
 import '../../../../../common/domain/use_cases/custom_food/create_custom_food_ingredient_use_case.dart';
@@ -11,6 +11,10 @@ import '../../../../../common/domain/use_cases/custom_food/save_custom_food_use_
 import '../../../../../common/domain/use_cases/food_logs/add_food_logs_use_case.dart';
 import '../../../../../common/domain/use_cases/nutrition_ai/get_food_records_by_image_recognition.dart';
 import '../../../../../common/models/daily_nutrition_model.dart';
+import '../../../../../common/models/food_record/food_record.dart';
+import '../../../../../common/models/food_record/meal_label.dart';
+import '../../../../../common/models/user_profile/user_profile_model.dart';
+import '../../../../../common/util/result.dart';
 import '../../../../../common/util/user_session.dart';
 import '../../../../../nutrition_ai_module_configuration.dart';
 import '../models/take_photo_result_view_model.dart';
@@ -229,7 +233,7 @@ class TakePhotoResultBloc
           return element.isSelected &&
               (element.isSaved ||
                   element.foodRecord?.resultType !=
-                      PassioFoodResultType.nutritionFacts);
+                      nutrition_ai.PassioFoodResultType.nutritionFacts);
         })
         .map((e) => e.foodRecord)
         .whereType<FoodRecord>()
@@ -242,7 +246,7 @@ class TakePhotoResultBloc
     final selectedMealLabel = _viewModel.mealLabel;
     for (var element in customFoodRecords) {
       element.refCode =
-          element.resultType == PassioFoodResultType.nutritionFacts
+          element.resultType == nutrition_ai.PassioFoodResultType.nutritionFacts
               ? '${FoodRecord.userFoodPrefix}${element.id}'
               : '';
       element.logMeal(dateTime: selectedDateTime);
@@ -265,7 +269,7 @@ class TakePhotoResultBloc
               unsavedFoodRecords) async {
     final futures = unsavedFoodRecords
         .where((e) =>
-            e.foodRecord.resultType == PassioFoodResultType.nutritionFacts)
+            e.foodRecord.resultType == nutrition_ai.PassioFoodResultType.nutritionFacts)
         .map((item) async {
       final record = item.foodRecord;
       final image = item.image;
@@ -315,8 +319,16 @@ class TakePhotoResultBloc
       return;
     }
     if (foodDataInfo != null) {
-      final data =
-          await nutritionAIRepository.fetchFoodItemForDataInfo(foodDataInfo);
+      final Result<nutrition_ai.PassioFoodItem?> foodItemResult =
+          await nutritionAIRepository.fetchFoodItemForDataInfo(foodDataInfo: foodDataInfo);
+      nutrition_ai.PassioFoodItem? data;
+      switch(foodItemResult) {
+        case Success<nutrition_ai.PassioFoodItem?>():
+          data = foodItemResult.value;
+          break;
+        case Error<nutrition_ai.PassioFoodItem?>():
+          return;
+      }
       if (data == null) {
         return;
       }
@@ -327,7 +339,7 @@ class TakePhotoResultBloc
 
     final updatedFoodRecordViewModel = FoodRecordViewModel(
       foodRecord: foodRecord,
-      image: foodRecord?.resultType != PassioFoodResultType.foodItem
+      image: foodRecord?.resultType != nutrition_ai.PassioFoodResultType.foodItem
           ? foodRecordViewModel.image
           : null,
     );

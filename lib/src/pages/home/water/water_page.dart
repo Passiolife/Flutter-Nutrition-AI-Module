@@ -6,11 +6,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/constant/app_constants.dart';
+import '../../../common/extension/context_extension.dart';
 import '../../../common/models/user_profile/user_profile_model.dart';
 import '../../../common/models/water_day_log/water_day_log.dart';
 import '../../../common/models/water_day_logs/water_day_logs.dart';
 import '../../../common/models/water_record/water_record.dart';
-import '../../../common/extension/context_extension.dart';
+import '../../../common/router/routes.dart';
 import '../../../common/util/date_time_utility.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/snackbar_extension.dart';
@@ -33,6 +34,13 @@ class WaterPage extends StatefulWidget {
     );
   }
 
+  static MaterialPageRoute route() {
+    return MaterialPageRoute(
+      settings: RouteSettings(name: Routes.waterPage),
+      builder: (_) => const WaterPage(),
+    );
+  }
+
   @override
   State<WaterPage> createState() => _WaterPageState();
 }
@@ -46,7 +54,7 @@ class _WaterPageState extends State<WaterPage>
         EntryTileListener {
   // Properties
   List<String?> get _tabs =>
-      [context.localization?.week, context.localization?.month];
+      [context.localization.week, context.localization.month];
 
   String? _selectedTab;
 
@@ -76,7 +84,7 @@ class _WaterPageState extends State<WaterPage>
 
   // Trend Widget Related properties
 
-  String get _trendTitle => context.localization?.waterTrend ?? '';
+  String get _trendTitle => context.localization.waterTrend ?? '';
 
   double get chartMaximumValue =>
       _dayLogs?.dayLog
@@ -169,7 +177,7 @@ class _WaterPageState extends State<WaterPage>
           body: Column(
             children: [
               MeasurementAppBar(
-                title: context.localization?.water,
+                title: context.localization.water,
                 listener: this,
               ),
               SizedBox(height: AppDimens.h24),
@@ -261,11 +269,11 @@ class _WaterPageState extends State<WaterPage>
                                                                     .imperial
                                                             ? context
                                                                     .localization
-                                                                    ?.oz ??
+                                                                    .oz ??
                                                                 ''
                                                             : context
                                                                     .localization
-                                                                    ?.ml ??
+                                                                    .ml ??
                                                                 '',
                                                         dateTime: DateTime
                                                             .fromMillisecondsSinceEpoch(
@@ -302,7 +310,7 @@ class _WaterPageState extends State<WaterPage>
     AddWaterPage.navigate(context: context).then((value) {
       if (value is bool? && (value ?? false)) {
         if (mounted) {
-          context.showSnackbar(text: context.localization?.waterRecorded);
+          context.showSnackbar(text: context.localization.waterRecorded);
         }
         _fetchRecords();
       }
@@ -323,11 +331,11 @@ class _WaterPageState extends State<WaterPage>
       _rangeDates = state.rangeDates;
       _dayLogs = state.dayLogs;
     } else if (state is QuickAddSuccessState) {
-      context.showSnackbar(text: context.localization?.waterRecorded);
+      context.showSnackbar(text: context.localization.waterRecorded);
       _fetchRecords();
     } else if (state is DeleteLogSuccessState) {
       context.showSnackbar(
-          text: context.localization?.waterRecordDeleteMessage);
+          text: context.localization.waterRecordDeleteMessage);
       _fetchRecords();
     }
   }
@@ -360,7 +368,7 @@ class _WaterPageState extends State<WaterPage>
       if (value is bool? && (value ?? false)) {
         if (mounted) {
           context.showSnackbar(
-              text: context.localization?.waterRecordUpdateMessage);
+              text: context.localization.waterRecordUpdateMessage);
           _fetchRecords();
         }
       }
@@ -386,7 +394,7 @@ class _WaterPageState extends State<WaterPage>
   void _onDateChanged(int offset) {
     DateTime newDateTime;
 
-    if (_selectedTab == context.localization?.month) {
+    if (_selectedTab == context.localization.month) {
       // Handle month change
       newDateTime = DateTime(
         _selectedDateTime.year,

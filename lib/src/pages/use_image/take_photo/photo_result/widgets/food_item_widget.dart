@@ -9,7 +9,7 @@ import '../../../../../common/extension/context_extension.dart';
 import '../../../../../common/models/macro_item_model.dart';
 import '../../../../../common/widgets/checkbox/primary_check_box.dart';
 import 'macros_values_widget.dart';
-import '../../../../../common/widgets/passio/food_item_row.dart';
+import '../../../../../common/widgets/passio/food_item_row/base_food_item_row.dart';
 
 class FoodItemWidget extends StatelessWidget {
   const FoodItemWidget({
@@ -75,7 +75,7 @@ class FoodItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 spacing: 8.h,
                 children: [
-                  FoodItemRow(
+                  BaseFoodItemRow(
                     image: image,
                     iconId: iconId,
                     index: index,

@@ -1,5 +1,9 @@
 include: package:flutter_lints/flutter.yaml
 
+analyzer:
+  exclude:
+    - bricks/**
+
 linter:
   rules:
     prefer_relative_imports: true

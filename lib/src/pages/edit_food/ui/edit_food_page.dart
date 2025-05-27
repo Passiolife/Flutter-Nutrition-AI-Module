@@ -4,16 +4,15 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../nutrition_ai_module.dart';
 import '../../../common/constant/app_constants.dart';
-import '../../../common/models/food_record/meal_label.dart';
 import '../../../common/router/routes.dart';
 import '../../../common/extension/context_extension.dart';
 import '../../../common/util/double_extensions.dart';
 import '../../../common/util/snackbar_extension.dart';
 import '../../dashboard/dashboard_page.dart';
 import '../../food_search/food_search_page.dart';
-import '../../my_foods/custom_foods/food_creator/food_creator_page.dart';
-import '../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
-import '../../my_foods/recipes/recipe_creator/ui/recipe_creator_page.dart';
+import '../../my_foods_old/custom_foods/food_creator/food_creator_page.dart';
+import '../../my_foods_old/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
+import '../../my_foods_old/recipes/recipe_creator/ui/recipe_creator_page.dart';
 import '../bloc/edit_food_bloc.dart';
 import '../nutrition_information/nutrition_information_page.dart';
 import 'dialogs/create_user_food_dialog.dart';
@@ -49,14 +48,6 @@ class EditFoodPage extends StatefulWidget {
   }) async {
     return await Navigator.pushNamed(context, Routes.editFood,
         arguments: params);
-    return await Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) {
-          return EditFoodPage._(params: params);
-        },
-      ),
-    );
   }
 
   @override

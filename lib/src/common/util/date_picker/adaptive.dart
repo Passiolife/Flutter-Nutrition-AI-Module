@@ -1,34 +1,44 @@
-/*
+
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+
+import 'cupertino_date_timer_picker.dart';
+import 'date_time_picker_utility.dart';
+import 'material_date_time_picker.dart';
 
 class AdaptiveDateTimePicker implements DateTimePickerUtility {
   final DateTimePickerUtility _pickerUtility;
 
-  AdaptiveDateTimePicker(BuildContext context)
-      : _pickerUtility = Theme.of(context).platform == TargetPlatform.iOS
+  AdaptiveDateTimePicker()
+      : _pickerUtility = Platform.isIOS
       ? CupertinoDateTimePicker()
       : MaterialDateTimePicker();
 
   @override
-  Future<void> showDatePicker({
+  Future<DateTime?> showDatePickerDialog({
     required BuildContext context,
     DateTime? initialDate,
-    ValueChanged<DateTime>? onDateSelected,
+    DateTime? firstDate,
+    DateTime? lastDate,
+    ValueChanged<DateTime?>? onDateSelected,
   }) async {
-    return _pickerUtility.showDatePicker(
+    return _pickerUtility.showDatePickerDialog(
       context: context,
       initialDate: initialDate,
+      firstDate: firstDate,
+      lastDate: lastDate,
       onDateSelected: onDateSelected,
     );
   }
 
   @override
-  Future<void> showTimePicker({
+  Future<TimeOfDay?> showTimePickerDialog({
     required BuildContext context,
     TimeOfDay? initialTime,
-    ValueChanged<TimeOfDay>? onTimeSelected,
+    ValueChanged<TimeOfDay?>? onTimeSelected,
   }) async {
-    return _pickerUtility.showTimePicker(
+    return _pickerUtility.showTimePickerDialog(
       context: context,
       initialTime: initialTime,
       onTimeSelected: onTimeSelected,
@@ -36,15 +46,19 @@ class AdaptiveDateTimePicker implements DateTimePickerUtility {
   }
 
   @override
-  Future<void> showDateTimePicker({
+  Future<DateTime?> showDateTimePickerDialog({
     required BuildContext context,
-    DateTime? initialDate,
-    ValueChanged<DateTime>? onDateTimeSelected,
+    DateTime? initialDateTime,
+    DateTime? firstDateTime,
+    DateTime? lastDateTime,
+    ValueChanged<DateTime?>? onDateTimeSelected,
   }) async {
-    return _pickerUtility.showDateTimePicker(
+    return _pickerUtility.showDateTimePickerDialog(
       context: context,
-      initialDate: initialDate,
+      initialDateTime: initialDateTime,
+      firstDateTime: firstDateTime,
+      lastDateTime: lastDateTime,
       onDateTimeSelected: onDateTimeSelected,
     );
   }
-}*/
+}

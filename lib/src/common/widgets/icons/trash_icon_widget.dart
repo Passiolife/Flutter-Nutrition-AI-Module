@@ -9,22 +9,27 @@ class TrashIconWidget extends StatelessWidget {
     this.color = AppColors.white,
     this.width,
     this.height,
+    this.onTap,
     super.key,
   });
 
-  final Color? color;
+  final Color color;
   final double? width;
   final double? height;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
-    return VectorGraphic(
-      loader: AssetBytesLoader(AppImages.icTrashNew),
-      width: width ?? 20.r,
-      height: height ?? 20.r,
-      colorFilter: const ColorFilter.mode(
-        AppColors.white,
-        BlendMode.srcIn,
+    return IconButton(
+      onPressed: onTap,
+      icon: VectorGraphic(
+        loader: AssetBytesLoader(AppImages.icTrashNew),
+        width: width ?? 20.r,
+        height: height ?? 20.r,
+        colorFilter: ColorFilter.mode(
+          color,
+          BlendMode.srcIn,
+        ),
       ),
     );
   }

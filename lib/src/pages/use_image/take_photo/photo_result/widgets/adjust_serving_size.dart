@@ -13,7 +13,7 @@ import '../../../../../common/util/navigation_utils/hero_dialog_route.dart';
 import '../../../../../common/widgets/button/primary_button.dart';
 import '../../../../../common/widgets/button/secondary_button.dart';
 import '../../../../../common/widgets/icons/icon_pencil_alt_widget.dart';
-import '../../../../../common/widgets/passio/food_item_row.dart';
+import '../../../../../common/widgets/passio/food_item_row/base_food_item_row.dart';
 import '../../../../../common/widgets/passio/serving_size_widget.dart';
 import '../../../../edit_nutrition_facts/edit_nutrition_facts_page.dart';
 
@@ -85,7 +85,7 @@ class _AdjustServingSizeState extends State<AdjustServingSize> {
                   Row(
                     children: [
                       Expanded(
-                        child: FoodItemRow(
+                        child: BaseFoodItemRow(
                           index: widget.index,
                           image: widget.image,
                           iconId: _foodRecord.iconId,

@@ -18,8 +18,9 @@ class AppImages {
 
   // Icons
   static const icBarcodeNewNew = '${iconsDir}ic_barc.svg';
-  static const icBarcodeScan = '${iconsDir}ic_scan_barcode.svg';
+  static const icBarcodeScan = '${iconsDir}ic_barcode_scan.svg';
   static const icClose = '${iconsDir}ic_close.svg';
+  static const icCustomFoods = '${iconsDir}ic_custom_foods.svg';
   static const icPlus = '${iconsDir}ic_plus.svg';
   // ic_arrow_left/svg // TODO: test because facing some issue with naming. Asset not found error.
   static const icTest = '${iconsDir}ic_test.svg';
@@ -39,7 +40,9 @@ class AppImages {
   static const icCheckMarkNew = '${iconsDir}ic_check_mark.svg';
   static const icPencilAltNew = '${iconsDir}ic_pencil_alt.svg';
   static const icSearchNew = '${iconsDir}ic_search_updated.svg';
-
+  static const icWaterGlassNew = '${iconsDir}ic_water_glass.svg';
+  static const icWaterSmallBottleNew = '${iconsDir}ic_water_small_bottle.svg';
+  static const icWaterLargeBottleNew = '${iconsDir}ic_water_large_bottle.svg';
 
   static const icAIAdvisor = '${imageDir}ic_ai_advisor.svg';
   static const icApple = '${imageDir}ic_apple.svg';

@@ -306,9 +306,9 @@
   "viewExistingItem": "View Existing Item",
   "useExistingItem": "Use Existing Item",
   "barcodeInSystem": "Barcode In System",
-  "barcodeInSystemDescription": "This barcode matches an existing item in our database. You can use the data from the database, or continue with creating a custom food.",
+  "barcodeInSystemDescription": "This barcode matches an existing item in our database. You can import data from an existing item, or use only the barcode with your own custom data.",
   "customFoodAlreadyExists": "Custom Food Already Exists",
-  "customFoodAlreadyExistsDescription": "This barcode matches an existing item in your custom food list. You can use the existing item, or create a new food without the barcode.",
+  "customFoodAlreadyExistsDescription": "This barcode matches an existing item in your custom food list. You can edit the existing item, or create a new Item without the barcode.",
   "createCustomFoodAnyway": "Create Custom Food Anyway",
   "createCustomFoodWithoutBarcode": "Create Custom Food Without Barcode",
   "session": "Session",
@@ -438,5 +438,11 @@
   "missingData": "Missing Data",
   "missingDataDescription": "Data missing, item will not be logged",
   "imageNotRecognized": "Image Not Recognized",
-  "imageNotRecognizedDescription": "item will not be logged, search manually"
+  "imageNotRecognizedDescription": "item will not be logged, search manually",
+  "pleaseEnterValidWater": "Please enter valid consumed water.",
+  "foodCreator": "Food Creator",
+  "createNewItem": "Create New Item",
+  "useBarcodeOnly": "Use Barcode Only",
+  "editExistingItem": "Edit Existing Item",
+  "importExistingData": "Import Existing Data"
 }

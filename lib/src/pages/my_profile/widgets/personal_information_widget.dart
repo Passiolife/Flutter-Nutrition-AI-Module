@@ -133,13 +133,13 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            context.localization?.personalInformation ?? '',
+            context.localization.personalInformation ?? '',
             style: AppTextStyle.textBase.addAll(
                 [AppTextStyle.textBase.leading6, AppTextStyle.semiBold]),
           ),
           16.verticalSpace,
           LabeledWidgetRow(
-            title: context.localization?.name,
+            title: context.localization.name,
             child: AppTextField(
               controller: _nameController,
               style: AppTextStyle.textBase
@@ -148,7 +148,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           ),
           16.verticalSpace,
           LabeledWidgetRow(
-            title: context.localization?.age,
+            title: context.localization.age,
             child: AppTextField(
               controller: _ageController,
               focusNode: _ageFocusNode,
@@ -163,7 +163,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           ),
           16.verticalSpace,
           LabeledWidgetRow(
-            title: context.localization?.gender,
+            title: context.localization.gender,
             child: AppDropDownMenu<String>(
               initialSelection: widget.gender?.name.toUpperCaseWord,
               dropdownMenuEntries: _genderEntries
@@ -181,7 +181,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           ),
           16.verticalSpace,
           LabeledWidgetRow(
-            title: context.localization?.height,
+            title: context.localization.height,
             child: AppTextField(
               controller: _heightController,
               readOnly: true,
@@ -200,7 +200,7 @@ class _PersonalInformationWidgetState extends State<PersonalInformationWidget> {
           ),
           16.verticalSpace,
           LabeledWidgetRow(
-            title: context.localization?.weight,
+            title: context.localization.weight,
             child: AppTextField(
               controller: _weightController,
               focusNode: _weightFocusNode,

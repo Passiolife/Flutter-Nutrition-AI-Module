@@ -94,10 +94,11 @@ class AppButtonStyles {
 }
 
 class AppButtonModel {
-  AppButtonModel({this.textStyle, this.padding, this.decoration});
+  AppButtonModel({this.textStyle, this.padding, this.margin,  this.decoration});
 
   final TextStyle? textStyle;
   final EdgeInsets? padding;
+  final EdgeInsets? margin;
   final BoxDecoration? decoration;
 }
 
@@ -110,11 +111,13 @@ extension AppButtonModelExtension on AppButtonModel {
   AppButtonModel copyWith({
     TextStyle? textStyle,
     EdgeInsets? padding,
+    EdgeInsets? margin,
     BoxDecoration? decoration,
   }) {
     return AppButtonModel(
       textStyle: textStyle ?? this.textStyle,
       padding: padding ?? this.padding,
+      margin: margin ?? this.margin,
       decoration: decoration ?? this.decoration,
     );
   }

@@ -109,7 +109,7 @@ final class UpdateNotRecognizedFoodEvent extends TakePhotoResultEvent {
   });
 
   final int index;
-  final PassioFoodDataInfo? foodDataInfo;
+  final nutrition_ai.PassioFoodDataInfo? foodDataInfo;
   final FoodRecord? foodRecord;
 
   @override

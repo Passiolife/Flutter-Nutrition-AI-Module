@@ -3,16 +3,16 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../common/constant/app_constants.dart';
-import '../../common/router/routes.dart';
 import '../../common/extension/context_extension.dart';
+import '../../common/router/routes.dart';
 import '../../common/util/overlay_widget.dart';
 import '../../common/util/preference_store.dart';
 import '../advisor/advisor_page.dart';
 import '../diary/diary_page.dart';
 import '../food_search/food_search_page.dart';
-import '../home/home_page.dart';
+import '../home/home_page_old.dart';
 import '../meal_plan/meal_plan_page.dart';
-import '../my_foods/my_foods_page.dart';
+import '../my_foods_old/my_foods_page.dart';
 import '../progress/progress_page.dart';
 import '../use_image/select_photo/select_photo_page.dart';
 import '../use_image/take_photo/take_photo_page.dart';
@@ -65,24 +65,18 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget? _getPage(int index) {
     switch (index) {
+      case 0:
+        return HomePage(key: UniqueKey());
       case 1:
-        return DiaryPage(
-          key: UniqueKey(),
-        );
+        return DiaryPage(key: UniqueKey());
       case 2:
         return const SizedBox.shrink();
       case 3:
-        return MealPlanPage(
-          key: UniqueKey(),
-        );
+        return MealPlanPage(key: UniqueKey());
       case 4:
-        return ProgressPage(
-          key: UniqueKey(),
-        );
+        return ProgressPage(key: UniqueKey());
       default:
-        return HomePage(
-          key: UniqueKey(),
-        );
+        return const SizedBox.shrink();
     }
   }
 
@@ -102,6 +96,7 @@ class _DashboardPageState extends State<DashboardPage> {
     super.initState();
   }
 
+  @override
   dispose() {
     _overlayUtil.remove();
     super.dispose();
@@ -182,7 +177,9 @@ class _DashboardPageState extends State<DashboardPage> {
   }
 
   void _checkTokenTrackingStatus({required BuildContext context}) {
-    final isEnabled = PreferenceStore.instance.getValue(AppCommonConstants.tokenTracking, AppCommonConstants.defaultTokenTracking);
+    final isEnabled = PreferenceStore.instance.getValue(
+        AppCommonConstants.tokenTracking,
+        AppCommonConstants.defaultTokenTracking);
     if (isEnabled) {
       _overlayUtil.show(
         context: context,

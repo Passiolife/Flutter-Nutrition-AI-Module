@@ -59,14 +59,14 @@ class TrendWidget extends StatelessWidget {
                 children: [
                   Expanded(
                     child: _WeightTrack(
-                      title: consumedTitle ?? context.localization?.consumed,
+                      title: consumedTitle ?? context.localization.consumed,
                       value: consumed,
                       unit: unit,
                     ),
                   ),
                   Expanded(
                     child: _WeightTrack(
-                      title: remainingTitle ?? context.localization?.remaining,
+                      title: remainingTitle ?? context.localization.remaining,
                       value: remaining,
                       unit: unit,
                     ),

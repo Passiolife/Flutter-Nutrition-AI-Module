@@ -24,7 +24,7 @@ import '../../../../common/util/navigation_utils/slide_page_route.dart';
 import '../../../../common/util/show_widget_util.dart';
 import '../../../../common/widgets/item_added_to_diary_widget.dart';
 import '../../../../nutrition_ai_module_configuration.dart';
-import '../../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
+import '../../../my_foods_old/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
 import 'bloc/take_photo_result_bloc.dart';
 import 'models/take_photo_result_navigation_data_provider.dart';
 import 'sections/action_buttons_section.dart';

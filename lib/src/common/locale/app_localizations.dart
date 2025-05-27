@@ -208,6 +208,7 @@ class AppLocalizations {
   String get weeklyAdherence => getLabel('weeklyAdherence');
 
   String get water => getLabel('water');
+  String get pleaseEnterValidWater => getLabel('pleaseEnterValidWater');
 
   String get oz => getLabel('oz');
 
@@ -895,4 +896,9 @@ class AppLocalizations {
   String get missingDataDescription => getLabel('missingDataDescription');
   String get imageNotRecognized => getLabel('imageNotRecognized');
   String get imageNotRecognizedDescription => getLabel('imageNotRecognizedDescription');
+  String get foodCreator => getLabel('foodCreator');
+  String get createNewItem => getLabel('createNewItem');
+  String get useBarcodeOnly => getLabel('useBarcodeOnly');
+  String get editExistingItem => getLabel('editExistingItem');
+  String get importExistingData => getLabel('importExistingData');
 }

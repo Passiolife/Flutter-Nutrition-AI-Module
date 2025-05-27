@@ -201,6 +201,10 @@ class VoiceLoggingBloc extends Bloc<VoiceLoggingEvent, VoiceLoggingState> {
     emit(const FoodLogSuccessListenerState());
   }
 
+  void _doLog() {
+
+  }
+
   FutureOr<void> _handleDoDisposeEvent(
       DoCancelEvent event, Emitter<VoiceLoggingState> emit) {
     speechToTextUtility.dispose();

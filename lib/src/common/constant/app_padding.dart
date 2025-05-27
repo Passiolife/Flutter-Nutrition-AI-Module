@@ -23,6 +23,8 @@ class AppPadding {
   static EdgeInsets pt8 = EdgeInsets.only(top: 8.h);
   static EdgeInsets pt12 = EdgeInsets.only(top: 12.h);
   static EdgeInsets pt16 = EdgeInsets.only(top: 16.h);
+  static EdgeInsets pt24 = EdgeInsets.only(top: 24.h);
+  static EdgeInsets pt32 = EdgeInsets.only(top: 32.h);
 
   /// Padding Bottom
   static EdgeInsets pb4 = EdgeInsets.only(bottom: 4.h);

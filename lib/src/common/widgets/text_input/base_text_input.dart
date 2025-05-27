@@ -18,6 +18,7 @@ class BaseTextInput extends StatelessWidget {
   final TextCapitalization textCapitalization;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final TextAlign textAlign;
   final EdgeInsetsGeometry? contentPadding;
@@ -63,6 +64,7 @@ class BaseTextInput extends StatelessWidget {
   final InputBorder? errorBorder;
   final TapRegionCallback? onTapOutside;
   final ValueChanged<String>? onFieldSubmitted;
+  final VoidCallback? onEditingComplete;
 
   const BaseTextInput({
     super.key,
@@ -79,6 +81,7 @@ class BaseTextInput extends StatelessWidget {
     this.maxLength,
     this.enableCounterText = false,
     this.keyboardType,
+    this.textInputAction,
     this.focusNode,
     this.obscureText = false,
     this.prefix,
@@ -111,6 +114,7 @@ class BaseTextInput extends StatelessWidget {
     this.autoValidateMode,
     this.onTapOutside,
     this.onFieldSubmitted,
+    this.onEditingComplete,
   });
 
   @override
@@ -141,6 +145,8 @@ class BaseTextInput extends StatelessWidget {
           excludeSemantics: true,
           label: 'text-input-$accessibilityLabel',
           child: TextFormField(
+            scrollPadding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom + (textStyle?.fontSize ?? 1)*4),
             onFieldSubmitted: onFieldSubmitted,
             controller: controller,
             validator: validator,
@@ -165,6 +171,7 @@ class BaseTextInput extends StatelessWidget {
             obscureText: obscureText,
             onChanged: onChanged,
             keyboardType: keyboardType,
+            textInputAction: textInputAction,
             textAlign: textAlign,
             readOnly: readOnly,
             autovalidateMode: autoValidateMode,
@@ -174,6 +181,7 @@ class BaseTextInput extends StatelessWidget {
                   // Close the keyboard when user click outside the text field
                   FocusManager.instance.primaryFocus?.unfocus();
                 },
+            onEditingComplete: onEditingComplete,
             buildCounter: (
               context, {
               required currentLength,

@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/constant/app_constants.dart';
-import '../../../../common/constant/app_padding.dart';
 import '../../../../common/extension/context_extension.dart';
-import '../../../../common/util/double_extensions.dart';
 import '../../../../common/extension/string_extensions.dart';
+import '../../../../common/util/double_extensions.dart';
 import '../../../../common/widgets/food_item_row_widget.dart';
 import '../../bloc/edit_food_bloc.dart';
 import '../edit_food_page.dart';
@@ -40,7 +38,7 @@ class IngredientsListWidget extends StatelessWidget {
                   '${ingredient.selectedQuantity.format(places: 2)} ${ingredient.selectedUnit.toUpperCaseWord} (${ingredient.computedWeight.value.format(places: 0)} ${ingredient.computedWeight.symbol})';
 
               final calories =
-                  '${ingredient.nutrientsSelectedSize().calories?.value.round() ?? 0} ${context.localization?.cal}';
+                  '${ingredient.nutrientsSelectedSize().calories?.value.round() ?? 0} ${context.localization.cal}';
 
               return FoodItemRowWidget(
                 data: FoodItemRowData(
@@ -66,10 +64,11 @@ class IngredientsListWidget extends StatelessWidget {
     );
   }
 
-  Future<void> _handleIngredientTap(
-      {required BuildContext context,
-      required int index,
-      required FoodRecordIngredient ingredient}) async {
+  Future<void> _handleIngredientTap({
+    required BuildContext context,
+    required int index,
+    required FoodRecordIngredient ingredient,
+  }) async {
     final data = await EditFoodPage.navigate(
       context: context,
       params: EditFoodPageParams(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../common/extension/context_extension.dart';
 import '../../../common/widgets/custom_app_bar_widget.dart';
-import '../../../common/widgets/custom_calendar_app_bar_widget.dart';
+import '../../../common/widgets/date_time/custom_calendar_app_bar_widget.dart';
 import 'interfaces.dart';
 
 class HomeAppBarWidget extends StatelessWidget {
@@ -20,7 +20,7 @@ class HomeAppBarWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomAppBarWidget(
-      title: '${context.localization?.welcome} ${userName ?? ''}!',
+      title: '${context.localization.welcome} ${userName ?? ''}!',
       children: [
         CustomCalendarAppBarWidget(
           selectedDate: selectedDate,

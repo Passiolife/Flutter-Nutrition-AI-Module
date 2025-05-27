@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../common/widgets/icons/icon_pencil_alt_widget.dart';
-import '../../../common/widgets/passio/food_item_row.dart';
+import '../../../common/widgets/passio/food_item_row/base_food_item_row.dart';
 import '../bloc/adjust_serving_size_bloc.dart';
 import '../models/adjust_serving_size_navigation_data.dart';
 
@@ -36,7 +36,7 @@ class FoodDetailsSection extends StatelessWidget {
         return Row(
           children: [
             Expanded(
-              child: FoodItemRow(
+              child: BaseFoodItemRow(
                 index: index,
                 image: image,
                 iconId: iconId,

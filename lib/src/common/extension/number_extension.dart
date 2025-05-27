@@ -41,7 +41,7 @@ extension StringNumberExtension on String? {
         locale ?? ((this?.contains(',') ?? false) ? 'de_DE' : 'en_US');
     final formattedNumber = NumberFormat.decimalPattern(updatedLocale)
         .tryParse(this ?? '')
-        .parseFormatted(places: places);
+        ?.parseFormatted(places: places);
     return formattedNumber;
   }
 }

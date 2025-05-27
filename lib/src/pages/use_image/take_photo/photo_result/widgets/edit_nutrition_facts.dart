@@ -13,7 +13,7 @@ import '../../../../../common/util/navigation_utils/hero_dialog_route.dart';
 import '../../../../../common/widgets/button/primary_button.dart';
 import '../../../../../common/widgets/button/secondary_button.dart';
 import '../../../../../common/widgets/drop_down/secondary_dropdown.dart';
-import '../../../../../common/widgets/icons/barcode_scan_widget.dart';
+import '../../../../../common/widgets/icons/barcode_scan_icon.dart';
 import '../../../../../common/widgets/text_input/number_text_input.dart';
 import '../../../../../common/widgets/text_input/primary_text_input.dart';
 import '../../../../barcode_scanner/barcode_scanner_page.dart';
@@ -304,7 +304,7 @@ class _DetailsWidgetState extends State<_DetailsWidget> {
                 initialValue: _barcode,
                 readOnly: true,
                 suffix: UnconstrainedBox(
-                  child: BarcodeScanWidget(),
+                  child: BarcodeScanIcon(),
                 ),
                 onTap: () async {
                   // String? barcode =

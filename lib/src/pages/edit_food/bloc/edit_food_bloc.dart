@@ -116,7 +116,7 @@ class EditFoodBloc extends Bloc<EditFoodEvent, EditFoodState> {
 
   FutureOr<void> _handleDoUpdateServingUnitEvent(
       DoUpdateServingUnitEvent event, Emitter<EditFoodState> emit) async {
-    foodRecord?.setSelectedUnitKeepWeight(event.unit);
+    foodRecord?.setUnitWithQuantityAdjustment(event.unit);
     add(DoUpdateServingQuantityEvent(
         quantity: foodRecord?.getSelectedQuantity() ?? 1, resetSlider: true));
   }

@@ -78,6 +78,7 @@ class ShowWidgetUtil {
     bool barrierDismissible = true,
     Color? barrierColor,
     bool fullscreen = false,
+    VoidCallback? barrierDismissibleCallback,
   }) {
     return showGeneralDialog(
       context: context,
@@ -107,6 +108,7 @@ class ShowWidgetUtil {
                             onTap: () {
                               if (barrierDismissible) {
                                 Navigator.of(context).pop();
+                                barrierDismissibleCallback?.call();
                               }
                             },
                             behavior: HitTestBehavior.opaque,

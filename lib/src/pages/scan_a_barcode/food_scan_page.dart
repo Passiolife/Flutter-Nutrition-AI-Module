@@ -30,9 +30,9 @@ class FoodScanPage extends StatelessWidget {
 
     return BlocProvider(
       create: (context) => FoodScanBloc(
+        nutritionRepository: nutritionAIRepository,
         foodLogRepository: foodLogRepository,
         customFoodRepository: customFoodRepository,
-        nutritionRepository: nutritionAIRepository,
       ),
       child: FoodScanScreen(),
     );

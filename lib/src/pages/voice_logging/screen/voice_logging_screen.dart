@@ -25,7 +25,7 @@ class _VoiceLoggingScreenState extends State<_VoiceLoggingScreen> {
         backgroundColor: AppColors.gray50,
         body: Column(
           children: [
-            CustomAppBarWidget(title: context.localization?.voiceLogging),
+            CustomAppBarWidget(title: context.localization.voiceLogging),
             Expanded(
               child: Column(
                 children: [
@@ -68,7 +68,7 @@ class _VoiceLoggingScreenState extends State<_VoiceLoggingScreen> {
           );
           break;
         case FoodLogSuccessListenerState():
-          context.showSnackbar(text: context.localization?.itemAddedToDiary);
+          context.showSnackbar(text: context.localization.itemAddedToDiary);
           DashboardPage.navigate(
             context,
             page: 1,
@@ -76,7 +76,7 @@ class _VoiceLoggingScreenState extends State<_VoiceLoggingScreen> {
           );
           break;
         case FoodLogFailureListenerState():
-          context.showSnackbar(text: context.localization?.foodLogErrorMessage);
+          context.showSnackbar(text: context.localization.foodLogErrorMessage);
           break;
       }
     }

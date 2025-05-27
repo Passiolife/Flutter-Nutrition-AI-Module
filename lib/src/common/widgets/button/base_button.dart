@@ -67,6 +67,7 @@ class _BaseButtonState extends State<BaseButton> {
           duration: const Duration(milliseconds: 250),
           decoration: widget.appButtonModel.decoration,
           padding: widget.appButtonModel.padding,
+          margin: widget.appButtonModel.margin,
           child: Center(
             child: !widget.loading
                 ? Row(

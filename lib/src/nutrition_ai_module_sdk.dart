@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sqflite/sqflite.dart';
 
-import 'common/connectors/local_db_connector.dart';
 import 'common/connectors/passio_connector.dart';
+import 'common/connectors/passio_internal_connector.dart';
 import 'common/constant/app_constants.dart';
 import 'common/locale/app_localizations.dart';
 import 'common/models/user_profile/user_profile_model.dart';
-import 'common/util/database_helper.dart';
+import 'common/util/file_utility.dart';
 import 'common/util/path_util.dart';
 import 'common/util/preference_store.dart';
 import 'common/util/user_session.dart';
 import 'nutrition_ai_module_configuration.dart';
 import 'nutrition_ai_page.dart';
-import 'pages/dashboard/dashboard_page.dart';
 
 /// The `NutritionAIModule` class is a singleton that handles the initialization
 /// and configuration of the Nutrition AI module. It manages the connection
@@ -30,7 +30,12 @@ class NutritionAIModule {
   static NutritionAIModule get instance => _instance;
 
   /// [configuration] holds the key and connector data.
-  var configuration = NutritionConfiguration(connector: LocalDBConnector());
+  var configuration = NutritionConfiguration(
+    connector: PassioInternalConnector(
+      databaseFactory: databaseFactory,
+      fileUtility: FileUtility(),
+    ),
+  );
 
   /// Sets the Passio connector for the configuration.
   ///
@@ -44,7 +49,8 @@ class NutritionAIModule {
   }
 
   NutritionAIModule setEnableLegacySearch(bool enableLegacySearch) {
-    configuration = configuration.copyWith(enableLegacySearch: enableLegacySearch);
+    configuration =
+        configuration.copyWith(enableLegacySearch: enableLegacySearch);
     return this;
   }
 
@@ -64,8 +70,8 @@ class NutritionAIModule {
   /// Returns a [Future] that completes when the launch process is finished.
   Future<void> launch(BuildContext context) async {
     // Check the type of connector and initialize the local database if needed.
-    if (configuration.connector is LocalDBConnector) {
-      await DatabaseHelper.instance.init();
+    if (configuration.connector is PassioInternalConnector) {
+      await (configuration.connector as PassioInternalConnector).open();
     }
 
     // Set preferred device orientation to portrait mode
@@ -73,11 +79,10 @@ class NutritionAIModule {
 
     // Set system UI overlay style.
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: AppColors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: AppColors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light
-    ));
+        statusBarColor: AppColors.transparent,
+        statusBarIconBrightness: Brightness.dark,
+        systemNavigationBarColor: AppColors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light));
 
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 

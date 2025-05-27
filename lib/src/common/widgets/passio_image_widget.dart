@@ -84,6 +84,7 @@ class _PassioImageWidgetState extends State<PassioImageWidget> {
       return;
     } else if (widget.iconId!.startsWith(FoodRecord.userFoodPrefix) ||
         widget.iconId!.startsWith(FoodRecord.userRecipePrefix)) {
+
       final result = await NutritionAIModule.instance.configuration.connector
           .fetchUserFoodImage(id: widget.iconId!);
       _image.value = result;

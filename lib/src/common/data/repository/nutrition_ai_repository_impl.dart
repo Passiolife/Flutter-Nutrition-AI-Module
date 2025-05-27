@@ -3,6 +3,7 @@ import 'dart:typed_data';
 import 'package:nutrition_ai/nutrition_ai.dart';
 
 import '../../domain/repository/nutrition_ai_repository.dart';
+import '../../util/result.dart';
 
 class NutritionAIRepositoryImpl extends NutritionAIRepository {
   const NutritionAIRepositoryImpl();
@@ -29,31 +30,39 @@ class NutritionAIRepositoryImpl extends NutritionAIRepository {
   }
 
   @override
-  Future<PassioFoodItem?> fetchFoodItemForDataInfo(
-      PassioFoodDataInfo foodDataInfo,
-      {double? servingQuantity,
-      String? servingUnit}) async {
+  Future<Result<PassioFoodItem?>> fetchFoodItemForDataInfo({
+    required PassioFoodDataInfo foodDataInfo,
+    double? servingQuantity,
+    String? servingUnit,
+  }) async {
     final quantity =
         servingQuantity ?? foodDataInfo.nutritionPreview.servingQuantity;
     final unit = servingUnit ?? foodDataInfo.nutritionPreview.servingUnit;
-    return await NutritionAI.instance.fetchFoodItemForDataInfo(
-      foodDataInfo,
-      servingQuantity: quantity,
-      servingUnit: unit,
-    );
+
+    try {
+      final PassioFoodItem? data =
+          await NutritionAI.instance.fetchFoodItemForDataInfo(
+        foodDataInfo,
+        servingQuantity: quantity,
+        servingUnit: unit,
+      );
+      return Result.success(data);
+    } catch (e) {
+      return Result.error(Exception('Failed to fetch food item for data info'));
+    }
   }
 
-  @override
-  Future<List<PassioFoodItem>> fetchFoodItemForDataInfos(
-      List<PassioFoodDataInfo?> foodDataInfo,
-      {List<({double? servingQuantity, String? servingUnit})>?
-          servingSizes}) async {
-    final foodDataInfos = foodDataInfo.whereType<PassioFoodDataInfo>();
-    return (await Future.wait(foodDataInfos
-            .map((foodData) async => await fetchFoodItemForDataInfo(foodData))))
-        .whereType<PassioFoodItem>()
-        .toList();
-  }
+  // @override
+  // Future<List<PassioFoodItem>> fetchFoodItemForDataInfos(
+  //     List<PassioFoodDataInfo?> foodDataInfo,
+  //     {List<({double? servingQuantity, String? servingUnit})>?
+  //         servingSizes}) async {
+  //   final foodDataInfos = foodDataInfo.whereType<PassioFoodDataInfo>();
+  //   return (await Future.wait(foodDataInfos
+  //           .map((foodData) async => await fetchFoodItemForDataInfos(foodData))))
+  //       .whereType<PassioFoodItem>()
+  //       .toList();
+  // }
 
   @override
   Future<PassioFoodItem?> recognizeNutritionFacts(Uint8List bytes,
@@ -71,5 +80,17 @@ class NutritionAIRepositoryImpl extends NutritionAIRepository {
   Future<PassioFoodItem?> fetchFoodItemForProductCode(
       String productCode) async {
     return await NutritionAI.instance.fetchFoodItemForProductCode(productCode);
+  }
+
+  @override
+  Future<Result<List<PassioFoodDataInfo>>> fetchSuggestions(
+      {required PassioMealTime mealTime}) async {
+    try {
+      final List<PassioFoodDataInfo> data =
+          await NutritionAI.instance.fetchSuggestions(mealTime);
+      return Result.success(data);
+    } catch (e) {
+      return Result.error(Exception('Failed to fetch suggestions'));
+    }
   }
 }

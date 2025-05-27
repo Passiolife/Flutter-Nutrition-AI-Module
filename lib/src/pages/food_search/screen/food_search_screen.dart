@@ -36,7 +36,7 @@ class FoodSearchScreen extends StatelessWidget {
 
   void _handleStateChanges(BuildContext context, FoodSearchState state) {
     if (state is FoodLogSuccessState) {
-      context.showSnackbar(text: context.localization?.itemAddedToDiary);
+      context.showSnackbar(text: context.localization.itemAddedToDiary);
     }
   }
 }

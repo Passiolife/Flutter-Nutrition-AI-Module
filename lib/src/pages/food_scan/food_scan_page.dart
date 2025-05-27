@@ -16,7 +16,7 @@ import '../../common/widgets/draggable_bottom_sheet_widget.dart';
 import '../dashboard/dashboard_page.dart';
 import '../edit_food/ui/edit_food_page.dart';
 import '../food_search/food_search_page.dart';
-import '../my_foods/custom_foods/food_creator/food_creator_page.dart';
+import '../my_foods_old/custom_foods/food_creator/food_creator_page.dart';
 import 'bloc/food_scan_bloc.dart';
 import 'widgets/nutrition_facts_result_widget.dart';
 import 'widgets/widgets.dart';
@@ -109,7 +109,7 @@ class _FoodScanPageState extends State<FoodScanPage>
           return Column(
             children: [
               CustomAppBarWidget(
-                title: context.localization?.foodScanner,
+                title: context.localization.foodScanner,
                 isMenuVisible: false,
                 suffix: GestureDetector(
                   behavior: HitTestBehavior.opaque,

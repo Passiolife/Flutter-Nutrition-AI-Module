@@ -41,14 +41,14 @@ class NoResultsFoundBottomSheet extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              title ?? context.localization?.noResultsFound ?? '',
+              title ?? context.localization.noResultsFound ?? '',
               style: AppTextStyle.textXl
                   .addAll([AppTextStyle.textXl.leading7, AppTextStyle.bold]),
             ),
             4.verticalSpace,
             Text(
               description ??
-                  context.localization?.voiceLoggingNoResultsFoundDescription ??
+                  context.localization.voiceLoggingNoResultsFoundDescription ??
                   '',
               style: AppTextStyle.textSm,
               textAlign: TextAlign.center,
@@ -59,7 +59,7 @@ class NoResultsFoundBottomSheet extends StatelessWidget {
                 Expanded(
                   child: AppButton(
                     buttonText:
-                        negativeButtonText ?? context.localization?.tryAgain,
+                        negativeButtonText ?? context.localization.tryAgain,
                     appButtonModel: AppButtonStyles.primaryBordered,
                     onTap: onTapNegative,
                   ),
@@ -67,7 +67,7 @@ class NoResultsFoundBottomSheet extends StatelessWidget {
                 SizedBox(width: AppDimens.w16),
                 Expanded(
                   child: AppButton(
-                    buttonText: context.localization?.searchManually,
+                    buttonText: context.localization.searchManually,
                     appButtonModel: AppButtonStyles.primary,
                     onTap: onTapPositive,
                   ),

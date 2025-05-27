@@ -24,7 +24,7 @@ class _TimeStampWidgetState extends State<TimeStampWidget> {
 
   String get _formattedDate {
     if (_selectedDate == null) return '';
-    return _selectedDate!.isToday ? 'Today' : '${_selectedDate?.formatToString(
+    return _selectedDate!.isToday ? 'Today' : '${_selectedDate?.formatToStringNew(
         DateTimeFormatStrings.monthDayYearHourMinute12Hour)}';
   }
 

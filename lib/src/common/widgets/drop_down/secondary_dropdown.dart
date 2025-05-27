@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '../../constant/app_border.dart';
 import '../../constant/app_constants.dart';
-import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
 import '../../models/key_value_model.dart';
 
@@ -25,9 +23,9 @@ class SecondaryDropdown<T> extends StatefulWidget {
 
   const SecondaryDropdown({
     super.key,
-    required this.value,
     required this.options,
     required this.onSelected,
+    this.value,
     this.enabled = true,
     this.autovalidateMode = AutovalidateMode.always,
     this.validator,
@@ -57,7 +55,7 @@ class _SecondaryDropdownState<T> extends State<SecondaryDropdown<T>> {
           valueListenable: _errorText,
           builder: (BuildContext context, String? errorText, child) {
             return SizedBox(
-              height: widget.height ?? 52.h,
+              height: widget.height ?? 45.h,
               width: context.width,
               child: DropdownMenu<KeyValueModel<T>>(
                 expandedInsets: EdgeInsets.zero,

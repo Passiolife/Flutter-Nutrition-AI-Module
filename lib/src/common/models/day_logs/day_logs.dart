@@ -16,8 +16,9 @@ class DayLogs {
           element.getCreatedAt()?.millisecondsSinceEpoch ?? 0);
 
       DayLog? log = dayLog.cast<DayLog?>().firstWhere(
-          (element) => element?.date.isSameDate(dateTime) ?? false,
-          orElse: () => null);
+            (element) => element?.date.isSameDate(dateTime) ?? false,
+            orElse: () => null,
+          );
 
       if (log != null) {
         log.addRecord(element);

@@ -55,7 +55,8 @@ class BarcodeInSystemWidget extends StatelessWidget {
           ),
           16.verticalSpace,
           ActionButtonsWidget(
-            neutralButtonText: context.localization.createCustomFoodAnyway,
+            positiveButtonText: context.localization.importExistingData,
+            neutralButtonText: context.localization.useBarcodeOnly,
             onNegativeButtonTap: onNegativeButtonTap,
             onPositiveButtonTap: onPositiveButtonTap,
             onNeutralButtonTap: onNeutralButtonTap,

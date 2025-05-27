@@ -94,8 +94,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         onPressed: () async {
                           await NutritionAIModule.instance
                               // .setPassioConnector(MyPassioConnector())
-                              .setAdvisorKey(
-                                  AppSecret.advisorKey) // This is optional
                               .launch(context);
                         },
                         child: const Text('Launch'),
@@ -112,7 +110,7 @@ class _MyHomePageState extends State<MyHomePage> {
       const passioConfig =
           PassioConfiguration(AppSecret.passioKey, debugMode: 1);
       NutritionAI.instance.configureSDK(passioConfig).then((value) async {
-        _passioStatus.value = value;
+          _passioStatus.value = value;
       });
     });
   }

@@ -55,7 +55,8 @@ class CustomFoodAlreadyExistsWidget extends StatelessWidget {
           ),
           16.verticalSpace,
           ActionButtonsWidget(
-            neutralButtonText: context.localization.createCustomFoodWithoutBarcode,
+            positiveButtonText: context.localization.editExistingItem,
+            neutralButtonText: context.localization.createNewItem,
             onNegativeButtonTap: onNegativeButtonTap,
             onPositiveButtonTap: onPositiveButtonTap,
             onNeutralButtonTap: onNeutralButtonTap,

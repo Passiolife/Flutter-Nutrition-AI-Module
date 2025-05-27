@@ -6,9 +6,9 @@ import '../../../../common/constant/app_padding.dart';
 import '../../../../common/models/food_record/food_record.dart';
 import '../../../../common/extension/context_extension.dart';
 import '../../../../common/widgets/app_button.dart';
-import '../../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart'
+import '../../../my_foods_old/recipes/recipe_creator/ui/model/navigation_data_provider.dart'
     as recipe;
-import '../../../my_foods/recipes/recipe_creator/ui/recipe_creator_page.dart';
+import '../../../my_foods_old/recipes/recipe_creator/ui/recipe_creator_page.dart';
 import '../../bloc/edit_food_bloc.dart';
 import '../dialogs/create_user_recipe_dialog.dart';
 import '../edit_food_page.dart';

@@ -5,7 +5,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../common/extension/core_extension.dart';
-import '../../../common/widgets/icons/barcode_scan_widget.dart';
+import '../../../common/widgets/icons/barcode_scan_icon.dart';
 import '../../../common/widgets/passio_image_widget.dart';
 import '../../../common/widgets/text_input/primary_text_input.dart';
 
@@ -101,7 +101,7 @@ class _DetailsWidgetState extends State<DetailsWidget> {
                     context.localization.enterBarcode.toUpperCaseWord ?? '',
                 initialValue: widget.barcode,
                 readOnly: true,
-                suffix: UnconstrainedBox(child: BarcodeScanWidget()),
+                suffix: UnconstrainedBox(child: BarcodeScanIcon()),
                 onTap: widget.onTapBarcode,
               ),
             ],

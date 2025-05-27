@@ -5,7 +5,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../nutrition_ai_module.dart';
 import '../../../../common/models/water_day_logs/water_day_logs.dart';
-import '../../../../common/util/date_time_utility.dart';
 import '../../../../common/widgets/typedefs.dart';
 
 part 'water_event.dart';
@@ -41,9 +40,8 @@ class WaterBloc extends Bloc<WaterEvent, WaterState> {
   Future<void> _handleQuickAddEvent(
       QuickAddEvent event, Emitter<WaterState> emit) async {
     DateTime createdAt = DateTime.now();
-    WaterRecord record = WaterRecord(
-      createdAt: createdAt.toUtc().millisecondsSinceEpoch,
-    );
+    WaterRecord record =
+        WaterRecord(createdAt: createdAt.toUtc().millisecondsSinceEpoch);
     record.setWater(event.consumedWater, event.unit);
     await _connector.updateWater(waterRecord: record, isNew: true);
     emit(const QuickAddSuccessState());

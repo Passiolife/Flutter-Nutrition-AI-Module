@@ -13,6 +13,17 @@ class KeyValueModel<T> extends Equatable {
   });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [icon, text, value];
+
+  KeyValueModel<T> copyWith({
+    Widget? icon,
+    String? text,
+    T? value,
+  }) {
+    return KeyValueModel(
+      icon: icon ?? this.icon,
+      text: text ?? this.text,
+      value: value ?? this.value,
+    );
+  }
 }

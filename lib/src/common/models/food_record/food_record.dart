@@ -201,7 +201,8 @@ class FoodRecord {
       foodItem.amount.selectedUnit,
       foodItem.ingredients.length <= 1 ? entityType : PassioIDEntityType.recipe,
       foodItem.ingredients
-          .map((e) => FoodRecordIngredient.fromPassioIngredient(e, entityType: entityType, resultType: resultType))
+          .map((e) => FoodRecordIngredient.fromPassioIngredient(e,
+              entityType: entityType, resultType: resultType))
           .toList(),
       null,
       openFoodLicense: foodItem.isOpenFood(),
@@ -320,11 +321,11 @@ class FoodRecord {
         name,
         additionalData,
         iconId,
-        ingredients,
+        Object.hashAllUnordered(ingredients),
         _selectedUnit,
         _selectedQuantity,
-        servingSizes,
-        servingUnits,
+        Object.hashAllUnordered(servingSizes),
+        Object.hashAllUnordered(servingUnits),
         entityType,
         mealLabel,
         _createdAt,
@@ -420,7 +421,7 @@ class FoodRecord {
   UnitMass ingredientWeight() {
     return ingredients
         .map((e) => e.servingWeight())
-        .reduce((value, element) => (value + element) as UnitMass);
+        .reduce((value, element) => (value + element));
   }
 
   /// Calculates the serving weight of the food item based on the selected unit.
@@ -431,7 +432,7 @@ class FoodRecord {
     if (unit == null) {
       return UnitMass(0, UnitMassType.grams);
     }
-    return (unit.weight * _selectedQuantity) as UnitMass;
+    return (unit.weight * _selectedQuantity);
   }
 
   /// Calculates the nutrients of the food item based on the current serving size.
@@ -449,6 +450,15 @@ class FoodRecord {
 
   /// Retrieves the currently selected unit for measurement.
   String getSelectedUnit() => _selectedUnit;
+
+  String recipeUnit() {
+    final units = ['serving', 'gram'];
+    return getSelectedUnit().isNotEmpty
+        ? units.contains(getSelectedUnit().toLowerCase())
+            ? getSelectedUnit()
+            : units.first
+        : units.first;
+  }
 
   /// Sets the selected unit for measurement and recalculates ingredient quantities accordingly.
   ///
@@ -844,8 +854,8 @@ extension CustomRecipeExtension on FoodRecord {
     newFoodRecord.additionalData = '';
     newFoodRecord.barcode = null;
     newFoodRecord.iconId = newIconId ?? iconId;
-    newFoodRecord.setSelectedQuantity(1);
-    newFoodRecord.setSelectedUnit('serving');
+    newFoodRecord.setSelectedQuantity(getSelectedQuantity());
+    newFoodRecord.setSelectedUnit(recipeUnit());
     newFoodRecord.removeMeal();
     newFoodRecord.ingredients = [];
     return newFoodRecord;

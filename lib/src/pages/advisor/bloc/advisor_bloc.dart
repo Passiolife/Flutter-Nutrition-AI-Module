@@ -41,6 +41,12 @@ Let's chat!
 
   Future<void> _handleDoInitializationEvent(
       DoInitializationEvent event, Emitter<AdvisorState> emit) async {
+
+    await NutritionAI.instance.shutDownPassioSDK();
+    const passioConfig =
+    PassioConfiguration('jNF7sKOufr1K0vYBNe7HShIgmv4dkJCYuvvro7pW', debugMode: 1);
+    await NutritionAI.instance.configureSDK(passioConfig);
+
     final result = await NutritionAdvisor.instance.initConversation();
     switch (result) {
       case Error():

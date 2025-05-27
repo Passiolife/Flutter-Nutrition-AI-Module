@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-import '../../constant/app_border.dart';
 import '../../constant/app_constants.dart';
-import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
 import 'base_text_input.dart';
 
@@ -16,11 +14,13 @@ class PrimaryTextInput extends StatefulWidget {
   final TextCapitalization textCapitalization;
   final VoidCallback? onTap;
   final TextInputType? keyboardType;
+  final TextInputAction? textInputAction;
   final FocusNode? focusNode;
   final TextAlign textAlign;
   final EdgeInsetsGeometry? contentPadding;
   final CrossAxisAlignment crossAxisAlignment;
   final AutovalidateMode? autoValidateMode;
+  final VoidCallback? onEditingComplete;
 
   final String hintText;
   final String? labelText;
@@ -75,6 +75,7 @@ class PrimaryTextInput extends StatefulWidget {
     this.enabled = true,
     this.maxLength,
     this.keyboardType,
+    this.textInputAction,
     this.focusNode,
     this.isPassword = false,
     this.prefix,
@@ -110,6 +111,7 @@ class PrimaryTextInput extends StatefulWidget {
     this.enabledBorderColor,
     this.focusedBorderColor,
     this.maxLines = 1,
+    this.onEditingComplete,
   });
 
   @override
@@ -143,6 +145,7 @@ class _PrimaryTextInputState extends State<PrimaryTextInput> {
           enabled: widget.enabled,
           maxLength: widget.maxLength,
           keyboardType: widget.keyboardType,
+          textInputAction: widget.textInputAction,
           obscureText: widget.isPassword && !_isVisibility,
           prefix: widget.prefix,
           suffix: widget.isPassword
@@ -172,9 +175,13 @@ class _PrimaryTextInputState extends State<PrimaryTextInput> {
           errorStyle: widget.errorStyle ??
               AppTextStyle.textXs.copyWith(
                 color: context.textThemeColors.errorColor,
+                height: 0.01,
               ),
           labelStyle: widget.labelStyle ??
-              AppTextStyle.textXs,
+              AppTextStyle.textSm.addAll(
+                  [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
+                color: context.textThemeColors.brandTextDark,
+              ),
           hintStyle: widget.hintStyle ??
               AppTextStyle.textBase
                   .addAll([AppTextStyle.textBase.leading6]).copyWith(
@@ -230,8 +237,8 @@ class _PrimaryTextInputState extends State<PrimaryTextInput> {
           onTap: widget.onTap,
           showCursor: widget.showCursor,
           enableInteractiveSelection: widget.enableInteractiveSelection,
-          validator: (_) {
-            return widget.validator?.call(widget.controller?.text);
+          validator: (value) {
+            return widget.validator?.call(value);
           },
         ),
         if (widget.footnote?.isNotEmpty == true)

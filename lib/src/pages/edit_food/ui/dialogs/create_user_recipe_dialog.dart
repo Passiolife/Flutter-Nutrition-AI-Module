@@ -8,8 +8,8 @@ import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/widgets/app_button.dart';
 import '../../../../common/widgets/app_loading_button_widget.dart';
 import '../../../../common/widgets/app_switch.dart';
-import '../../../my_foods/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
-import '../../../my_foods/recipes/recipe_creator/ui/recipe_creator_page.dart';
+import '../../../my_foods_old/recipes/recipe_creator/ui/model/navigation_data_provider.dart';
+import '../../../my_foods_old/recipes/recipe_creator/ui/recipe_creator_page.dart';
 
 class CreateUserRecipeDialog {
   static Future<bool> show({

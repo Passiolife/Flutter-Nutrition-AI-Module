@@ -92,10 +92,10 @@ class _ResultSectionState extends State<ResultSection> {
   }
 
   Future<void> _openNutritionFacts() async {
-    await NutritionAI.instance.stopCamera();
+    // await NutritionAI.instance.stopCamera();
     if(mounted) {
       await Navigator.pushNamed(context, Routes.nutritionFacts);
     }
-    await NutritionAI.instance.startCamera();
+    // await NutritionAI.instance.startCamera();
   }
 }

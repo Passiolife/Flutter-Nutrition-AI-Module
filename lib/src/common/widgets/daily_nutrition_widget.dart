@@ -23,6 +23,7 @@ class DailyNutritionWidget extends StatelessWidget {
     this.totalProteins,
     this.consumedFat,
     this.totalFat,
+    this.onTap,
     this.listener,
     super.key,
   });
@@ -43,12 +44,13 @@ class DailyNutritionWidget extends StatelessWidget {
   final int? consumedFat;
   final double? totalFat;
 
+  final VoidCallback? onTap;
   final DailyNutritionListener? listener;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: listener?.onTapDailyNutrition,
+      onTap: onTap,
       child: Container(
         width: double.infinity,
         decoration: AppShadows.base,

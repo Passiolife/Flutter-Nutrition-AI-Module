@@ -19,4 +19,12 @@ abstract class Routes {
   static const String photoPreview = '/photoPreview';
   static const String nutritionFacts = '/nutritionFacts';
   static const String adjustServingSize = '/adjustServingSize';
+  static const String waterPage = '/waterPage';
+  static const String addWaterPage = '/addWaterPage';
+  static const String weightPage = '/weightPage';
+  static const String diaryPage = '/diaryPage';
+
+  // My Foods
+  static const String customFoods = '/customFoodsPage';
+
 }

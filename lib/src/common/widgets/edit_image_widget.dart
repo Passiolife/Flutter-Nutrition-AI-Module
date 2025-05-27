@@ -2,7 +2,6 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../pages/use_image/select_photo/select_photo_page.dart';
@@ -13,6 +12,7 @@ import '../extension/context_extension.dart';
 import '../widgets/menu_item_row_widget.dart';
 import 'app_pop_up_widget.dart';
 import 'passio_image_widget.dart';
+import 'vector/vector_widget.dart';
 
 typedef OnChangeImage = void Function(Uint8List? image);
 
@@ -72,10 +72,10 @@ class _EditImageWidgetState extends State<EditImageWidget> {
             _image.value = profiles?.firstOrNull;
           }
         } else if (value.title == context.localization.selectPhoto) {
-          List<XFile>? profiles = await SelectPhotoPage.navigate(context,
+          List<Uint8List>? profiles = await SelectPhotoPage.navigate(context,
               returnResult: true, maxLimit: 1);
           if (profiles?.firstOrNull != null) {
-            _image.value = await profiles?.firstOrNull?.readAsBytes();
+            _image.value = profiles?.firstOrNull;
           }
         }
         if (_image.value != null) {
@@ -103,11 +103,16 @@ class _EditImageWidgetState extends State<EditImageWidget> {
                           height: 100.r,
                           fit: BoxFit.contain,
                         ),
+                  /*VectorWidget(
+                    imagePath: widget.defaultImage,
+                    width: 100.r,
+                    height: 100.r,
+                  ),*/
                 );
               }),
           8.verticalSpace,
           Text(
-            context.localization.editImage ?? '',
+            context.localization.editImage,
             style: AppTextStyle.textSm
                 .addAll([AppTextStyle.textSm.leading5]).copyWith(
               decoration: AppTextStyle.underline,

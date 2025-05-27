@@ -8,7 +8,7 @@ import '../../../../common/extension/string_extensions.dart';
 import '../../../../common/widgets/app_button.dart';
 import '../../../../common/widgets/app_loading_button_widget.dart';
 import '../../../../common/widgets/app_switch.dart';
-import '../../../my_foods/custom_foods/food_creator/food_creator_page.dart';
+import '../../../my_foods_old/custom_foods/food_creator/food_creator_page.dart';
 
 class CreateUserFoodDialog {
   static Future<bool> show({

@@ -144,38 +144,28 @@ class _NumberTextInputState extends State<NumberTextInput> {
 
   @override
   void initState() {
-    _controller = widget.controller ?? TextEditingController();
+    _controller =
+        widget.controller ?? TextEditingController(text: widget.initialValue);
     _focusNode = widget.focusNode ?? FocusNode();
+    _focusNode!.addListener(_handleFocusChange);
     if (Platform.isIOS) {
       _overlayManager = OverlayManager();
-      _focusNode!.addListener(_handleFocusChange);
     }
     _onFieldSubmitted = widget.onFieldSubmitted;
     super.initState();
   }
 
   void _handleFocusChange() {
-    if (_focusNode!.hasFocus) {
+    if (_focusNode?.hasFocus == true) {
       _overlayManager?.showOverlay(context, DoneKeyboardButtonWidget(
         onDone: () {
           final text = _controller.text;
-          if (text.isNotEmpty) {
-            _setAndUpdateText(text);
-            // final formatted = text.localeFormatted<double?>();
-            // if (formatted == null) return;
-            // _controller.text = formatted.format();
-            // _onFieldSubmitted?.call(formatted.format());
-          } else {
-            _setAndUpdateText(widget.initialValue ?? '');
-            // final formatted = double.tryParse(widget.initialValue ?? '');
-            // if (formatted == null) return;
-            // _controller.text = formatted.format();
-            // _onFieldSubmitted?.call(formatted.format());
-          }
+          _setAndUpdateText(text.isNotEmpty ? text : widget.initialValue ?? '');
         },
       ));
     } else {
       _overlayManager?.removeOverlay();
+      _setAndUpdateText(_controller.text.isNotEmpty ? _controller.text : widget.initialValue ?? '');
     }
   }
 
@@ -186,6 +176,12 @@ class _NumberTextInputState extends State<NumberTextInput> {
       _controller.text = formatted.format();
       _onFieldSubmitted?.call(formatted.format());
     }
+  }
+
+  @override
+  void dispose() {
+    _focusNode?.removeListener(_handleFocusChange);
+    super.dispose();
   }
 
   @override
@@ -201,7 +197,10 @@ class _NumberTextInputState extends State<NumberTextInput> {
                 color: context.textThemeColors.brandTextDark,
               ),
           onTapOutside: (_) {
-
+            _setAndUpdateText(_controller.text);
+          },
+          onEditingComplete: () {
+            _setAndUpdateText(_controller.text);
           },
           onFieldSubmitted: _setAndUpdateText,
           onChanged: widget.onChanged,
@@ -213,7 +212,7 @@ class _NumberTextInputState extends State<NumberTextInput> {
           hintText: widget.hintText,
           controller: _controller,
           inputFormatters: widget.inputFormatters,
-          // initialValue: widget.initialValue,
+          initialValue: widget.initialValue,
           enabled: widget.enabled,
           maxLength: widget.maxLength,
           keyboardType: widget.keyboardType ??
@@ -250,11 +249,12 @@ class _NumberTextInputState extends State<NumberTextInput> {
           errorStyle: widget.errorStyle ??
               AppTextStyle.textXs.copyWith(
                 color: context.textThemeColors.errorColor,
+                height: 0.01,
               ),
           labelStyle: widget.labelStyle ??
               AppTextStyle.textSm.addAll(
                   [AppTextStyle.textSm.leading4, AppTextStyle.medium]).copyWith(
-                color: context.textThemeColors.brandTextLight,
+                color: context.textThemeColors.brandTextDark,
               ),
           hintStyle: widget.hintStyle ??
               AppTextStyle.textBase
@@ -315,8 +315,8 @@ class _NumberTextInputState extends State<NumberTextInput> {
           onTap: widget.onTap,
           showCursor: widget.showCursor,
           enableInteractiveSelection: widget.enableInteractiveSelection,
-          validator: (_) {
-            return widget.validator?.call(widget.controller?.text);
+          validator: (value) {
+            return widget.validator?.call(value);
           },
         ),
         if (widget.footnote?.isNotEmpty == true)

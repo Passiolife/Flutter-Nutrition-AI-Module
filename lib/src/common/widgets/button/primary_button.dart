@@ -10,6 +10,7 @@ class PrimaryButton extends StatelessWidget {
   const PrimaryButton({
     this.text,
     this.padding,
+    this.margin,
     this.onTap,
     this.enabled = true,
     this.loading = false,
@@ -18,6 +19,7 @@ class PrimaryButton extends StatelessWidget {
 
   final String? text;
   final EdgeInsets? padding;
+  final EdgeInsets? margin;
   final VoidCallback? onTap;
   final bool enabled;
   final bool loading;
@@ -29,7 +31,7 @@ class PrimaryButton extends StatelessWidget {
     return BaseButton(
       text: text ?? '',
       appButtonModel:
-          AppButtonStyles.primary.copyWith(padding: padding ?? _defaultPadding),
+          AppButtonStyles.primary.copyWith(padding: padding ?? _defaultPadding).copyWith(margin: margin),
       onTap: onTap,
       enable: enabled,
       loading: loading,

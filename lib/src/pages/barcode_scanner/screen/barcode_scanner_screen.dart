@@ -79,7 +79,7 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
 
   void _showCustomFoodAlreadyExistsDialog({FoodRecord? foodRecord}) async {
     ShowWidgetUtil.showCustomGeneralDialogNew(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (dContext) {
         return CustomFoodAlreadyExistsWidget(
@@ -94,12 +94,15 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
           },
         );
       },
+      barrierDismissibleCallback: () {
+        Navigator.pop(context);
+      },
     );
   }
 
   void _showBarcodeInSystemDialog({FoodRecord? foodRecord}) async {
     ShowWidgetUtil.showCustomGeneralDialogNew(
-      barrierDismissible: false,
+      barrierDismissible: true,
       context: context,
       builder: (dContext) {
         return BarcodeInSystemWidget(
@@ -113,6 +116,9 @@ class _BarcodeScannerScreenState extends State<_BarcodeScannerScreen>
             Navigator.pop(context, foodRecord?.barcode);
           },
         );
+      },
+      barrierDismissibleCallback: () {
+        Navigator.pop(context);
       },
     );
   }

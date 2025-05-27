@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:vector_graphics/vector_graphics.dart';
 
-import '../../constant/app_border.dart';
 import '../../constant/app_constants.dart';
-import '../../constant/app_padding.dart';
 import '../../extension/context_extension.dart';
 import '../../models/key_value_model.dart';
 
