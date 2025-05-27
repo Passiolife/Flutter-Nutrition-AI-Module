@@ -1,0 +1,2 @@
+/Users/mind/Documents/Sahil/Projects/Projects/Flutter-Nutrition-AI-Module/example/android/app/.cxx/Debug/6n6r5yu1/x86_64/CMakeFiles/edit_cache.dir
+/Users/mind/Documents/Sahil/Projects/Projects/Flutter-Nutrition-AI-Module/example/android/app/.cxx/Debug/6n6r5yu1/x86_64/CMakeFiles/rebuild_cache.dir

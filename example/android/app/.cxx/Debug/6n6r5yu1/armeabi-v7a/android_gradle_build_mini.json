@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/mind/Documents/Sahil/flutter_sdk/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/mind/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/mind/Documents/Sahil/Projects/Projects/Flutter-Nutrition-AI-Module/example/android/app/.cxx/Debug/6n6r5yu1/armeabi-v7a",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/mind/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/mind/Documents/Sahil/Projects/Projects/Flutter-Nutrition-AI-Module/example/android/app/.cxx/Debug/6n6r5yu1/armeabi-v7a",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}
